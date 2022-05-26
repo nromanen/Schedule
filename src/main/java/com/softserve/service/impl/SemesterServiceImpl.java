@@ -31,12 +31,14 @@ import java.util.stream.Collectors;
 public class SemesterServiceImpl implements SemesterService {
 
     private final SemesterRepository semesterRepository;
-    private final PeriodService periodService;
     private final ScheduleRepository scheduleRepository;
     private final LessonRepository lessonRepository;
+    private final GroupRepository groupRepository;
+
+    private final PeriodService periodService;
+
     private final List<DayOfWeek> workDaysList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
             DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
-    private final GroupRepository groupRepository;
 
     @Autowired
     public SemesterServiceImpl(SemesterRepository semesterRepository,
@@ -52,10 +54,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method gets information from Repository for particular Semester with id parameter
-     *
-     * @param id Identity number of the Semester
-     * @return Semester entity
+     * {@inheritDoc}
      */
     @Cacheable(value = "map", key = "#id")
     @Override
@@ -70,9 +69,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method gets information about all semesters from Repository
-     *
-     * @return List of all semesters
+     * {@inheritDoc}
      */
     @Cacheable(value = "semesterList")
     @Override
@@ -83,10 +80,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method saves new semester to Repository
-     *
-     * @param semester Semester entity to be saved
-     * @return saved Semester entity
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -99,6 +93,13 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.save(semester);
     }
 
+    /**
+     * Checks constraints for the given semester.
+     *
+     * @param semester the semester to be checked
+     * @throws IncorrectTimeException       if the start time of the period was after its end or the start time was equal to the end time
+     * @throws EntityAlreadyExistsException if semester already exists with given description and year
+     */
     private void checkConstraints(Semester semester) {
         if (isTimeInvalid(semester)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
@@ -108,6 +109,14 @@ public class SemesterServiceImpl implements SemesterService {
         }
     }
 
+    /**
+     * Checks update constraints for the given semester.
+     *
+     * @param semester the semester to be checked
+     * @throws UsedEntityException if semester have schedule and can not be removed,
+     *                             if one or more days in a semester have lessons and can not be removed,
+     *                             if one or more classes in a semester have lessons and can not be removed
+     */
     private void checkUpdateConstraints(Semester semester) {
         checkConstraints(semester);
         if (isScheduleWithLessonsCanNotBeRemoved(semester)) {
@@ -121,6 +130,11 @@ public class SemesterServiceImpl implements SemesterService {
         }
     }
 
+    /**
+     * Fills the semester by default values.
+     *
+     * @param semester the semester to be filled
+     */
     private void fillDefaultValues(Semester semester) {
         if (CollectionUtils.isEmpty(semester.getDaysOfWeek())) {
             semester.setDaysOfWeek(new HashSet<>(workDaysList));
@@ -131,9 +145,9 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method sets current semester in database to false while saving new current semester or updating current semester
+     * Sets current semester in the repository to {@code false} while saving new current semester or updating current semester.
      *
-     * @param semester Semester entity to be saved or updated
+     * @param semester the semester to be saved or updated
      */
     private void setCurrentToFalse(Semester semester) {
         if (semester.isCurrentSemester()) {
@@ -143,9 +157,9 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method sets default semester in database to false while saving new default semester or updating default semester
+     * Sets default semester in the repository to {@code false} while saving new default semester or updating default semester
      *
-     * @param semester Semester entity to be saved or updated
+     * @param semester the semester to be saved or updated
      */
     private void setDefaultToFalse(Semester semester) {
         if (semester.isDefaultSemester()) {
@@ -155,10 +169,9 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method updates information for an existing semester in Repository
+     * {@inheritDoc}
      *
-     * @param semester Semester entity with updated fields
-     * @return updated Semester entity
+     * @throws UsedEntityException if the given semester has not passed checkUpdateConstraints
      */
     @Caching(put = {@CachePut(value = "map", key = "#semester.id")},
             evict = {@CacheEvict(value = "semesterList", allEntries = true)})
@@ -172,10 +185,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method deletes an existing semester from Repository
-     *
-     * @param object Semester entity to be deleted
-     * @return deleted Semester entity
+     * {@inheritDoc}
      */
     @CacheEvict(value = "map", key = "#object.id")
     @Override
@@ -184,11 +194,8 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterRepository.delete(object);
     }
 
-
     /**
-     * Method searches get of semester with currentSemester = true in the DB
-     *
-     * @return entity Semester if such exist, else return null
+     * {@inheritDoc}
      */
     @Override
     public Semester getCurrentSemester() {
@@ -202,9 +209,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method searches get of semester with defaultSemester = true in the DB
-     *
-     * @return entity Semester if such exist, else return null
+     * {@inheritDoc}
      */
     @Override
     public Semester getDefaultSemester() {
@@ -217,13 +222,26 @@ public class SemesterServiceImpl implements SemesterService {
         return semester;
     }
 
-    //check if the end time is not before the start time or equals return true, else - false
+    /**
+     * Checks the start and end days of the semester.
+     *
+     * @param object the semester that will be checked
+     * @return {@code true} if the end time is before the start time or equals, otherwise return {@code false}
+     */
     private boolean isTimeInvalid(Semester object) {
         log.info("Enter into isTimeInvalid  with entity: {}", object);
         return object.getStartDay().isAfter(object.getEndDay()) ||
                 object.getStartDay().equals(object.getEndDay());
     }
 
+    /**
+     * Check existence of the given semester.
+     *
+     * @param semesterId  the id of the semester
+     * @param description the string represents the description of the semester
+     * @param year        the year of the semester
+     * @return {@code true} if the given semester exists in the repository
+     */
     private boolean isSemesterExists(long semesterId, String description, int year) {
         log.info("In isSemesterExists (semesterId = [{}],description = [{}], year = [{}])", semesterId, description, year);
         Semester existingSemester = semesterRepository.getSemesterByDescriptionAndYear(description, year).orElse(null);
@@ -234,11 +252,11 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method is used for checking if days with lessons are not removed from the updated semester
+     * Checks if days with lessons are not removed from the updated semester.
      *
-     * @param semester that is checked before updating
-     * @return true if one or more days with lessons have been removed from the updated semester;
-     * false if days with lessons have not been removed.
+     * @param semester the semester that will be checked before updating
+     * @return {@code true} if one or more days with lessons have been removed from the updated semester,
+     * {@code false} if days with lessons have not been removed
      */
     private boolean isDaysWithLessonsCanNotBeRemoved(Semester semester) {
         log.debug("Enter into isDaysWithLessonsCanBeRemoved with entity: {}", semester);
@@ -247,11 +265,11 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method is used for checking if semester with schedule are not removed from the updated semester
+     * Checks if semester with schedule are not removed from the updated semester.
      *
-     * @param semester that is checked before updating
-     * @return true if schedule have been removed from the updated semester;
-     * false if schedule have not been removed.
+     * @param semester the semester that will be checked before updating
+     * @return {@code true} if schedule have been removed from the updated semester;
+     * {@code false} if schedule have not been removed.
      */
     private boolean isScheduleWithLessonsCanNotBeRemoved(Semester semester) {
         log.debug("Enter into isScheduleWithLessonsCanNotBeRemoved with entity: {}", semester);
@@ -260,11 +278,11 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method is used for checking if periods with lessons are not removed from the updated semester
+     * Checks if periods with lessons are not removed from the updated semester.
      *
-     * @param semester that is checked before updating
-     * @return true if one or more periods with lessons have been removed from the updated semester;
-     * false if periods with lessons have not been removed.
+     * @param semester the semester that will be checked before updating
+     * @return {@code true} if one or more periods with lessons have been removed from the updated semester,
+     * {@code false} if periods with lessons have not been removed.
      */
     private boolean isPeriodsWithLessonsCanNotBeRemoved(Semester semester) {
         log.debug("Enter into isPeriodsWithLessonsCanNotBeRemoved with entity: {}", semester);
@@ -273,9 +291,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method used for getting all disabled semesters
-     *
-     * @return list of disabled semesters
+     * {@inheritDoc}
      */
     @Override
     public List<Semester> getDisabled() {
@@ -290,10 +306,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method used to change the current semester that the Manager is working on
-     *
-     * @param semesterId id of the semester that needs to be current
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -305,10 +318,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * The method used to change the default semester that the Manager is working on
-     *
-     * @param semesterId id of the semester that needs to be current
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -320,11 +330,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method add group to an existing semester
-     *
-     * @param semester semester in which we need to add group
-     * @param group    group to add
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -340,12 +346,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     *
-     * Method add groups to an existing semester
-     *
-     * @param semester semester in which we need to add groups
-     * @param groupIds groups to add
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @CacheEvict(value = "semesterList", allEntries = true)
     @Override
@@ -360,11 +361,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method add daysOfWeek to an existing semester
-     *
-     * @param semester   semester in which we need to add daysOfWeek
-     * @param daysOfWeek daysOfWeek to add
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester addDaysOfWeekToSemester(Semester semester, Set<DayOfWeek> daysOfWeek) {
@@ -381,11 +378,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method add daysOfWeek to an existing semester
-     *
-     * @param semester semester in which we need to add periods
-     * @param periods  periods to add
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester addPeriodsToSemester(Semester semester, Set<Period> periods) {
@@ -402,11 +395,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method delete group from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @param group    group to delete
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester deleteGroupFromSemester(Semester semester, Group group) {
@@ -418,10 +407,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method delete groups, periods and days Of Weeks from an existing semester
-     *
-     * @param semester semester in which we need to delete group
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester deleteAllContentFromSemester(Semester semester) {
@@ -436,11 +422,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method delete groups from an existing semester
-     *
-     * @param semester semester in which we need to delete groups
-     * @param groups   group to delete
-     * @return changed Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
@@ -450,11 +432,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Method copy groups, periods, days Of Weeks and Schedule from one to other semester
-     *
-     * @param fromSemesterId id semester from which we need to copy groups, periods, days Of Weeks and Schedule
-     * @param toSemesterId   id semester in which we need to copy groups, periods, days Of Weeks and Schedule
-     * @return copied Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester copySemester(Long fromSemesterId, Long toSemesterId) {

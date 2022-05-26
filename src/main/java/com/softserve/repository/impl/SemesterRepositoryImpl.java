@@ -23,7 +23,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     private static final String HQL_SELECT_PERIODS_WITH_LESSONS
             = "select s.period from Schedule s where s.lesson.semester.id = :semesterId";
 
-    private Session getSession(){
+    private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("semesterDisableFilter");
         filter.setParameter("disable", false);
@@ -31,27 +31,21 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     }
 
     /**
-     * The method used for getting list of entities from database
-     *
-     * @return list of entities
+     * {@inheritDoc}
      */
     @Override
     public List<Semester> getAll() {
         log.info("In getAll()");
-        return  getSession().createQuery("SELECT distinct s " +
-                "from Semester s " +
-                "left join fetch s.periods " +
-                "left join fetch s.groups " +
-                "left join fetch s.daysOfWeek", Semester.class)
+        return getSession().createQuery("SELECT distinct s "
+                        + "from Semester s "
+                        + "left join fetch s.periods "
+                        + "left join fetch s.groups "
+                        + "left join fetch s.daysOfWeek", Semester.class)
                 .getResultList();
     }
 
-
     /**
-     * Modified update method, which merge entity before updating it
-     *
-     * @param entity Semester is going to be updated
-     * @return Semester
+     * {@inheritDoc}
      */
     @Override
     public Semester update(Semester entity) {
@@ -61,42 +55,44 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         return entity;
     }
 
-    // Checking if semester is used in Schedule table
+    /**
+     * Checks if semester is used in Schedule table.
+     *
+     * @param semester the semester to be checked
+     * @return {@code true} if semester is used in Schedule table, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(Semester semester) {
         log.info("In checkReference(semester = [{}])", semester);
-        Long count = (Long) sessionFactory.getCurrentSession().createQuery
-                        ("select count (s.id) " +
-                                "from Schedule s where s.lesson.semester.id = :semesterId")
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (s.id) from Schedule s where s.lesson.semester.id = :semesterId")
                 .setParameter("semesterId", semester.getId()).getSingleResult();
 
         return count != 0;
     }
 
     /**
-     * Method gets count of semesters with provided description and year
-     * @param description searched description
-     * @param year searched year
-     * @return count of semesters
+     * {@inheritDoc}
      */
     @Override
     public Long countSemesterDuplicatesByDescriptionAndYear(String description, int year) {
         log.info("In countSemesterDuplicates(description = [{}], year = [{}])", description, year);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count(*) from Semester s where s.description = :description and s.year = :year")
+        return (Long) sessionFactory.getCurrentSession()
+                .createQuery("select count(*) from Semester s where s.description = :description and s.year = :year")
                 .setParameter("description", description)
                 .setParameter("year", year)
                 .getSingleResult();
     }
 
     /**
-     * Method searches get of semester with currentSemester = true in the DB
-     *
-     * @return Optional with Semester if such exist, else return empty Optional
+     * {@inheritDoc}
      */
     @Override
     public Optional<Semester> getCurrentSemester() {
         log.info("In getCurrentSemester method");
-        TypedQuery<Semester> query = sessionFactory.getCurrentSession().createNamedQuery("findCurrentSemester", Semester.class).setMaxResults(1);
+        TypedQuery<Semester> query = sessionFactory.getCurrentSession()
+                .createNamedQuery("findCurrentSemester", Semester.class)
+                .setMaxResults(1);
         query.setParameter("currentSemester", true);
         List<Semester> semesters = query.getResultList();
         if (semesters.isEmpty()) {
@@ -106,9 +102,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     }
 
     /**
-     * Method searches get of semester with defaultSemester = true in the DB
-     *
-     * @return Optional with Semester if such exist, else return empty Optional
+     * {@inheritDoc}
      */
     @Override
     public Optional<Semester> getDefaultSemester() {
@@ -123,69 +117,56 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     }
 
     /**
-     * Method sets value current semester to false fo all entities which have it true
-     *
-     * @return number of updated rows
+     * {@inheritDoc}
      */
     @Override
     public int updateAllSemesterCurrentToFalse() {
         log.info("In setCurrentSemesterToFalse()");
-        return  sessionFactory.getCurrentSession().createQuery(
-                        "UPDATE Semester s set s.currentSemester = false  where currentSemester = true")
+        return sessionFactory.getCurrentSession().createQuery(
+                        "UPDATE Semester s set s.currentSemester = false where currentSemester = true")
                 .executeUpdate();
     }
 
     /**
-     * Method sets value default semester to false fo all entities which have it true
-     *
-     * @return number of updated rows
+     * {@inheritDoc}
      */
     @Override
     public int updateAllSemesterDefaultToFalse() {
         log.info("In setDefaultSemesterToFalse()");
-        return  sessionFactory.getCurrentSession().createQuery(
-                        "UPDATE Semester s set s.defaultSemester = false  where defaultSemester = true")
+        return sessionFactory.getCurrentSession().createQuery(
+                        "UPDATE Semester s set s.defaultSemester = false where defaultSemester = true")
                 .executeUpdate();
     }
 
     /**
-     * Method sets the value current semester true for semester with id
-     *
-     * @param semesterId id of the semester
-     * @return number of updated rows
+     * {@inheritDoc}
      */
     @Override
     public int setCurrentSemester(Long semesterId) {
         log.info("In setCurrentSemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
-                        "UPDATE Semester s set s.currentSemester = true  where s.id = :semesterId")
+                        "UPDATE Semester s set s.currentSemester = true where s.id = :semesterId")
                 .setParameter("semesterId", semesterId)
                 .executeUpdate();
     }
 
     /**
-     * Method sets the value default semester true for semester with id
-     *
-     * @param semesterId id of the semester
-     * @return number of updated rows
+     * {@inheritDoc}
      */
     @Override
     public int setDefaultSemester(Long semesterId) {
         log.info("In setDefaultSemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
-                        "UPDATE Semester s set s.defaultSemester = true  where s.id = :semesterId")
+                        "UPDATE Semester s set s.defaultSemester = true where s.id = :semesterId")
                 .setParameter("semesterId", semesterId)
                 .executeUpdate();
     }
 
     /**
-     * Method gets Semester object with provided description and year
-     * @param description searched description
-     * @param year searched year
-     * @return Semester if such exists, else null
+     * {@inheritDoc}
      */
     @Override
-    public Optional<Semester> getSemesterByDescriptionAndYear(String description, int year) {
+    public Optional<Semester> getSemesterByDescriptionAndYear(final String description, final int year) {
         log.info("In getSemesterByDescriptionAndYear(String description = [{}], int year = [{}])", description, year);
         return sessionFactory.getCurrentSession().createQuery("select s from Semester s where s.description= :description and s.year= :year", Semester.class)
                 .setParameter("description", description).
@@ -194,12 +175,10 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     }
 
     /**
-     * The method used for getting unique days with lessons in the semester
-     * @param semesterId id of the semester
-     * @return a list of days
+     * {@inheritDoc}
      */
     @Override
-    public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
+    public List<DayOfWeek> getDaysWithLessonsBySemesterId(final Long semesterId) {
         log.info("In getDaysWithLessonsBySemesterId(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_DAYS_WITH_LESSONS, DayOfWeek.class)
                 .setParameter("semesterId", semesterId)
@@ -207,12 +186,10 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     }
 
     /**
-     * The method used for getting periods with lessons in the semester
-     * @param semesterId id of the semester
-     * @return a list of periods
+     * {@inheritDoc}
      */
     @Override
-    public List<Period> getPeriodsWithLessonsBySemesterId(Long semesterId) {
+    public List<Period> getPeriodsWithLessonsBySemesterId(final Long semesterId) {
         log.info("In getPeriodsWithLessonsBySemesterId(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_PERIODS_WITH_LESSONS, Period.class)
                 .setParameter("semesterId", semesterId)

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
@@ -37,6 +38,7 @@ import java.util.Objects;
 @PropertySource("classpath:mail.properties")
 @Slf4j
 public class MailServiceImpl implements MailService {
+
     @Value("${spring.mail.username}")
     private String username;
 
@@ -69,21 +71,18 @@ public class MailServiceImpl implements MailService {
     }
 
     /**
-     * Method for sending message from server to user
-     * @param emailTo to whom the message will be sent
-     * @param subject the subject of the message
-     * @param message message from the letter
+     * {@inheritDoc}
      */
     @Async
     @Override
-    public void send(String emailTo, String subject, String message) {
-        log.info("Enter into send method with emailTo {}, subject {}", emailTo, subject);
+    public void send(String receiver, String subject, String message) {
+        log.info("Enter into send method with receiver {}, subject {}", receiver, subject);
 
-        if(enabled){
+        if (enabled) {
             SimpleMailMessage mailMessage = new SimpleMailMessage();
 
             mailMessage.setFrom(credentialsUsername);
-            mailMessage.setTo(emailTo);
+            mailMessage.setTo(receiver);
             mailMessage.setSubject(subject);
             mailMessage.setText(message);
 
@@ -92,9 +91,7 @@ public class MailServiceImpl implements MailService {
     }
 
     /**
-     * Method for sending message from user to different emails
-     * @param sender from whom the message will be sent
-     * @param emailMessageDTO message that will be sent
+     * {@inheritDoc}
      */
     @Override
     public void send(String sender, EmailMessageDTO emailMessageDTO) {
@@ -109,7 +106,7 @@ public class MailServiceImpl implements MailService {
             messageHelper.setTo(emailMessageDTO.getReceivers().toArray(String[]::new));
 
             if (emailMessageDTO.getAttachments() != null) {
-                for (MultipartFile attachment: emailMessageDTO.getAttachments()) {
+                for (MultipartFile attachment : emailMessageDTO.getAttachments()) {
                     messageHelper.addAttachment(Objects.requireNonNull(attachment.getOriginalFilename()), attachment);
                 }
             }
@@ -120,6 +117,9 @@ public class MailServiceImpl implements MailService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void send(String fileName, String receiver, String subject, String message, ByteArrayOutputStream bos) throws MessagingException {
         log.info("Enter into send method with emailTo - {}, subject - {}", receiver, subject);
@@ -148,10 +148,12 @@ public class MailServiceImpl implements MailService {
         this.mailSender.send(mimeMessage);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Async
     @Override
-    public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException
-    {
+    public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException {
 
         // Prepare the evaluation context
         final Context ctx = new Context(Locale.UK);

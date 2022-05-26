@@ -32,11 +32,14 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 @Service
 public class StudentServiceImpl implements StudentService {
+
     private final StudentRepository studentRepository;
-    private final StudentMapper studentMapper;
+
     private final GroupService groupService;
     private final UserService userService;
+
     private final GroupMapper groupMapper;
+    private final StudentMapper studentMapper;
 
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository, StudentMapper studentMapper,
@@ -50,11 +53,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for getting Student by id
-     *
-     * @param id Identity Student id
-     * @return target Student
-     * @throws EntityNotFoundException if Student with id doesn't exist
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -65,9 +64,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * Method gets information about Students from Repository
-     *
-     * @return List of all Students
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -77,11 +74,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * Method creates new Student in Repository
+     * {@inheritDoc}
      *
-     * @param object Student entity with info to be created
-     * @return created Student entity
-     * @throws FieldAlreadyExistsException if Student with input email already exists
+     * @throws FieldAlreadyExistsException if student with input email already exists
      */
     @Transactional
     @Override
@@ -91,10 +86,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * Method save information for student in Repository and register user if email exists
-     *
-     * @param studentDTO StudentDTO instance
-     * @return saved Student entity
+     * {@inheritDoc}
      */
     @Transactional
     @Override
@@ -112,11 +104,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * Method updates information for an existing Student in Repository
+     * {@inheritDoc}
      *
-     * @param object Student entity with info to be updated
-     * @return updated Student entity
-     * @throws FieldAlreadyExistsException if Student with input email already exists
+     * @throws FieldAlreadyExistsException if student with input email already exists
      */
     @SneakyThrows
     @Transactional
@@ -126,6 +116,9 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.update(object);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Transactional
     @Override
     public Student update(StudentDTO studentDTO) {
@@ -149,12 +142,8 @@ public class StudentServiceImpl implements StudentService {
 
     }
 
-
     /**
-     * Method deletes an existing Student from Repository
-     *
-     * @param object Student entity to be deleted
-     * @return deleted Student entity
+     * {@inheritDoc}
      */
     @Transactional
     @Override
@@ -164,6 +153,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * This asynchronous method used for importing students from csv file.
      * Each line of the file should consist of four fields, separated by commas.
      * Each field may or may not be enclosed in double-quotes.
@@ -175,10 +166,8 @@ public class StudentServiceImpl implements StudentService {
      * "Bochum","Oleksandr","Ivanov","boichuk@ukr.net"
      * etc.
      * <p>
-     * The method is not transactional in order to prevent interruptions while saving a student
-     *
-     * @param file file with students data
-     * @return list of created students.
+     * The method is not transactional in order to prevent interruptions while saving a student.
+     * <p>
      * If the student in the returned list have a non-null value of the group title then he already existed.
      * If the student in the returned list have a null value of the group title then he saved as a new student.
      * If the student in the returned list have a null value of the group then he didn't pass a validation.
@@ -202,7 +191,7 @@ public class StudentServiceImpl implements StudentService {
 
     public StudentImportDTO saveStudentFromFile(Long groupId, StudentImportDTO student) {
         try {
-            if(student.getEmail() == null || student.getEmail().isEmpty()){
+            if (student.getEmail() == null || student.getEmail().isEmpty()) {
                 log.error("Empty or null email: {}", student.getEmail());
                 student.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
                 return student;
@@ -220,7 +209,7 @@ public class StudentServiceImpl implements StudentService {
             if (studentFromBase.isEmpty()) {
                 return assignUserToNewStudent(student, userOptional, newStudent, group);
             }
-                return checkForEmptyFieldsOfExistingStudent(student, userOptional, studentFromBase);
+            return checkForEmptyFieldsOfExistingStudent(student, userOptional, studentFromBase);
         } catch (ConstraintViolationException e) {
             student.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
             log.error("VALIDATION_ERROR while saving student with email {}", student.getEmail(), e);
@@ -233,11 +222,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for register provided user and save provided student
+     * Registers provided user and save provided student.
      *
-     * @param student    our student from file
+     * @param student    the student imported from file
      * @param newStudent our student which we will save to database
      * @param group      group which provided from server
+     * @return the saved student
      */
     private StudentImportDTO registerAndSaveNewStudent(StudentImportDTO student, Student newStudent, Group group) {
         log.debug("Enter to method if email and student DONT EXIST");
@@ -247,21 +237,23 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for assigning existing user to provided new student
+     * Assigns existing user to provided new student.
      *
-     * @param student      our student from file
-     * @param userOptional our user from database
-     * @param newStudent   our student which we will save to database
-     * @param group        group which provided from server
+     * @param student      the student from file
+     * @param userOptional the Optional describing the user provided from database
+     * @param newStudent   the student which we will save to database
+     * @param group        the group which provided from server
+     * @return the saved student
+     * @throws ImportRoleConflictException if user with current email has another role in the system
      */
     private StudentImportDTO assignUserToNewStudent(StudentImportDTO student, Optional<User> userOptional, Student newStudent, Group group) {
         log.debug("Enter to method if email EXIST and student DONT EXIST");
         if (userOptional.isPresent() && userOptional.get().getRole() == Role.ROLE_STUDENT) {
-            if(isEmailInUse(student.getEmail())){
+            if (isEmailInUse(student.getEmail())) {
                 log.error("Student with current email exist ",
                         new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
-               student.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
-               return student;
+                student.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
+                return student;
             }
             newStudent.setUser(userOptional.get());
             return saveStudentAndSetEmailGroupStatus(student, group, newStudent);
@@ -271,11 +263,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for register provided user and save provided student
+     * Checks for empty fields of existing student.
      *
      * @param student         our student from file
      * @param studentFromBase our student from dataBase
      * @param userOptional    our user from database
+     * @return the existed student
+     * @throws FieldAlreadyExistsException if student with current email exist
+     * @throws ImportRoleConflictException if user with current email has another role in the system
      */
     private StudentImportDTO checkForEmptyFieldsOfExistingStudent(StudentImportDTO student,
                                                                   Optional<User> userOptional,
@@ -296,28 +291,31 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used check if email Null or Empty
+     * Checks if email Null or Empty.
      *
-     * @param email our email from studentDTO
+     * @param email the string represents the email from studentDTO
+     * @return {@code true} if the given email is null or empty
      */
     private boolean isEmailNullOrEmpty(String email) {
         return email == null || email.isEmpty();
     }
 
     /**
-     * The method used check if students from DB has this email
+     * Checks if any student in the repository has the given email.
      *
-     * @param email our email from studentDTO
+     * @param email the string represents the email from studentDTO
+     * @return {@code true} if given email is used, otherwise {@code false}
      */
     private boolean isEmailInUse(String email) {
         return studentRepository.isEmailInUse(email);
     }
 
     /**
-     * The method for register new user with provided email and set user_id to provided student
+     * Registers new user with provided email and set user_id to provided student.
      *
-     * @param email   our email from studentDTO
-     * @param student is our provided student
+     * @param email   the string represents the email from studentDTO
+     * @param student the student
+     * @return the updated student
      */
     private Student registerStudent(Student student, String email) {
         log.info("Enter into registerStudent method with student {} and email:{}", student, email);
@@ -327,11 +325,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * The method used for save new student with registered/found user and set fields to studentDTO
+     * Saves new student with registered/found user and set fields to studentDTO.
      *
-     * @param student           is provided studentImportDTO from file
-     * @param group             is provided group from server
-     * @param registeredStudent is our student that we're going to save
+     * @param student           the provided studentImportDTO from file
+     * @param group             the provided group from server
+     * @param registeredStudent the student that to be saved
+     * @return the saved student
      */
     private StudentImportDTO saveStudentAndSetEmailGroupStatus(StudentImportDTO student,
                                                                Group group, Student registeredStudent) {
@@ -343,5 +342,4 @@ public class StudentServiceImpl implements StudentService {
         savedStudent.setImportSaveStatus(ImportSaveStatus.SAVED);
         return savedStudent;
     }
-
 }

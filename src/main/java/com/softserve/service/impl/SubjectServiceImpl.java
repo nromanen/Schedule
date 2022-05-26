@@ -21,27 +21,23 @@ public class SubjectServiceImpl implements SubjectService {
 
     private final SubjectRepository subjectRepository;
 
-
     @Autowired
     public SubjectServiceImpl(SubjectRepository subjectRepository) {
         this.subjectRepository = subjectRepository;
     }
 
     /**
-     * Method gets information from Repository for particular subject with id parameter
-     * @param id Identity number of the subject
-     * @return Subject entity
+     * {@inheritDoc}
      */
     @Override
     public Subject getById(Long id) {
-        log.info("In getById(id = [{}])",  id);
+        log.info("In getById(id = [{}])", id);
         return subjectRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException(Subject.class, "id", id.toString()));
     }
 
     /**
-     * Method gets information about all subjects from Repository
-     * @return List of all subject
+     * {@inheritDoc}
      */
     @Override
     public List<Subject> getAll() {
@@ -50,14 +46,14 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * Method saves new subject to Repository
-     * @param object Subject entity to be saved
-     * @return saved Subject entity
+     * {@inheritDoc}
+     *
+     * @throws FieldAlreadyExistsException  if subject with given name already exists.
      */
     @Override
     public Subject save(Subject object) {
         log.info("In save(entity = [{}]", object);
-        if(isSubjectExistsWithName(object.getName())){
+        if (isSubjectExistsWithName(object.getName())) {
             log.error("Subject with name {} already exists", object.getName());
             throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
         }
@@ -65,9 +61,10 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * Method updates information for an existing subject in Repository
-     * @param object Subject entity with updated fields
-     * @return updated Subject entity
+     * {@inheritDoc}
+     *
+     * @throws FieldAlreadyExistsException if subject with given name already exists.
+     * @throws EntityNotFoundException if given subject not found
      */
     @Override
     public Subject update(Subject object) {
@@ -78,39 +75,31 @@ public class SubjectServiceImpl implements SubjectService {
                 throw new FieldAlreadyExistsException(Subject.class, "name", object.getName());
             }
             return subjectRepository.update(object);
-        }
-        else {
+        } else {
             throw new EntityNotFoundException(Group.class, "id", object.getId().toString());
         }
     }
 
     /**
-     * Method deletes an existing subject from Repository
-     * @param object Subject entity to be deleted
-     * @return deleted Subject entity
+     * {@inheritDoc}
      */
     @Override
     public Subject delete(Subject object) {
-        log.info("In delete(object = [{}])",  object);
+        log.info("In delete(object = [{}])", object);
         return subjectRepository.delete(object);
     }
 
     /**
-     * Method finds if Subject with name already exists
-     * @param name subject name
-     * @return true if Subject with such name already exist
+     * {@inheritDoc}
      */
     @Override
     public boolean isSubjectExistsWithName(String name) {
-        log.info("In isSubjectExistsWithName(name = [{}])",  name);
+        log.info("In isSubjectExistsWithName(name = [{}])", name);
         return subjectRepository.countSubjectsWithName(name) != 0;
     }
 
     /**
-     * Method finds if Subject with name already exists
-     * @param id subject id
-     * @param name subject name
-     * @return true if Subject with such name already exist
+     * {@inheritDoc}
      */
     @Override
     public boolean isSubjectExistsWithNameAndIgnoreWithId(Long id, String name) {
@@ -119,19 +108,16 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * Method verifies if Subject with id param exist in repository
-     * @param id subject id
-     * @return true if Subject with id param exist
+     * {@inheritDoc}
      */
     @Override
     public boolean isExistsWithId(Long id) {
-        log.info("In isExistsWithId(id = [{}])",  id);
-        return subjectRepository.countBySubjectId(id)!=0;
+        log.info("In isExistsWithId(id = [{}])", id);
+        return subjectRepository.countBySubjectId(id) != 0;
     }
+
     /**
-     * The method used for getting all disabled subjects
-     *
-     * @return list of disabled subjects
+     * {@inheritDoc}
      */
     @Override
     public List<Subject> getDisabled() {
@@ -140,10 +126,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     /**
-     * The method used for getting subjects with their types from database
-     * @param semesterId Long semester from which subjects will be taken
-     * @param teacherId Long teacher who teaches subjects
-     * @return List of subjects with their types
+     * {@inheritDoc}
      */
     @Override
     public List<SubjectWithTypeDTO> getSubjectsWithTypes(Long semesterId, Long teacherId) {
