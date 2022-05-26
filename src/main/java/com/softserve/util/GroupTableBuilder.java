@@ -30,7 +30,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for creating group schedule table in pdf
+     * Method used for creating group schedule table in pdf.
      *
      * @param schedule the schedule of group
      * @param language the selected language
@@ -80,7 +80,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
 
     /**
      * Method used for getting all periods from schedule using TreeSet to avoid
-     * duplicating values, then sorting them by start time
+     * duplicating values, then sorting them by start time.
      *
      * @param schedule the schedule of group
      * @return sorted treeSet of periodDTO
@@ -100,7 +100,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for creating title cell for table
+     * Method used for creating title cell for table.
      *
      * @param tableWidth the width of table
      * @param schedule   the schedule of group
@@ -123,7 +123,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
 
     /**
      * Method used for creating  main table cells
-     * depending on whether they are odd or even
+     * depending on whether they are odd or even.
      *
      * @param day      the day of week and classes for group
      * @param period   the period for group
@@ -154,7 +154,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for creating upper (odd) cell of table
+     * Method used for creating upper (odd) cell of table.
      *
      * @param lessons  the lessons for group
      * @param language the selected language
@@ -173,7 +173,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for creating lower (even) cell of table
+     * Method used for creating lower (even) cell of table.
      *
      * @param lessons  the lessons for group
      * @param language the selected language
@@ -191,7 +191,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for generating schedule text in table's cell
+     * Method used for generating schedule text in table's cell.
      *
      * @param lessons  the lessons of schedule
      * @param language the selected language
@@ -211,7 +211,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for get subjectName, lesson type, teacher and room from lessons
+     * Method used for get subjectName, lesson type, teacher and room from lessons.
      *
      * @param lessons the lessons of schedule
      * @return text of subjectName, lesson type, teacher and room from lessons
@@ -230,7 +230,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for get link from lessons
+     * Method used for get link from lessons.
      *
      * @param lessons the lessons of schedule
      * @return text of link from lessons if link is not null, else null

@@ -306,7 +306,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     /**
-     * Returns all classes in the given day when group has schedule and fill classes by even/odd lessons
+     * Returns all classes in the given day when group has schedule and fill classes by even/odd lessons.
      *
      * @param semesterId the id of the semester
      * @param groupId    the id of the group

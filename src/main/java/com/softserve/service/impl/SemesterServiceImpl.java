@@ -155,7 +155,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Sets default semester in the repository to {@code false} while saving new default semester or updating default semester
+     * Sets default semester in the repository to {@code false} while saving new default semester or updating default semester.
      *
      * @param semester the semester to be saved or updated
      */

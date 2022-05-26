@@ -106,7 +106,7 @@
         </module>
         <module name="JavadocType"/> <!-- перевіряє, стиль Javadoc над типами -->
         <!--<module name="JavadocVariable"/>--> <!-- перевіряє, наявність Javadoc над змінними -->
-        <!--<module name="JavadocStyle"/>--> <!-- перевіряє, стиль Javadoc -->
+        <module name="JavadocStyle"/> <!-- перевіряє, стиль Javadoc -->
         <!--<module name="MissingJavadocMethod">
             <property name="tokens" value="METHOD_DEF"/>
         </module>--> <!-- перевіряє, наявність Javadoc над методами -->

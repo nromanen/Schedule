@@ -31,7 +31,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for creating group schedule table in pdf
+     * Method used for creating group schedule table in pdf.
      *
      * @param schedule the schedule of teacher
      * @param language the selected language
@@ -83,7 +83,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for getting ClassForTeacherScheduleDTO by period
+     * Method used for getting ClassForTeacherScheduleDTO by period.
      *
      * @param classes the classes to search
      * @param period  the period for class
@@ -104,7 +104,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
 
     /**
      * Method used for getting all periods from schedule using TreeSet to avoid
-     * duplicating values, then sorting them by start time
+     * duplicating values, then sorting them by start time.
      *
      * @param schedule the schedule of teacher
      * @return sorted treeSet of periodDTO
@@ -125,7 +125,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for creating title cell for table
+     * Method used for creating title cell for table.
      *
      * @param tableWidth the width of table
      * @param schedule   the schedule of teacher
@@ -147,7 +147,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
 
     /**
      * Method used for creating  main table cells
-     * depending on whether they are odd or even
+     * depending on whether they are odd or even.
      *
      * @param oddClasses  the upper (odd) cell of table
      * @param evenClasses the lover (even) cell of table
@@ -177,7 +177,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for creating upper (odd) cell of table
+     * Method used for creating upper (odd) cell of table.
      *
      * @param oddClasses the classes for teacher
      * @param language   the selected language
@@ -194,7 +194,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for creating lower (even) cell of table
+     * Method used for creating lower (even) cell of table.
      *
      * @param evenClasses the classes for teacher
      * @param language    the selected language
@@ -212,7 +212,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
 
 
     /**
-     * Method used for generating schedule text in table's cell
+     * Method used for generating schedule text in table's cell.
      *
      * @param lessons  the lessons of schedule
      * @param language the selected language
@@ -243,8 +243,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for get group's title, getSubject for site, Lesson type
-     * and room from lessons
+     * Method used for get group's title, getSubject for site, Lesson type and room from lessons.
      *
      * @param lessons the lessons of schedule
      * @return text of group's title, getSubject for site, Lesson type and room from lessons
@@ -279,7 +278,7 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     }
 
     /**
-     * Method used for get list of links from lessons
+     * Method used for get list of links from lessons.
      *
      * @param lessons the lessons of schedule
      * @return list of links from lessons

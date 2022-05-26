@@ -144,7 +144,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for join Teacher and User
+     * The method used for join Teacher and User.
      *
      * @param teacherId Long teacherId used to find Teacher by it
      * @param userId    Long userId used to find User by it

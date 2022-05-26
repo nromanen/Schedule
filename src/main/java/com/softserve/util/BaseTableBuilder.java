@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Base class for the several table builder types supported
+ * Base class for the several table builder types supported.
  */
 public abstract class BaseTableBuilder {
 
@@ -51,7 +51,7 @@ public abstract class BaseTableBuilder {
     }
 
     /**
-     * Method used for creating empty table
+     * Method used for creating empty table.
      *
      * @param tableWidth the width of table
      * @return empty PdfPTable
@@ -73,7 +73,7 @@ public abstract class BaseTableBuilder {
     }
 
     /**
-     * Method used for creating header cells for table
+     * Method used for creating header cells for table.
      *
      * @param days     the days of the week
      * @param language the selected language

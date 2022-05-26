@@ -103,7 +103,7 @@ public interface SemesterService extends BasicService<Semester, Long> {
     Semester deleteAllContentFromSemester(Semester semester);
 
     /**
-     * Deletes groups from the specified semester
+     * Deletes groups from the specified semester.
      *
      * @param semester the semester in which given groups will be deleted
      * @param groups   the groups to delete
