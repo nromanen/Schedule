@@ -14,10 +14,7 @@ import java.util.Optional;
 public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implements UserRepository {
 
     /**
-     * The method used for getting User by email from database
-     *
-     * @param email String email used to find User by it
-     * @return User
+     * {@inheritDoc}
      */
     @Override
     public Optional<User> findByEmail(String email) {
@@ -32,10 +29,7 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     }
 
     /**
-     * The method used for getting User by token from database
-     *
-     * @param token String token used to find User by it
-     * @return User
+     * {@inheritDoc}
      */
     @Override
     public Optional<User> findByToken(String token) {
@@ -50,9 +44,7 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     }
 
     /**
-     * The method used for getting list of users from database, that have role USER in system
-     *
-     * @return list of entities Teacher
+     * {@inheritDoc}
      */
     @Override
     public List<User> getAllUsersWithRoleUser() {
@@ -63,12 +55,8 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
                 .getResultList();
     }
 
-
     /**
-     * Modified update method, which merge entity before updating it
-     *
-     * @param entity user is going to be updated
-     * @return User
+     * {@inheritDoc}
      */
     @Override
     public User update(User entity) {
@@ -78,7 +66,12 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         return entity;
     }
 
-    // Checking if user is used in Teacher table
+    /**
+     * Checks if given user is used in Teacher table.
+     *
+     * @param user the user to be checked
+     * @return {@code true} if there's teacher related with given user, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(User user) {
         log.info("In checkReference(user = [{}])", user);

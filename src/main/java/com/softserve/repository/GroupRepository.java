@@ -6,23 +6,83 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GroupRepository extends BasicRepository<Group, Long> {
+
+    /**
+     * Retrieves a group with the given id.
+     *
+     * @param id the id of group
+     * @return an Optional describing the group with the given id or an empty Optional if none found
+     */
     Optional<Group> getWithStudentsById(Long id);
 
-    boolean isExistsByTitleIgnoringId(String string, Long id);
+    /**
+     * Returns {@code true} if group with the given title exists other than the group with the given id.
+     *
+     * @param title the string represents the title of the group
+     * @param id    the id of the group to be excluded from the search result
+     * @return {@code true} if group with given title exists, otherwise {@code false}
+     */
+    boolean isExistsByTitleIgnoringId(String title, Long id);
 
+    /**
+     * Returns {@code true} if group with the given title exists.
+     *
+     * @param title the string represents the title of the group
+     * @return {@code true} if group with given title exists, otherwise {@code false}
+     */
     boolean isExistsByTitle(String title);
 
+    /**
+     * Returns {@code true} if group with the given id exists.
+     *
+     * @param id the id of the group
+     * @return {@code true} if group with given id exists, otherwise {@code false}
+     */
     boolean isExistsById(Long id);
 
+    /**
+     * Returns all groups with the given teacher id for default semester.
+     *
+     * @param id the id of the teacher
+     * @return the list of groups
+     */
     List<Group> getByTeacherId(Long id);
 
+    /**
+     * Returns all groups with the given Ids.
+     *
+     * @param groupIds the list of the ids of the groups
+     * @return the list of groups
+     */
     List<Group> getGroupsByGroupIds(List<Long> groupIds);
 
+    /**
+     * Returns the list of groups sorted according to the established sort order.
+     *
+     * @return the list of groups sorted according to the established sort order
+     */
     List<Group> getAllBySortingOrder();
 
+    /**
+     * Returns max sorting order.
+     *
+     * @return an Optional describing the max sorting order or an empty Optional if none found
+     */
     Optional<Integer> getMaxSortingOrder();
 
+    /**
+     * Changes group's sorting order.
+     *
+     * @param lowerBound the lower bound of sorting order
+     * @param upperBound the upper bound of sorting order
+     */
     void changeGroupOrderOffset(Integer lowerBound, Integer upperBound);
 
+    /**
+     * Retrieves sorting order by group id.
+     *
+     * @param id the id of the group which sorting order needs to be retrieved
+     * @return an Optional describing the sorting order of the group
+     */
     Optional<Integer> getSortingOrderById(Long id);
 }

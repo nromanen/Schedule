@@ -19,6 +19,7 @@ import java.util.Set;
 @Slf4j
 @Service
 public class GroupServiceImpl implements GroupService {
+
     private final GroupRepository groupRepository;
     private final SemesterService semesterService;
 
@@ -29,11 +30,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method gets by id group from Repository
-     *
-     * @param id Identity number of the group
-     * @return Group entity
-     * @throws EntityNotFoundException if Group with id doesn't exist
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -44,11 +41,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method gets by id group with students from Repository
-     *
-     * @param id Identity number of the group
-     * @return Group entity
-     * @throws EntityNotFoundException if Group with id doesn't exist
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -58,11 +51,8 @@ public class GroupServiceImpl implements GroupService {
                 .orElseThrow(() -> new EntityNotFoundException(Group.class, "id", id.toString()));
     }
 
-
     /**
-     * Method gets information about all groups from Repository
-     *
-     * @return List of all groups
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -72,10 +62,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * The method used for getting groups by teacher id for default semester
-     *
-     * @param id Long id of a teacher
-     * @return List of groups
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -85,9 +72,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * The method is used to retrieve groups by set sorting order
-     *
-     * @return the list of groups sorted by set sorting order
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -99,11 +84,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * The method is used to save group after the specific group to get desired order
-     *
-     * @param group   the group that must be saved
-     * @param afterId the id of the group after which must be saved the new one
-     * @return saved group with set order and id
+     * {@inheritDoc}
      */
     @Transactional
     @Override
@@ -123,11 +104,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method updates group order position
-     *
-     * @param group   group that will be replaced
-     * @param afterId id of the group after which will be placed
-     * @return group with new position
+     * {@inheritDoc}
      */
     @Transactional
     @Override
@@ -149,6 +126,13 @@ public class GroupServiceImpl implements GroupService {
         return groupRepository.update(group);
     }
 
+    /**
+     * Retrieves sorting order by group id.
+     *
+     * @param id the id of the group
+     * @return the sorting order of the group
+     * @throws SortingOrderNotExistsException if sorting order not exists
+     */
     private Integer getSortingOrderById(Long id) {
         log.debug("Entered getSortingOrderById({})", id);
         return groupRepository.getSortingOrderById(id)
@@ -156,11 +140,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method saves new group to Repository
+     * {@inheritDoc}
      *
-     * @param group Group entity with info to be saved
-     * @return saved Group entity
-     * @throws FieldAlreadyExistsException if Group with input title already exists
+     * @throws FieldAlreadyExistsException if group with input title already exists
      */
     @Transactional
     @Override
@@ -171,10 +153,9 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method updates information for an existing group in  Repository
+     * {@inheritDoc}
      *
-     * @param group Group entity with info to be updated
-     * @return updated Group entity
+     * @throws FieldAlreadyExistsException if another group with input title already exists
      */
     @Transactional
     @Override
@@ -186,10 +167,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method deletes an existing group from Repository
-     *
-     * @param group Group entity to be deleted
-     * @return deleted Group entity
+     * {@inheritDoc}
      */
     @Transactional
     @Override
@@ -199,10 +177,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * Method verifies if Group with id param exist in repository
-     *
-     * @param id Long id of Group
-     * @return true if Group with id param exists, else - false
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -212,9 +187,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * The method used for getting all disabled groups
-     *
-     * @return list of disabled groups
+     * {@inheritDoc}
      */
     @Transactional(readOnly = true)
     @Override
@@ -224,9 +197,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * The method used for getting all groups for semester
-     *
-     * @return list of groups for semester
+     * {@inheritDoc}
      */
     @Override
     public Set<Group> getGroupsBySemesterId(Long semesterId) {
@@ -235,9 +206,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * The method used for getting all groups for current semester
-     *
-     * @return list of groups for current semester
+     * {@inheritDoc}
      */
     @Override
     public Set<Group> getGroupsForCurrentSemester() {
@@ -246,9 +215,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * The method used for getting all groups for default semester
-     *
-     * @return list of groups for default semester
+     * {@inheritDoc}
      */
     @Override
     public Set<Group> getGroupsForDefaultSemester() {
@@ -257,9 +224,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * The method used for getting all groups by group Ids
-     *
-     * @return list of groups by Ids
+     * {@inheritDoc}
      */
     @Override
     @Transactional

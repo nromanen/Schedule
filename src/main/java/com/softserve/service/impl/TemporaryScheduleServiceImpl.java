@@ -46,10 +46,10 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     private final TeacherService teacherService;
     private final ScheduleService scheduleService;
     private final UserService userService;
+
     private final DeleteVacationNotify deleteVacationNotify;
     private final DeleteTeacherVacationNotify deleteTeacherVacationNotify;
     private final DeletePeriodVacationNotify deletePeriodVacationNotify;
-
 
     @Autowired
     public TemporaryScheduleServiceImpl(TemporaryScheduleRepository temporaryScheduleRepository, SemesterService semesterService,
@@ -73,11 +73,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting room by id
-     *
-     * @param id Identity number of temporary schedule
-     * @return target temporary schedule
-     * @throws EntityNotFoundException if temporary schedule doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public TemporarySchedule getById(Long id) {
@@ -94,11 +90,8 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
 
     }
 
-
     /**
-     * The method used for getting all temporary schedules
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> getAll() {
@@ -107,9 +100,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting all temporary schedules
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
@@ -118,9 +109,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting all temporary schedules
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> getTemporaryScheduleByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
@@ -132,11 +121,8 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporarySchedules;
     }
 
-
     /**
-     * The method used for getting all temporary schedules
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> getAllBySemesterAndRange(Long semesterId, LocalDate fromDate, LocalDate toDate) {
@@ -145,9 +131,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting all temporary schedules
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> getAllByCurrentSemester() {
@@ -160,9 +144,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting all temporary schedules by semesterId
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> getAllBySemesterId(Long semesterId) {
@@ -175,9 +157,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting all temporary schedules
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> getAllByRange(LocalDate fromDate, LocalDate toDate) {
@@ -190,9 +170,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for getting all temporary schedules
-     *
-     * @return list of  temporary schedules
+     * {@inheritDoc}
      */
     @Override
     public List<TemporarySchedule> vacationByDateRange(LocalDate fromDate, LocalDate toDate) {
@@ -203,9 +181,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * Method deleteTemporarySchedulesBySemesterId delete all temporarySchedule from db in with current semesterId
-     *
-     * @param semesterId id Semester for delete schedule
+     * {@inheritDoc}
      */
     @Override
     public void deleteTemporarySchedulesBySemesterId(Long semesterId) {
@@ -213,6 +189,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         temporaryScheduleRepository.deleteTemporarySchedulesBySemesterId(semesterId);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> getTemporaryScheduleForEvenOddWeeks(Long semesterId) {
         log.info("In getTemporaryScheduleForEvenOddWeeks with semesterId = {}", semesterId);
@@ -253,10 +232,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for saving temporary schedule in database
-     *
-     * @param object temporary schedule
-     * @return save temporary schedule
+     * {@inheritDoc}
      */
     @Override
     public List<String> addRange(LocalDate from, LocalDate to, TemporarySchedule object) {
@@ -280,10 +256,11 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for saving temporary schedule in database
+     * Saves the given temporary schedule in the repository.
      *
-     * @param object temporary schedule
-     * @return save temporary schedule
+     * @param object the temporary schedule
+     * @return the saved temporary schedule
+     * @throws EntityAlreadyExistsException
      */
     @Override
     public TemporarySchedule save(TemporarySchedule object) {
@@ -318,10 +295,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for updating existed room in database
-     *
-     * @param object temporary schedule
-     * @return temporary schedule before update
+     * {@inheritDoc}
      */
     @Override
     public TemporarySchedule update(TemporarySchedule object) {
@@ -434,10 +408,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     }
 
     /**
-     * The method used for deleting existed temporary schedule in database
-     *
-     * @param object temporary schedule
-     * @return deleted temporary schedule
+     * {@inheritDoc}
      */
     @Override
     public TemporarySchedule delete(TemporarySchedule object) {
@@ -496,6 +467,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return temporaryScheduleRepository.isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(object, vacation) != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Teacher getTeacherByScheduleId(Long scheduleId) {
         if (scheduleId != null) {
             return scheduleService.getById(scheduleId).getLesson().getTeacher();
@@ -503,7 +477,9 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
         return null;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     public String getTeacherEmailFromTemporarySchedule(Teacher teacher) {
         if (teacher != null) {
             Long toTeacherId = teacherService.getById(teacher.getId()).getUserId();

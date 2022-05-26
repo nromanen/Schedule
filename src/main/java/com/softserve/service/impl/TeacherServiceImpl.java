@@ -38,8 +38,8 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
     private final UserService userService;
     private final MailService mailService;
-    private final TeacherMapper teacherMapper;
     private final DepartmentService departmentService;
+    private final TeacherMapper teacherMapper;
 
     @Autowired
     public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService,
@@ -52,11 +52,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for getting teacher by id
-     *
-     * @param id Identity teacher id
-     * @return target teacher
-     * @throws EntityNotFoundException if teacher doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public Teacher getById(Long id) {
@@ -66,9 +62,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * Method gets information about teachers from Repository
-     *
-     * @return List of all teachers
+     * {@inheritDoc}
      */
     @Override
     public List<Teacher> getAll() {
@@ -77,10 +71,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * Method save information for teacher in Repository
-     *
-     * @param teacher Teacher entity
-     * @return saved Teacher entity
+     * {@inheritDoc}
      */
     @Override
     public Teacher save(Teacher teacher) {
@@ -89,10 +80,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * Method save information for teacher in Repository and register user if email exists
-     *
-     * @param teacherDTO TeacherDTO instance
-     * @return saved Teacher entity
+     * {@inheritDoc}
      */
     @Override
     public Teacher save(TeacherDTO teacherDTO) {
@@ -105,10 +93,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * Method updates information for an existing teacher in Repository and register user if email was added
-     *
-     * @param teacherForUpdateDTO TeacherForUpdateDTO instance with info to be updated
-     * @return updated Teacher entity
+     * {@inheritDoc}
      */
     @Override
     public Teacher update(TeacherForUpdateDTO teacherForUpdateDTO) {
@@ -127,10 +112,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * Method updates information for an existing teacher in Repository
-     *
-     * @param teacher Teacher entity with info to be updated
-     * @return updated Teacher entity
+     * {@inheritDoc}
      */
     @Override
     public Teacher update(Teacher teacher) {
@@ -139,10 +121,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * Method deletes an existing teacher from Repository
-     *
-     * @param teacher Teacher entity to be deleted
-     * @return deleted Teacher entity
+     * {@inheritDoc}
      */
     @Override
     public Teacher delete(Teacher teacher) {
@@ -156,9 +135,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for getting all disabled teachers
-     *
-     * @return list of disabled teachers
+     * {@inheritDoc}
      */
     @Override
     public List<Teacher> getDisabled() {
@@ -197,14 +174,8 @@ public class TeacherServiceImpl implements TeacherService {
         return update(getTeacher);
     }
 
-
     /**
-     * The method used for getting teacher by userId
-     *
-     * @param userId Identity user id
-     * @return Teacher entity
-     * @throws EntityNotFoundException if teacher doesn't exist
-     * @throws FieldNullException      if userId is null
+     * {@inheritDoc}
      */
     @Override
     public Teacher findByUserId(Long userId) {
@@ -217,9 +188,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for getting list of teachers from database, that don't registered in system
-     *
-     * @return list of entities User
+     * {@inheritDoc}
      */
     @Override
     public List<Teacher> getAllTeacherWithoutUser() {
@@ -246,6 +215,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
+     * {@inheritDoc}
      * Each line of the file should consist of five fields, separated by commas without spaceBar.
      * First line of the file is a header.
      * All subsequent lines contain data about teachers.
@@ -254,10 +224,6 @@ public class TeacherServiceImpl implements TeacherService {
      * Test1,Test1,Test1,test1,test1@gmail.com
      * Test2,Test2,Test2,test2,test2@gmail.com
      * etc.
-     * <p>
-     *
-     * @param file file with teachers data
-     * @return list of created teachers.
      */
     @Override
     public List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId) {
@@ -295,12 +261,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for assigning existing user to provided new teacher
+     * Assigns existing user to provided new teacher.
      *
-     * @param teacher      our teacher from file
-     * @param userOptional our user from database
-     * @param newTeacher   our teacher which we will save to database
+     * @param teacher      the teacher from file
+     * @param userOptional the user from database
+     * @param newTeacher   the teacher which we will save to the repository
      * @param department   department which provided from server
+     * @return the saved teacher or {code null} if given optional does not contain user
      */
     private TeacherImportDTO assignUserToNewTeacher(TeacherImportDTO teacher, Optional<User> userOptional,
                                                     Teacher newTeacher, Department department) {
@@ -319,11 +286,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for register provided user and update existed teacher
+     * Registers provided user and update existed teacher.
      *
-     * @param teacher         our teacher from file
-     * @param teacherFromBase our teacher from dataBase
+     * @param teacher         the teacher from file
+     * @param teacherFromBase the teacher from dataBase
      * @param department      department which provided from server
+     * @return the saved teacher or {@code null} if given optional does not contain teacher
      */
     private TeacherImportDTO registerUserAndUpdateTeacher(TeacherImportDTO teacher, Optional<Teacher> teacherFromBase, Department department) {
         log.debug("Enter to method if email DONT EXIST and teacher EXIST");
@@ -347,10 +315,10 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for register provided user and save provided teacher
+     * Registers provided user and save provided teacher.
      *
-     * @param teacher    our teacher from file
-     * @param newTeacher our teacher which we will save to database
+     * @param teacher    the teacher from file
+     * @param newTeacher the teacher which we will save to database
      * @param department department which provided from server
      */
     private TeacherImportDTO registerAndSaveNewTeacher(TeacherImportDTO teacher, Teacher newTeacher, Department department) {
@@ -366,12 +334,13 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * The method used for register provided user and save provided teacher
+     * Registers provided user and save provided teacher.
      *
-     * @param teacher         our teacher from file
-     * @param teacherFromBase our teacher from dataBase
-     * @param userOptional    our user from database
-     * @param department      department which provided from server
+     * @param teacher         the teacher from file
+     * @param teacherFromBase the teacher from dataBase
+     * @param userOptional    the user from database
+     * @param department      the department which provided from server
+     * @return the existed teacher of {@code null} if given optional does not contain user
      */
     private TeacherImportDTO checkForEmptyFieldsOfExistingTeacher(TeacherImportDTO teacher, Optional<User> userOptional,
                                                                   Optional<Teacher> teacherFromBase, Department department) {

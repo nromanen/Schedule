@@ -96,9 +96,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
             "where les.semester.id = :semesterId)";
 
     /**
-     * Method gets information about all lessons from DB
-     *
-     * @return List of all lessons
+     * {@inheritDoc}
      */
     @Override
     public List<Lesson> getAll() {
@@ -115,12 +113,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return tq.getResultList();
     }
 
-
     /**
-     * Method gets information about all lessons for particular group from DB
-     *
-     * @param groupId Identity number of the group for which need to find all lessons
-     * @return List of filtered lessons
+     * {@inheritDoc}
      */
     @Override
     public List<Lesson> getAllForGroup(Long groupId, Long semesterId) {
@@ -140,12 +134,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return tq.getResultList();
     }
 
-
     /**
-     * Method gets information  all lessons for teacher from DB
-     *
-     * @param teacherId Identity number of the teacher for which need to find all lessons
-     * @return List of filtered lessons
+     * {@inheritDoc}
      */
     @Override
     public List<Lesson> getLessonByTeacher(Long teacherId, Long semesterId) {
@@ -165,12 +155,8 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return tq.getResultList();
     }
 
-
     /**
-     * Method searches duplicate of lesson in the DB
-     *
-     * @param lesson Lesson entity that needs to be verified
-     * @return count of duplicates if such exist, else return 0
+     * {@inheritDoc}
      */
     @Override
     public Long countLessonDuplicates(Lesson lesson) {
@@ -193,10 +179,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     /**
-     * Method searches duplicate of lesson in the DB
-     *
-     * @param lesson Lesson entity that needs to be verified
-     * @return count of duplicates if such exist, else return 0
+     * {@inheritDoc}
      */
     @Override
     public Long countLessonDuplicatesWithIgnoreId(Lesson lesson) {
@@ -224,10 +207,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     /**
-     * The method used for getting list of lessons from database by semesterId
-     *
-     * @param semesterId Semester id for getting all lessons by this id from db
-     * @return list of entities Lesson
+     * {@inheritDoc}
      */
     @Override
     public List<Lesson> getLessonsBySemester(Long semesterId) {
@@ -239,7 +219,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     @Override
-    public void deleteLessonBySemesterId(Long semesterId) {
+    public void deleteLessonsBySemesterId(Long semesterId) {
         log.info("In deleteLessonBySemesterId(semesterId = [{}])", semesterId);
         sessionFactory.getCurrentSession()
                 .createQuery(DELETE_BY_SEMESTER_ID)
@@ -247,10 +227,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     /**
-     * The method used for getting all lessons from database by subjectForSite, teacherForSite and semesterId
-     *
-     * @param lesson Lesson object for getting lessons from db by this param
-     * @return List of Lessons
+     * {@inheritDoc}
      */
     @Override
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
@@ -266,10 +243,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     /**
-     * The method used for getting all lessons from database which are grouped by lesson
-     *
-     * @param lesson Lesson object for getting lessons
-     * @return List of Lessons
+     * {@inheritDoc}
      */
     @Override
     public List<Lesson> getGroupedLessonsByLesson(Lesson lesson) {
@@ -285,7 +259,12 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getResultList();
     }
 
-    // Checking if lesson is used in Schedule table
+    /**
+     * Checks if lesson is used in Schedule table.
+     *
+     * @param lesson the lesson entity to be checked
+     * @return {@code true} if lesson is used in Schedule table, otherwise {@code false}
+     */
     @Override
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
@@ -296,12 +275,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     /**
-     * The method used for updating links to meeting for lessons.
-     * By default, link to meeting is updated by semester id and teacher id
-     * But update can be more specific by providing additional subject id and/or lesson type in a lesson object
-     *
-     * @param lesson Lesson object with new link to meeting
-     * @return Integer the number of links that was updated
+     * {@inheritDoc}
      */
     @Override
     public Integer updateLinkToMeeting(Lesson lesson) {
@@ -331,10 +305,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     /**
-     * Method is used to update grouped lessons
-     *
-     * @param updatedLesson grouped lesson that needs to be updated
-     * @return updated Lesson
+     * {@inheritDoc}
      */
     @Override
     public Lesson updateGrouped(Lesson oldLesson, Lesson updatedLesson, boolean isTeacherOrSubjectUpdated) {
@@ -363,10 +334,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     }
 
     /**
-     * The method is used to delete all lessons grouped
-     *
-     * @param lesson grouped lesson which must be deleted
-     * @return deleted lesson
+     * {@inheritDoc}
      */
     @Override
     public Lesson deleteGrouped(Lesson lesson) {
@@ -384,6 +352,9 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return lesson;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int setGrouped(Long lessonId) {
         log.info("Entered setGrouped({})", lessonId);

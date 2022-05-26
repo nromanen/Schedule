@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Long> implements DepartmentRepository {
+
     private static final String HQL_IS_EXISTS_BY_NAME
             = "SELECT (count(*) > 0) "
             + "FROM Department d "
@@ -37,9 +38,9 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method returns information about all departments from DB
+     * Returns the list of all departments with ascending sorting by name from the database.
      *
-     * @return List of all departments with ASC sorting by name
+     * @return the list of departments with ascending sorting by name
      */
     @Override
     public List<Department> getAll() {
@@ -50,10 +51,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method used for updating Department
-     *
-     * @param entity entity is going to be updated
-     * @return entity that was updated
+     * {@inheritDoc}
      */
     @Override
     public Department update(Department entity) {
@@ -62,10 +60,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method used for finding out if name exists
-     *
-     * @param name String name used to find Department
-     * @return boolean : if exists - true, else - false
+     * {@inheritDoc}
      */
     @Override
     public boolean isExistsByName(String name) {
@@ -80,11 +75,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method used for finding out if name exists ignoring id
-     *
-     * @param name String name used to find Department
-     * @param id   Long id
-     * @return boolean : if exists - true, else - false
+     * {@inheritDoc}
      */
     @Override
     public boolean isExistsByNameIgnoringId(String name, Long id) {
@@ -100,10 +91,7 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * The method used for getting all teachers from the Department
-     *
-     * @param departmentId id of the department
-     * @return list of teachers
+     * {@inheritDoc}
      */
     @Override
     public List<Teacher> getAllTeachers(Long departmentId) {
@@ -114,6 +102,9 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
                 .getResultList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean checkReference(Department department) {
         return sessionFactory.getCurrentSession()

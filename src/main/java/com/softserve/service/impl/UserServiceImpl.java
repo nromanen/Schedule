@@ -33,8 +33,10 @@ import static org.apache.commons.lang3.StringUtils.*;
 @Service
 @PropertySource({"classpath:cors.properties"})
 public class UserServiceImpl implements UserService {
+
     public static final String PASSWORD_FOR_SOCIAL_USER = "A&vbSdvSeук4му%ца349ІВмк432ем0!Qfdruevvb";
     private static final char[] NUMBERS = ("0123456789").toCharArray();
+
     private static final char[] SPECIAL_CHARACTERS = ("!@#$%^&*").toCharArray();
     private static final String EMAIL_MATCHES = "([a-z0-9][-a-z0-9_\\+\\.]*[a-z0-9])@([a-z0-9][-a-z0-9\\.]*[a-z0-9]\\." +
             "(arpa|root|aero|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq" +
@@ -44,7 +46,6 @@ public class UserServiceImpl implements UserService {
             "|mo|mp|mq|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|om|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ro|ru|rw" +
             "|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz" +
             "|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|([0-9]{1,3}\\.{3}[0-9]{1,3}))";
-
     private static final String REGISTRATION_MESSAGE = "Hello, {0}.\n" +
             "You received this email because you requested to registration on our site.\n" +
             "For successful profile activation, you have to follow the next link: ";
@@ -65,11 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for getting user by id
-     *
-     * @param id Identity user id
-     * @return User entity
-     * @throws EntityNotFoundException if user doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public User getById(Long id) {
@@ -80,9 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Method gets information about all users from Repository
-     *
-     * @return List of all users
+     * {@inheritDoc}
      */
     @Override
     public List<User> getAll() {
@@ -91,11 +86,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for saving user in database
+     * {@inheritDoc}
      *
-     * @param object new user
-     * @return User entity
-     * @throws FieldAlreadyExistsException when some of provided fields already exist in database
+     * @throws FieldAlreadyExistsException if some of provided fields already exist in the repository
      */
     @Override
     public User save(User object) {
@@ -108,11 +101,9 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for updating user in database
+     * {@inheritDoc}
      *
-     * @param object updated user
-     * @return User entity
-     * @throws FieldAlreadyExistsException when some of provided fields already exist in database
+     * @throws FieldAlreadyExistsException if some of provided fields already exist in the repository
      */
     @Override
     public User update(User object) {
@@ -126,10 +117,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Method deletes an existing user from repository
-     *
-     * @param object user entity to be deleted
-     * @return deleted user
+     * {@inheritDoc}
      */
     @Override
     public User delete(User object) {
@@ -138,10 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for getting User by email from database
-     *
-     * @param email String email used to find User by it
-     * @return User entity
+     * {@inheritDoc}
      */
     @Override
     public User findByEmail(String email) {
@@ -152,10 +137,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for getting User by token from database
-     *
-     * @param token String token used to find User by it
-     * @return User entity
+     * {@inheritDoc}
      */
     @Override
     public User findByToken(String token) {
@@ -166,11 +148,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for registration User
-     *
-     * @param user Entity User used for registration User in system
-     * @return User entity
-     * @throws IncorrectPasswordException when password is incorrect or not strong enough
+     * {@inheritDoc}
      */
     @Override
     public User registration(User user) {
@@ -179,12 +157,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for automatic registration User
-     *
-     * @param email email used for registration User in system
-     * @param role  role used for registration User in system
-     * @return User entity
-     * @throws IncorrectPasswordException when password is incorrect or not strong enough
+     * {@inheritDoc}
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
@@ -198,9 +171,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for reset User password
-     *
-     * @param email used for getting user by email
+     * {@inheritDoc}
      */
     @Override
     public void resetPassword(String email) {
@@ -224,10 +195,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for create User after sign in with Oauth2 Social
-     *
-     * @param oAuth2User OAuth2User - credentials for save User in db
-     * @return User entity
+     * {@inheritDoc}
      */
     @Override
     public User createSocialUser(OAuth2User oAuth2User) {
@@ -237,10 +205,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for getting Optional<User> by email from database
-     *
-     * @param email String email used to find User by it
-     * @return Optional<User> entity
+     * {@inheritDoc}
      */
     @Override
     public Optional<User> findSocialUser(String email) {
@@ -249,9 +214,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for getting list of users from database, that have role USER in system
-     *
-     * @return list of entities User
+     * {@inheritDoc}
      */
     @Override
     public List<User> getAllUsersWithRoleUser() {
@@ -260,12 +223,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * The method used for change password for current user
-     *
-     * @param user        User entity
-     * @param oldPassword String password, that use user for sign in up to now
-     * @param newPassword String password, that will use user for sign in in future
-     * @return Optional<User> entity
+     * {@inheritDoc}
      */
     @Override
     public String changePasswordForCurrentUser(User user, String oldPassword, String newPassword) {

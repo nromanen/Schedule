@@ -77,10 +77,9 @@ jacocoTestCoverageVerification {
 check.dependsOn jacocoTestCoverageVerification
 
 checkstyle {
-    toolVersion = 9.0
+    toolVersion = 10.0
     showViolations = true
     ignoreFailures = true
-    config = rootProject.resources.text.fromFile('config/checkstyle/checkstyle.xml');
 }
 
 tasks.withType(Checkstyle) {

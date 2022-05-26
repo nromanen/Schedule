@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
+
     public static final String GET_NEXT_POSITION
             = "SELECT min(g.sortingOrder) "
             + "FROM Group g "
@@ -72,9 +73,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * Method gets information about all groups from DB
+     * Returns all groups from database with ascending sorting by title.
      *
-     * @return List of all groups with ASC sorting by title
+     * @return the list of all groups
      */
     @Override
     public List<Group> getAll() {
@@ -85,10 +86,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method used for getting groups by teacher id for default semester
-     *
-     * @param id Long id of a teacher
-     * @return List of groups
+     * {@inheritDoc}
      */
     @Override
     public List<Group> getByTeacherId(Long id) {
@@ -100,9 +98,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method is used to retrieve groups by set sorting order
-     *
-     * @return the list of groups sorted by set sorting order
+     * {@inheritDoc}
      */
     @Override
     public List<Group> getAllBySortingOrder() {
@@ -113,9 +109,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method is used to retrieve max sorting order
-     *
-     * @return max sorting order
+     * {@inheritDoc}
      */
     @Override
     public Optional<Integer> getMaxSortingOrder() {
@@ -125,10 +119,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method is used to change group's sorting order
-     *
-     * @param lowerBound the lower bound of sorting order
-     * @param upperBound the upper bound of sorting order
+     * {@inheritDoc}
      */
     @Override
     public void changeGroupOrderOffset(Integer lowerBound, Integer upperBound) {
@@ -141,10 +132,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method is used to retrieve sorting order by group's id
-     *
-     * @param id group's id which sorting order needs to be retrieved
-     * @return sorting order of the group
+     * {@inheritDoc}
      */
     @Override
     public Optional<Integer> getSortingOrderById(Long id) {
@@ -156,10 +144,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
 
 
     /**
-     * The method used for getting by id entity with students
-     *
-     * @param id Long id of entity
-     * @return found entity
+     * {@inheritDoc}
      */
     @Override
     public Optional<Group> getWithStudentsById(Long id) {
@@ -170,12 +155,8 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .uniqueResultOptional();
     }
 
-
     /**
-     * The method used for finding out if group with such title exists
-     *
-     * @param title String title used to find Group
-     * @return true if exists, else - false
+     * {@inheritDoc}
      */
     @Override
     public boolean isExistsByTitle(String title) {
@@ -190,11 +171,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method used for finding out if group with such title exists ignoring id
-     *
-     * @param title String title used to find Group
-     * @param id    Long id, which is ignored during the search
-     * @return true if exists, else - false
+     * {@inheritDoc}
      */
     @Override
     public boolean isExistsByTitleIgnoringId(String title, Long id) {
@@ -210,10 +187,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * Method used to verify if group with such id exists
-     *
-     * @param id long id of the Group
-     * @return true if there is no group with such id, false if record with id exists
+     * {@inheritDoc}
      */
     @Override
     public boolean isExistsById(Long id) {
@@ -225,10 +199,10 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method used for checking if group is used in Lesson table
+     * Checks if group is used in lesson table.
      *
-     * @param group Group entity is going to be checked
-     * @return true if exists lesson related with this group
+     * @param group the group entity to be checked
+     * @return {@code true} if exists lesson related with given group
      */
     @Override
     protected boolean checkReference(Group group) {
@@ -240,10 +214,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     /**
-     * The method used for getting all groups by group Ids
-     *
-     * @param groupIds ids of the groups that need to be retrieved
-     * @return list of the groups
+     * {@inheritDoc}
      */
     @Override
     public List<Group> getGroupsByGroupIds(List<Long> groupIds) {
