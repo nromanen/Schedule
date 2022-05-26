@@ -320,6 +320,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @param teacher    the teacher from file
      * @param newTeacher the teacher which we will save to database
      * @param department department which provided from server
+     * @return saved teacher
      */
     private TeacherImportDTO registerAndSaveNewTeacher(TeacherImportDTO teacher, Teacher newTeacher, Department department) {
         log.debug("Enter to method if email and teacher DONT EXIST");

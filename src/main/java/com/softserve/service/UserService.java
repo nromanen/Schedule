@@ -2,8 +2,6 @@ package com.softserve.service;
 
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.IncorrectPasswordException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
@@ -16,7 +14,7 @@ public interface UserService extends BasicService<User, Long> {
      *
      * @param email the string represents user's email
      * @return the found user
-     * @throws EntityNotFoundException if user with given email is not found
+     * @throws com.softserve.exception.EntityNotFoundException if user with given email is not found
      */
     User findByEmail(String email);
 
@@ -25,7 +23,7 @@ public interface UserService extends BasicService<User, Long> {
      *
      * @param token the string represents the user's token
      * @return the founded user
-     * @throws EntityNotFoundException if user with given token is not found
+     * @throws com.softserve.exception.EntityNotFoundException if user with given token is not found
      */
     User findByToken(String token);
 
@@ -34,7 +32,7 @@ public interface UserService extends BasicService<User, Long> {
      *
      * @param user the user used for registration in the system
      * @return User entity
-     * @throws IncorrectPasswordException when password is incorrect or not strong enough
+     * @throws com.softserve.exception.IncorrectPasswordException when password is incorrect or not strong enough
      */
     User registration(User user);
 
@@ -75,7 +73,7 @@ public interface UserService extends BasicService<User, Long> {
      * @param oldPassword the string represents previous raw password
      * @param newPassword the string represents new raw password
      * @return the string represents new encoded password
-     * @throws IncorrectPasswordException if previous password was incorrect or new one not strong enough
+     * @throws com.softserve.exception.IncorrectPasswordException if previous password was incorrect or new one not strong enough
      */
     String changePasswordForCurrentUser(User user, String oldPassword, String newPassword);
 
@@ -85,7 +83,7 @@ public interface UserService extends BasicService<User, Long> {
      * @param email the string represents email for user registration
      * @param role  the role of the new user
      * @return the new registered user
-     * @throws IncorrectPasswordException if password was incorrect or not strong enough
+     * @throws com.softserve.exception.IncorrectPasswordException if password was incorrect or not strong enough
      */
     User automaticRegistration(String email, Role role);
 

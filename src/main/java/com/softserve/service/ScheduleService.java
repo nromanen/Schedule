@@ -9,9 +9,6 @@ import com.softserve.entity.Room;
 import com.softserve.entity.Schedule;
 import com.softserve.entity.TemporarySchedule;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.exception.EntityAlreadyExistsException;
-import com.softserve.exception.MessageNotSendException;
-import com.softserve.exception.ScheduleConflictException;
 
 import javax.mail.MessagingException;
 import java.time.DayOfWeek;
@@ -42,8 +39,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      * Checks if lessons with this group title already exists and if schedule item for group already exists.
      *
      * @param schedule the schedule
-     * @throws EntityAlreadyExistsException if lessons with this group title already exists
-     * @throws ScheduleConflictException    if schedule for group already exists
+     * @throws com.softserve.exception.EntityAlreadyExistsException if lessons with this group title already exists
+     * @throws com.softserve.exception.ScheduleConflictException    if schedule for group already exists
      */
     void checkReferences(Schedule schedule);
 
@@ -56,7 +53,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      * @param classId    the id of the class
      * @param lessonId   the id of the lesson
      * @return the necessary info to finish saving schedule
-     * @throws ScheduleConflictException if schedule for group already exists
+     * @throws com.softserve.exception.ScheduleConflictException if schedule for group already exists
      */
     CreateScheduleInfoDTO getInfoForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long lessonId);
 
@@ -123,7 +120,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      * @param teacherId the id of the teacher
      * @return the list of schedules and temporary schedules
      */
-    Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate, LocalDate toDate, Long teacherId);
+    Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate,
+                                                                                                         LocalDate toDate, Long teacherId);
 
     /**
      * Deletes all schedules from the repository in with given semester id.
@@ -173,7 +171,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      * @param semesterId the id of the semester
      * @param teachersId the array of ids of teachers to whom the schedule will be sent
      * @param language   the locale of the message
-     * @throws MessageNotSendException if message with the schedule not send
+     * @throws com.softserve.exception.MessageNotSendException if message with the schedule not send
      */
     void sendScheduleToTeachers(Long semesterId, Long[] teachersId, Locale language);
 

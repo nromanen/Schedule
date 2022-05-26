@@ -53,6 +53,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * time in period / password, entered during registration by User, are incorrect;
      * schedule / period have conflicts with already existed entities;
      * object already exists in another class.
+     *
+     * @param ex    exception
+     * @return ApiError with exception data
      */
     @ExceptionHandler({IncorrectTimeException.class, IncorrectPasswordException.class,
             ScheduleConflictException.class, PeriodConflictException.class, EntityAlreadyExistsException.class,

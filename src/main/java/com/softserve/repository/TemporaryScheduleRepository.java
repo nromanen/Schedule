@@ -31,7 +31,8 @@ public interface TemporaryScheduleRepository extends BasicRepository<TemporarySc
     Long isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation);
 
     /**
-     * Counts the number of temporary schedule records in the database for given date, teacher and vacation in the given semester ignoring the specified id.
+     * Counts the number of temporary schedule records in the database for given date,
+     * teacher and vacation in the given semester ignoring the specified id.
      *
      * @param id         the id of temporary schedule that will be ignored
      * @param date       the required date
@@ -52,7 +53,8 @@ public interface TemporaryScheduleRepository extends BasicRepository<TemporarySc
     Long isExistTemporarySchedule(TemporarySchedule object, boolean vacation);
 
     /**
-     * Counts the number of temporary schedule records in the database that corresponds to the specified date, schedule id, semester id and given vacation.
+     * Counts the number of temporary schedule records in the database that corresponds
+     * to the specified date, schedule id, semester id and given vacation.
      *
      * @param object   the temporary schedule
      * @param vacation the boolean value represents vacation
@@ -61,7 +63,8 @@ public interface TemporaryScheduleRepository extends BasicRepository<TemporarySc
     Long isExistTemporaryScheduleByDateAndScheduleId(TemporarySchedule object, boolean vacation);
 
     /**
-     * Counts the number of temporary schedule records in the database that corresponds to the specified temporary schedule and given vacation ignoring the specified id.
+     * Counts the number of temporary schedule records in the database that corresponds
+     * to the specified temporary schedule and given vacation ignoring the specified id.
      *
      * @param object   the temporary schedule
      * @param vacation the boolean value represents vacation
@@ -70,7 +73,8 @@ public interface TemporaryScheduleRepository extends BasicRepository<TemporarySc
     Long isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(TemporarySchedule object, boolean vacation);
 
     /**
-     * Counts the number of temporary schedule records in the database that corresponds to the specified temporary schedule ignoring the id of given schedule.
+     * Counts the number of temporary schedule records in the database that corresponds
+     * to the specified temporary schedule ignoring the id of given schedule.
      *
      * @param object the temporary schedule
      * @return the number of records in db

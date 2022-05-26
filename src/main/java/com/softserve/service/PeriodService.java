@@ -1,8 +1,6 @@
 package com.softserve.service;
 
 import com.softserve.entity.Period;
-import com.softserve.exception.IncorrectTimeException;
-import com.softserve.exception.PeriodConflictException;
 
 import java.util.List;
 
@@ -13,8 +11,9 @@ public interface PeriodService extends BasicService<Period, Long> {
      *
      * @param periods the list of periods
      * @return the list of saved periods
-     * @throws IncorrectTimeException  if the start time of the period was after its end or the start time was equal to the end time
-     * @throws PeriodConflictException if some periods intersected with others periods
+     * @throws com.softserve.exception.IncorrectTimeException  if the start time of the period was after its end
+     * or the start time was equal to the end time
+     * @throws com.softserve.exception.PeriodConflictException if some periods intersected with others periods
      */
     List<Period> save(List<Period> periods);
 

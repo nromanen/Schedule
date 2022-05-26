@@ -4,9 +4,6 @@ import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherImportDTO;
 import com.softserve.entity.Teacher;
-import com.softserve.exception.EntityAlreadyExistsException;
-import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.FieldNullException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -35,7 +32,7 @@ public interface TeacherService extends BasicService<Teacher, Long> {
      * @param teacherId the id of the teacher
      * @param userId    the id of the user
      * @return the joined teacher with user
-     * @throws EntityAlreadyExistsException if user already exist in some teacher/manager or teacher contains some user id
+     * @throws com.softserve.exception.EntityAlreadyExistsException if user already exist in some teacher/manager or teacher contains some user id
      */
     Teacher joinTeacherWithUser(Long teacherId, Long userId);
 
@@ -51,8 +48,8 @@ public interface TeacherService extends BasicService<Teacher, Long> {
      *
      * @param userId the id of the user
      * @return the founded teacher
-     * @throws EntityNotFoundException if teacher doesn't exist
-     * @throws FieldNullException      if user id is null
+     * @throws com.softserve.exception.EntityNotFoundException if teacher doesn't exist
+     * @throws com.softserve.exception.FieldNullException      if user id is null
      */
     Teacher findByUserId(Long userId);
 
@@ -67,6 +64,7 @@ public interface TeacherService extends BasicService<Teacher, Long> {
      * Imports teachers from file and saves in the repository.
      *
      * @param file the file with teachers data
+     * @param departmentId the id of the department
      * @return tje list of created teachers
      */
     List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId);

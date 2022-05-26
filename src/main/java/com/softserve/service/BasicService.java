@@ -1,9 +1,5 @@
 package com.softserve.service;
 
-
-import com.softserve.exception.DeleteDisabledException;
-import com.softserve.exception.EntityNotFoundException;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,7 +11,7 @@ interface BasicService<T extends Serializable, I extends Serializable> {
      *
      * @param id the id of the entity
      * @return the entity with the given id
-     * @throws EntityNotFoundException if entity not found
+     * @throws com.softserve.exception.EntityNotFoundException if entity not found
      */
     T getById(I id);
 
@@ -47,7 +43,7 @@ interface BasicService<T extends Serializable, I extends Serializable> {
      *
      * @param object the entity to be deleted
      * @return the deleted entity
-     * @throws DeleteDisabledException if there are still references to given object
+     * @throws com.softserve.exception.DeleteDisabledException if there are still references to given object
      */
     T delete(T object);
 }

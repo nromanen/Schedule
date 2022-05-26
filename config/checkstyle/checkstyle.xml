@@ -107,9 +107,9 @@
         <module name="JavadocType"/> <!-- перевіряє, стиль Javadoc над типами -->
         <!--<module name="JavadocVariable"/>--> <!-- перевіряє, наявність Javadoc над змінними -->
         <!--<module name="JavadocStyle"/>--> <!-- перевіряє, стиль Javadoc -->
-        <module name="MissingJavadocMethod"> <!-- перевіряє, наявність Javadoc над методами -->
+        <!--<module name="MissingJavadocMethod">
             <property name="tokens" value="METHOD_DEF"/>
-        </module>
+        </module>--> <!-- перевіряє, наявність Javadoc над методами -->
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See https://checkstyle.org/config_naming.html -->

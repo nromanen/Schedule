@@ -3,7 +3,6 @@ package com.softserve.service;
 import com.softserve.entity.Group;
 import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
-import com.softserve.exception.ScheduleConflictException;
 
 import java.time.DayOfWeek;
 import java.util.List;
@@ -15,7 +14,7 @@ public interface SemesterService extends BasicService<Semester, Long> {
      * Returns the semester with field currentSemester equal to true.
      *
      * @return the semester if such exist, otherwise throw exception
-     * @throws ScheduleConflictException if current semester for managers work isn't specified
+     * @throws com.softserve.exception.ScheduleConflictException if current semester for managers work isn't specified
      */
     Semester getCurrentSemester();
 
