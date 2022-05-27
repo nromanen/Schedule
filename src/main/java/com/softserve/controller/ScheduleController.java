@@ -228,7 +228,7 @@ public class ScheduleController {
         log.info("In changeScheduleByRoom with scheduleId = {} and roomId = {}", scheduleId, roomId);
         Schedule schedule = scheduleService.getById(scheduleId);
         Room room = roomService.getById(roomId);
-        if (schedule.getRoom().getId() == room.getId()) {
+        if (schedule.getRoom().getId().equals(room.getId())) {
             return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(schedule));
         }
         schedule.setRoom(room);
