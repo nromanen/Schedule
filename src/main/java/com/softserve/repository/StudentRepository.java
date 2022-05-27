@@ -8,6 +8,7 @@ public interface StudentRepository extends BasicRepository<Student, Long> {
 
     /**
      * Retrieves a student from the database by full name.
+     *
      * @param student the student with given full name
      * @return an Optional describing the student with the given id or an empty Optional if none found
      */

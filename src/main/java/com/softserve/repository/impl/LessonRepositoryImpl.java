@@ -34,11 +34,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     private static final String UPDATE_GROUPED_TEACHER_OR_SUBJECT
             = "update Lesson "
             + "set subject.id = :subjectId, "
-            + " hours = :hours, "
-            + " teacher.id = :teacherId, "
-            + " lessonType = :lessonType, "
-            + " subjectForSite = :subjectForSite, "
-            + " linkToMeeting = :linkToMeeting "
+            + "hours = :hours, "
+            + "teacher.id = :teacherId, "
+            + "lessonType = :lessonType, "
+            + "subjectForSite = :subjectForSite, "
+            + "linkToMeeting = :linkToMeeting "
             + "where grouped = true "
             + "and subject.id = :initialSubjectId "
             + "and teacher.id = :initialTeacherId "
@@ -47,11 +47,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     private static final String UPDATE_GROUPED
             = "update Lesson "
             + "set subject.id = :subjectId, "
-            + " hours = :hours, "
-            + " teacher.id = :teacherId, "
-            + " lessonType = :lessonType, "
-            + " subjectForSite = :subjectForSite, "
-            + " linkToMeeting = :linkToMeeting "
+            + "hours = :hours, "
+            + "teacher.id = :teacherId, "
+            + "lessonType = :lessonType, "
+            + "subjectForSite = :subjectForSite, "
+            + "linkToMeeting = :linkToMeeting "
             + "where grouped = true "
             + "and subject.id = :initialSubjectId "
             + "and hours = :initialHours "
@@ -82,7 +82,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
 
     private static final String GET_SUBJECT_TEACHER_SEMESTER
             = "select l from Lesson l " +
-            " where l.subject.id= :subjectId " +
+            "where l.subject.id= :subjectId " +
             "and l.teacher.id= :teacherId " +
             "and l.semester.id= :semesterId " +
             "and l.lessonType= :lessonType " +
@@ -268,8 +268,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     @Override
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
-        Long count = sessionFactory.getCurrentSession()
-                .createQuery(COUNT_QUERY, Long.class)
+        Long count = sessionFactory.getCurrentSession().createQuery(COUNT_QUERY, Long.class)
                 .setParameter("lessonId", lesson.getId())
                 .getSingleResult();
         return count != 0;

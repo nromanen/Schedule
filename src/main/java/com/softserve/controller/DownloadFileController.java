@@ -32,7 +32,9 @@ public class DownloadFileController {
     private final ScheduleService scheduleService;
 
     @GetMapping(value = "/schedule-for-teacher-in-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> teacherSchedulesReport(@RequestParam Long teacherId, @RequestParam Long semesterId, @RequestParam Locale language) {
+    public ResponseEntity<InputStreamResource> teacherSchedulesReport(@RequestParam Long teacherId,
+                                                                      @RequestParam Long semesterId,
+                                                                      @RequestParam Locale language) {
         ScheduleForTeacherDTO schedule = scheduleService.getScheduleForTeacher(semesterId, teacherId);
 
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
@@ -51,7 +53,8 @@ public class DownloadFileController {
     }
 
     @GetMapping(value = "/schedule-for-group-in-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<InputStreamResource> groupSchedulesReport(@RequestParam Long groupId, @RequestParam Long semesterId, @RequestParam Locale language) {
+    public ResponseEntity<InputStreamResource> groupSchedulesReport(@RequestParam Long groupId, @RequestParam Long semesterId,
+                                                                    @RequestParam Locale language) {
         List<ScheduleForGroupDTO> schedules = scheduleService.getFullScheduleForGroup(semesterId, groupId);
         ScheduleForGroupDTO schedule = schedules.get(0);
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();

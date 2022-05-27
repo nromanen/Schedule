@@ -3,8 +3,6 @@ package com.softserve.service;
 import com.softserve.dto.StudentDTO;
 import com.softserve.dto.StudentImportDTO;
 import com.softserve.entity.Student;
-import com.softserve.exception.FieldAlreadyExistsException;
-import com.softserve.exception.FieldNullException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,8 +15,8 @@ public interface StudentService extends BasicService<Student, Long> {
      *
      * @param studentDTO the student to be saved
      * @return the saved student
-     * @throws FieldNullException          if user's email was empty
-     * @throws FieldAlreadyExistsException if email was already in use
+     * @throws com.softserve.exception.FieldNullException          if user's email was empty
+     * @throws com.softserve.exception.FieldAlreadyExistsException if email was already in use
      */
     Student save(StudentDTO studentDTO);
 
@@ -27,7 +25,7 @@ public interface StudentService extends BasicService<Student, Long> {
      *
      * @param studentDTO the student with new information to be updated
      * @return the updated student
-     * @throws FieldAlreadyExistsException if student with given input email already exists
+     * @throws com.softserve.exception.FieldAlreadyExistsException if student with given input email already exists
      */
     Student update(StudentDTO studentDTO);
 

@@ -15,7 +15,7 @@ public class Style {
 
 
     /**
-     * Method used for formatting title cells of schedule
+     * Method used for formatting title cells of schedule.
      *
      * @param cell for formatting
      */
@@ -40,7 +40,7 @@ public class Style {
     }
 
     /**
-     * Method used for formatting header cells of schedule
+     * Method used for formatting header cells of schedule.
      *
      * @param cell for formatting
      */
@@ -64,7 +64,7 @@ public class Style {
     }
 
     /**
-     * Method used for formatting period cells of schedule
+     * Method used for formatting period cells of schedule.
      *
      * @param cell for formatting
      */
@@ -88,7 +88,7 @@ public class Style {
     }
 
     /**
-     * Method used for formatting value cells of schedule
+     * Method used for formatting value cells of schedule.
      *
      * @param cell for formatting
      */
@@ -109,7 +109,7 @@ public class Style {
     }
 
     /**
-     * Method used for formatting inner value cells of schedule
+     * Method used for formatting inner value cells of schedule.
      *
      * @param cell for formatting
      */

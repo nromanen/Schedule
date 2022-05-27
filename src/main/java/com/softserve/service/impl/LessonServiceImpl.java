@@ -85,10 +85,11 @@ public class LessonServiceImpl implements LessonService {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Saves new lesson in the repository and automatically assigns
      * teacher for site by teacher data if teacher for site is empty or null and
      * subject for site by subject name if subject for site is empty or null.
+     *
      * @throws EntityAlreadyExistsException if given lesson already exists
      */
     @Override

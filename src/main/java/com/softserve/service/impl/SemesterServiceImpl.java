@@ -2,12 +2,10 @@ package com.softserve.service.impl;
 
 import com.softserve.entity.*;
 import com.softserve.exception.*;
+import com.softserve.repository.GroupRepository;
 import com.softserve.repository.LessonRepository;
 import com.softserve.repository.ScheduleRepository;
-import com.softserve.repository.GroupRepository;
 import com.softserve.repository.SemesterRepository;
-import com.softserve.service.LessonService;
-import com.softserve.service.GroupService;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.extern.slf4j.Slf4j;
@@ -157,7 +155,7 @@ public class SemesterServiceImpl implements SemesterService {
     }
 
     /**
-     * Sets default semester in the repository to {@code false} while saving new default semester or updating default semester
+     * Sets default semester in the repository to {@code false} while saving new default semester or updating default semester.
      *
      * @param semester the semester to be saved or updated
      */

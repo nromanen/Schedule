@@ -68,7 +68,7 @@ public class StudentController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
     @ApiOperation(value = "Delete student by id")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id){
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("Enter into delete of StudentController with id {} ", id);
         studentService.delete(studentService.getById(id));
         return new ResponseEntity<>(HttpStatus.OK);
@@ -77,7 +77,7 @@ public class StudentController {
     @PostMapping("/import")
     @ApiOperation(value = "import students from file to database")
     public ResponseEntity<List<StudentImportDTO>> importFromCsv(@ApiParam(value = "csv format is required")
-            @RequestParam("file") MultipartFile file, @RequestParam Long groupId) {
+                                                                @RequestParam("file") MultipartFile file, @RequestParam Long groupId) {
         return ResponseEntity.ok(studentService.saveFromFile(file, groupId)
                 .getNow(new ArrayList<>()));
     }

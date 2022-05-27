@@ -144,7 +144,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * {@inheritDoc}
+     * The method used for join Teacher and User.
+     *
+     * @param teacherId Long teacherId used to find Teacher by it
+     * @param userId    Long userId used to find User by it
+     * @return Teacher entity
+     * @throws EntityAlreadyExistsException when user already exist in some teacher/manager or teacher contains some userId
      */
     @Override
     public Teacher joinTeacherWithUser(Long teacherId, Long userId) {
@@ -264,7 +269,8 @@ public class TeacherServiceImpl implements TeacherService {
      * @param department   department which provided from server
      * @return the saved teacher or {code null} if given optional does not contain user
      */
-    private TeacherImportDTO assignUserToNewTeacher(TeacherImportDTO teacher, Optional<User> userOptional, Teacher newTeacher, Department department) {
+    private TeacherImportDTO assignUserToNewTeacher(TeacherImportDTO teacher, Optional<User> userOptional,
+                                                    Teacher newTeacher, Department department) {
         log.debug("Enter to method if email EXIST and teacher DONT EXIST");
         if (userOptional.isPresent()) {
 
@@ -314,7 +320,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @param teacher    the teacher from file
      * @param newTeacher the teacher which we will save to database
      * @param department department which provided from server
-     * @return the saved teacher
+     * @return saved teacher
      */
     private TeacherImportDTO registerAndSaveNewTeacher(TeacherImportDTO teacher, Teacher newTeacher, Department department) {
         log.debug("Enter to method if email and teacher DONT EXIST");
@@ -337,7 +343,8 @@ public class TeacherServiceImpl implements TeacherService {
      * @param department      the department which provided from server
      * @return the existed teacher of {@code null} if given optional does not contain user
      */
-    private TeacherImportDTO checkForEmptyFieldsOfExistingTeacher(TeacherImportDTO teacher, Optional<User> userOptional, Optional<Teacher> teacherFromBase, Department department) {
+    private TeacherImportDTO checkForEmptyFieldsOfExistingTeacher(TeacherImportDTO teacher, Optional<User> userOptional,
+                                                                  Optional<Teacher> teacherFromBase, Department department) {
         log.debug("Enter to method if email EXIST and teacher EXIST");
         if (userOptional.isPresent() && teacherFromBase.isPresent()) {
 

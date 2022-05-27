@@ -10,6 +10,6 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode
 public class RoomClassesInScheduleDTO {
-        private List<LessonsInRoomScheduleDTO> even;
-        private List<LessonsInRoomScheduleDTO> odd;
+    private List<LessonsInRoomScheduleDTO> even;
+    private List<LessonsInRoomScheduleDTO> odd;
 }

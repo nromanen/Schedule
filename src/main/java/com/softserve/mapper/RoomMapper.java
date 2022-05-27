@@ -11,6 +11,7 @@ import java.util.List;
 public interface RoomMapper {
     @Mapping(target = "sortOrder", ignore = true)
     Room convertToEntity(RoomDTO dto);
+
     RoomDTO convertToDto(Room entity);
 
     List<RoomDTO> convertToDtoList(List<Room> rooms);

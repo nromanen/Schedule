@@ -14,17 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -108,8 +100,7 @@ public class TeacherController {
     @PostMapping("/teachers/import")
     @ApiOperation(value = "import teachers from file to database")
     public ResponseEntity<List<TeacherImportDTO>> importFromCsv(@ApiParam(value = "csv format is required")
-                                                          @RequestParam("file") MultipartFile file, @RequestParam Long departmentId) {
+                                                                @RequestParam("file") MultipartFile file, @RequestParam Long departmentId) {
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.saveFromFile(file, departmentId));
     }
-
 }

@@ -36,9 +36,9 @@ public class DBConfig {
 
     @Bean
     public DataSource getDataSource() {
-        String  url;
-        String  user;
-        String  password;
+        String url;
+        String user;
+        String password;
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
         try {
             dataSource.setDriverClass(Objects.requireNonNull(environment.getProperty(DRIVER)));
@@ -78,7 +78,7 @@ public class DBConfig {
         String url = System.getenv("HEROKU_DB_URL");
         String user = System.getenv("HEROKU_DB_USER");
         String password = System.getenv("HEROKU_DB_PASSWORD");
-        if(url != null && user != null && password!=null) {
+        if (url != null && user != null && password != null) {
             properties.put("hibernate.connection.url", url);
             properties.put("hibernate.connection.username", user);
             properties.put("hibernate.connection.password", password);

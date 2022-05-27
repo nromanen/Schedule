@@ -29,6 +29,7 @@ public interface TeacherRepository extends BasicRepository<Teacher, Long> {
 
     /**
      * Retrieves a teacher entity by his full name and position.
+     *
      * @param teacher the teacher with given full name and position
      * @return an Optional describing the teacher with the given user id or an empty Optional if none found
      */

@@ -19,7 +19,7 @@ import java.util.Locale;
 public class PdfReportGenerator {
 
     /**
-     * Method used for generating byte array, which we convert into pdf in controller
+     * Method used for generating byte array, which we convert into pdf in controller.
      *
      * @param schedule for selected teacher and semester
      * @param language for selected language
@@ -47,7 +47,7 @@ public class PdfReportGenerator {
     }
 
     /**
-     * Method used for generating byte array, which we convert into pdf in controller
+     * Method used for generating byte array, which we convert into pdf in controller.
      *
      * @param schedule for selected group and semester
      * @param language for selected language

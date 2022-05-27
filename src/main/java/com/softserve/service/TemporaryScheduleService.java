@@ -101,6 +101,7 @@ public interface TemporaryScheduleService extends BasicService<TemporarySchedule
 
     /**
      * Returns teacher entity by the given schedule id.
+     *
      * @param scheduleId the id of the schedule
      * @return teacher entity by the given schedule id or {@code null} if the schedule id equal to {@code null}
      */
@@ -108,6 +109,7 @@ public interface TemporaryScheduleService extends BasicService<TemporarySchedule
 
     /**
      * Returns the lists of temporary schedules grouped into map by the days of the week and then grouped into map by type of the week.
+     *
      * @param semesterId the id of the semester
      * @return the lists of temporary schedules grouped into map by the days of the week and then grouped into map by type of the week
      */

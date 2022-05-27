@@ -2,7 +2,6 @@ package com.softserve.service;
 
 import com.softserve.dto.ScheduleFullForArchiveDTO;
 import com.softserve.dto.SemesterDTO;
-import com.softserve.exception.EntityNotFoundException;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public interface ArchiveService {
      *
      * @param semesterId the id of the semester for getting schedule by this id
      * @return the schedule with given semester id
-     * @throws EntityNotFoundException if schedule by given semester id not found
+     * @throws com.softserve.exception.EntityNotFoundException if schedule by given semester id not found
      */
     ScheduleFullForArchiveDTO getArchiveScheduleBySemesterId(Long semesterId);
 

@@ -1,10 +1,13 @@
 package com.softserve.controller;
 
-import com.softserve.dto.*;
+import com.softserve.dto.AuthenticationRequestDTO;
+import com.softserve.dto.AuthenticationResponseDTO;
+import com.softserve.dto.MessageDTO;
+import com.softserve.dto.RegistrationRequestDTO;
 import com.softserve.entity.User;
+import com.softserve.mapper.UserMapper;
 import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
-import com.softserve.mapper.UserMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 import static com.softserve.service.impl.UserServiceImpl.PASSWORD_FOR_SOCIAL_USER;
@@ -33,16 +35,16 @@ import static com.softserve.service.impl.UserServiceImpl.PASSWORD_FOR_SOCIAL_USE
 @PropertySource({"classpath:cors.properties"})
 public class AuthenticationController {
 
-    @Value("${backend.url}")
-    private String url;
-
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final UserMapper userMapper;
+    @Value("${backend.url}")
+    private String url;
 
     @Autowired
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService, UserMapper userMapper) {
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider,
+                                    UserService userService, UserMapper userMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.userService = userService;
@@ -57,7 +59,8 @@ public class AuthenticationController {
                 new BadCredentialsException("Invalid password or email")
         );
         if (user.getPassword().equals(PASSWORD_FOR_SOCIAL_USER)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageDTO("You registered via social network. Please, sign in via social network."));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    new MessageDTO("You registered via social network. Please, sign in via social network."));
         }
         String username = requestDto.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));

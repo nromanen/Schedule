@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * Base class for the several table builder types supported
+ * Base class for the several table builder types supported.
  */
 public abstract class BaseTableBuilder {
 
@@ -37,7 +37,7 @@ public abstract class BaseTableBuilder {
     /**
      * Constructs a BaseTableBuilder.
      *
-     * @throws IOException when the font file could not be read
+     * @throws IOException       when the font file could not be read
      * @throws DocumentException when the font is invalid
      */
     protected BaseTableBuilder() throws DocumentException, IOException {
@@ -51,11 +51,11 @@ public abstract class BaseTableBuilder {
     }
 
     /**
-     * Method used for creating empty table
+     * Method used for creating empty table.
      *
      * @param tableWidth the width of table
-     * @throws DocumentException if the size of table is wrong
      * @return empty PdfPTable
+     * @throws DocumentException if the size of table is wrong
      */
     protected PdfPTable generateEmptyTable(int tableWidth) throws DocumentException {
         PdfPTable table = new PdfPTable(tableWidth);
@@ -73,9 +73,9 @@ public abstract class BaseTableBuilder {
     }
 
     /**
-     * Method used for creating header cells for table
+     * Method used for creating header cells for table.
      *
-     * @param days the days of the week
+     * @param days     the days of the week
      * @param language the selected language
      * @return mass of PdfPCell for table header, where the first cell is 'period' and other cells are days of week
      */

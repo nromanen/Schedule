@@ -40,7 +40,7 @@ public class SubjectController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get subject info by id")
-    public ResponseEntity<SubjectDTO> get(@PathVariable("id") long id){
+    public ResponseEntity<SubjectDTO> get(@PathVariable("id") long id) {
         log.info("In get(id = [{}])", id);
         Subject subject = subjectService.getById(id);
         return ResponseEntity.status(HttpStatus.OK).body(subjectMapper.subjectToSubjectDTO(subject));
@@ -64,7 +64,7 @@ public class SubjectController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete subject by id")
-    public ResponseEntity delete(@PathVariable("id") long id){
+    public ResponseEntity delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         Subject subject = subjectService.getById(id);
         subjectService.delete(subject);

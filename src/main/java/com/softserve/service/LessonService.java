@@ -83,6 +83,7 @@ public interface LessonService extends BasicService<Lesson, Long> {
 
     /**
      * Deletes lessons with the given semester id from the repository.
+     *
      * @param semesterId the id of the semester
      */
     void deleteLessonBySemesterId(Long semesterId);

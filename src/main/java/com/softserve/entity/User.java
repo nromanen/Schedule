@@ -1,7 +1,10 @@
 package com.softserve.entity;
 
 import com.softserve.entity.enums.Role;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;

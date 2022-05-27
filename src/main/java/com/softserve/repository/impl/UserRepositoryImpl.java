@@ -75,9 +75,9 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
     @Override
     protected boolean checkReference(User user) {
         log.info("In checkReference(user = [{}])", user);
-        Long count = (Long) sessionFactory.getCurrentSession().createQuery
-                        ("select count (t.id) " +
-                                "from Teacher t where t.userId = :userId")
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (t.id) from Teacher t " +
+                                "where t.userId = :userId")
                 .setParameter("userId", user.getId())
                 .getSingleResult();
         return count != 0;

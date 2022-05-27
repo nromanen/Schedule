@@ -10,6 +10,7 @@ public interface LessonRepository extends BasicRepository<Lesson, Long> {
      * Returns the list of lessons with the given group id and semester id from the  database.
      *
      * @param groupId the id of the group for which need to find all lessons
+     * @param semesterId the id of the semester for which need to find all lessons
      * @return the list of filtered lessons
      */
     List<Lesson> getAllForGroup(Long groupId, Long semesterId);
@@ -72,7 +73,7 @@ public interface LessonRepository extends BasicRepository<Lesson, Long> {
 
     /**
      * Updates links to lesson's meeting.
-     *
+     * <p>
      * By default, link to meeting is updated by semester id and teacher id.
      * But update can be more specific by providing additional subject id and/or lesson type in a lesson object.
      *
@@ -84,8 +85,8 @@ public interface LessonRepository extends BasicRepository<Lesson, Long> {
     /**
      * Updates grouped lessons.
      *
-     * @param oldLesson the lesson
-     * @param updatedLesson grouped lesson that needs to be updated
+     * @param oldLesson                 the lesson
+     * @param updatedLesson             grouped lesson that needs to be updated
      * @param isTeacherOrSubjectUpdated {@code true} if teacher or subject is updated
      * @return the updated lesson
      */
@@ -101,6 +102,7 @@ public interface LessonRepository extends BasicRepository<Lesson, Long> {
 
     /**
      * Set the lesson as grouped.
+     *
      * @param lessonId the id of the lesson
      * @return the number of updated lessons
      */

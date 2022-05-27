@@ -36,11 +36,11 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     public List<Semester> getAll() {
         log.info("In getAll()");
-        return getSession().createQuery("SELECT distinct s "
-                        + "from Semester s "
-                        + "left join fetch s.periods "
-                        + "left join fetch s.groups "
-                        + "left join fetch s.daysOfWeek", Semester.class)
+        return getSession().createQuery("SELECT distinct s " +
+                        "from Semester s " +
+                        "left join fetch s.periods " +
+                        "left join fetch s.groups " +
+                        "left join fetch s.daysOfWeek", Semester.class)
                 .getResultList();
     }
 
@@ -65,7 +65,8 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     protected boolean checkReference(Semester semester) {
         log.info("In checkReference(semester = [{}])", semester);
         Long count = (Long) sessionFactory.getCurrentSession().createQuery(
-                        "select count (s.id) from Schedule s where s.lesson.semester.id = :semesterId")
+                        "select count (s.id) " +
+                                "from Schedule s where s.lesson.semester.id = :semesterId")
                 .setParameter("semesterId", semester.getId()).getSingleResult();
 
         return count != 0;
@@ -77,8 +78,8 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     @Override
     public Long countSemesterDuplicatesByDescriptionAndYear(String description, int year) {
         log.info("In countSemesterDuplicates(description = [{}], year = [{}])", description, year);
-        return (Long) sessionFactory.getCurrentSession()
-                .createQuery("select count(*) from Semester s where s.description = :description and s.year = :year")
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count(*) from Semester s where s.description = :description and s.year = :year")
                 .setParameter("description", description)
                 .setParameter("year", year)
                 .getSingleResult();
@@ -123,7 +124,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     public int updateAllSemesterCurrentToFalse() {
         log.info("In setCurrentSemesterToFalse()");
         return sessionFactory.getCurrentSession().createQuery(
-                        "UPDATE Semester s set s.currentSemester = false where currentSemester = true")
+                        "UPDATE Semester s set s.currentSemester = false  where currentSemester = true")
                 .executeUpdate();
     }
 
@@ -134,7 +135,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     public int updateAllSemesterDefaultToFalse() {
         log.info("In setDefaultSemesterToFalse()");
         return sessionFactory.getCurrentSession().createQuery(
-                        "UPDATE Semester s set s.defaultSemester = false where defaultSemester = true")
+                        "UPDATE Semester s set s.defaultSemester = false  where defaultSemester = true")
                 .executeUpdate();
     }
 
@@ -166,9 +167,10 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * {@inheritDoc}
      */
     @Override
-    public Optional<Semester> getSemesterByDescriptionAndYear(final String description, final int year) {
+    public Optional<Semester> getSemesterByDescriptionAndYear(String description, int year) {
         log.info("In getSemesterByDescriptionAndYear(String description = [{}], int year = [{}])", description, year);
-        return sessionFactory.getCurrentSession().createQuery("select s from Semester s where s.description= :description and s.year= :year", Semester.class)
+        return sessionFactory.getCurrentSession().createQuery(
+                        "select s from Semester s where s.description= :description and s.year= :year", Semester.class)
                 .setParameter("description", description).
                 setParameter("year", year)
                 .uniqueResultOptional();
@@ -178,7 +180,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * {@inheritDoc}
      */
     @Override
-    public List<DayOfWeek> getDaysWithLessonsBySemesterId(final Long semesterId) {
+    public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
         log.info("In getDaysWithLessonsBySemesterId(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_DAYS_WITH_LESSONS, DayOfWeek.class)
                 .setParameter("semesterId", semesterId)
@@ -189,7 +191,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
      * {@inheritDoc}
      */
     @Override
-    public List<Period> getPeriodsWithLessonsBySemesterId(final Long semesterId) {
+    public List<Period> getPeriodsWithLessonsBySemesterId(Long semesterId) {
         log.info("In getPeriodsWithLessonsBySemesterId(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_PERIODS_WITH_LESSONS, Period.class)
                 .setParameter("semesterId", semesterId)

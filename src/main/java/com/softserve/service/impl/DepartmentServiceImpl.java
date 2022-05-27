@@ -93,6 +93,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * Checks if there is no department with the same name as the given department in the repository.
+     *
      * @param object the department
      * @throws FieldAlreadyExistsException if there is a department with the name as the given department has
      */
@@ -104,6 +105,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     /**
      * Checks the uniqueness of the department name in the repository.
+     *
      * @param object the department
      * @throws FieldAlreadyExistsException if the name of the given department not unique
      */

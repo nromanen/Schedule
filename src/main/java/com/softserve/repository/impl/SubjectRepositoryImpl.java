@@ -48,8 +48,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     @Override
     public Long countSubjectsWithName(String name) {
         log.info("In countSubjectsWithName(name = [{}])", name);
-        return (Long) sessionFactory.getCurrentSession().createQuery
-                        ("SELECT count (*) FROM Subject s WHERE s.name = :name")
+        return (Long) sessionFactory.getCurrentSession().createQuery("SELECT count (*) FROM Subject s WHERE s.name = :name")
                 .setParameter("name", name).getSingleResult();
     }
 
@@ -59,8 +58,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     @Override
     public Long countSubjectsWithNameAndIgnoreWithId(Long id, String name) {
         log.info("In countSubjectsWithName(name = [{}])", name);
-        return (Long) sessionFactory.getCurrentSession().createQuery
-                        ("SELECT count (*) FROM Subject s WHERE s.name = :name and id!=:id")
+        return (Long) sessionFactory.getCurrentSession().createQuery("SELECT count (*) FROM Subject s WHERE s.name = :name and id!=:id")
                 .setParameter("name", name).setParameter("id", id).getSingleResult();
     }
 
@@ -70,8 +68,7 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     @Override
     public Long countBySubjectId(Long id) {
         log.info("In countBySubjectId(id = [{}])", id);
-        return (Long) sessionFactory.getCurrentSession().createQuery
-                        ("SELECT count (*) FROM Subject s WHERE s.id = :id")
+        return (Long) sessionFactory.getCurrentSession().createQuery("SELECT count (*) FROM Subject s WHERE s.id = :id")
                 .setParameter("id", id).getSingleResult();
     }
 
@@ -84,8 +81,8 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     @Override
     protected boolean checkReference(Subject subject) {
         log.info("In checkReference(subject = [{}])", subject);
-        Long count = (Long) sessionFactory.getCurrentSession().createQuery
-                        ("select count (l.id) " +
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (l.id) " +
                                 "from Lesson l where l.subject.id = :subjectId")
                 .setParameter("subjectId", subject.getId())
                 .getSingleResult();

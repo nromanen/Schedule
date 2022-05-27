@@ -9,7 +9,8 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {LessonInfoMapper.class, RoomMapper.class})
 public interface ScheduleWithoutSemesterMapper {
     ScheduleWithoutSemesterDTO scheduleToScheduleWithoutSemesterDTO(Schedule schedule);
-    Schedule ScheduleWithoutSemesterDTOToSchedule(ScheduleWithoutSemesterDTO scheduleWithoutSemesterDTO);
+
+    Schedule scheduleWithoutSemesterDTOToSchedule(ScheduleWithoutSemesterDTO scheduleWithoutSemesterDTO);
 
     List<ScheduleWithoutSemesterDTO> scheduleToScheduleWithoutSemesterDTOs(List<Schedule> schedules);
 }

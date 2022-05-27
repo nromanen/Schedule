@@ -9,7 +9,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class LessonInfoDTO extends LessonBaseDTO{
+public class LessonInfoDTO extends LessonBaseDTO {
     private GroupDTO group;
     private boolean grouped;
 }

@@ -134,10 +134,9 @@ public class PeriodServiceImpl implements PeriodService {
     private boolean isPeriodFree(List<Period> oldPeriods, Period newPeriod) {
         log.info("Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: {} and newPeriod: {}",
                 oldPeriods, newPeriod);
-        return oldPeriods.stream().noneMatch
-                (oldPeriod ->
-                        (isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)) && newPeriod.getId() != oldPeriod.getId()
-                );
+        return oldPeriods.stream().noneMatch(oldPeriod ->
+                (isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)) && newPeriod.getId() != oldPeriod.getId()
+        );
     }
 
     private boolean isPeriodsIntersect(Period newPeriod, Period oldPeriod) {
@@ -165,6 +164,7 @@ public class PeriodServiceImpl implements PeriodService {
 
     /**
      * Checks if the period with given name exists in the repository.
+     *
      * @param name the string represents tha namen of the period
      * @return {@code true} if the period with given name exists, otherwise {@code false}
      */

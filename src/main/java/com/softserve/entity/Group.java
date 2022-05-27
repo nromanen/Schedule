@@ -6,14 +6,8 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.ParamDef;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -29,10 +23,10 @@ import java.util.List;
 @EqualsAndHashCode
 @Table(name = "groups")
 @Builder(toBuilder = true)
-@FilterDef(name="groupDisableFilter", parameters={
-        @ParamDef( name="disable", type="boolean" ),
+@FilterDef(name = "groupDisableFilter", parameters = {
+        @ParamDef(name = "disable", type = "boolean"),
 })
-@Filter(name="groupDisableFilter", condition="disable = :disable")
+@Filter(name = "groupDisableFilter", condition = "disable = :disable")
 public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +46,7 @@ public class Group implements Serializable {
     private List<Student> students = new ArrayList<>();
 
     @Builder.Default
-    @Column(name = "disable",  columnDefinition = "boolean default 'false'")
+    @Column(name = "disable", columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 
     @Column(name = "sorting_order")

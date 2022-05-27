@@ -1,7 +1,6 @@
 package com.softserve.service;
 
 import com.softserve.entity.Group;
-import com.softserve.exception.EntityNotFoundException;
 
 import java.util.List;
 import java.util.Set;
@@ -13,7 +12,7 @@ public interface GroupService extends BasicService<Group, Long> {
      *
      * @param id the id of the of the group
      * @return the group with the given id with students
-     * @throws EntityNotFoundException if group with given id not found
+     * @throws com.softserve.exception.EntityNotFoundException if group with given id not found
      */
     Group getWithStudentsById(Long id);
 
@@ -92,7 +91,7 @@ public interface GroupService extends BasicService<Group, Long> {
      * @param group   group that will be replaced
      * @param afterId id of the group after which will be placed
      * @return the updated group with new position
-     * @throws EntityNotFoundException if given group not found
+     * @throws com.softserve.exception.EntityNotFoundException if given group not found
      */
     Group updateGroupOrder(Group group, Long afterId);
 }

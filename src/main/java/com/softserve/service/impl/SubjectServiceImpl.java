@@ -48,7 +48,7 @@ public class SubjectServiceImpl implements SubjectService {
     /**
      * {@inheritDoc}
      *
-     * @throws FieldAlreadyExistsException  if subject with given name already exists.
+     * @throws FieldAlreadyExistsException if subject with given name already exists.
      */
     @Override
     public Subject save(Subject object) {
@@ -64,7 +64,7 @@ public class SubjectServiceImpl implements SubjectService {
      * {@inheritDoc}
      *
      * @throws FieldAlreadyExistsException if subject with given name already exists.
-     * @throws EntityNotFoundException if given subject not found
+     * @throws EntityNotFoundException     if given subject not found
      */
     @Override
     public Subject update(Subject object) {

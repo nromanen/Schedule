@@ -62,8 +62,8 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
     @Override
     protected boolean checkReference(Period period) {
         log.info("In checkReference(period = [{}])", period);
-        Long count = (Long) sessionFactory.getCurrentSession().createQuery
-                        ("select count (s.id) " +
+        Long count = (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (s.id) " +
                                 "from Schedule s where s.period.id = :periodId")
                 .setParameter("periodId", period.getId())
                 .getSingleResult();

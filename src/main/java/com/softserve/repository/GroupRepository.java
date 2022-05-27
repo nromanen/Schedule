@@ -15,7 +15,7 @@ public interface GroupRepository extends BasicRepository<Group, Long> {
      */
     Optional<Group> getWithStudentsById(Long id);
 
-     /**
+    /**
      * Returns {@code true} if group with the given title exists other than the group with the given id.
      *
      * @param title the string represents the title of the group

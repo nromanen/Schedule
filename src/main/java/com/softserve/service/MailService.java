@@ -39,11 +39,12 @@ public interface MailService {
 
     /**
      * Sends a message with the given temporary schedule.
+     *
      * @param emailTo           the recipient's email address
      * @param subject           the subject of the message
      * @param temporarySchedule the temporary schedule
      * @param emailTemplate     the template of the email
      * @throws MessagingException if an error occurred while sending the letter
      */
-    void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException;
+    void send(String emailTo, String subject, TemporarySchedule temporarySchedule, String emailTemplate) throws MessagingException;
 }

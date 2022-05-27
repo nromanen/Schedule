@@ -42,7 +42,8 @@ public class MongoConfig {
     @Bean
     public Object getMongoClient() {
         if (isServerMongoDB()) {
-            MongoCredential credential = MongoCredential.createCredential(mongoServerUsername, mongoServerMainDatabase, mongoServerPassword.toCharArray());
+            MongoCredential credential = MongoCredential.createCredential(mongoServerUsername, mongoServerMainDatabase,
+                    mongoServerPassword.toCharArray());
             MongoClientSettings settings = MongoClientSettings.builder()
                     .credential(credential)
                     .retryWrites(true)

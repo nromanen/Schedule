@@ -1,9 +1,9 @@
 package com.softserve.controller;
 
 import com.softserve.dto.GroupDTO;
+import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.dto.GroupOrderDTO;
 import com.softserve.dto.GroupWithStudentsDTO;
-import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.entity.Group;
 import com.softserve.mapper.GroupMapper;
 import com.softserve.service.GroupService;
@@ -13,14 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Slf4j
@@ -46,14 +40,14 @@ public class GroupController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get group info by id")
-    public ResponseEntity<GroupDTO> get(@PathVariable("id") long id){
+    public ResponseEntity<GroupDTO> get(@PathVariable("id") long id) {
         log.info("In get(id = [{}])", id);
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(groupService.getById(id)));
     }
 
     @GetMapping("/{id}/with-students")
     @ApiOperation(value = "Get group info by id")
-    public ResponseEntity<GroupWithStudentsDTO> getWithStudents(@PathVariable("id") long id){
+    public ResponseEntity<GroupWithStudentsDTO> getWithStudents(@PathVariable("id") long id) {
         log.info("In get(id = [{}])", id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(groupMapper.groupToGroupWithStudentsDTO(groupService.getWithStudentsById(id)));
@@ -84,7 +78,7 @@ public class GroupController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete group by id")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id){
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         groupService.delete(groupService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -107,7 +101,7 @@ public class GroupController {
                 .body(groupMapper.groupsToGroupDTOs(groupService.getAllBySortingOrder()));
     }
 
-    @PostMapping( "/after")
+    @PostMapping("/after")
     @ApiOperation(value = "Create group ordered after another")
     public ResponseEntity<GroupDTO> saveGroupAfter(@RequestBody GroupOrderDTO groupDTO) {
         log.info("Entered saveGroupAfter({})", groupDTO);

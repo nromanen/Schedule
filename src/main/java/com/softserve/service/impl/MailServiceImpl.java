@@ -39,18 +39,13 @@ import java.util.Objects;
 @Slf4j
 public class MailServiceImpl implements MailService {
 
+    private final JavaMailSender mailSender;
+    private final Environment environment;
+    private final SpringTemplateEngine springTemplateEngine;
     @Value("${spring.mail.username}")
     private String username;
-
     @Value("${mail.enabled:true}")
-    boolean enabled;
-
-    private final JavaMailSender mailSender;
-
-    private final Environment environment;
-
-    private final SpringTemplateEngine springTemplateEngine;
-
+    private boolean enabled;
     private String credentialsUsername;
 
     @Autowired
@@ -153,7 +148,8 @@ public class MailServiceImpl implements MailService {
      */
     @Async
     @Override
-    public void send(final String emailTo, final String subject, TemporarySchedule temporarySchedule, final String emailTemplate) throws MessagingException {
+    public void send(String emailTo, String subject,
+                     TemporarySchedule temporarySchedule, String emailTemplate) throws MessagingException {
 
         // Prepare the evaluation context
         final Context ctx = new Context(Locale.UK);

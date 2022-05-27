@@ -1,7 +1,5 @@
 package com.softserve.repository;
 
-import com.softserve.exception.DeleteDisabledException;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +42,7 @@ public interface BasicRepository<T extends Serializable, I extends Serializable>
      *
      * @param entity the entity to be deleted
      * @return the deleted entity
-     * @throws DeleteDisabledException if there are still references to given entity
+     * @throws com.softserve.exception.DeleteDisabledException if there are still references to given entity
      */
     T delete(T entity);
 

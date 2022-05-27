@@ -1,7 +1,9 @@
 package com.softserve.dto;
 
 import com.softserve.entity.enums.Role;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

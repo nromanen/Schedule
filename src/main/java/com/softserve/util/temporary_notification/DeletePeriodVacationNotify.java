@@ -12,7 +12,7 @@ import javax.mail.MessagingException;
 
 @Slf4j
 @Component
-public class DeletePeriodVacationNotify extends AbstractTemporaryNotification{
+public class DeletePeriodVacationNotify extends AbstractTemporaryNotification {
     private final TemporaryScheduleService temporaryScheduleService;
     private final MailService mailService;
 
@@ -21,6 +21,7 @@ public class DeletePeriodVacationNotify extends AbstractTemporaryNotification{
         this.temporaryScheduleService = temporaryScheduleService;
         this.mailService = mailService;
     }
+
     @Override
     public boolean check(TemporarySchedule temporarySchedule) throws MessagingException {
         log.info("In check of DeleteVacationNotification(temporarySchedule = [{}])", temporarySchedule);
@@ -28,14 +29,18 @@ public class DeletePeriodVacationNotify extends AbstractTemporaryNotification{
             String temporaryTeacherEmail = temporaryScheduleService.getTeacherEmailFromTemporarySchedule(temporarySchedule.getTeacher());
             if (temporaryTeacherEmail != null) {
                 if (temporarySchedule.isVacation()) {
-                    mailService.send(temporaryTeacherEmail, "test", temporarySchedule, "mail/deleteVacationByPeriodForOriginTeacher");
+                    mailService.send(temporaryTeacherEmail, "test", temporarySchedule,
+                            "mail/deleteVacationByPeriodForOriginTeacher");
                 } else {
-                    mailService.send(temporaryTeacherEmail, "test", temporarySchedule, "mail/deleteTemporaryScheduleByPeriodForTemporaryTeacher");
+                    mailService.send(temporaryTeacherEmail, "test", temporarySchedule,
+                            "mail/deleteTemporaryScheduleByPeriodForTemporaryTeacher");
 
-                    String originalScheduleTeacherEmail = temporaryScheduleService.getTeacherEmailFromTemporarySchedule(temporaryScheduleService.getTeacherByScheduleId(temporarySchedule.getScheduleId()));
+                    String originalScheduleTeacherEmail = temporaryScheduleService
+                            .getTeacherEmailFromTemporarySchedule(temporaryScheduleService.getTeacherByScheduleId(temporarySchedule.getScheduleId()));
                     if (originalScheduleTeacherEmail != null) {
                         if (!temporaryTeacherEmail.equals(originalScheduleTeacherEmail)) {
-                            mailService.send(originalScheduleTeacherEmail, "test", temporarySchedule, "mail/deleteTemporaryScheduleByPeriodForOriginTeacher");
+                            mailService.send(originalScheduleTeacherEmail, "test", temporarySchedule,
+                                    "mail/deleteTemporaryScheduleByPeriodForOriginTeacher");
                         }
                     }
                 }

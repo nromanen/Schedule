@@ -1,12 +1,11 @@
 package com.softserve.controller;
 
-
 import com.softserve.dto.AddPeriodDTO;
 import com.softserve.dto.MessageDTO;
 import com.softserve.dto.PeriodDTO;
 import com.softserve.entity.Period;
-import com.softserve.service.PeriodService;
 import com.softserve.mapper.PeriodMapper;
+import com.softserve.service.PeriodService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +54,7 @@ public class PeriodController {
         Period newPeriod = periodService.save(periodMapper.convertToEntity(addPeriodDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(periodMapper.convertToDto(newPeriod));
     }
+
     @PostMapping("/classes/all")
     @ApiOperation(value = "Create a list of classes")
     public ResponseEntity<MessageDTO> save(@RequestBody List<AddPeriodDTO> periods) {
@@ -73,7 +73,7 @@ public class PeriodController {
 
     @DeleteMapping("/classes/{id}")
     @ApiOperation(value = "Delete class by id")
-    public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id){
+    public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id) {
         log.info("Enter into delete of PeriodController with id: {}", id);
         periodService.delete(periodService.getById(id));
         return ResponseEntity.ok().body(new MessageDTO("Period has been deleted successfully."));

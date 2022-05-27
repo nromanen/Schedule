@@ -20,7 +20,7 @@ public class ConverterToSchedulesInRoom {
 
     private List<LessonsListInRoomScheduleDTO> getLessonsListInRoomScheduleDTOS(Map<Lesson, List<Schedule>> schedules) {
         List<LessonsListInRoomScheduleDTO> lessonsListInRoomScheduleDTOS = new ArrayList<>();
-        for(var lessonSchedule: schedules.entrySet()) {
+        for (var lessonSchedule : schedules.entrySet()) {
             LessonsListInRoomScheduleDTO lessonsListInRoomScheduleDTO = new LessonsListInRoomScheduleDTO();
             lessonsListInRoomScheduleDTO.setSubjectName(lessonSchedule.getKey().getSubjectForSite());
             lessonsListInRoomScheduleDTO.setLessonType(lessonSchedule.getKey().getLessonType());
@@ -38,7 +38,7 @@ public class ConverterToSchedulesInRoom {
                                                   Map<Room, List<Schedule>> roomSchedules) {
         List<ScheduleForRoomDTO> schedulesInRoomDTOS = new ArrayList<>();
         Set<Room> roomsScheduled = roomSchedules.keySet();
-        for (var roomSchedule: rooms) {
+        for (var roomSchedule : rooms) {
             ScheduleForRoomDTO schedule = new ScheduleForRoomDTO();
             schedule.setRoomId(roomSchedule.getId());
             schedule.setRoomName(roomSchedule.getName());
@@ -47,7 +47,7 @@ public class ConverterToSchedulesInRoom {
                 schedule.setSchedules(
                         concatDaySchedules(semester, roomSchedules.get(roomSchedule).stream()
                                 .collect(Collectors.groupingBy(Schedule::getDayOfWeek, LinkedHashMap::new, Collectors.toList()))
-                ));
+                        ));
             } else {
                 schedule.setSchedules(getEmptyDays(semester));
             }
@@ -61,7 +61,7 @@ public class ConverterToSchedulesInRoom {
         List<DaysOfWeekWithClassesForRoomDTO> days = new ArrayList<>();
         Set<DayOfWeek> daysWithSchedules = daySchedules.keySet();
         Set<DayOfWeek> semesterDays = new TreeSet<>(semester.getDaysOfWeek());
-        for (var day: semesterDays) {
+        for (var day : semesterDays) {
             DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
             daysOfWeekWithClassesForRoomDTO.setDay(day);
             if (daysWithSchedules.contains(day)) {
@@ -76,7 +76,7 @@ public class ConverterToSchedulesInRoom {
     }
 
     private List<RoomClassesInScheduleDTO> concatRoomClassesInScheduleDTOS(Semester semester,
-                                                                             List<Schedule> schedules) {
+                                                                           List<Schedule> schedules) {
         List<RoomClassesInScheduleDTO> roomClassesInScheduleDTOS = new ArrayList<>();
         RoomClassesInScheduleDTO roomClassesInScheduleDTO = new RoomClassesInScheduleDTO();
         Map<Boolean, List<Schedule>> evenOdd = schedules.stream()
@@ -90,10 +90,10 @@ public class ConverterToSchedulesInRoom {
     }
 
     private List<LessonsInRoomScheduleDTO> concatLessonsInRoomScheduleDTOS(Semester semester,
-                                                                            Map<Period, List<Schedule>> periodSchedules) {
+                                                                           Map<Period, List<Schedule>> periodSchedules) {
         List<LessonsInRoomScheduleDTO> lessons = new ArrayList<>();
         Set<Period> periods = periodSchedules.keySet();
-        for (var periodSchedule: semester.getPeriods()) {
+        for (var periodSchedule : semester.getPeriods()) {
             LessonsInRoomScheduleDTO lessonsInRoomScheduleDTO = new LessonsInRoomScheduleDTO();
             lessonsInRoomScheduleDTO.setClassId(periodSchedule.getId());
             lessonsInRoomScheduleDTO.setClassName(periodSchedule.getName());
@@ -114,7 +114,7 @@ public class ConverterToSchedulesInRoom {
 
     private List<DaysOfWeekWithClassesForRoomDTO> getEmptyDays(Semester semester) {
         List<DaysOfWeekWithClassesForRoomDTO> days = new ArrayList<>();
-        for (var daySchedule: semester.getDaysOfWeek()) {
+        for (var daySchedule : semester.getDaysOfWeek()) {
             DaysOfWeekWithClassesForRoomDTO daysOfWeekWithClassesForRoomDTO = new DaysOfWeekWithClassesForRoomDTO();
             daysOfWeekWithClassesForRoomDTO.setDay(daySchedule);
             daysOfWeekWithClassesForRoomDTO.setClasses(getEmptyRoomClassesInScheduleDTOS(semester));
@@ -134,7 +134,7 @@ public class ConverterToSchedulesInRoom {
 
     private List<LessonsInRoomScheduleDTO> getEmptyLessonsInRoomScheduleDTOS(Semester semester) {
         List<LessonsInRoomScheduleDTO> lessons = new ArrayList<>();
-        for (var periodSchedule: semester.getPeriods()) {
+        for (var periodSchedule : semester.getPeriods()) {
             LessonsInRoomScheduleDTO lessonsInRoomScheduleDTO = new LessonsInRoomScheduleDTO();
             lessonsInRoomScheduleDTO.setClassId(periodSchedule.getId());
             lessonsInRoomScheduleDTO.setClassName(periodSchedule.getName());

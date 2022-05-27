@@ -1,6 +1,6 @@
 package com.softserve.repository.impl;
 
-import com.softserve.entity.*;
+import com.softserve.entity.TemporarySchedule;
 import com.softserve.repository.TemporaryScheduleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,13 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public Long isExistTemporaryScheduleByVacationByDate(LocalDate date, Long semesterId, boolean vacation) {
         log.info("In isExistTemporaryScheduleByVacationByDate(semesterId = [{}], date = [{}], vacation = [{}])", semesterId, date, vacation);
         return (Long) sessionFactory.getCurrentSession().createQuery(
-                "select count (t.id) from TemporarySchedule t where t.date = :date and t.vacation = :vacation and t.semester.id = :semesterId and t.scheduleId = null  and t.teacher = null  and t.period = null ")
+                        "select count (t.id) from TemporarySchedule t " +
+                                "where t.date = :date " +
+                                "and t.vacation = :vacation " +
+                                "and t.semester.id = :semesterId " +
+                                "and t.scheduleId = null " +
+                                "and t.teacher = null " +
+                                "and t.period = null")
                 .setParameter("date", date)
                 .setParameter("semesterId", semesterId)
                 .setParameter("vacation", vacation)
@@ -48,7 +54,13 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     @Override
     public Long isExistTemporaryScheduleByVacationByDateAndTeacher(LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
         log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t where  t.date = :date and t.vacation = :vacation and t.semester.id = :semesterId  and t.scheduleId = null  and t.period.id = null ")
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (t.id) from TemporarySchedule t " +
+                                "where t.date = :date " +
+                                "and t.vacation = :vacation " +
+                                "and t.semester.id = :semesterId " +
+                                "and t.scheduleId = null " +
+                                "and t.period.id = null")
                 .setParameter("date", date)
                 .setParameter("semesterId", semesterId)
                 .setParameter("vacation", vacation)
@@ -59,7 +71,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
      * {@inheritDoc}
      */
     @Override
-    public Long isExistTemporaryScheduleByVacationByDateAndTeacherWithIgnoreId(Long id, LocalDate date, Long semesterId, Long teacherId, boolean vacation) {
+    public Long isExistTemporaryScheduleByVacationByDateAndTeacherWithIgnoreId(Long id, LocalDate date, Long semesterId, Long teacherId,
+                                                                               boolean vacation) {
         log.info("In isExistVacationByDate(semesterId = [{}], date = [{}])", semesterId, date);
         return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t" +
                         " where  t.date = :date and t.vacation =  :vacation and t.semester.id = :semesterId and t.id!= :id  " +
@@ -77,8 +90,18 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     @Override
     public Long isExistTemporarySchedule(TemporarySchedule object, boolean vacation) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  false " +
-                        "and s.room.id=:roomId and s.group.id=:groupId and s.period.id = :periodId and s.subject.id = :subjectId and s.scheduleId = :scheduleId and s.lessonType=:lessonType and s.semester.id = :semesterId and s.vacation = :vacation")
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (s.id) from TemporarySchedule s " +
+                                "where s.date = :date " +
+                                "and s.vacation = false " +
+                                "and s.room.id = :roomId " +
+                                "and s.group.id = :groupId " +
+                                "and s.period.id = :periodId " +
+                                "and s.subject.id = :subjectId " +
+                                "and s.scheduleId = :scheduleId " +
+                                "and s.lessonType = :lessonType " +
+                                "and s.semester.id = :semesterId " +
+                                "and s.vacation = :vacation")
                 .setParameter("date", object.getDate())
                 .setParameter("roomId", object.getRoom().getId())
                 .setParameter("groupId", object.getGroup().getId())
@@ -97,8 +120,13 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     @Override
     public Long isExistTemporaryScheduleByDateAndScheduleId(TemporarySchedule object, boolean vacation) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t where  t.date = :date and t.vacation =  false " +
-                        " and t.scheduleId = :scheduleId  and t.semester.id = :semesterId and t.vacation = :vacation")
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (t.id) from TemporarySchedule t " +
+                                "where t.date = :date " +
+                                "and t.vacation = false " +
+                                "and t.scheduleId = :scheduleId " +
+                                "and t.semester.id = :semesterId " +
+                                "and t.vacation = :vacation")
                 .setParameter("date", object.getDate())
                 .setParameter("scheduleId", object.getScheduleId())
                 .setParameter("semesterId", object.getSemester().getId())
@@ -112,8 +140,14 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     @Override
     public Long isExistTemporaryScheduleByDateAndScheduleIdWithIgnoreId(TemporarySchedule object, boolean vacation) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (t.id) from  TemporarySchedule t where  t.date = :date and t.vacation =  false " +
-                        " and t.scheduleId = :scheduleId  and t.semester.id = :semesterId and t.vacation = :vacation and t.id!= :id")
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (t.id) from TemporarySchedule t " +
+                                "where t.date = :date " +
+                                "and t.vacation = false " +
+                                "and t.scheduleId = :scheduleId " +
+                                "and t.semester.id = :semesterId " +
+                                "and t.vacation = :vacation " +
+                                "and t.id != :id")
                 .setParameter("date", object.getDate())
                 .setParameter("scheduleId", object.getScheduleId())
                 .setParameter("semesterId", object.getSemester().getId())
@@ -128,8 +162,18 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     @Override
     public Long isExistTemporaryScheduleWithIgnoreId(TemporarySchedule object) {
         log.info("In isExistTemporarySchedule(object = [{}]", object);
-        return (Long) sessionFactory.getCurrentSession().createQuery("select count (s.id) from  TemporarySchedule s where  s.date = :date and s.vacation =  false " +
-                        "and s.room.id=:roomId and s.group.id=:groupId and s.period.id = :periodId and s.subject.id = :subjectId and s.scheduleId = :scheduleId and s.lessonType=:lessonType and s.semester.id = :semesterId and s.id!=:id")
+        return (Long) sessionFactory.getCurrentSession().createQuery(
+                        "select count (s.id) from TemporarySchedule s " +
+                                "where s.date = :date " +
+                                "and s.vacation = false " +
+                                "and s.room.id = :roomId " +
+                                "and s.group.id = :groupId " +
+                                "and s.period.id = :periodId " +
+                                "and s.subject.id = :subjectId " +
+                                "and s.scheduleId = :scheduleId " +
+                                "and s.lessonType = :lessonType " +
+                                "and s.semester.id = :semesterId " +
+                                "and s.id != :id")
                 .setParameter("date", object.getDate())
                 .setParameter("roomId", object.getRoom().getId())
                 .setParameter("groupId", object.getGroup().getId())
@@ -162,10 +206,13 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     @Override
     public List<TemporarySchedule> getAllByTeacherAndRange(LocalDate fromDate, LocalDate toDate, Long teacherId) {
         log.info("In getAllByTeacherAndRange(teacherId = [{}], fromDate = [{}], toDate = [{}]", teacherId, fromDate, teacherId);
-        return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
-                        " join Schedule  s on t.scheduleId = s.id" +
-                        " join Lesson l on s.lesson.id  = l.id " +
-                        "where t.date <= :toDate  and t.date >= :fromDate and ( t.teacher.id = :teacherId or l.teacher.id = :teacherId )  ORDER BY t.date asc ")
+        return sessionFactory.getCurrentSession().createQuery(
+                        "SELECT t from TemporarySchedule t " +
+                                "join Schedule s on t.scheduleId = s.id " +
+                                "join Lesson l on s.lesson.id = l.id " +
+                                "where t.date <= :toDate " +
+                                "and t.date >= :fromDate " +
+                                "and (t.teacher.id = :teacherId or l.teacher.id = :teacherId ) ORDER BY t.date asc ")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
                 .setParameter("teacherId", teacherId)
@@ -231,7 +278,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
     public void deleteTemporarySchedulesBySemesterId(Long semesterId) {
         log.info("In deleteTemporarySchedulesBySemesterId with semesterId = {}", semesterId);
         sessionFactory.getCurrentSession().createQuery(
-                        "delete from TemporarySchedule t where t.id in (select temp.id from TemporarySchedule temp where temp.semester.id = :semesterId)")
+                        "delete from TemporarySchedule t " +
+                                "where t.id in (select temp.id from TemporarySchedule temp where temp.semester.id = :semesterId)")
                 .setParameter("semesterId", semesterId).executeUpdate();
     }
 }

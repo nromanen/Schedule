@@ -1,20 +1,24 @@
 package com.softserve.mapper;
 
-import com.softserve.dto.SubjectWithTypeDTO;
 import com.softserve.dto.SubjectDTO;
 import com.softserve.dto.SubjectNameWithTypesDTO;
+import com.softserve.dto.SubjectWithTypeDTO;
 import com.softserve.entity.Subject;
 import com.softserve.entity.enums.LessonType;
 import org.mapstruct.Mapper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Mapper(componentModel = "spring")
 public abstract class SubjectMapper {
     public abstract SubjectDTO subjectToSubjectDTO(Subject subject);
+
     public abstract Subject subjectDTOToSubject(SubjectDTO subjectDTO);
 
-    public abstract List<SubjectDTO> subjectsToSubjectDTOs (List<Subject> subjects);
+    public abstract List<SubjectDTO> subjectsToSubjectDTOs(List<Subject> subjects);
 
     public List<SubjectNameWithTypesDTO> subjectWithTypeDTOsToSubjectNameWithTypesDTOs(List<SubjectWithTypeDTO> subjects) {
 

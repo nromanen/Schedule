@@ -15,67 +15,55 @@ import java.util.Optional;
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
 
+    public static final String GET_NEXT_POSITION
+            = "SELECT min(g.sortingOrder) "
+            + "FROM Group g "
+            + "WHERE g.sortingOrder > :position";
+    public static final String GET_ORDER_BY_ID
+            = "SELECT g.sortingOrder "
+            + "FROM Group g "
+            + "WHERE g.id = :id";
     private static final String GET_ALL_QUERY
             = "SELECT g "
             + "FROM Group g "
             + "ORDER BY g.title ASC";
-
     private static final String GET_WITH_STUDENTS_BY_ID_QUERY
             = "SELECT g "
             + "FROM Group g "
             + "LEFT JOIN FETCH g.students "
             + "WHERE g.id = :id";
-
     private static final String IS_EXISTS_BY_TITLE_QUERY
             = "SELECT (count(*) > 0) "
             + "FROM Group g "
             + "WHERE lower(g.title) = lower(:title)";
-
     private static final String IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY = IS_EXISTS_BY_TITLE_QUERY + " AND g.id!=:id";
-
     private static final String IS_EXISTS_BY_ID_QUERY
             = "SELECT (count(*) > 0) "
             + "FROM Group g "
             + "WHERE g.id = :id";
-
     private static final String IS_LESSONS_EXIST_FOR_GROUP_ID_QUERY
             = "SELECT (count(l.id) > 0) "
             + "FROM Lesson l "
             + "WHERE l.group.id = :groupId";
-
     private static final String GET_BY_TEACHER_ID
             = "SELECT DISTINCT l.group "
             + "FROM Lesson l "
             + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
-
     private static final String GET_GROUPS_BY_IDS
             = "select g "
             + "from Group g "
             + "where g.id in (:ids)";
-
     private static final String GET_ALL_ORDERED
             = "SELECT g "
             + "FROM Group g "
             + "ORDER BY g.sortingOrder ASC";
-
     private static final String GET_MAX_SORTING_ORDER
             = "SELECT max(g.sortingOrder) "
             + "FROM Group g";
-
     private static final String UPDATE_GROUP_OFFSET
             = "UPDATE Group g "
             + "SET g.sortingOrder = g.sortingOrder+1 "
             + "WHERE g.sortingOrder >= :lowerPosition and g.sortingOrder < :upperPosition";
-
-    public static final String GET_NEXT_POSITION
-            = "SELECT min(g.sortingOrder) "
-            + "FROM Group g "
-            + "WHERE g.sortingOrder > :position";
-
-    public static final String GET_ORDER_BY_ID
-            = "SELECT g.sortingOrder "
-            + "FROM Group g "
-            + "WHERE g.id = :id";
 
     private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
@@ -153,6 +141,7 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .setParameter("id", id)
                 .uniqueResultOptional();
     }
+
 
     /**
      * {@inheritDoc}
