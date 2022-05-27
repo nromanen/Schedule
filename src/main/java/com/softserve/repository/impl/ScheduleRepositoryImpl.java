@@ -327,7 +327,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     public List<Schedule> getScheduleBySemester(Long semesterId) {
         log.info("In getScheduleBySemester(semesterId = [{}])", semesterId);
 
-        List<Schedule> scheduleList = sessionFactory.getCurrentSession().createQuery(
+        return sessionFactory.getCurrentSession().createQuery(
                         "SELECT distinct s " +
                                 "from Schedule s " +
                                 "join fetch s.lesson sl " +
@@ -338,7 +338,6 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "where s.lesson.semester.id = :semesterId " + NOT_DISABLED_SQL)
                 .setParameter("semesterId", semesterId)
                 .getResultList();
-        return scheduleList;
 
     }
 
