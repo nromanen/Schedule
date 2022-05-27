@@ -37,7 +37,7 @@ public interface SemesterService extends BasicService<Semester, Long> {
      * Returns semester with field defaultSemester equal to true.
      *
      * @return the default semester if such exist, otherwise throw exception
-     * @throws ScheduleConflictException if default semester isn't specified
+     * @throws com.softserve.exception.ScheduleConflictException if default semester isn't specified
      */
     Semester getDefaultSemester();
 

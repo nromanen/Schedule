@@ -153,9 +153,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     public List<Schedule> getSchedulesForGroupedLessons(Schedule schedule) {
         log.info("In getSchedulesForGroupedLessons(schedule = [{}]", schedule);
         List<Schedule> schedules = new ArrayList<>();
-        schedulesForGroupedLessons(schedule).forEach(schedule1 -> {
-            schedules.add(scheduleRepository.getScheduleByObject(schedule1));
-        });
+        schedulesForGroupedLessons(schedule).forEach(schedule1 ->
+            schedules.add(scheduleRepository.getScheduleByObject(schedule1))
+        );
         return schedules;
     }
 
@@ -441,28 +441,26 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     private TemporaryScheduleDTOForDashboard compareScheduleWithTemporarySchedule(List<TemporarySchedule> temporarySchedules,
                                                                                   Long groupId, Long periodId, Long teacherId) {
-        TemporaryScheduleDTOForDashboard temporaryScheduleDTO = new TemporaryScheduleDTOForDashboard();
         TemporarySchedule temporarySchedule = temporarySchedules.stream().filter(temporarySchedule1 ->
                         !temporarySchedule1.isVacation() && temporarySchedule1.getScheduleId() != null
-                                && temporarySchedule1.getPeriod().getId() == periodId
+                                && temporarySchedule1.getPeriod().getId().equals(periodId)
                                 && temporarySchedule1.getGroup().getId().equals(groupId)
                 )
                 .findFirst().orElse(temporarySchedules.stream().filter(temporarySchedule1 ->
                         temporarySchedule1.getScheduleId() != null &&
-                                temporarySchedule1.getPeriod().getId() == periodId
+                                temporarySchedule1.getPeriod().getId().equals(periodId)
                                 && temporarySchedule1.getGroup().getId().equals(groupId) &&
                                 temporarySchedule1.isVacation()
                 ).findFirst().orElse(temporarySchedules.stream().filter(temporarySchedule1 ->
                         temporarySchedule1.getPeriod() == null &&
                                 temporarySchedule1.getScheduleId() == null &&
                                 temporarySchedule1.getTeacher() != null
-                                && temporarySchedule1.getTeacher().getId() == teacherId
+                                && temporarySchedule1.getTeacher().getId().equals(teacherId)
                                 && temporarySchedule1.isVacation()
                 ).findFirst().orElse(temporarySchedules.stream().filter(temporarySchedule1 ->
                         temporarySchedule1.getScheduleId() == null && temporarySchedule1.isVacation()
                 ).findFirst().orElse(new TemporarySchedule()))));
-        temporaryScheduleDTO = temporaryScheduleMapper.convertToDtoForDashboard(temporarySchedule);
-        return temporaryScheduleDTO;
+        return temporaryScheduleMapper.convertToDtoForDashboard(temporarySchedule);
     }
 
     private List<DaysOfWeekWithClassesForGroupDTO> getDaysForSemester(Long semesterId, Long groupId) {
@@ -804,28 +802,28 @@ public class ScheduleServiceImpl implements ScheduleService {
 
                 for (Schedule schedule : entry.getValue()) {
                     TemporarySchedule temporarySchedule = temporarySchedules.stream().filter(temporarySchedule1 ->
-                            temporarySchedule1.getScheduleId() == schedule.getId() &&
-                                    temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
+                            temporarySchedule1.getScheduleId().equals(schedule.getId()) &&
+                                    temporarySchedule1.getSemester().getId().equals(schedule.getLesson().getSemester().getId())
                                     && temporarySchedule1.getDate().equals(itr.getKey())
 
                     ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
                             temporarySchedule1.getScheduleId() != null &&
-                                    temporarySchedule1.getScheduleId() == schedule.getId() &&
+                                    temporarySchedule1.getScheduleId().equals(schedule.getId()) &&
                                     temporarySchedule1.getDate().equals(itr.getKey()) &&
-                                    temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
+                                    temporarySchedule1.getSemester().getId().equals(schedule.getLesson().getSemester().getId())
 
                     ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
                             temporarySchedule1.getPeriod() == null &&
                                     temporarySchedule1.getScheduleId() == null &&
                                     temporarySchedule1.getTeacher() != null &&
-                                    temporarySchedule1.getTeacher().getId() == schedule.getLesson().getTeacher().getId() &&
+                                    temporarySchedule1.getTeacher().getId().equals(schedule.getLesson().getTeacher().getId()) &&
                                     temporarySchedule1.getDate().equals(itr.getKey()) &&
-                                    temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
+                                    temporarySchedule1.getSemester().getId().equals(schedule.getLesson().getSemester().getId())
 
                     ).findFirst().orElse(vacationByDateRangeForTeacher.stream().filter(temporarySchedule1 ->
                             temporarySchedule1.getScheduleId() == null &&
                                     temporarySchedule1.getDate().equals(itr.getKey()) &&
-                                    temporarySchedule1.getSemester().getId() == schedule.getLesson().getSemester().getId()
+                                    temporarySchedule1.getSemester().getId().equals(schedule.getLesson().getSemester().getId())
 
                     ).findFirst().orElse(new TemporarySchedule()))));
                     temporaryScheduleMap.put(schedule, temporarySchedule);
@@ -862,7 +860,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         ScheduleForTeacherDTO schedule = getScheduleForTeacher(semesterId, teacher.getId());
         PdfReportGenerator generatePdfReport = new PdfReportGenerator();
         ByteArrayOutputStream bos = generatePdfReport.teacherScheduleReport(schedule, language);
-        String teacherEmail = userService.getById(Long.valueOf(teacher.getUserId())).getEmail();
+        String teacherEmail = userService.getById(teacher.getUserId()).getEmail();
         mailService.send(String.format("%s_%s_%s_%s.pdf", semesterService.getById(semesterId).getDescription(), teacher.getSurname(),
                         teacher.getName(), teacher.getPatronymic()),
                 teacherEmail,

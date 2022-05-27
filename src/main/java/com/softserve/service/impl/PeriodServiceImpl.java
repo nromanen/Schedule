@@ -101,7 +101,7 @@ public class PeriodServiceImpl implements PeriodService {
         if (isPeriodFree(getAll(), object)) {
             getById(object.getId());
             if (periodRepository.findByName(object.getName()).isPresent() &&
-                    periodRepository.findByName(object.getName()).get().getId() != object.getId()) {
+                    !periodRepository.findByName(object.getName()).get().getId().equals(object.getId())) {
                 throw new FieldAlreadyExistsException(Period.class, "name", object.getName());
             }
             return periodRepository.update(object);
