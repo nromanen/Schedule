@@ -73,8 +73,7 @@ public class SemesterServiceImpl implements SemesterService {
     @Override
     public List<Semester> getAll() {
         log.debug("In getAll()");
-        List<Semester> semesters = semesterRepository.getAll();
-        return semesters;
+        return semesterRepository.getAll();
     }
 
     /**
@@ -368,7 +367,7 @@ public class SemesterServiceImpl implements SemesterService {
         Set<DayOfWeek> days = semester.getDaysOfWeek();
 
         if (days == null) {
-            days = new HashSet<DayOfWeek>();
+            days = new HashSet<>();
         }
         days.addAll(daysOfWeek);
         semester.setDaysOfWeek(days);
@@ -385,7 +384,7 @@ public class SemesterServiceImpl implements SemesterService {
         Set<Period> periodsSemester = semester.getPeriods();
 
         if (periodsSemester == null) {
-            periodsSemester = new HashSet<Period>();
+            periodsSemester = new HashSet<>();
         }
         periodsSemester.addAll(periods);
         semester.setPeriods(periodsSemester);

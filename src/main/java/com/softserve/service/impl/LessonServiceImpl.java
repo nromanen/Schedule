@@ -119,9 +119,7 @@ public class LessonServiceImpl implements LessonService {
     public List<Lesson> save(List<Lesson> lessons) {
         log.info("In save(lessons = [{}])", lessons);
         List<Lesson> lessonsList = new ArrayList<>();
-        lessons.forEach(lesson -> {
-            lessonsList.add(save(lesson));
-        });
+        lessons.forEach(lesson -> lessonsList.add(save(lesson)));
 
         return lessonsList;
     }

@@ -9,11 +9,11 @@ import java.util.stream.IntStream;
 
 @Getter
 public class EntityNotFoundException extends RuntimeException {
-    private final Class clazz;
+    private final Class<?> clazz;
     private final String[] searchParamsMap;
     private final String shortMessage;
 
-    public EntityNotFoundException(Class clazz, String... searchParamsMap) {
+    public EntityNotFoundException(Class<?> clazz, String... searchParamsMap) {
         super(EntityNotFoundException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, (Object[]) searchParamsMap)));
         this.clazz = clazz;
         this.searchParamsMap = searchParamsMap;

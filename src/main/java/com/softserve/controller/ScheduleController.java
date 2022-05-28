@@ -163,7 +163,7 @@ public class ScheduleController {
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete schedule by id")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete(id =[{}]", id);
         Schedule schedule = scheduleService.getById(id);
         if (schedule.getLesson().isGrouped()) {
@@ -214,7 +214,7 @@ public class ScheduleController {
     @DeleteMapping("/delete-schedules")
     @ApiOperation(value = "Delete all schedules by semester id")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity deleteSchedulesBySemesterId(@RequestParam Long semesterId) {
+    public ResponseEntity<Void> deleteSchedulesBySemesterId(@RequestParam Long semesterId) {
         log.info("In deleteSchedulesBySemesterId with semesterId = {}", semesterId);
         scheduleService.deleteSchedulesBySemesterId(semesterId);
         return ResponseEntity.ok().build();
@@ -255,12 +255,8 @@ public class ScheduleController {
                     lessonsInScheduleDTO.setLesson(lessonsInScheduleMapper.lessonToLessonsInTemporaryScheduleDTO(item.getKey().getLesson()));
                     lessonsInScheduleDTO.setPeriod(periodMapper.convertToDto(entry.getKey()));
                     lessonsInScheduleDTO.setRoom(roomForScheduleMapper.roomToRoomForScheduleDTO(item.getKey().getRoom()));
+                    lessonsInScheduleDTO.setVacation(item.getValue().isVacation());
 
-                    if (item.getValue().isVacation()) {
-                        lessonsInScheduleDTO.setVacation(true);
-                    } else {
-                        lessonsInScheduleDTO.setVacation(false);
-                    }
                     scheduleForTemporaryTeacherDateRangeDTO.setSchedule(lessonsInScheduleDTO);
 
                     if (item.getValue().getScheduleId() != null) {

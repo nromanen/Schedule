@@ -53,7 +53,7 @@ public class AuthenticationController {
 
     @PostMapping("/sign-in")
     @ApiOperation(value = "Get credentials  for login")
-    public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO requestDto) {
+    public ResponseEntity<Object> signIn(@RequestBody AuthenticationRequestDTO requestDto) {
         log.info("Enter into signIn method with user email {}", requestDto.getEmail());
         User user = userService.findSocialUser(requestDto.getEmail()).orElseThrow(() ->
                 new BadCredentialsException("Invalid password or email")
@@ -117,7 +117,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/google")
-    public ResponseEntity getGoogleSignIn(HttpServletResponse response) throws IOException {
+    public ResponseEntity<String> getGoogleSignIn(HttpServletResponse response) throws IOException {
         response.sendRedirect(url + "oauth_login/google");
         return ResponseEntity.ok().body("Ok");
     }

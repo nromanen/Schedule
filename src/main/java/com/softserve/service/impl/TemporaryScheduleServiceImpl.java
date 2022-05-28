@@ -282,7 +282,6 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
                 checkReferencedElement(object);
             }
         }
-        TemporarySchedule temporarySchedule = temporaryScheduleRepository.save(object);
 //        if(temporarySchedule.isNotification()){
 //            try {
 //                DeleteVacationNotification deleteVacationNotification = new DeleteVacationNotification(teacherService, userService, mailService);
@@ -291,7 +290,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
 //                log.error(e.toString());
 //            }
 //        }
-        return temporarySchedule;
+        return temporaryScheduleRepository.save(object);
     }
 
     /**

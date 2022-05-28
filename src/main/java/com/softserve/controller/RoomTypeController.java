@@ -63,7 +63,7 @@ public class RoomTypeController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete room type by id")
-    public ResponseEntity delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         RoomType roomType = roomTypeService.getById(id);
         roomTypeService.delete(roomType);

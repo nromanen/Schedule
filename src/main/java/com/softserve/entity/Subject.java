@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
@@ -19,9 +18,8 @@ import java.io.Serializable;
         @ParamDef(name = "disable", type = "boolean"),
 })
 
-@Filters({
-        @Filter(name = "subjectDisableFilter", condition = "disable = :disable"),
-})
+@Filter(name = "subjectDisableFilter", condition = "disable = :disable")
+
 @NoArgsConstructor
 @Setter
 @Getter

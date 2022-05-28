@@ -64,7 +64,7 @@ public class SubjectController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete subject by id")
-    public ResponseEntity delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         Subject subject = subjectService.getById(id);
         subjectService.delete(subject);

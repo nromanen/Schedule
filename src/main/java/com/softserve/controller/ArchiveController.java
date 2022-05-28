@@ -44,7 +44,7 @@ public class ArchiveController {
     @PostMapping("/{semesterId}")
     @ApiOperation(value = "Save archive schedule by semesterId in mongo db")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity archiveScheduleBySemester(@PathVariable("semesterId") Long semesterId) {
+    public ResponseEntity<Object> archiveScheduleBySemester(@PathVariable("semesterId") Long semesterId) {
         log.info("In archiveScheduleBySemester with semesterId = {}", semesterId);
         Semester semester = semesterService.getById(semesterId);
         List<Schedule> schedules = scheduleService.getSchedulesBySemester(semesterId);

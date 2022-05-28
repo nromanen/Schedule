@@ -154,7 +154,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         log.info("In getSchedulesForGroupedLessons(schedule = [{}]", schedule);
         List<Schedule> schedules = new ArrayList<>();
         schedulesForGroupedLessons(schedule).forEach(schedule1 ->
-            schedules.add(scheduleRepository.getScheduleByObject(schedule1))
+                schedules.add(scheduleRepository.getScheduleByObject(schedule1))
         );
         return schedules;
     }
@@ -403,26 +403,24 @@ public class ScheduleServiceImpl implements ScheduleService {
                 LessonInScheduleByWeekDTO lessonInScheduleByWeekDTO = classesInScheduleForGroupDTO.getWeeks();
                 LessonsInScheduleDTO even = lessonInScheduleByWeekDTO.getEven();
                 LessonsInScheduleDTO odd = lessonInScheduleByWeekDTO.getOdd();
-                if (even != null && !temporarySchedules.get(EvenOdd.EVEN).isEmpty()) {
-                    if (temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForGroupDTO.getDay()) != null) {
-                        TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(
-                                temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForGroupDTO.getDay()),
-                                scheduleForGroupDTO.getGroup().getId(), classesInScheduleForGroupDTO.getPeriod().getId(),
-                                classesInScheduleForGroupDTO.getWeeks().getEven().getTeacher().getId());
-                        if (temporaryScheduleDTO != null) {
-                            even.setTemporaryScheduleDTO(temporaryScheduleDTO);
-                        }
+                if (even != null && !temporarySchedules.get(EvenOdd.EVEN).isEmpty() &&
+                        temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForGroupDTO.getDay()) != null) {
+                    TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(
+                            temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForGroupDTO.getDay()),
+                            scheduleForGroupDTO.getGroup().getId(), classesInScheduleForGroupDTO.getPeriod().getId(),
+                            classesInScheduleForGroupDTO.getWeeks().getEven().getTeacher().getId());
+                    if (temporaryScheduleDTO != null) {
+                        even.setTemporaryScheduleDTO(temporaryScheduleDTO);
                     }
                 }
-                if (odd != null && !temporarySchedules.get(EvenOdd.ODD).isEmpty()) {
-                    if (temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForGroupDTO.getDay()) != null) {
-                        TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(
-                                temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForGroupDTO.getDay()),
-                                scheduleForGroupDTO.getGroup().getId(), classesInScheduleForGroupDTO.getPeriod().getId(),
-                                classesInScheduleForGroupDTO.getWeeks().getOdd().getTeacher().getId());
-                        if (temporaryScheduleDTO != null) {
-                            odd.setTemporaryScheduleDTO(temporaryScheduleDTO);
-                        }
+                if (odd != null && !temporarySchedules.get(EvenOdd.ODD).isEmpty() &&
+                        temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForGroupDTO.getDay()) != null) {
+                    TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(
+                            temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForGroupDTO.getDay()),
+                            scheduleForGroupDTO.getGroup().getId(), classesInScheduleForGroupDTO.getPeriod().getId(),
+                            classesInScheduleForGroupDTO.getWeeks().getOdd().getTeacher().getId());
+                    if (temporaryScheduleDTO != null) {
+                        odd.setTemporaryScheduleDTO(temporaryScheduleDTO);
                     }
                 }
 
@@ -527,30 +525,28 @@ public class ScheduleServiceImpl implements ScheduleService {
         for (DaysOfWeekWithClassesForTeacherDTO daysOfWeekWithClassesForTeacherDTOList : scheduleForTeacherDTO.getDays()) {
             for (ClassForTeacherScheduleDTO classForTeacherScheduleDTO : daysOfWeekWithClassesForTeacherDTOList.getEvenWeek().getPeriods()) {
                 for (LessonForTeacherScheduleDTO lessonForTeacherScheduleDTO : classForTeacherScheduleDTO.getLessons()) {
-                    if (lessonForTeacherScheduleDTO != null && !temporarySchedules.get(EvenOdd.EVEN).isEmpty()) {
-                        if (temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForTeacherDTOList.getDay()) != null) {
-                            TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(
-                                    temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForTeacherDTOList.getDay()),
-                                    lessonForTeacherScheduleDTO.getGroup().getId(), classForTeacherScheduleDTO.getPeriod().getId(),
-                                    scheduleForTeacherDTO.getTeacher().getId());
-                            if (temporaryScheduleDTO != null) {
-                                lessonForTeacherScheduleDTO.setTemporaryScheduleDTO(temporaryScheduleDTO);
-                            }
+                    if (lessonForTeacherScheduleDTO != null && !temporarySchedules.get(EvenOdd.EVEN).isEmpty() &&
+                            temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForTeacherDTOList.getDay()) != null) {
+                        TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(
+                                temporarySchedules.get(EvenOdd.EVEN).get(daysOfWeekWithClassesForTeacherDTOList.getDay()),
+                                lessonForTeacherScheduleDTO.getGroup().getId(), classForTeacherScheduleDTO.getPeriod().getId(),
+                                scheduleForTeacherDTO.getTeacher().getId());
+                        if (temporaryScheduleDTO != null) {
+                            lessonForTeacherScheduleDTO.setTemporaryScheduleDTO(temporaryScheduleDTO);
                         }
                     }
                 }
             }
             for (ClassForTeacherScheduleDTO classForTeacherScheduleDTO : daysOfWeekWithClassesForTeacherDTOList.getOddWeek().getPeriods()) {
                 for (LessonForTeacherScheduleDTO lessonForTeacherScheduleDTO : classForTeacherScheduleDTO.getLessons()) {
-                    if (lessonForTeacherScheduleDTO != null && !temporarySchedules.get(EvenOdd.ODD).isEmpty()) {
-                        if (temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForTeacherDTOList.getDay()) != null) {
-                            TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(
-                                    temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForTeacherDTOList.getDay()),
-                                    lessonForTeacherScheduleDTO.getGroup().getId(), classForTeacherScheduleDTO.getPeriod().getId(),
-                                    scheduleForTeacherDTO.getTeacher().getId());
-                            if (temporaryScheduleDTO != null) {
-                                lessonForTeacherScheduleDTO.setTemporaryScheduleDTO(temporaryScheduleDTO);
-                            }
+                    if (lessonForTeacherScheduleDTO != null && !temporarySchedules.get(EvenOdd.ODD).isEmpty() &&
+                            temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForTeacherDTOList.getDay()) != null) {
+                        TemporaryScheduleDTOForDashboard temporaryScheduleDTO = compareScheduleWithTemporarySchedule(
+                                temporarySchedules.get(EvenOdd.ODD).get(daysOfWeekWithClassesForTeacherDTOList.getDay()),
+                                lessonForTeacherScheduleDTO.getGroup().getId(), classForTeacherScheduleDTO.getPeriod().getId(),
+                                scheduleForTeacherDTO.getTeacher().getId());
+                        if (temporaryScheduleDTO != null) {
+                            lessonForTeacherScheduleDTO.setTemporaryScheduleDTO(temporaryScheduleDTO);
                         }
                     }
                 }
@@ -797,7 +793,6 @@ public class ScheduleServiceImpl implements ScheduleService {
             Map<Period, Map<Schedule, TemporarySchedule>> periodListHashMap = new HashMap<>();
 
             for (Map.Entry<Period, List<Schedule>> entry : itr.getValue().entrySet()) {
-                //HashMap<Schedule, TemporarySchedule> hashMap = new HashMap<>();
                 Map<Schedule, TemporarySchedule> temporaryScheduleMap = new LinkedHashMap<>();
 
                 for (Schedule schedule : entry.getValue()) {
