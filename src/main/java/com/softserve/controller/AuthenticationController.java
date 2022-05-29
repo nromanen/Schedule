@@ -59,8 +59,8 @@ public class AuthenticationController {
                 new BadCredentialsException("Invalid password or email")
         );
         if (user.getPassword().equals(PASSWORD_FOR_SOCIAL_USER)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    new MessageDTO("You registered via social network. Please, sign in via social network."));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new MessageDTO("You registered via social network. Please, sign in via social network."));
         }
         String username = requestDto.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));

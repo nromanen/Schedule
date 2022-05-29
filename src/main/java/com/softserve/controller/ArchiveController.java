@@ -49,8 +49,8 @@ public class ArchiveController {
         Semester semester = semesterService.getById(semesterId);
         List<Schedule> schedules = scheduleService.getSchedulesBySemester(semesterId);
         if (schedules.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDTO(String.format("Schedules with semesterId = %d not found.",
-                    semesterId)));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new MessageDTO(String.format("Schedules with semesterId = %d not found.", semesterId)));
         }
         ScheduleFullDTO scheduleFullDTO = scheduleService.getFullScheduleForSemester(semesterId);
         List<TemporaryScheduleForArchiveDTO> temporaryScheduleDTOs = temporaryScheduleMapper.convertToNewDtoList(
