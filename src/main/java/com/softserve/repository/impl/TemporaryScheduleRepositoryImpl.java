@@ -12,6 +12,12 @@ import java.util.List;
 @Slf4j
 public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<TemporarySchedule, Long> implements TemporaryScheduleRepository {
 
+    private static final String SEMESTER_ID = "semesterId";
+    private static final String FROM_DATE = "fromDate";
+    private static final String TO_DATE = "toDate";
+    private static final String VACATION = "vacation";
+    private static final String SCHEDULE_ID = "scheduleID";
+
     /**
      * {@inheritDoc}
      */
@@ -27,8 +33,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                                 "and t.teacher = null " +
                                 "and t.period = null")
                 .setParameter("date", date)
-                .setParameter("semesterId", semesterId)
-                .setParameter("vacation", vacation)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(VACATION, vacation)
                 .getSingleResult();
     }
 
@@ -42,9 +48,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                         "where  t.date = :date and t.vacation = :vacation and t.semester.id = :semesterId and t.id!= :id and t.period = null " +
                         "and t.teacher = null  and t.scheduleId = null ")
                 .setParameter("date", date)
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .setParameter("id", id)
-                .setParameter("vacation", vacation)
+                .setParameter(VACATION, vacation)
                 .getSingleResult();
     }
 
@@ -62,8 +68,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                                 "and t.scheduleId = null " +
                                 "and t.period.id = null")
                 .setParameter("date", date)
-                .setParameter("semesterId", semesterId)
-                .setParameter("vacation", vacation)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(VACATION, vacation)
                 .getSingleResult();
     }
 
@@ -78,9 +84,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                         " where  t.date = :date and t.vacation =  :vacation and t.semester.id = :semesterId and t.id!= :id  " +
                         "and t.scheduleId = null  and t.period.id = null")
                 .setParameter("date", date)
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .setParameter("id", id)
-                .setParameter("vacation", vacation)
+                .setParameter(VACATION, vacation)
                 .getSingleResult();
     }
 
@@ -107,10 +113,10 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .setParameter("groupId", object.getGroup().getId())
                 .setParameter("periodId", object.getPeriod().getId())
                 .setParameter("subjectId", object.getSubject().getId())
-                .setParameter("scheduleId", object.getScheduleId())
+                .setParameter(SCHEDULE_ID, object.getScheduleId())
                 .setParameter("lessonType", object.getLessonType())
-                .setParameter("semesterId", object.getSemester().getId())
-                .setParameter("vacation", vacation)
+                .setParameter(SEMESTER_ID, object.getSemester().getId())
+                .setParameter(VACATION, vacation)
                 .getSingleResult();
     }
 
@@ -128,9 +134,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                                 "and t.semester.id = :semesterId " +
                                 "and t.vacation = :vacation")
                 .setParameter("date", object.getDate())
-                .setParameter("scheduleId", object.getScheduleId())
-                .setParameter("semesterId", object.getSemester().getId())
-                .setParameter("vacation", vacation)
+                .setParameter(SCHEDULE_ID, object.getScheduleId())
+                .setParameter(SEMESTER_ID, object.getSemester().getId())
+                .setParameter(VACATION, vacation)
                 .getSingleResult();
     }
 
@@ -149,10 +155,10 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                                 "and t.vacation = :vacation " +
                                 "and t.id != :id")
                 .setParameter("date", object.getDate())
-                .setParameter("scheduleId", object.getScheduleId())
-                .setParameter("semesterId", object.getSemester().getId())
+                .setParameter(SCHEDULE_ID, object.getScheduleId())
+                .setParameter(SEMESTER_ID, object.getSemester().getId())
                 .setParameter("id", object.getId())
-                .setParameter("vacation", vacation)
+                .setParameter(VACATION, vacation)
                 .getSingleResult();
     }
 
@@ -179,9 +185,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                 .setParameter("groupId", object.getGroup().getId())
                 .setParameter("periodId", object.getPeriod().getId())
                 .setParameter("subjectId", object.getSubject().getId())
-                .setParameter("scheduleId", object.getScheduleId())
+                .setParameter(SCHEDULE_ID, object.getScheduleId())
                 .setParameter("lessonType", object.getLessonType())
-                .setParameter("semesterId", object.getSemester().getId())
+                .setParameter(SEMESTER_ID, object.getSemester().getId())
                 .setParameter("id", object.getId())
                 .getSingleResult();
     }
@@ -194,8 +200,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
         log.info("In temporaryScheduleByDateRangeForTeacher with fromDate = {} and toDate = {} and teacherId = {}", fromDate, toDate, teacherId);
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
                         "where t.date <= :toDate  and t.date >= :fromDate and t.teacher.id = :teacherId  and t.vacation=false  ORDER BY t.date asc ")
-                .setParameter("fromDate", fromDate)
-                .setParameter("toDate", toDate)
+                .setParameter(FROM_DATE, fromDate)
+                .setParameter(TO_DATE, toDate)
                 .setParameter("teacherId", teacherId)
                 .getResultList();
     }
@@ -213,8 +219,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
                                 "where t.date <= :toDate " +
                                 "and t.date >= :fromDate " +
                                 "and (t.teacher.id = :teacherId or l.teacher.id = :teacherId ) ORDER BY t.date asc ")
-                .setParameter("fromDate", fromDate)
-                .setParameter("toDate", toDate)
+                .setParameter(FROM_DATE, fromDate)
+                .setParameter(TO_DATE, toDate)
                 .setParameter("teacherId", teacherId)
                 .getResultList();
     }
@@ -227,7 +233,7 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
         log.info("In getAllBySemester(semesterId = [{}]", semesterId);
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
                         "where t.semester.id = :semesterId ORDER BY t.date asc ")
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .getResultList();
     }
 
@@ -239,8 +245,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
         log.info("In getAllByRange");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
                         "where t.date <= :toDate  and t.date >= :fromDate  ORDER BY t.date asc ")
-                .setParameter("fromDate", fromDate)
-                .setParameter("toDate", toDate)
+                .setParameter(FROM_DATE, fromDate)
+                .setParameter(TO_DATE, toDate)
                 .getResultList();
     }
 
@@ -252,9 +258,9 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
         log.info("In getAllBySemesterAndRange");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
                         "where t.date <= :toDate  and t.date >= :fromDate and t.semester.id = :semesterId  ORDER BY t.date asc ")
-                .setParameter("fromDate", fromDate)
-                .setParameter("toDate", toDate)
-                .setParameter("semesterId", semesterId)
+                .setParameter(FROM_DATE, fromDate)
+                .setParameter(TO_DATE, toDate)
+                .setParameter(SEMESTER_ID, semesterId)
                 .getResultList();
     }
 
@@ -266,8 +272,8 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
         log.info("In vacationByDateRangeForTeacher");
         return sessionFactory.getCurrentSession().createQuery("SELECT t from TemporarySchedule t " +
                         "where t.date <= :toDate  and t.date >= :fromDate and t.vacation = true  ORDER BY t.date asc ")
-                .setParameter("fromDate", fromDate)
-                .setParameter("toDate", toDate)
+                .setParameter(FROM_DATE, fromDate)
+                .setParameter(TO_DATE, toDate)
                 .getResultList();
     }
 
@@ -280,6 +286,6 @@ public class TemporaryScheduleRepositoryImpl extends BasicRepositoryImpl<Tempora
         sessionFactory.getCurrentSession().createQuery(
                         "delete from TemporarySchedule t " +
                                 "where t.id in (select temp.id from TemporarySchedule temp where temp.semester.id = :semesterId)")
-                .setParameter("semesterId", semesterId).executeUpdate();
+                .setParameter(SEMESTER_ID, semesterId).executeUpdate();
     }
 }

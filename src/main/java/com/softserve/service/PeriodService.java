@@ -12,7 +12,7 @@ public interface PeriodService extends BasicService<Period, Long> {
      * @param periods the list of periods
      * @return the list of saved periods
      * @throws com.softserve.exception.IncorrectTimeException  if the start time of the period was after its end
-     * or the start time was equal to the end time
+     *                                                         or the start time was equal to the end time
      * @throws com.softserve.exception.PeriodConflictException if some periods intersected with others periods
      */
     List<Period> save(List<Period> periods);

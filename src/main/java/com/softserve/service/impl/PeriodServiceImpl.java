@@ -102,7 +102,7 @@ public class PeriodServiceImpl implements PeriodService {
         if (isPeriodFree(getAll(), object)) {
             getById(object.getId());
             periodRepository.findByName(object.getName()).ifPresent(period -> {
-                if(!Objects.equals(period.getId(),object.getId())) {
+                if (!Objects.equals(period.getId(), object.getId())) {
                     throw new FieldAlreadyExistsException(Period.class, "name", object.getName());
                 }
             });
@@ -137,7 +137,8 @@ public class PeriodServiceImpl implements PeriodService {
         log.info("Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: {} and newPeriod: {}",
                 oldPeriods, newPeriod);
         return oldPeriods.stream().noneMatch(oldPeriod ->
-                (isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)) && !Objects.equals(newPeriod.getId(), oldPeriod.getId())
+                (isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)) &&
+                        !Objects.equals(newPeriod.getId(), oldPeriod.getId())
         );
     }
 

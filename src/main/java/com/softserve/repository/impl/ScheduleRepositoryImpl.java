@@ -19,6 +19,17 @@ import java.util.Optional;
 @Slf4j
 public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> implements ScheduleRepository {
 
+    private static final String SEMESTER_ID = "semesterId";
+    private static final String PERIOD_ID = "periodId";
+    private static final String TEACHER_ID = "teacherId";
+    private static final String LESSON = "lesson";
+    private static final String LESSON_ID = "lessonId";
+    private static final String DAY_OF_WEEK = "dayOfWeek";
+    private static final String GROUP_ID = "groupId";
+    private static final String CLASS_ID = "classId";
+    private static final String EVEN_ODD = "evenOdd";
+    private static final String DISABLE = "disable";
+
     private static final String NOT_DISABLED_SQL = " and s.room.disable=false and s.lesson.semester.disable=false " +
             "and s.lesson.group.disable=false  and s.lesson.teacher.disable=false and s.lesson.subject.disable=false ";
 
@@ -60,10 +71,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             return (Long) sessionFactory.getCurrentSession().createQuery(
                             SELECT_COUNT +
                                     "and s.lesson.group.id = :groupId")
-                    .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek)
-                    .setParameter("classId", classId)
-                    .setParameter("groupId", groupId)
+                    .setParameter(SEMESTER_ID, semesterId)
+                    .setParameter(DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(CLASS_ID, classId)
+                    .setParameter(GROUP_ID, groupId)
                     .getSingleResult();
         } else {
             //else schedule pretends to occur by even/odd need to check that here are
@@ -73,11 +84,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                             SELECT_COUNT +
                                     "and s.lesson.group.id = :groupId " +
                                     "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')")
-                    .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek)
-                    .setParameter("classId", classId)
-                    .setParameter("groupId", groupId)
-                    .setParameter("evenOdd", evenOdd)
+                    .setParameter(SEMESTER_ID, semesterId)
+                    .setParameter(DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(CLASS_ID, classId)
+                    .setParameter(GROUP_ID, groupId)
+                    .setParameter(EVEN_ODD, evenOdd)
                     .getSingleResult();
         }
     }
@@ -93,10 +104,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             return (Long) sessionFactory.getCurrentSession().createQuery("" +
                             SELECT_COUNT +
                             "and s.lesson.teacher.id = :teacherId ")
-                    .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek)
-                    .setParameter("classId", classId)
-                    .setParameter("teacherId", teacherId)
+                    .setParameter(SEMESTER_ID, semesterId)
+                    .setParameter(DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(CLASS_ID, classId)
+                    .setParameter(TEACHER_ID, teacherId)
                     .getSingleResult();
 
         } else {
@@ -104,11 +115,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                             SELECT_COUNT +
                                     "and s.lesson.teacher.id = :teacherId " +
                                     "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')")
-                    .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek)
-                    .setParameter("classId", classId)
-                    .setParameter("teacherId", teacherId)
-                    .setParameter("evenOdd", evenOdd)
+                    .setParameter(SEMESTER_ID, semesterId)
+                    .setParameter(DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(CLASS_ID, classId)
+                    .setParameter(TEACHER_ID, teacherId)
+                    .setParameter(EVEN_ODD, evenOdd)
                     .getSingleResult();
         }
 
@@ -126,7 +137,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "(select g.id from Schedule s join s.lesson.group g " +
                                 "" +
                                 "where s.lesson.semester.id = :semesterId" + NOT_DISABLED_SQL + ")")
-                .setParameter("semesterId", semesterId).getResultList();
+                .setParameter(SEMESTER_ID, semesterId).getResultList();
     }
 
     /**
@@ -142,9 +153,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "where s.lesson.semester.id = :semesterId " +
                                 "and s.lesson.group.id = :groupId " +
                                 "and s.dayOfWeek = :dayOfWeek" + NOT_DISABLED_SQL + ") order by p1.startTime")
-                .setParameter("semesterId", semesterId)
-                .setParameter("groupId", groupId)
-                .setParameter("dayOfWeek", day)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(GROUP_ID, groupId)
+                .setParameter(DAY_OF_WEEK, day)
                 .getResultList();
     }
 
@@ -165,11 +176,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "and s.period.id = :periodId " +
                                 "and s.lesson.group.id = :groupId " + NOT_DISABLED_SQL + ") " +
                                 "and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
-                .setParameter("semesterId", semesterId)
-                .setParameter("groupId", groupId)
-                .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day)
-                .setParameter("evenOdd", evenOdd)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(GROUP_ID, groupId)
+                .setParameter(PERIOD_ID, periodId)
+                .setParameter(DAY_OF_WEEK, day)
+                .setParameter(EVEN_ODD, evenOdd)
                 .uniqueResultOptional();
     }
 
@@ -189,11 +200,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "and s.period.id = :periodId " +
                                 "and s.lesson.id = :lessonId " + NOT_DISABLED_SQL + ") " +
                                 "and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
-                .setParameter("semesterId", semesterId)
-                .setParameter("lessonId", lessonId)
-                .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day)
-                .setParameter("evenOdd", evenOdd)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(LESSON_ID, lessonId)
+                .setParameter(PERIOD_ID, periodId)
+                .setParameter(DAY_OF_WEEK, day)
+                .setParameter(EVEN_ODD, evenOdd)
                 .getSingleResult();
     }
 
@@ -207,8 +218,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                         "select distinct s.dayOfWeek from  Schedule s " +
                                 "where s.lesson.semester.id = :semesterId " +
                                 "and s.lesson.group.id = :groupId")
-                .setParameter("semesterId", semesterId)
-                .setParameter("groupId", groupId)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(GROUP_ID, groupId)
                 .getResultList();
     }
 
@@ -222,8 +233,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                         "select count (s.id) from Schedule s " +
                                 "where s.lesson.semester.id = :semesterId " +
                                 "and s.lesson.group.id = :groupId" + NOT_DISABLED_SQL)
-                .setParameter("semesterId", semesterId)
-                .setParameter("groupId", groupId)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(GROUP_ID, groupId)
                 .getSingleResult();
     }
 
@@ -237,8 +248,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                         "select distinct s.dayOfWeek from  Schedule s " +
                                 "where s.lesson.semester.id = :semesterId " +
                                 "and s.lesson.teacher.id = :teacherId" + NOT_DISABLED_SQL)
-                .setParameter("semesterId", semesterId)
-                .setParameter("teacherId", teacherId)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(TEACHER_ID, teacherId)
                 .getResultList();
     }
 
@@ -257,10 +268,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "and s.lesson.teacher.id = :teacherId " +
                                 "and s.dayOfWeek = :dayOfWeek " + NOT_DISABLED_SQL + ") " +
                                 "and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY')) order by p1.startTime")
-                .setParameter("semesterId", semesterId)
-                .setParameter("teacherId", teacherId)
-                .setParameter("dayOfWeek", day)
-                .setParameter("evenOdd", evenOdd)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(TEACHER_ID, teacherId)
+                .setParameter(DAY_OF_WEEK, day)
+                .setParameter(EVEN_ODD, evenOdd)
                 .getResultList();
     }
 
@@ -281,11 +292,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "and s.period.id = :periodId " +
                                 "and s.lesson.teacher.id = :teacherId " + NOT_DISABLED_SQL + ") " +
                                 "and (s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY'))")
-                .setParameter("semesterId", semesterId)
-                .setParameter("teacherId", teacherId)
-                .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day)
-                .setParameter("evenOdd", evenOdd)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(TEACHER_ID, teacherId)
+                .setParameter(PERIOD_ID, periodId)
+                .setParameter(DAY_OF_WEEK, day)
+                .setParameter(EVEN_ODD, evenOdd)
                 .getResultList();
     }
 
@@ -299,8 +310,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                 createQuery(
                         "from Schedule s where s.lesson.semester.id = :semesterId " +
                                 "and s.lesson.teacher.id = :teacherId " + NOT_DISABLED_SQL)
-                .setParameter("semesterId", semesterId)
-                .setParameter("teacherId", teacherId)
+                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(TEACHER_ID, teacherId)
                 .getResultList();
     }
 
@@ -312,10 +323,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         log.info("Enter into getScheduleByObject");
         return sessionFactory.getCurrentSession().
                 createQuery(GET_BY_ALL_PARAMETERS, Schedule.class)
-                .setParameter("periodId", schedule.getPeriod().getId())
-                .setParameter("lessonId", schedule.getLesson().getId())
-                .setParameter("dayOfWeek", schedule.getDayOfWeek())
-                .setParameter("evenOdd", schedule.getEvenOdd())
+                .setParameter(PERIOD_ID, schedule.getPeriod().getId())
+                .setParameter(LESSON_ID, schedule.getLesson().getId())
+                .setParameter(DAY_OF_WEEK, schedule.getDayOfWeek())
+                .setParameter(EVEN_ODD, schedule.getEvenOdd())
                 .setParameter("roomId", schedule.getRoom().getId())
                 .getSingleResult();
     }
@@ -336,7 +347,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "join fetch slm.groups " +
                                 "join fetch slm.daysOfWeek " +
                                 "where s.lesson.semester.id = :semesterId " + NOT_DISABLED_SQL)
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .getResultList();
 
     }
@@ -350,11 +361,11 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<Schedule> cq = cb.createQuery(Schedule.class);
         Root<Schedule> from = cq.from(Schedule.class);
-        cq.where(cb.equal(from.get("room").get("disable"), false),
-                cb.equal(from.get("lesson").get("semester").get("disable"), false),
-                cb.equal(from.get("lesson").get("group").get("disable"), false),
-                cb.equal(from.get("lesson").get("subject").get("disable"), false),
-                cb.equal(from.get("lesson").get("teacher").get("disable"), false));
+        cq.where(cb.equal(from.get("room").get(DISABLE), false),
+                cb.equal(from.get(LESSON).get("semester").get(DISABLE), false),
+                cb.equal(from.get(LESSON).get("group").get(DISABLE), false),
+                cb.equal(from.get(LESSON).get("subject").get(DISABLE), false),
+                cb.equal(from.get(LESSON).get("teacher").get(DISABLE), false));
 
         TypedQuery<Schedule> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return tq.getResultList();
@@ -370,7 +381,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                         "where s.lesson.semester.startDay <= :toDate  and s.lesson.semester.endDay >= :fromDate and s.lesson.teacher.id = :teacherId")
                 .setParameter("fromDate", fromDate)
                 .setParameter("toDate", toDate)
-                .setParameter("teacherId", teacherId)
+                .setParameter(TEACHER_ID, teacherId)
                 .getResultList();
     }
 
@@ -385,7 +396,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "where s.room.id = :roomId " +
                                 "and s.lesson.semester.id = :semesterId order by s.period.startTime asc ")
                 .setParameter("roomId", roomId)
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .getResultList();
     }
 
@@ -398,7 +409,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         sessionFactory.getCurrentSession().createQuery(
                         "delete from Schedule s " +
                                 "where s.id in (select sch.id from Schedule sch where sch.lesson.semester.id = :semesterId)")
-                .setParameter("semesterId", semesterId).executeUpdate();
+                .setParameter(SEMESTER_ID, semesterId).executeUpdate();
     }
 
     /**
@@ -409,7 +420,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         log.info("In countInputLessonsInScheduleByLessonId(lessonId = [{}])", lessonId);
         return (Long) sessionFactory.getCurrentSession().createQuery(
                         "select count (s.id) from  Schedule s where s.lesson.id = :lessonId " + NOT_DISABLED_SQL)
-                .setParameter("lessonId", lessonId)
+                .setParameter(LESSON_ID, lessonId)
                 .getSingleResult();
     }
 
@@ -426,10 +437,10 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "and s.period.id = :periodId " +
                                 "and s.dayOfWeek =:dayOfWeek " +
                                 "and (s.evenOdd =:evenOdd or s.evenOdd = 'WEEKLY')" + NOT_DISABLED_SQL)
-                .setParameter("lessonId", lessonId)
-                .setParameter("periodId", periodId)
-                .setParameter("dayOfWeek", day)
-                .setParameter("evenOdd", evenOdd)
+                .setParameter(LESSON_ID, lessonId)
+                .setParameter(PERIOD_ID, periodId)
+                .setParameter(DAY_OF_WEEK, day)
+                .setParameter(EVEN_ODD, evenOdd)
                 .getSingleResult();
     }
 
@@ -441,7 +452,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
         log.debug("Entered getAllOrdered()");
         return sessionFactory.getCurrentSession()
                 .createQuery(GET_ALL_ORDERED_BY_ROOMS_DAYS_PERIODS, Schedule.class)
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .getResultList();
     }
 }

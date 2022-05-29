@@ -58,6 +58,8 @@ public class UserServiceImpl implements UserService {
     @Value("${backend.url}")
     private String url;
 
+    private static final String EMAIL = "email";
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService) {
         this.userRepository = userRepository;
@@ -95,7 +97,7 @@ public class UserServiceImpl implements UserService {
         log.info("Enter into save method with entity:{}", object);
         object.setPassword(passwordEncoder.encode(object.getPassword()));
         if (emailExists(object.getEmail())) {
-            throw new FieldAlreadyExistsException(User.class, "email", object.getEmail());
+            throw new FieldAlreadyExistsException(User.class, EMAIL, object.getEmail());
         }
         return userRepository.save(object);
     }
@@ -110,8 +112,8 @@ public class UserServiceImpl implements UserService {
         log.info("Enter into update method with entity:{}", object);
         getById(object.getId());
         userRepository.findByEmail(object.getEmail()).ifPresent(user -> {
-            if(!Objects.equals(user.getId(), object.getId())) {
-                throw new FieldAlreadyExistsException(User.class, "email", object.getEmail());
+            if (!Objects.equals(user.getId(), object.getId())) {
+                throw new FieldAlreadyExistsException(User.class, EMAIL, object.getEmail());
             }
         });
         return userRepository.update(object);
@@ -133,7 +135,7 @@ public class UserServiceImpl implements UserService {
     public User findByEmail(String email) {
         log.info("Enter into findByEmail method with email:{}", email);
         return userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException(User.class, "email", email)
+                () -> new EntityNotFoundException(User.class, EMAIL, email)
         );
     }
 
@@ -201,7 +203,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createSocialUser(OAuth2User oAuth2User) {
         log.info("Enter into emailExists method with OAuth2User = {}", oAuth2User);
-        String email = oAuth2User.getAttribute("email");
+        String email = oAuth2User.getAttribute(EMAIL);
         return userRepository.findByEmail(email).orElseGet(() -> saveSocialUser(email));
     }
 

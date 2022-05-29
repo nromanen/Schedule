@@ -68,7 +68,7 @@ public class TeacherController {
 
     @DeleteMapping("/teachers/{id}")
     @ApiOperation(value = "Delete teacher by id")
-    public ResponseEntity delete(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         log.info("Enter into delete method with  teacher id: {}", id);
         Teacher teacher = teacherService.getById(id);
         teacherService.delete(teacher);
@@ -91,7 +91,9 @@ public class TeacherController {
 
     @GetMapping("/send-pdf-to-email/semester/{id}")
     @ApiOperation(value = "Send pdf with schedule to teachers emails")
-    public ResponseEntity<Void> sendSchedulesToEmail(@PathVariable("id") Long semesterId, @RequestParam Long[] teachersId, @RequestParam Locale language) {
+    public ResponseEntity<Void> sendSchedulesToEmail(@PathVariable("id") Long semesterId,
+                                                     @RequestParam Long[] teachersId,
+                                                     @RequestParam Locale language) {
         log.info("Enter into sendPDFToEmail method with teachers id: {} and semester id: {}", teachersId, semesterId);
         scheduleService.sendScheduleToTeachers(semesterId, teachersId, language);
         return ResponseEntity.status(HttpStatus.OK).build();

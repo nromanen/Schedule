@@ -17,6 +17,8 @@ import java.util.Optional;
 @Repository
 public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> implements SemesterRepository {
 
+    private static final String SEMESTER_ID = "semesterId";
+
     private static final String HQL_SELECT_DAYS_WITH_LESSONS
             = "select distinct s.dayOfWeek from Schedule s where s.lesson.semester.id = :semesterId";
 
@@ -67,7 +69,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         Long count = (Long) sessionFactory.getCurrentSession().createQuery(
                         "select count (s.id) " +
                                 "from Schedule s where s.lesson.semester.id = :semesterId")
-                .setParameter("semesterId", semester.getId()).getSingleResult();
+                .setParameter(SEMESTER_ID, semester.getId()).getSingleResult();
 
         return count != 0;
     }
@@ -147,7 +149,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         log.info("In setCurrentSemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
                         "UPDATE Semester s set s.currentSemester = true where s.id = :semesterId")
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .executeUpdate();
     }
 
@@ -159,7 +161,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         log.info("In setDefaultSemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(
                         "UPDATE Semester s set s.defaultSemester = true where s.id = :semesterId")
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .executeUpdate();
     }
 
@@ -183,7 +185,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     public List<DayOfWeek> getDaysWithLessonsBySemesterId(Long semesterId) {
         log.info("In getDaysWithLessonsBySemesterId(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_DAYS_WITH_LESSONS, DayOfWeek.class)
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .getResultList();
     }
 
@@ -194,7 +196,7 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     public List<Period> getPeriodsWithLessonsBySemesterId(Long semesterId) {
         log.info("In getPeriodsWithLessonsBySemesterId(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession().createQuery(HQL_SELECT_PERIODS_WITH_LESSONS, Period.class)
-                .setParameter("semesterId", semesterId)
+                .setParameter(SEMESTER_ID, semesterId)
                 .getResultList();
     }
 }
