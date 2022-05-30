@@ -23,10 +23,7 @@ import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.temporal.TemporalAdjusters.previousOrSame;
@@ -195,14 +192,14 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> getTemporaryScheduleForEvenOddWeeks(Long semesterId) {
         log.info("In getTemporaryScheduleForEvenOddWeeks with semesterId = {}", semesterId);
-        Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> evenOddListMap = new HashMap<>();
+        EnumMap<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> evenOddListMap = new EnumMap<>(EvenOdd.class);
         Semester semester = semesterService.getById(semesterId);
         LocalDate today = LocalDate.now();
         LocalDate from = today.with(previousOrSame(MONDAY));
         int countStartDate = semester.getStartDay().getDayOfWeek().getValue();
         int countEndDate = today.getDayOfWeek().getValue();
         int countDays = Integer.parseInt(String.valueOf(ChronoUnit.DAYS.between(
-                semester.getStartDay().minusDays(countStartDate), today.plusDays(7 - countEndDate))));
+                semester.getStartDay().minusDays(countStartDate), today.plusDays(7L - countEndDate))));
 
         EvenOdd keyOne = (countDays / 7) % 2 != 0 ? EvenOdd.EVEN : EvenOdd.ODD;
         EvenOdd keyTwo = keyOne.equals(EvenOdd.EVEN) ? EvenOdd.ODD : EvenOdd.EVEN;
@@ -210,8 +207,8 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
             List<TemporarySchedule> one = getAllBySemesterAndRange(semesterId, from, from.plusDays(7));
             List<TemporarySchedule> two = getAllBySemesterAndRange(semesterId, from.plusDays(8), from.plusDays(14));
 
-            Map<DayOfWeek, List<TemporarySchedule>> oneMap = new HashMap<>();
-            Map<DayOfWeek, List<TemporarySchedule>> twoMap = new HashMap<>();
+            EnumMap<DayOfWeek, List<TemporarySchedule>> oneMap = new EnumMap<>(DayOfWeek.class);
+            EnumMap<DayOfWeek, List<TemporarySchedule>> twoMap = new EnumMap<>(DayOfWeek.class);
 
 
             for (TemporarySchedule temporarySchedule : one) {

@@ -1,8 +1,8 @@
 package com.softserve.util;
 
-public final class ScheduleConstants {
+public final class Constants {
 
-    private ScheduleConstants() {
+    private Constants() {
     }
 
     public static final String ID = "id";
@@ -31,5 +31,5 @@ public final class ScheduleConstants {
     public static final String VACATION = "vacation";
     public static final String EVEN_ODD = "evenOdd";
     public static final String DISABLE = "disable";
-
+    public static final String EMAIL = "email";
 }

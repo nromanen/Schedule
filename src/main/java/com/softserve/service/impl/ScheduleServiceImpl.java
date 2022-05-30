@@ -685,7 +685,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (schedule.getEvenOdd() == EvenOdd.ODD) {
             if (startSemester.getValue() > schedule.getDayOfWeek().getValue()) {
                 int i = startSemester.getValue() - schedule.getDayOfWeek().getValue();
-                LocalDate firstCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(14 - i);
+                LocalDate firstCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(14L - i);
 
                 return checkDateRangeForReturn(firstCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
             }
@@ -698,7 +698,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (schedule.getEvenOdd() == EvenOdd.EVEN || schedule.getEvenOdd() == EvenOdd.WEEKLY) {
             if (startSemester.getValue() > schedule.getDayOfWeek().getValue()) {
                 int i = startSemester.getValue() - schedule.getDayOfWeek().getValue();
-                LocalDate firstCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(7 - i);
+                LocalDate firstCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(7L - i);
 
                 return checkDateRangeForReturn(firstCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
             }
@@ -707,7 +707,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 LocalDate secondCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(k);
                 return checkDateRangeForReturn(secondCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
             }
-            LocalDate thirdCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(7 + k);
+            LocalDate thirdCaseDate = schedule.getLesson().getSemester().getStartDay().plusDays(7L + k);
             return checkDateRangeForReturn(thirdCaseDate, schedule.getLesson().getSemester().getEndDay(), toDate);
         }
         return false;
@@ -734,7 +734,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                     int countStartDate = schedule.getLesson().getSemester().getStartDay().getDayOfWeek().getValue();
                     int countEndDate = date.getDayOfWeek().getValue();
                     int countDays = Integer.parseInt(String.valueOf(ChronoUnit.DAYS.between(
-                            schedule.getLesson().getSemester().getStartDay().minusDays(countStartDate), date.plusDays(7 - countEndDate))));
+                            schedule.getLesson().getSemester().getStartDay().minusDays(countStartDate), date.plusDays(7L - countEndDate))));
 
                     switch (schedule.getEvenOdd()) {
                         case ODD:

@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public abstract class LessonInfoMapper {
+public interface LessonInfoMapper {
     @Mapping(source = "semester.id", target = "semesterId")
-    public abstract LessonInfoDTO lessonToLessonInfoDTO(Lesson lesson);
+    LessonInfoDTO lessonToLessonInfoDTO(Lesson lesson);
 
     @Mapping(target = "semester.id", source = "semesterId")
     @Mapping(target = "teacher.position", ignore = true)
@@ -23,10 +23,10 @@ public abstract class LessonInfoMapper {
     @Mapping(target = "teacher.userId", ignore = true)
     @Mapping(target = "group.students", ignore = true)
     @Mapping(target = "group.sortingOrder", ignore = true)
-    public abstract Lesson lessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
+    Lesson lessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
 
     @Mapping(source = "semester.id", target = "semesterId")
-    public abstract LessonDTO lessonToLessonDTO(Lesson lesson);
+    LessonDTO lessonToLessonDTO(Lesson lesson);
 
     @Mapping(target = "semester.groups", ignore = true)
     @Mapping(target = "grouped", ignore = true)
@@ -36,9 +36,9 @@ public abstract class LessonInfoMapper {
     @Mapping(target = "teacher.department", ignore = true)
     @Mapping(target = "teacher.disable", ignore = true)
     @Mapping(target = "teacher.userId", ignore = true)
-    public abstract Lesson lessonDTOToLesson(LessonDTO lessonDTO);
+    Lesson lessonDTOToLesson(LessonDTO lessonDTO);
 
-    public List<Lesson> lessonForGroupsDTOToLessons(LessonForGroupsDTO lessonForGroupsDTO) {
+    default List<Lesson> lessonForGroupsDTOToLessons(LessonForGroupsDTO lessonForGroupsDTO) {
         if (lessonForGroupsDTO == null || lessonForGroupsDTO.getGroups() == null) {
             return new ArrayList<>();
         }
@@ -51,12 +51,12 @@ public abstract class LessonInfoMapper {
         return lessons;
     }
 
-    public abstract List<LessonInfoDTO> lessonsToLessonInfoDTOs(List<Lesson> lessons);
+    List<LessonInfoDTO> lessonsToLessonInfoDTOs(List<Lesson> lessons);
 
-    public abstract List<LessonDTO> lessonsToLessonDTOs(List<Lesson> lessons);
+    List<LessonDTO> lessonsToLessonDTOs(List<Lesson> lessons);
 
     @Mapping(target = "group", ignore = true)
-    public abstract LessonInfoDTO lessonForGroupsDTOToLessonInfoDTO(LessonForGroupsDTO lessonForGroupsDTO);
+    LessonInfoDTO lessonForGroupsDTOToLessonInfoDTO(LessonForGroupsDTO lessonForGroupsDTO);
 
     @Mapping(source = "semesterId", target = "semester.id")
     @Mapping(source = "teacherId", target = "teacher.id")
@@ -68,5 +68,5 @@ public abstract class LessonInfoMapper {
     @Mapping(target = "subjectForSite", ignore = true)
     @Mapping(target = "group", ignore = true)
     @Mapping(target = "grouped", ignore = true)
-    public abstract Lesson lessonWithLinkDTOToLesson(LessonWithLinkDTO lessonWithLinkDTO);
+    Lesson lessonWithLinkDTOToLesson(LessonWithLinkDTO lessonWithLinkDTO);
 }
