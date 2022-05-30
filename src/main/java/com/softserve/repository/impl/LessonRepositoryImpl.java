@@ -2,6 +2,7 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Lesson;
 import com.softserve.repository.LessonRepository;
+import com.softserve.util.ScheduleConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -15,20 +16,6 @@ import java.util.List;
 @Repository
 @Slf4j
 public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> implements LessonRepository {
-
-    private static final String ID = "id";
-    private static final String SUBJECT = "subject";
-    private static final String SUBJECT_ID = "subjectId";
-    private static final String TEACHER = "teacher";
-    private static final String TEACHER_ID = "teacherId";
-    private static final String SEMESTER = "semester";
-    private static final String SEMESTER_ID = "semesterId";
-    private static final String GROUP = "group";
-    private static final String LESSON_TYPE = "lessonType";
-    private static final String LESSON_ID = "lessonId";
-    private static final String SUBJECT_FOR_SITE = "subjectForSite";
-    private static final String DISABLE = "disable";
-    private static final String HOURS = "hours";
 
     private static final String SELECT_GROUPED
             = "select l from Lesson l "
@@ -118,10 +105,10 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
         Root<Lesson> from = cq.from(Lesson.class);
-        cq.where(cb.equal(from.get(TEACHER).get(DISABLE), false),
-                cb.equal(from.get(SUBJECT).get(DISABLE), false),
-                cb.equal(from.get(GROUP).get(DISABLE), false));
-        cq.orderBy(cb.asc(from.get(SUBJECT_FOR_SITE)));
+        cq.where(cb.equal(from.get(ScheduleConstants.TEACHER).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.SUBJECT).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.GROUP).get(ScheduleConstants.DISABLE), false));
+        cq.orderBy(cb.asc(from.get(ScheduleConstants.SUBJECT_FOR_SITE)));
 
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return tq.getResultList();
@@ -137,13 +124,13 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
         Root<Lesson> from = cq.from(Lesson.class);
 
-        cq.where(cb.equal(from.get(TEACHER).get(DISABLE), false),
-                cb.equal(from.get(SUBJECT).get(DISABLE), false),
+        cq.where(cb.equal(from.get(ScheduleConstants.TEACHER).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.SUBJECT).get(ScheduleConstants.DISABLE), false),
 
-                cb.equal(from.get(GROUP).get(DISABLE), false),
-                cb.equal(from.get(GROUP).get(ID), groupId),
-                cb.equal(from.get(SEMESTER).get(ID), semesterId));
-        cq.orderBy(cb.asc(from.get(SUBJECT_FOR_SITE)));
+                cb.equal(from.get(ScheduleConstants.GROUP).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.GROUP).get(ScheduleConstants.ID), groupId),
+                cb.equal(from.get(ScheduleConstants.SEMESTER).get(ScheduleConstants.ID), semesterId));
+        cq.orderBy(cb.asc(from.get(ScheduleConstants.SUBJECT_FOR_SITE)));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return tq.getResultList();
     }
@@ -158,13 +145,13 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
         Root<Lesson> from = cq.from(Lesson.class);
 
-        cq.where(cb.equal(from.get(TEACHER).get(DISABLE), false),
-                cb.equal(from.get(TEACHER).get(ID), teacherId),
-                cb.equal(from.get(SUBJECT).get(DISABLE), false),
+        cq.where(cb.equal(from.get(ScheduleConstants.TEACHER).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.TEACHER).get(ScheduleConstants.ID), teacherId),
+                cb.equal(from.get(ScheduleConstants.SUBJECT).get(ScheduleConstants.DISABLE), false),
 
-                cb.equal(from.get(GROUP).get(DISABLE), false),
-                cb.equal(from.get(SEMESTER).get(ID), semesterId));
-        cq.orderBy(cb.asc(from.get(SUBJECT_FOR_SITE)));
+                cb.equal(from.get(ScheduleConstants.GROUP).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.SEMESTER).get(ScheduleConstants.ID), semesterId));
+        cq.orderBy(cb.asc(from.get(ScheduleConstants.SUBJECT_FOR_SITE)));
         TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
         return tq.getResultList();
     }
@@ -181,11 +168,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         Root<Lesson> from = cq.from(Lesson.class);
 
         cq.where(
-                cb.equal(from.get(TEACHER).get(ID), lesson.getTeacher().getId()),
-                cb.equal(from.get(SUBJECT).get(ID), lesson.getSubject().getId()),
-                cb.equal(from.get(GROUP).get(ID), lesson.getGroup().getId()),
-                cb.equal(from.get(SEMESTER).get(ID), lesson.getSemester().getId()),
-                cb.equal(from.get(LESSON_TYPE), lesson.getLessonType()));
+                cb.equal(from.get(ScheduleConstants.TEACHER).get(ScheduleConstants.ID), lesson.getTeacher().getId()),
+                cb.equal(from.get(ScheduleConstants.SUBJECT).get(ScheduleConstants.ID), lesson.getSubject().getId()),
+                cb.equal(from.get(ScheduleConstants.GROUP).get(ScheduleConstants.ID), lesson.getGroup().getId()),
+                cb.equal(from.get(ScheduleConstants.SEMESTER).get(ScheduleConstants.ID), lesson.getSemester().getId()),
+                cb.equal(from.get(ScheduleConstants.LESSON_TYPE), lesson.getLessonType()));
 
         cq.select(cb.count(from));
         Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
@@ -203,18 +190,18 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         CriteriaQuery<Long> cq = cb.createQuery(Long.class);
         Root<Lesson> from = cq.from(Lesson.class);
 
-        cq.where(cb.equal(from.get(TEACHER).get(DISABLE), false),
-                cb.equal(from.get(TEACHER).get(ID), lesson.getTeacher().getId()),
+        cq.where(cb.equal(from.get(ScheduleConstants.TEACHER).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.TEACHER).get(ScheduleConstants.ID), lesson.getTeacher().getId()),
 
-                cb.equal(from.get(SUBJECT).get(DISABLE), false),
-                cb.equal(from.get(SUBJECT).get(ID), lesson.getSubject().getId()),
+                cb.equal(from.get(ScheduleConstants.SUBJECT).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.SUBJECT).get(ScheduleConstants.ID), lesson.getSubject().getId()),
 
-                cb.equal(from.get(GROUP).get(DISABLE), false),
-                cb.equal(from.get(GROUP).get(ID), lesson.getGroup().getId()),
+                cb.equal(from.get(ScheduleConstants.GROUP).get(ScheduleConstants.DISABLE), false),
+                cb.equal(from.get(ScheduleConstants.GROUP).get(ScheduleConstants.ID), lesson.getGroup().getId()),
 
-                cb.notEqual(from.get(ID), lesson.getId()),
-                cb.equal(from.get(SEMESTER).get(ID), lesson.getSemester().getId()),
-                cb.equal(from.get(LESSON_TYPE), lesson.getLessonType()));
+                cb.notEqual(from.get(ScheduleConstants.ID), lesson.getId()),
+                cb.equal(from.get(ScheduleConstants.SEMESTER).get(ScheduleConstants.ID), lesson.getSemester().getId()),
+                cb.equal(from.get(ScheduleConstants.LESSON_TYPE), lesson.getLessonType()));
         cq.select(cb.count(from));
         Query<Long> query = sessionFactory.getCurrentSession().createQuery(cq);
         return query.getSingleResult();
@@ -228,7 +215,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession()
                 .createQuery(GET_BY_SEMESTER_ID, Lesson.class)
-                .setParameter(SEMESTER_ID, semesterId)
+                .setParameter(ScheduleConstants.SEMESTER_ID, semesterId)
                 .getResultList();
     }
 
@@ -237,7 +224,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         log.info("In deleteLessonBySemesterId(semesterId = [{}])", semesterId);
         sessionFactory.getCurrentSession()
                 .createQuery(DELETE_BY_SEMESTER_ID)
-                .setParameter(SEMESTER_ID, semesterId).executeUpdate();
+                .setParameter(ScheduleConstants.SEMESTER_ID, semesterId).executeUpdate();
     }
 
     /**
@@ -248,11 +235,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
         return sessionFactory.getCurrentSession()
                 .createQuery(GET_SUBJECT_TEACHER_SEMESTER, Lesson.class)
-                .setParameter(SUBJECT_ID, lesson.getSubject().getId())
-                .setParameter(TEACHER_ID, lesson.getTeacher().getId())
-                .setParameter(SEMESTER_ID, lesson.getSemester().getId())
-                .setParameter(LESSON_TYPE, lesson.getLessonType())
-                .setParameter(LESSON_ID, lesson.getId())
+                .setParameter(ScheduleConstants.SUBJECT_ID, lesson.getSubject().getId())
+                .setParameter(ScheduleConstants.TEACHER_ID, lesson.getTeacher().getId())
+                .setParameter(ScheduleConstants.SEMESTER_ID, lesson.getSemester().getId())
+                .setParameter(ScheduleConstants.LESSON_TYPE, lesson.getLessonType())
+                .setParameter(ScheduleConstants.LESSON_ID, lesson.getId())
                 .getResultList();
     }
 
@@ -264,12 +251,12 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         log.info("getGroupedLessonsByLessonId(lesson = [{}]", lesson);
         return sessionFactory.getCurrentSession()
                 .createQuery(SELECT_GROUPED, Lesson.class)
-                .setParameter(SUBJECT_ID, lesson.getSubject().getId())
-                .setParameter(HOURS, lesson.getHours())
-                .setParameter(TEACHER_ID, lesson.getTeacher().getId())
-                .setParameter(SEMESTER_ID, lesson.getSemester().getId())
-                .setParameter(LESSON_TYPE, lesson.getLessonType())
-                .setParameter(SUBJECT_FOR_SITE, lesson.getSubjectForSite())
+                .setParameter(ScheduleConstants.SUBJECT_ID, lesson.getSubject().getId())
+                .setParameter(ScheduleConstants.HOURS, lesson.getHours())
+                .setParameter(ScheduleConstants.TEACHER_ID, lesson.getTeacher().getId())
+                .setParameter(ScheduleConstants.SEMESTER_ID, lesson.getSemester().getId())
+                .setParameter(ScheduleConstants.LESSON_TYPE, lesson.getLessonType())
+                .setParameter(ScheduleConstants.SUBJECT_FOR_SITE, lesson.getSubjectForSite())
                 .getResultList();
     }
 
@@ -283,7 +270,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
         Long count = sessionFactory.getCurrentSession().createQuery(COUNT_QUERY, Long.class)
-                .setParameter(LESSON_ID, lesson.getId())
+                .setParameter(ScheduleConstants.LESSON_ID, lesson.getId())
                 .getSingleResult();
         return count != 0;
     }
@@ -302,15 +289,15 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         criteriaUpdate.set("linkToMeeting", lesson.getLinkToMeeting());
 
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(root.get(SEMESTER).get(ID), lesson.getSemester().getId()));
-        predicates.add(cb.equal(root.get(TEACHER).get(ID), lesson.getTeacher().getId()));
+        predicates.add(cb.equal(root.get(ScheduleConstants.SEMESTER).get(ScheduleConstants.ID), lesson.getSemester().getId()));
+        predicates.add(cb.equal(root.get(ScheduleConstants.TEACHER).get(ScheduleConstants.ID), lesson.getTeacher().getId()));
 
         if (lesson.getSubject().getId() != null) {
-            predicates.add(cb.equal(root.get(SUBJECT).get(ID), lesson.getSubject().getId()));
+            predicates.add(cb.equal(root.get(ScheduleConstants.SUBJECT).get(ScheduleConstants.ID), lesson.getSubject().getId()));
         }
 
         if (lesson.getLessonType() != null) {
-            predicates.add(cb.equal(root.get(LESSON_TYPE), lesson.getLessonType()));
+            predicates.add(cb.equal(root.get(ScheduleConstants.LESSON_TYPE), lesson.getLessonType()));
         }
 
         criteriaUpdate.where(predicates.toArray(new Predicate[0]));
@@ -332,11 +319,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .setParameter("initialTeacherId", oldLesson.getTeacher().getId())
                 .setParameter("initialSemesterId", oldLesson.getSemester().getId())
                 .setParameter("linkToMeeting", updatedLesson.getLinkToMeeting())
-                .setParameter(SUBJECT_ID, updatedLesson.getSubject().getId())
-                .setParameter(HOURS, updatedLesson.getHours())
-                .setParameter(TEACHER_ID, updatedLesson.getTeacher().getId())
-                .setParameter(LESSON_TYPE, updatedLesson.getLessonType())
-                .setParameter(SUBJECT_FOR_SITE, updatedLesson.getSubjectForSite());
+                .setParameter(ScheduleConstants.SUBJECT_ID, updatedLesson.getSubject().getId())
+                .setParameter(ScheduleConstants.HOURS, updatedLesson.getHours())
+                .setParameter(ScheduleConstants.TEACHER_ID, updatedLesson.getTeacher().getId())
+                .setParameter(ScheduleConstants.LESSON_TYPE, updatedLesson.getLessonType())
+                .setParameter(ScheduleConstants.SUBJECT_FOR_SITE, updatedLesson.getSubjectForSite());
         query = isTeacherOrSubjectUpdated
                 ? query
                 : query.setParameter("initialSubjectForSite", oldLesson.getSubjectForSite())
@@ -355,12 +342,12 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         log.info("Entered deleteGrouped({})", lesson);
         int deleted = sessionFactory.getCurrentSession()
                 .createQuery(DELETE_GROUPED)
-                .setParameter(SUBJECT_ID, lesson.getSubject().getId())
-                .setParameter(HOURS, lesson.getHours())
-                .setParameter(TEACHER_ID, lesson.getTeacher().getId())
-                .setParameter(SEMESTER_ID, lesson.getSemester().getId())
-                .setParameter(LESSON_TYPE, lesson.getLessonType())
-                .setParameter(SUBJECT_FOR_SITE, lesson.getSubjectForSite())
+                .setParameter(ScheduleConstants.SUBJECT_ID, lesson.getSubject().getId())
+                .setParameter(ScheduleConstants.HOURS, lesson.getHours())
+                .setParameter(ScheduleConstants.TEACHER_ID, lesson.getTeacher().getId())
+                .setParameter(ScheduleConstants.SEMESTER_ID, lesson.getSemester().getId())
+                .setParameter(ScheduleConstants.LESSON_TYPE, lesson.getLessonType())
+                .setParameter(ScheduleConstants.SUBJECT_FOR_SITE, lesson.getSubjectForSite())
                 .executeUpdate();
         log.debug("Deleted group lessons {}", deleted);
         return lesson;
@@ -374,7 +361,7 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         log.info("Entered setGrouped({})", lessonId);
         return sessionFactory.getCurrentSession()
                 .createQuery(SET_GROUPED)
-                .setParameter(ID, lessonId)
+                .setParameter(ScheduleConstants.ID, lessonId)
                 .executeUpdate();
     }
 }
