@@ -5,6 +5,7 @@ import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.SortingOrderNotExistsException;
 import com.softserve.mapper.RoomForScheduleInfoMapper;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
@@ -70,6 +71,7 @@ public class RoomServiceImpl implements RoomService {
         if (isRoomExists(object)) {
             throw new EntityAlreadyExistsException("Room with this parameters already exists");
         } else {
+            object.setSortingOrder(roomRepository.getLastSortingOrder().orElse(0) + 1);
             return roomRepository.save(object);
         }
     }
@@ -95,7 +97,9 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room delete(Room object) {
         log.info("Enter into delete of RoomServiceImpl with entity:{}", object);
-        return roomRepository.delete(object);
+        Room deleted = roomRepository.delete(object);
+        roomRepository.shiftSortingOrderRange(deleted.getSortingOrder() + 1, null, RoomRepository.Direction.UP);
+        return deleted;
     }
 
     /**
@@ -156,23 +160,16 @@ public class RoomServiceImpl implements RoomService {
     /**
      * {@inheritDoc}
      */
-    @Transactional
     @Override
-    public Room saveRoomAfterId(Room room, Long afterId) {
-        log.info("Entered saveRoomAfterId({},{})", room, afterId);
-        Double maxOrder = roomRepository.getMaxSortOrder().orElse(0.0);
-        Double minOrder = roomRepository.getMinSortOrder().orElse(0.0);
-        if (afterId != null) {
-            if (afterId == 0) {
-                room.setSortOrder(minOrder / 2);
-            } else {
-                Double prevPos = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
-                Double nextPos = roomRepository.getNextPosition(prevPos).orElse(prevPos + 2);
-                Double newPos = ((nextPos + prevPos) / 2);
-                room.setSortOrder(newPos);
-            }
+    public Room saveAfterId(Room room, Long afterId) {
+        log.info("Entered saveAfterId({},{})", room, afterId);
+        if (afterId.equals(0L)) {
+            Integer order = getSortingOrderById(afterId) + 1;
+            roomRepository.shiftSortingOrderRange(order, null, RoomRepository.Direction.DOWN);
+            room.setSortingOrder(order);
         } else {
-            room.setSortOrder(maxOrder + 1);
+            roomRepository.shiftSortingOrderRange(1, null, RoomRepository.Direction.DOWN);
+            room.setSortingOrder(1);
         }
         return roomRepository.save(room);
     }
@@ -180,27 +177,42 @@ public class RoomServiceImpl implements RoomService {
     /**
      * {@inheritDoc}
      */
-    @Transactional
     @Override
-    public Room updateRoomAfterId(Room room, Long afterId) {
-        log.info("Entered updateRoomAfterId({},{})", room, afterId);
-        Double minOrder = roomRepository.getMinSortOrder().orElse(0.0);
+    public Room updateSortingOrder(Room room, Long afterId) {
+        log.info("Entered updateSortingOrder({}, {})", room, afterId);
+        if (room.getId().equals(afterId)) {
+            throw new IllegalArgumentException("The given room id and the afterId are the same!");
+        }
+        if (!roomRepository.isExistsById(room.getId())) {
+            throw new EntityNotFoundException(Room.class, "id", room.getId().toString());
+        }
         if (afterId != null) {
-            if (afterId == room.getId()) {
-                Double myOrder = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
-                room.setSortOrder(myOrder);
-            } else if (afterId == 0) {
-                room.setSortOrder(minOrder / 2);
+            room.setSortingOrder(getSortingOrderById(room.getId()));
+            Integer sortingOrderOfPrevRoom = getSortingOrderById(afterId);
+            if (sortingOrderOfPrevRoom > room.getSortingOrder()) {
+                roomRepository.shiftSortingOrderRange(room.getSortingOrder() + 1, sortingOrderOfPrevRoom, RoomRepository.Direction.UP);
+                room.setSortingOrder(sortingOrderOfPrevRoom);
             } else {
-                Double prevPos = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
-                Double nextPos = roomRepository.getNextPosition(prevPos).orElse(prevPos + 2);
-                Double newPos = ((nextPos + prevPos) / 2);
-                room.setSortOrder(newPos);
+                roomRepository.shiftSortingOrderRange(sortingOrderOfPrevRoom + 1, room.getSortingOrder(), RoomRepository.Direction.DOWN);
+                room.setSortingOrder(sortingOrderOfPrevRoom + 1);
             }
         } else {
-            room.setSortOrder(1.0);
+            roomRepository.shiftSortingOrderRange(1, null, RoomRepository.Direction.DOWN);
+            room.setSortingOrder(1);
         }
         return roomRepository.update(room);
     }
 
+    /**
+     * Retrieves sorting order by room id.
+     *
+     * @param id the id of the room
+     * @return the sorting order of the given room id
+     * @throws SortingOrderNotExistsException if sorting order of the room isn't set
+     */
+    private Integer getSortingOrderById(Long id) {
+        log.debug("Entered getSortingOrderById({})", id);
+        return roomRepository.getSortingOrderById(id)
+                .orElseThrow(() -> new SortingOrderNotExistsException(Room.class, id));
+    }
 }

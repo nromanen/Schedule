@@ -68,27 +68,30 @@ public interface RoomService extends BasicService<Room, Long> {
     List<Room> getDisabled();
 
     /**
-     * Returns all rooms ordered by sortOrder and title.
+     * Returns all rooms ordered by sortingOrder.
      *
-     * @return the list of rooms ordered by sortOrder and title
+     * @return the list of rooms ordered by sortingOrder
      */
     List<Room> getAllOrdered();
 
     /**
-     * Saves the given room after the specific room id.
+     * Saves the given room after the specific room id to get desired order. If afterId equal {@code zero}, saves the room at the first position.
      *
      * @param room    the room to be saved
-     * @param afterId the id of the room after which need to save given room
-     * @return the saved room
+     * @param afterId the id of the room after which to be saved the new one. May be {@code null}
+     * @return the saved room with a set sorting order
      */
-    Room saveRoomAfterId(Room room, Long afterId);
+    Room saveAfterId(Room room, Long afterId);
 
     /**
-     * Updates the given room by saving it after the specific room id.
+     * Updates the sorting order of the given room and adjacent rooms in sorting order to place the given room after the room with specified id.
+     * If afterId equal {@code zero}, places the room at the first position.
      *
-     * @param room    the room to be saved
-     * @param afterId id of room after which we want to insert our room
-     * @return the saved room
+     * @param room    the room to be updated
+     * @param afterId the id of the room after which the given room will be placed. May be {@code null}
+     * @return the updated room with a set sorting order
+     * @throws com.softserve.exception.EntityNotFoundException if given room not found
+     * @throws IllegalArgumentException                        if the given room id and the afterId are the same
      */
-    Room updateRoomAfterId(Room room, Long afterId);
+    Room updateSortingOrder(Room room, Long afterId);
 }

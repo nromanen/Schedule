@@ -33,7 +33,6 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 35, message = "Name must be between 2 and 35 characters long")
     @Column(length = 35, nullable = false)
@@ -46,6 +45,6 @@ public class Room implements Serializable {
     @Column(name = "disable", columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 
-    @Column(name = "sort_order")
-    private Double sortOrder;
+    @Column(name = "sorting_order")
+    private Integer sortingOrder;
 }

@@ -9,6 +9,11 @@ import java.util.Optional;
 
 public interface RoomRepository extends BasicRepository<Room, Long> {
 
+    enum Direction {
+        UP,
+        DOWN
+    }
+
     /**
      * Returns all free rooms by specific period, day of week and number of week from database.
      *
@@ -55,40 +60,41 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
     List<Room> getDisabled();
 
     /**
-     * Returns all rooms from database ordered by sortOrder and title.
+     * Returns all rooms from database ordered by sortingOrder.
      *
-     * @return the list of entities ordered by sortOrder and title
+     * @return the list of the rooms ordered by sortingOrder
      */
     List<Room> getAllOrdered();
 
     /**
-     * Returns max sorting order.
+     * Returns {@code true} if room with the given id exists.
      *
-     * @return an Optional describing the max sorting order
+     * @param id the id of the room
+     * @return {@code true} if room with given id exists, otherwise {@code false}
      */
-    Optional<Double> getMaxSortOrder();
+    boolean isExistsById(Long id);
 
     /**
-     * Returns min sorting order.
+     * Returns the last occupied position in sorting order.
      *
-     * @return an Optional describing the min sorting order
+     * @return an Optional describing the last occupied position in sorting order
      */
-    Optional<Double> getMinSortOrder();
+    Optional<Integer> getLastSortingOrder();
 
     /**
-     * Returns sorting order of the next element.
+     * Retrieves sorting order by room id.
      *
-     * @param position the sorting order of the element
-     * @return an Optional describing sorting order of the next element
+     * @param id the id of the room which sorting order needs to be retrieved
+     * @return an Optional describing the sorting order of the room
      */
-    Optional<Double> getNextPosition(Double position);
+    Optional<Integer> getSortingOrderById(Long id);
 
     /**
-     * Returns sorting order of the given room id.
+     * Shifts the sorting order range by 1 in the specified direction. Bounds are included.
      *
-     * @param afterId the room id which sorting order needs to be retrieved
-     * @return an Optional describing sorting order of the room
+     * @param lowerBound the lower bound of sorting order
+     * @param upperBound the upper bound of sorting order. May be {@code null}
+     * @param direction  the direction of shift
      */
-    Optional<Double> getSortOrderAfterId(Long afterId);
-
+    void shiftSortingOrderRange(Integer lowerBound, Integer upperBound, Direction direction);
 }
