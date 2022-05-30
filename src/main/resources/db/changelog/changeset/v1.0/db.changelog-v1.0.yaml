@@ -613,7 +613,7 @@ databaseChangeLog:
         - dropSequence:
             sequenceName: temporary_schedule_teacher_id_seq
   - changeSet:
-      id: 1653908145376-192
+      id: 1653908145376-191
       author: RuslanSlobodian
       changes:
         - modifyDataType:
@@ -622,7 +622,7 @@ databaseChangeLog:
             schemaName: public
             tableName: rooms
   - changeSet:
-      id: 1653908145376-191
+      id: 1653908145376-192
       author: RuslanSlobodian
       changes:
         - renameColumn:

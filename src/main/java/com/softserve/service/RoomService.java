@@ -75,7 +75,7 @@ public interface RoomService extends BasicService<Room, Long> {
     List<Room> getAllOrdered();
 
     /**
-     * Saves the given room after the specific room id to get desired order. If afterId equal {@code zero}, saves the room at the first position.
+     * Saves the given room after the specific room id to get desired order. If afterId equal {@code null}, saves the room at the first position.
      *
      * @param room    the room to be saved
      * @param afterId the id of the room after which to be saved the new one. May be {@code null}
@@ -85,7 +85,7 @@ public interface RoomService extends BasicService<Room, Long> {
 
     /**
      * Updates the sorting order of the given room and adjacent rooms in sorting order to place the given room after the room with specified id.
-     * If afterId equal {@code zero}, places the room at the first position.
+     * If afterId equal {@code null}, places the room at the first position.
      *
      * @param room    the room to be updated
      * @param afterId the id of the room after which the given room will be placed. May be {@code null}

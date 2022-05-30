@@ -163,7 +163,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room saveAfterId(Room room, Long afterId) {
         log.info("Entered saveAfterId({},{})", room, afterId);
-        if (afterId.equals(0L)) {
+        if (afterId != null) {
             Integer order = getSortingOrderById(afterId) + 1;
             roomRepository.shiftSortingOrderRange(order, null, RoomRepository.Direction.DOWN);
             room.setSortingOrder(order);

@@ -124,17 +124,17 @@ public class RoomController {
                 .body(roomMapper.convertToDtoList(roomService.getAllOrdered()));
     }
 
-    @PostMapping("/after/{id}")
+    @PostMapping(path = {"/after/{id}", "/after"})
     @ApiOperation(value = "Create room after id")
-    public ResponseEntity<RoomDTO> saveRoomAfterId(@PathVariable("id") Long id, @RequestBody RoomDTO roomDTO) {
-        log.info("Entered saveRoomAfterId({}{})", id, roomDTO);
-        Room room = roomService.saveAfterId(roomMapper.convertToEntity(roomDTO), id);
+    public ResponseEntity<RoomDTO> saveRoomAfterId(@PathVariable(name = "id", required = false) Long roomAfterId, @RequestBody RoomDTO roomDTO) {
+        log.info("Entered saveRoomAfterId({}{})", roomAfterId, roomDTO);
+        Room room = roomService.saveAfterId(roomMapper.convertToEntity(roomDTO), roomAfterId);
         return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(room));
     }
 
-    @PutMapping("/after/{id}")
+    @PutMapping(path = {"/after/{id}", "/after"})
     @ApiOperation(value = "Update room order")
-    public ResponseEntity<RoomDTO> upgradeRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
+    public ResponseEntity<RoomDTO> upgradeRoomAfterId(@PathVariable(name = "id", required = false) Long roomAfterId, @RequestBody RoomDTO roomDTO) {
         log.info("Entered upgradeRoomAfterId({}{})", roomAfterId, roomDTO);
         Room room = roomService.updateSortingOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
         return ResponseEntity.status(HttpStatus.OK).body(roomMapper.convertToDto(room));
