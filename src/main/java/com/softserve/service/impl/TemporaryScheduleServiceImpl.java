@@ -192,7 +192,7 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
     @Override
     public Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> getTemporaryScheduleForEvenOddWeeks(Long semesterId) {
         log.info("In getTemporaryScheduleForEvenOddWeeks with semesterId = {}", semesterId);
-        EnumMap<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> evenOddListMap = new EnumMap<>(EvenOdd.class);
+        Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> evenOddListMap = new EnumMap<>(EvenOdd.class);
         Semester semester = semesterService.getById(semesterId);
         LocalDate today = LocalDate.now();
         LocalDate from = today.with(previousOrSame(MONDAY));
@@ -207,8 +207,8 @@ public class TemporaryScheduleServiceImpl implements TemporaryScheduleService {
             List<TemporarySchedule> one = getAllBySemesterAndRange(semesterId, from, from.plusDays(7));
             List<TemporarySchedule> two = getAllBySemesterAndRange(semesterId, from.plusDays(8), from.plusDays(14));
 
-            EnumMap<DayOfWeek, List<TemporarySchedule>> oneMap = new EnumMap<>(DayOfWeek.class);
-            EnumMap<DayOfWeek, List<TemporarySchedule>> twoMap = new EnumMap<>(DayOfWeek.class);
+            Map<DayOfWeek, List<TemporarySchedule>> oneMap = new EnumMap<>(DayOfWeek.class);
+            Map<DayOfWeek, List<TemporarySchedule>> twoMap = new EnumMap<>(DayOfWeek.class);
 
 
             for (TemporarySchedule temporarySchedule : one) {
