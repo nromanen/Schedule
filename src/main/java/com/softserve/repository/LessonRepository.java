@@ -9,7 +9,7 @@ public interface LessonRepository extends BasicRepository<Lesson, Long> {
     /**
      * Returns the list of lessons with the given group id and semester id from the  database.
      *
-     * @param groupId the id of the group for which need to find all lessons
+     * @param groupId    the id of the group for which need to find all lessons
      * @param semesterId the id of the semester for which need to find all lessons
      * @return the list of filtered lessons
      */

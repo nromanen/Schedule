@@ -106,7 +106,7 @@ public class SemesterController {
 
     @DeleteMapping("/semesters/{id}")
     @ApiOperation(value = "Delete semester by id")
-    public ResponseEntity delete(@PathVariable("id") long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         Semester semester = semesterService.getById(id);
         semesterService.delete(semester);

@@ -53,14 +53,14 @@ public class AuthenticationController {
 
     @PostMapping("/sign-in")
     @ApiOperation(value = "Get credentials  for login")
-    public ResponseEntity signIn(@RequestBody AuthenticationRequestDTO requestDto) {
+    public ResponseEntity<Object> signIn(@RequestBody AuthenticationRequestDTO requestDto) {
         log.info("Enter into signIn method with user email {}", requestDto.getEmail());
         User user = userService.findSocialUser(requestDto.getEmail()).orElseThrow(() ->
                 new BadCredentialsException("Invalid password or email")
         );
         if (user.getPassword().equals(PASSWORD_FOR_SOCIAL_USER)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    new MessageDTO("You registered via social network. Please, sign in via social network."));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new MessageDTO("You registered via social network. Please, sign in via social network."));
         }
         String username = requestDto.getEmail();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
@@ -117,7 +117,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/google")
-    public ResponseEntity getGoogleSignIn(HttpServletResponse response) throws IOException {
+    public ResponseEntity<String> getGoogleSignIn(HttpServletResponse response) throws IOException {
         response.sendRedirect(url + "oauth_login/google");
         return ResponseEntity.ok().body("Ok");
     }

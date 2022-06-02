@@ -37,11 +37,9 @@ public class DeletePeriodVacationNotify extends AbstractTemporaryNotification {
 
                     String originalScheduleTeacherEmail = temporaryScheduleService
                             .getTeacherEmailFromTemporarySchedule(temporaryScheduleService.getTeacherByScheduleId(temporarySchedule.getScheduleId()));
-                    if (originalScheduleTeacherEmail != null) {
-                        if (!temporaryTeacherEmail.equals(originalScheduleTeacherEmail)) {
-                            mailService.send(originalScheduleTeacherEmail, "test", temporarySchedule,
-                                    "mail/deleteTemporaryScheduleByPeriodForOriginTeacher");
-                        }
+                    if (originalScheduleTeacherEmail != null && !temporaryTeacherEmail.equals(originalScheduleTeacherEmail)) {
+                        mailService.send(originalScheduleTeacherEmail, "test", temporarySchedule,
+                                "mail/deleteTemporaryScheduleByPeriodForOriginTeacher");
                     }
                 }
             }

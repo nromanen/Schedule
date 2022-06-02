@@ -3,12 +3,11 @@ package com.softserve.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.NamedQuery;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.ParamDef;
 
-import javax.persistence.Entity;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -32,10 +31,7 @@ import java.util.Set;
         @ParamDef(name = "disable", type = "boolean"),
 })
 
-@Filters({
-        @Filter(name = "semesterDisableFilter", condition = "disable = :disable"),
-})
-
+@Filter(name = "semesterDisableFilter", condition = "disable = :disable")
 
 @NoArgsConstructor
 @Getter

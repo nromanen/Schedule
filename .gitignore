@@ -4,4 +4,4 @@
 /gradle
 /backup
 /src/test/resources/hibernatetest.properties
-/schedule_logs!/schedule_logs/log.log
+/schedule_logs
