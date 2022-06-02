@@ -163,14 +163,14 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room saveAfterId(Room room, Long afterId) {
         log.info("Entered saveAfterId({},{})", room, afterId);
-        if (afterId != null) {
-            Integer order = getSortingOrderById(afterId) + 1;
-            roomRepository.shiftSortingOrderRange(order, null, RoomRepository.Direction.DOWN);
-            room.setSortingOrder(order);
+        int order;
+        if (afterId.equals(0L)) {
+            order = 1;
         } else {
-            roomRepository.shiftSortingOrderRange(1, null, RoomRepository.Direction.DOWN);
-            room.setSortingOrder(1);
+            order = getSortingOrderById(afterId) + 1;
         }
+        roomRepository.shiftSortingOrderRange(order, null, RoomRepository.Direction.DOWN);
+        room.setSortingOrder(order);
         return roomRepository.save(room);
     }
 
@@ -181,12 +181,15 @@ public class RoomServiceImpl implements RoomService {
     public Room updateSortingOrder(Room room, Long afterId) {
         log.info("Entered updateSortingOrder({}, {})", room, afterId);
         if (room.getId().equals(afterId)) {
-            throw new IllegalArgumentException("The given room id and the afterId are the same!");
+            return room;
         }
         if (!roomRepository.isExistsById(room.getId())) {
             throw new EntityNotFoundException(Room.class, "id", room.getId().toString());
         }
-        if (afterId != null) {
+        if (afterId.equals(0L)) {
+            roomRepository.shiftSortingOrderRange(1, null, RoomRepository.Direction.DOWN);
+            room.setSortingOrder(1);
+        } else {
             room.setSortingOrder(getSortingOrderById(room.getId()));
             Integer sortingOrderOfPrevRoom = getSortingOrderById(afterId);
             if (sortingOrderOfPrevRoom > room.getSortingOrder()) {
@@ -196,9 +199,6 @@ public class RoomServiceImpl implements RoomService {
                 roomRepository.shiftSortingOrderRange(sortingOrderOfPrevRoom + 1, room.getSortingOrder(), RoomRepository.Direction.DOWN);
                 room.setSortingOrder(sortingOrderOfPrevRoom + 1);
             }
-        } else {
-            roomRepository.shiftSortingOrderRange(1, null, RoomRepository.Direction.DOWN);
-            room.setSortingOrder(1);
         }
         return roomRepository.update(room);
     }
