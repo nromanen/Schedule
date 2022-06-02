@@ -119,9 +119,7 @@ public class LessonServiceImpl implements LessonService {
     public List<Lesson> save(List<Lesson> lessons) {
         log.info("In save(lessons = [{}])", lessons);
         List<Lesson> lessonsList = new ArrayList<>();
-        lessons.forEach(lesson -> {
-            lessonsList.add(save(lesson));
-        });
+        lessons.forEach(lesson -> lessonsList.add(save(lesson)));
 
         return lessonsList;
     }
@@ -146,7 +144,7 @@ public class LessonServiceImpl implements LessonService {
                 lessonRepository.setGrouped(lesson.getId());
             }
             boolean isSubjectUpdated = oldLesson.getSubject().getId().longValue() != lesson.getSubject().getId().longValue();
-            boolean isTeacherUpdated = oldLesson.getTeacher().getId() != lesson.getTeacher().getId();
+            boolean isTeacherUpdated = !oldLesson.getTeacher().getId().equals(lesson.getTeacher().getId());
             lesson = lessonRepository.updateGrouped(oldLesson, lesson, isSubjectUpdated || isTeacherUpdated);
         } else {
             lesson = lessonRepository.update(lesson);

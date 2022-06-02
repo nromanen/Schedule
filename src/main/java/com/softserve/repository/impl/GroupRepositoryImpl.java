@@ -15,51 +15,56 @@ import java.util.Optional;
 @Slf4j
 public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implements GroupRepository {
 
+    public static final String FROM_GROUP = " FROM Group g ";
+
     public static final String GET_NEXT_POSITION
-            = "SELECT min(g.sortingOrder) "
-            + "FROM Group g "
+            = "SELECT min(g.sortingOrder)"
+            + FROM_GROUP
             + "WHERE g.sortingOrder > :position";
     public static final String GET_ORDER_BY_ID
-            = "SELECT g.sortingOrder "
-            + "FROM Group g "
+            = "SELECT g.sortingOrder"
+            + FROM_GROUP
             + "WHERE g.id = :id";
     private static final String GET_ALL_QUERY
-            = "SELECT g "
-            + "FROM Group g "
+            = "SELECT g"
+            + FROM_GROUP
             + "ORDER BY g.title ASC";
     private static final String GET_WITH_STUDENTS_BY_ID_QUERY
-            = "SELECT g "
-            + "FROM Group g "
+            = "SELECT g"
+            + FROM_GROUP
             + "LEFT JOIN FETCH g.students "
             + "WHERE g.id = :id";
     private static final String IS_EXISTS_BY_TITLE_QUERY
-            = "SELECT (count(*) > 0) "
-            + "FROM Group g "
+            = "SELECT (count(*) > 0)"
+            + FROM_GROUP
             + "WHERE lower(g.title) = lower(:title)";
     private static final String IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY = IS_EXISTS_BY_TITLE_QUERY + " AND g.id!=:id";
     private static final String IS_EXISTS_BY_ID_QUERY
-            = "SELECT (count(*) > 0) "
-            + "FROM Group g "
+            = "SELECT (count(*) > 0)"
+            + FROM_GROUP
             + "WHERE g.id = :id";
+
+    private static final String FROM_LESSON = " FROM Lesson l ";
+
     private static final String IS_LESSONS_EXIST_FOR_GROUP_ID_QUERY
-            = "SELECT (count(l.id) > 0) "
-            + "FROM Lesson l "
+            = "SELECT (count(l.id) > 0)"
+            + FROM_LESSON
             + "WHERE l.group.id = :groupId";
     private static final String GET_BY_TEACHER_ID
-            = "SELECT DISTINCT l.group "
-            + "FROM Lesson l "
+            = "SELECT DISTINCT l.group"
+            + FROM_LESSON
             + "WHERE l.teacher.id = :id AND l.semester.defaultSemester = true";
     private static final String GET_GROUPS_BY_IDS
-            = "select g "
-            + "from Group g "
+            = "select g"
+            + FROM_GROUP
             + "where g.id in (:ids)";
     private static final String GET_ALL_ORDERED
-            = "SELECT g "
-            + "FROM Group g "
+            = "SELECT g"
+            + FROM_GROUP
             + "ORDER BY g.sortingOrder ASC";
     private static final String GET_MAX_SORTING_ORDER
             = "SELECT max(g.sortingOrder) "
-            + "FROM Group g";
+            + FROM_GROUP;
     private static final String UPDATE_GROUP_OFFSET
             = "UPDATE Group g "
             + "SET g.sortingOrder = g.sortingOrder+1 "

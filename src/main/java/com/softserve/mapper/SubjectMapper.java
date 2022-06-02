@@ -13,14 +13,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 @Mapper(componentModel = "spring")
-public abstract class SubjectMapper {
-    public abstract SubjectDTO subjectToSubjectDTO(Subject subject);
+public interface SubjectMapper {
+    SubjectDTO subjectToSubjectDTO(Subject subject);
 
-    public abstract Subject subjectDTOToSubject(SubjectDTO subjectDTO);
+    Subject subjectDTOToSubject(SubjectDTO subjectDTO);
 
-    public abstract List<SubjectDTO> subjectsToSubjectDTOs(List<Subject> subjects);
+    List<SubjectDTO> subjectsToSubjectDTOs(List<Subject> subjects);
 
-    public List<SubjectNameWithTypesDTO> subjectWithTypeDTOsToSubjectNameWithTypesDTOs(List<SubjectWithTypeDTO> subjects) {
+    default List<SubjectNameWithTypesDTO> subjectWithTypeDTOsToSubjectNameWithTypesDTOs(List<SubjectWithTypeDTO> subjects) {
 
         List<SubjectNameWithTypesDTO> subjectsNamesWithTypes = new ArrayList<>();
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -100,10 +101,11 @@ public class PeriodServiceImpl implements PeriodService {
         }
         if (isPeriodFree(getAll(), object)) {
             getById(object.getId());
-            if (periodRepository.findByName(object.getName()).isPresent() &&
-                    periodRepository.findByName(object.getName()).get().getId() != object.getId()) {
-                throw new FieldAlreadyExistsException(Period.class, "name", object.getName());
-            }
+            periodRepository.findByName(object.getName()).ifPresent(period -> {
+                if (!Objects.equals(period.getId(), object.getId())) {
+                    throw new FieldAlreadyExistsException(Period.class, "name", object.getName());
+                }
+            });
             return periodRepository.update(object);
         } else {
             throw new PeriodConflictException("your period has conflict with already existed periods");
@@ -135,7 +137,8 @@ public class PeriodServiceImpl implements PeriodService {
         log.info("Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: {} and newPeriod: {}",
                 oldPeriods, newPeriod);
         return oldPeriods.stream().noneMatch(oldPeriod ->
-                (isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)) && newPeriod.getId() != oldPeriod.getId()
+                (isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)) &&
+                        !Objects.equals(newPeriod.getId(), oldPeriod.getId())
         );
     }
 

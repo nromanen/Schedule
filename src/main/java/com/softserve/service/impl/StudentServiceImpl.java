@@ -17,6 +17,7 @@ import com.softserve.repository.StudentRepository;
 import com.softserve.service.GroupService;
 import com.softserve.service.StudentService;
 import com.softserve.service.UserService;
+import com.softserve.util.Constants;
 import com.softserve.util.CsvFileParser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -97,11 +98,11 @@ public class StudentServiceImpl implements StudentService {
         log.info("Enter into save method with studentDTO:{}", studentDTO);
         Student student = studentMapper.studentDTOToStudent(studentDTO);
         if (isEmailNullOrEmpty(studentDTO.getEmail())) {
-            throw new FieldNullException(StudentDTO.class, "email");
+            throw new FieldNullException(StudentDTO.class, Constants.EMAIL);
         }
         Optional<User> optionalUser = userService.findSocialUser(studentDTO.getEmail());
         if (optionalUser.isPresent() && isEmailInUse(studentDTO.getEmail())) {
-            throw new FieldAlreadyExistsException(Student.class, "email", studentDTO.getEmail());
+            throw new FieldAlreadyExistsException(Student.class, Constants.EMAIL, studentDTO.getEmail());
         }
         return save(registerStudent(student, studentDTO.getEmail()));
     }
@@ -128,17 +129,17 @@ public class StudentServiceImpl implements StudentService {
         log.info("Enter into update method with studentDTO:{}", studentDTO);
         Student student = studentMapper.studentDTOToStudent(studentDTO);
         if (isEmailNullOrEmpty(studentDTO.getEmail())) {
-            throw new FieldNullException(StudentDTO.class, "email");
+            throw new FieldNullException(StudentDTO.class, Constants.EMAIL);
         }
         if (!studentRepository.isIdPresent(student.getId())) {
-            throw new EntityNotFoundException(Student.class, "email", studentDTO.getEmail());
+            throw new EntityNotFoundException(Student.class, Constants.EMAIL, studentDTO.getEmail());
         }
         Optional<User> userOptional = userService.findSocialUser(studentDTO.getEmail());
         if (userOptional.isEmpty()) {
             return update(registerStudent(student, studentDTO.getEmail()));
         }
         if (!studentRepository.isEmailForThisStudent(studentDTO.getEmail(), student.getId())) {
-            throw new FieldAlreadyExistsException(Student.class, "email", studentDTO.getEmail());
+            throw new FieldAlreadyExistsException(Student.class, Constants.EMAIL, studentDTO.getEmail());
         }
         student.setUser(userOptional.get());
         return update(student);
@@ -164,7 +165,7 @@ public class StudentServiceImpl implements StudentService {
      * First line of the file is a header.
      * All subsequent lines contain data about students.
      * <p>
-     * "surname","name","patronymic","email"
+     * "surname","name","patronymic",EMAIL
      * "Romanian","Hanna","Stepanov","romaniuk@gmail.com"
      * "Bochum","Oleksandr","Ivanov","boichuk@ukr.net"
      * etc.
@@ -254,7 +255,7 @@ public class StudentServiceImpl implements StudentService {
         if (userOptional.isPresent() && userOptional.get().getRole() == Role.ROLE_STUDENT) {
             if (isEmailInUse(student.getEmail())) {
                 log.error("Student with current email exist ",
-                        new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
+                        new FieldAlreadyExistsException(Student.class, Constants.EMAIL, student.getEmail()));
                 student.setImportSaveStatus(ImportSaveStatus.ALREADY_EXIST);
                 return student;
             }
@@ -286,7 +287,7 @@ public class StudentServiceImpl implements StudentService {
             existedStudent.setEmail(student.getEmail());
             existedStudent.setGroupDTO(groupMapper.groupToGroupDTO(ourStudentFromBase.getGroup()));
             log.error("Student with current email exist ",
-                    new FieldAlreadyExistsException(Student.class, "email", student.getEmail()));
+                    new FieldAlreadyExistsException(Student.class, Constants.EMAIL, student.getEmail()));
             return existedStudent;
         } else {
             throw new ImportRoleConflictException("User with current Email has another ROLE");

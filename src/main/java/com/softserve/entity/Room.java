@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
@@ -24,9 +23,7 @@ import java.io.Serializable;
         @ParamDef(name = "disable", type = "boolean"),
 })
 
-@Filters({
-        @Filter(name = "roomDisableFilter", condition = "disable = :disable"),
-})
+@Filter(name = "roomDisableFilter", condition = "disable = :disable")
 
 public class Room implements Serializable {
     @Id

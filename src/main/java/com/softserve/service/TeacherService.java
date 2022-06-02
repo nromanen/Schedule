@@ -63,7 +63,7 @@ public interface TeacherService extends BasicService<Teacher, Long> {
     /**
      * Imports teachers from file and saves in the repository.
      *
-     * @param file the file with teachers data
+     * @param file         the file with teachers data
      * @param departmentId the id of the department
      * @return tje list of created teachers
      */

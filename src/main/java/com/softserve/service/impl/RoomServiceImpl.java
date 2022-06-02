@@ -186,7 +186,7 @@ public class RoomServiceImpl implements RoomService {
         log.info("Entered updateRoomAfterId({},{})", room, afterId);
         Double minOrder = roomRepository.getMinSortOrder().orElse(0.0);
         if (afterId != null) {
-            if (afterId == room.getId()) {
+            if (afterId.equals(room.getId())) {
                 Double myOrder = roomRepository.getSortOrderAfterId(afterId).orElse(0.0);
                 room.setSortOrder(myOrder);
             } else if (afterId == 0) {

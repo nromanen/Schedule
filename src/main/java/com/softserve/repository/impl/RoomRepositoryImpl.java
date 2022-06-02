@@ -3,6 +3,7 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.repository.RoomRepository;
+import com.softserve.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
 import org.hibernate.Session;
@@ -16,7 +17,6 @@ import java.util.Optional;
 @Repository
 @Slf4j
 public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implements RoomRepository {
-
     public static final String GET_NEXT_POSITION =
             "SELECT min(r.sortOrder) FROM Room r WHERE r.sortOrder > :position";
     private static final String GET_ALL_QUERY =
@@ -75,7 +75,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
         Filter filter = session.enableFilter("roomDisableFilter");
-        filter.setParameter("disable", false);
+        filter.setParameter(Constants.DISABLE, false);
         return session;
     }
 
@@ -107,8 +107,8 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                                 " and s.dayOfWeek = :dayOfWeek" +
                                 " and s.evenOdd = :evenOdd)", Room.class)
                 .setParameter("idOfPeriod", idOfPeriod)
-                .setParameter("dayOfWeek", dayOfWeek)
-                .setParameter("evenOdd", evenOdd);
+                .setParameter(Constants.DAY_OF_WEEK, dayOfWeek)
+                .setParameter(Constants.EVEN_ODD, evenOdd);
         return query.getResultList();
     }
 
@@ -122,7 +122,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     protected boolean checkReference(Room room) {
         log.info("In checkReference(room = [{}])", room);
         Long count = (Long) sessionFactory.getCurrentSession().createQuery(CHECK_REFERENCE)
-                .setParameter("roomId", room.getId())
+                .setParameter(Constants.ROOM_ID, room.getId())
                 .getSingleResult();
         return count != 0;
     }
@@ -137,16 +137,16 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         Session session = getSession();
         if (evenOdd == EvenOdd.WEEKLY) {
             return session.createQuery(GET_NOT_AVAILABLE_ROOMS_FOR_SCHEDULE, Room.class)
-                    .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek)
-                    .setParameter("classId", classId)
+                    .setParameter(Constants.SEMESTER_ID, semesterId)
+                    .setParameter(Constants.DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(Constants.CLASS_ID, classId)
                     .getResultList();
         } else {
             return session.createQuery(GET_NOT_AVAILABLE_ROOMS_FOR_SCHEDULE_2, Room.class)
-                    .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek)
-                    .setParameter("classId", classId)
-                    .setParameter("evenOdd", evenOdd)
+                    .setParameter(Constants.SEMESTER_ID, semesterId)
+                    .setParameter(Constants.DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(Constants.CLASS_ID, classId)
+                    .setParameter(Constants.EVEN_ODD, evenOdd)
                     .getResultList();
         }
     }
@@ -161,16 +161,16 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         Session session = getSession();
         if (evenOdd == EvenOdd.WEEKLY) {
             return session.createQuery(GET_AVAILABLE_ROOMS_FOR_SCHEDULE, Room.class)
-                    .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek)
-                    .setParameter("classId", classId)
+                    .setParameter(Constants.SEMESTER_ID, semesterId)
+                    .setParameter(Constants.DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(Constants.CLASS_ID, classId)
                     .getResultList();
         } else {
             return session.createQuery(GET_AVAILABLE_ROOMS_FOR_SCHEDULE_2, Room.class)
-                    .setParameter("semesterId", semesterId)
-                    .setParameter("dayOfWeek", dayOfWeek)
-                    .setParameter("classId", classId)
-                    .setParameter("evenOdd", evenOdd)
+                    .setParameter(Constants.SEMESTER_ID, semesterId)
+                    .setParameter(Constants.DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(Constants.CLASS_ID, classId)
+                    .setParameter(Constants.EVEN_ODD, evenOdd)
                     .getResultList();
         }
     }

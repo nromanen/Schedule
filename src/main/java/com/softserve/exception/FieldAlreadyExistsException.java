@@ -10,11 +10,11 @@ import java.util.stream.IntStream;
 
 @Getter
 public class FieldAlreadyExistsException extends RuntimeException {
-    private final Class clazz;
+    private final Class<?> clazz;
     private final String[] searchParamsMap;
     private final String shortMessage;
 
-    public FieldAlreadyExistsException(Class clazz, String... searchParamsMap) {
+    public FieldAlreadyExistsException(Class<?> clazz, String... searchParamsMap) {
         super(FieldAlreadyExistsException.generateMessage(clazz.getSimpleName(), toMap(String.class, String.class, (Object[]) searchParamsMap)));
         this.clazz = clazz;
         this.searchParamsMap = searchParamsMap;

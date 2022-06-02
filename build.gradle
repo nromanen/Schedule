@@ -79,7 +79,6 @@ check.dependsOn jacocoTestCoverageVerification
 checkstyle {
     toolVersion = 10.0
     showViolations = true
-    ignoreFailures = true
 }
 
 tasks.withType(Checkstyle) {
@@ -88,6 +87,9 @@ tasks.withType(Checkstyle) {
             xml.destination rootProject.file("build/reports/checkstyle/checkstyle.xml")
             html.destination rootProject.file("build/reports/checkstyle/checkstyle.html")
         }
+    }
+    checkstyleTest {
+        ignoreFailures = true
     }
 }
 

@@ -7,7 +7,8 @@ import java.util.Collections;
 
 public final class JwtUserFactory {
 
-    private JwtUserFactory() { }
+    private JwtUserFactory() {
+    }
 
     public static JwtUser create(User user) {
         return new JwtUser(

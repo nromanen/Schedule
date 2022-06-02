@@ -3,6 +3,7 @@ package com.softserve.controller;
 import com.softserve.dto.EmailMessageDTO;
 import com.softserve.dto.UserCreateDTO;
 import com.softserve.dto.UserDTO;
+import com.softserve.dto.UserDataDTO;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
@@ -108,7 +109,7 @@ public class UserController {
 
     @GetMapping("/profile")
     @ApiOperation(value = "Get current user data")
-    public ResponseEntity getCurrentUser(@CurrentUser JwtUser jwtUser) {
+    public ResponseEntity<UserDataDTO> getCurrentUser(@CurrentUser JwtUser jwtUser) {
         log.info("Enter into getCurrentUser method with JwtUser {}", jwtUser.getUsername());
         User user = userService.getById(jwtUser.getId());
         if (user.getRole() == Role.ROLE_TEACHER) {

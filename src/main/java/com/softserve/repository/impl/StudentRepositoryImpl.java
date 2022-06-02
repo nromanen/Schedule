@@ -11,18 +11,20 @@ import java.util.Optional;
 @Slf4j
 public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> implements StudentRepository {
 
+    private static final String FROM_STUDENT = " FROM Student s ";
+
     private static final String HQL_IS_EXISTS_BY_EMAIL
-            = "SELECT (count(*) > 0) "
-            + "FROM Student s "
+            = "SELECT (count(*) > 0)"
+            + FROM_STUDENT
             + "WHERE s.user.email = :email";
 
     private static final String HQL_IS_EXISTS_BY_EMAIL_IN_CURRENT_STUDENT
-            = "SELECT (count(*) > 0) "
-            + "FROM Student s "
+            = "SELECT (count(*) > 0)"
+            + FROM_STUDENT
             + "WHERE s.user.email = :email AND s.id = :id";
 
     private static final String GET_STUDENT_WITH_FULL_NAME_SURNAME
-            = "select s from Student s " +
+            = "select s" + FROM_STUDENT +
             "where s.name = :sName and " +
             "s.surname = :sSurname and " +
             "s.patronymic = :sPatronymic";
