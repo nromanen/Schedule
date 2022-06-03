@@ -2,6 +2,7 @@ package com.softserve.config;
 
 import com.softserve.entity.User;
 import com.softserve.exception.AuthGoogleEmailDontExistException;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.SocialClientRegistrationException;
 import com.softserve.repository.UserRepository;
 import com.softserve.security.customFilter.GoogleAuthFilter;
@@ -54,7 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final Environment env;
     private final UserService userService;
-    private final UserRepository userRepository;
 
     private static final String CLIENT_PROPERTY_KEY = "spring.security.oauth2.client.registration.";
     private static final String GOOGLE = "google";
@@ -93,11 +93,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Autowired
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, Environment env, UserService userService, UserRepository userRepository) {
+    public SecurityConfig(JwtTokenProvider jwtTokenProvider, Environment env, UserService userService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.env = env;
         this.userService = userService;
-        this.userRepository = userRepository;
     }
 
     @Autowired
@@ -230,19 +229,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
             String url = env.getProperty("backend.url");
             String email = oAuth2User.getAttribute("email");
-            if(checkIfEmailExist(email)){
+            try {
                 User user = userService.findByEmail(email);
 
                 String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
                 response.sendRedirect(url + "login?social=true&token=" + jwtToken);
-            }else {
-               throw new AuthGoogleEmailDontExistException("Email dont registered in system: ", email);
+            } catch (EntityNotFoundException ex) {
+                throw new AuthGoogleEmailDontExistException("Email dont registered in system: ", email);
             }
         };
     }
-
-    private boolean checkIfEmailExist(String email){
-        return userRepository.findByEmail(email).isPresent();
-    }
-
 }
