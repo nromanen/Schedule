@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
-    @Mapping(target = "sortingOrder", ignore = true)
+    @Mapping(target = "sortOrder", ignore = true)
     Room convertToEntity(RoomDTO dto);
 
     RoomDTO convertToDto(Room entity);

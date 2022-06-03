@@ -68,9 +68,9 @@ public interface RoomService extends BasicService<Room, Long> {
     List<Room> getDisabled();
 
     /**
-     * Returns all rooms ordered by sortingOrder.
+     * Returns all rooms ordered by sortOrder.
      *
-     * @return the list of rooms ordered by sortingOrder
+     * @return the list of rooms ordered by sortOrder
      */
     List<Room> getAllOrdered();
 
@@ -84,13 +84,13 @@ public interface RoomService extends BasicService<Room, Long> {
     Room saveAfterId(Room room, Long afterId);
 
     /**
-     * Updates the sorting order of the given room and adjacent rooms in sorting order to place the given room after the room with specified id.
+     * Updates the sort order of the given room and adjacent rooms in sort order to place the given room after the room with specified id.
      * If afterId equal {@code zero}, places the room at the first position.
      *
      * @param room    the room to be updated
      * @param afterId the id of the room after which the given room will be placed. May be {@code null}
-     * @return the updated room with a set sorting order
+     * @return the updated room with a set sort order
      * @throws com.softserve.exception.EntityNotFoundException if given room not found
      */
-    Room updateSortingOrder(Room room, Long afterId);
+    Room updateSortOrder(Room room, Long afterId);
 }

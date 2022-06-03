@@ -136,7 +136,7 @@ public class RoomController {
     @ApiOperation(value = "Update room order")
     public ResponseEntity<RoomDTO> upgradeRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
         log.info("Entered upgradeRoomAfterId({}{})", roomAfterId, roomDTO);
-        Room room = roomService.updateSortingOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
+        Room room = roomService.updateSortOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
         return ResponseEntity.status(HttpStatus.OK).body(roomMapper.convertToDto(room));
     }
 }

@@ -621,13 +621,3 @@ databaseChangeLog:
             newDataType: int4
             schemaName: public
             tableName: rooms
-  - changeSet:
-      id: 1653908145376-192
-      author: RuslanSlobodian
-      changes:
-        - renameColumn:
-            columnDataType: int4
-            newColumnName: sorting_order
-            oldColumnName: sort_order
-            schemaName: public
-            tableName: rooms

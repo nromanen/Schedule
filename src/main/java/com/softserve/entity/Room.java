@@ -42,6 +42,6 @@ public class Room implements Serializable {
     @Column(name = "disable", columnDefinition = "boolean default 'false'")
     private boolean disable = false;
 
-    @Column(name = "sorting_order")
-    private Integer sortingOrder;
+    @Column(name = "sort_order")
+    private Integer sortOrder;
 }

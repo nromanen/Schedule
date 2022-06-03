@@ -60,9 +60,9 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
     List<Room> getDisabled();
 
     /**
-     * Returns all rooms from database ordered by sortingOrder.
+     * Returns all rooms from database ordered by sortOrder.
      *
-     * @return the list of the rooms ordered by sortingOrder
+     * @return the list of the rooms ordered by sortOrder
      */
     List<Room> getAllOrdered();
 
@@ -75,26 +75,26 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
     boolean isExistsById(Long id);
 
     /**
-     * Returns the last occupied position in sorting order.
+     * Returns the last occupied position in sort order.
      *
-     * @return an Optional describing the last occupied position in sorting order
+     * @return an Optional describing the last occupied position in sort order
      */
-    Optional<Integer> getLastSortingOrder();
+    Optional<Integer> getLastSortOrder();
 
     /**
-     * Retrieves sorting order by room id.
+     * Retrieves sort order by room id.
      *
-     * @param id the id of the room which sorting order needs to be retrieved
-     * @return an Optional describing the sorting order of the room
+     * @param id the id of the room which sort order needs to be retrieved
+     * @return an Optional describing the sort order of the room
      */
-    Optional<Integer> getSortingOrderById(Long id);
+    Optional<Integer> getSortOrderById(Long id);
 
     /**
-     * Shifts the sorting order range by 1 in the specified direction. Bounds are included.
+     * Shifts the sort order range by 1 in the specified direction. Bounds are included.
      *
-     * @param lowerBound the lower bound of sorting order
-     * @param upperBound the upper bound of sorting order. May be {@code null}
+     * @param lowerBound the lower bound of sort order
+     * @param upperBound the upper bound of sort order. May be {@code null}
      * @param direction  the direction of shift
      */
-    void shiftSortingOrderRange(Integer lowerBound, Integer upperBound, Direction direction);
+    void shiftSortOrderRange(Integer lowerBound, Integer upperBound, Direction direction);
 }
