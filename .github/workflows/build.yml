@@ -32,7 +32,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonarqube -x test
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build -x war
       - name: Test report
         uses: mikepenz/action-junit-report@v3
         if: always()
