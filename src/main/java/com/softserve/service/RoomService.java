@@ -79,7 +79,7 @@ public interface RoomService extends BasicService<Room, Long> {
      *
      * @param room    the room to be saved
      * @param afterId the id of the room after which to be saved the new one. May be {@code null}
-     * @return the saved room with a set sorting order
+     * @return the saved room with a set sort order
      */
     Room saveAfterId(Room room, Long afterId);
 

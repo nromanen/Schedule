@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RoomControllerTest {
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
@@ -175,7 +175,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void SetRoomAfterId() throws Exception{
+    public void SaveRoomAfterId() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(4L);
@@ -192,7 +192,25 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void SetRoomFirstOrder() throws Exception{
+    public void saveRoomAfterRoomThatDoesNotExist_ShouldReturn404() throws Exception {
+
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(4L);
+        roomTypeDTO.setDescription("Small auditory");
+
+        RoomDTO roomSave = new RoomDTO();
+        roomSave.setName("Save after 123");
+        roomSave.setType(roomTypeDTO);
+
+        mockMvc.perform(post("/rooms/after/{id}", 123)
+                        .content(objectMapper.writeValueAsString(roomSave))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("Room was not found or have not set sorting order"));
+    }
+
+    @Test
+    public void SetRoomFirstOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
@@ -209,7 +227,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void UpdateRoomSetOrder() throws Exception{
+    public void UpdateRoomSetOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
@@ -231,7 +249,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void UpdateRoomWithSameOrder() throws Exception{
+    public void UpdateRoomWithSameOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
@@ -251,6 +269,44 @@ public class RoomControllerTest {
                 .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
                 .andExpect(jsonPath("$.type").value(roomForCompare.getType()))
                 .andExpect(jsonPath("$.name").value(roomForCompare.getName()));
+    }
+
+    @Test
+    public void placeAfterRoomThatDoesNotExist_Return404() throws Exception {
+
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(5L);
+        roomTypeDTO.setDescription("Medium auditory");
+
+        RoomDTO roomDtoForUpdate = new RoomDTO();
+        roomDtoForUpdate.setId(5L);
+        roomDtoForUpdate.setName("update with id 2");
+        roomDtoForUpdate.setType(roomTypeDTO);
+
+        mockMvc.perform(put("/rooms/after/{id}", 10)
+                        .content(objectMapper.writeValueAsString(roomDtoForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("Room was not found or have not set sorting order"));
+    }
+
+    @Test
+    public void updatedRoomDoesNotExist_ShouldReturn404() throws Exception {
+
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(5L);
+        roomTypeDTO.setDescription("Medium auditory");
+
+        RoomDTO roomDtoForUpdate = new RoomDTO();
+        roomDtoForUpdate.setId(10L);
+        roomDtoForUpdate.setName("update with id 2");
+        roomDtoForUpdate.setType(roomTypeDTO);
+
+        mockMvc.perform(put("/rooms/after/{id}", 20)
+                        .content(objectMapper.writeValueAsString(roomDtoForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("Room was not found"));
     }
 
 }
