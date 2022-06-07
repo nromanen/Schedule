@@ -56,6 +56,16 @@
         <property name="optional" value="true"/>
     </module>
 
+    <!-- https://checkstyle.org/config_filters.html#SuppressionSingleFilter -->
+    <module name="SuppressionSingleFilter">  <!-- Suppress MethodNameRegular check on unit tests"-->
+        <property name="id" value="MethodNameRegular"/>
+        <property name="files" value=".*[\\/]src[\\/]test[\\/]"/>
+    </module>
+    <module name="SuppressionSingleFilter">  <!-- Suppress MethodNameTest check except on unit tests-->
+        <property name="id" value="MethodNameTest"/>
+        <property name="files" value=".*[\\/]src[\\/](?!test[\\/])"/>
+    </module>
+
     <!-- Checks that a package-info.java file exists for each package.     -->
     <!-- See https://checkstyle.org/config_javadoc.html#JavadocPackage -->
     <!--<module name="JavadocPackage"/>--> <!-- перевіряє Javadoc над пакетом -->
@@ -117,7 +127,13 @@
         <module name="LocalFinalVariableName"/> <!-- перевіряє відповідність локальних кінцевих імен змінних заданому шаблону -->
         <module name="LocalVariableName"/> <!-- перевіряють неймінг local not final variables -->
         <module name="MemberName"/> <!-- перевіряють неймінг екземплярів -->
-        <module name="MethodName"/> <!-- перевіряють неймінг method -->
+        <module name="MethodName"> <!-- перевіряє неймінг методів класів -->
+            <property name="id" value="MethodNameRegular"/>
+        </module>
+        <module name="MethodName"> <!-- перевіряє неймінг методів тестів -->
+            <property name="id" value="MethodNameTest"/>
+            <property name="format" value="^[a-z](_?[a-zA-Z0-9]+)*$"/>
+        </module>
         <module name="PackageName"/> <!-- перевіряють неймінг package -->
         <module name="ParameterName"/> <!-- перевіряють неймінг variables -->
         <module name="StaticVariableName"/> <!-- перевіряють неймінг static variables -->
