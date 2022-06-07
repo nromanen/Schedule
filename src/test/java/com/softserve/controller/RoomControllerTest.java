@@ -206,7 +206,7 @@ public class RoomControllerTest {
                         .content(objectMapper.writeValueAsString(roomSave))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("Room was not found or have not set sorting order"));
+                .andExpect(jsonPath("$.message").value("Room was not found or have not set sort order"));
     }
 
     @Test
@@ -287,7 +287,7 @@ public class RoomControllerTest {
                         .content(objectMapper.writeValueAsString(roomDtoForUpdate))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message").value("Room was not found or have not set sorting order"));
+                .andExpect(jsonPath("$.message").value("Room was not found or have not set sort order"));
     }
 
     @Test

@@ -3,7 +3,7 @@ package com.softserve.service.impl;
 import com.softserve.entity.Group;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
-import com.softserve.exception.SortingOrderNotExistsException;
+import com.softserve.exception.SortOrderNotExistsException;
 import com.softserve.repository.GroupRepository;
 import com.softserve.service.GroupService;
 import com.softserve.service.SemesterService;
@@ -131,12 +131,12 @@ public class GroupServiceImpl implements GroupService {
      *
      * @param id the id of the group
      * @return the sorting order of the group
-     * @throws SortingOrderNotExistsException if sorting order not exists
+     * @throws SortOrderNotExistsException if sorting order not exists
      */
     private Integer getSortingOrderById(Long id) {
         log.debug("Entered getSortingOrderById({})", id);
         return groupRepository.getSortingOrderById(id)
-                .orElseThrow(() -> new SortingOrderNotExistsException(Group.class, id));
+                .orElseThrow(() -> new SortOrderNotExistsException(Group.class, id));
     }
 
     /**

@@ -104,8 +104,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(apiError);
     }
 
-    @ExceptionHandler(SortingOrderNotExistsException.class)
-    protected ResponseEntity<Object> handleSortingOrderNotExists(SortingOrderNotExistsException exception) {
+    @ExceptionHandler(SortOrderNotExistsException.class)
+    protected ResponseEntity<Object> handleSortOrderNotExists(SortOrderNotExistsException exception) {
         ApiError apiError = new ApiError(NOT_FOUND, exception);
         apiError.setMessage(exception.getShortMessage());
         log.error(exception.getMessage());

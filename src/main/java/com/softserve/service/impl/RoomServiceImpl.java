@@ -5,7 +5,7 @@ import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.SortingOrderNotExistsException;
+import com.softserve.exception.SortOrderNotExistsException;
 import com.softserve.mapper.RoomForScheduleInfoMapper;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
@@ -208,11 +208,11 @@ public class RoomServiceImpl implements RoomService {
      *
      * @param id the id of the room
      * @return the sort order of the given room id
-     * @throws SortingOrderNotExistsException if sort order of the room isn't set
+     * @throws SortOrderNotExistsException if sort order of the room isn't set
      */
     private Integer getSortOrderById(Long id) {
         log.debug("Entered getSortOrderById({})", id);
         return roomRepository.getSortOrderById(id)
-                .orElseThrow(() -> new SortingOrderNotExistsException(Room.class, id));
+                .orElseThrow(() -> new SortOrderNotExistsException(Room.class, id));
     }
 }

@@ -4,7 +4,7 @@ import com.softserve.entity.Room;
 import com.softserve.entity.RoomType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.SortingOrderNotExistsException;
+import com.softserve.exception.SortOrderNotExistsException;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.impl.RoomServiceImpl;
 import org.junit.Test;
@@ -202,8 +202,8 @@ public class RoomServiceTest {
 
     }
 
-    @Test(expected = SortingOrderNotExistsException.class)
-    public void saveAfterId_WhenSaveAfterNotExistRoom_ShouldThrowSortingOrderNotExistsException() throws SortingOrderNotExistsException {
+    @Test(expected = SortOrderNotExistsException.class)
+    public void saveAfterId_WhenSaveAfterNotExistRoom_ShouldThrowSortingOrderNotExistsException() throws SortOrderNotExistsException {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
