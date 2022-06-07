@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ScheduleControllerTest {
 
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
@@ -95,7 +95,7 @@ public class ScheduleControllerTest {
         mockMvc.perform(get("/schedules/semester").param("semesterId", "100").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", IsEmptyCollection.empty()))
+                .andExpect(jsonPath("$",IsEmptyCollection.empty()))
                 .andExpect(content().contentType("application/json"));
     }
 
@@ -118,12 +118,12 @@ public class ScheduleControllerTest {
         lessonService.save(lesson);
 
         mockMvc.perform(get("/schedules/data-before")
-                        .param("semesterId", "4")
-                        .param("dayOfWeek", "MONDAY")
-                        .param("evenOdd", "EVEN")
-                        .param("classId", "6")
-                        .param("lessonId", lesson.getId().toString())
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "4")
+                .param("dayOfWeek", "MONDAY")
+                .param("evenOdd", "EVEN")
+                .param("classId", "6")
+                .param("lessonId", lesson.getId().toString())
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
@@ -132,12 +132,12 @@ public class ScheduleControllerTest {
     @Test
     public void returnBadRequestIfGetInfoForExistScheduleBySemesterIdByDayOfWeekByEvenOddByClassIdByLessonId() throws Exception {
         mockMvc.perform(get("/schedules/data-before")
-                        .param("semesterId", "4")
-                        .param("dayOfWeek", "MONDAY")
-                        .param("evenOdd", "EVEN")
-                        .param("classId", "4")
-                        .param("lessonId", "4")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "4")
+                .param("dayOfWeek", "MONDAY")
+                .param("evenOdd", "EVEN")
+                .param("classId", "4")
+                .param("lessonId", "4")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"));
@@ -146,9 +146,9 @@ public class ScheduleControllerTest {
     @Test
     public void getFullScheduleForGroup() throws Exception {
         mockMvc.perform(get("/schedules/full/groups")
-                        .param("semesterId", "4")
-                        .param("groupId", "4")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "4")
+                .param("groupId", "4")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
@@ -157,9 +157,9 @@ public class ScheduleControllerTest {
     @Test
     public void returnEmptyListOfScheduleIfGetFullScheduleForNotFoundedGroup() throws Exception {
         mockMvc.perform(get("/schedules/full/groups")
-                        .param("semesterId", "4")
-                        .param("groupId", "10")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "4")
+                .param("groupId", "10")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.schedule").value(Matchers.empty()))
@@ -169,8 +169,8 @@ public class ScheduleControllerTest {
     @Test
     public void getFullScheduleForSemester() throws Exception {
         mockMvc.perform(get("/schedules/full/semester")
-                        .param("semesterId", "4")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "4")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
@@ -179,8 +179,8 @@ public class ScheduleControllerTest {
     @Test
     public void returnNotFoundIfGetFullScheduleForNotFoundedSemester() throws Exception {
         mockMvc.perform(get("/schedules/full/semester")
-                        .param("semesterId", "10")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "10")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json"));
@@ -189,9 +189,9 @@ public class ScheduleControllerTest {
     @Test
     public void getFullScheduleForTeacher() throws Exception {
         mockMvc.perform(get("/schedules/full/teachers")
-                        .param("semesterId", "4")
-                        .param("teacherId", "4")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "4")
+                .param("teacherId", "4")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
@@ -200,9 +200,9 @@ public class ScheduleControllerTest {
     @Test
     public void returnNotFoundIfGetFullScheduleForNotFoundedTeacher() throws Exception {
         mockMvc.perform(get("/schedules/full/teachers")
-                        .param("semesterId", "4")
-                        .param("teacherId", "10")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "4")
+                .param("teacherId", "10")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json"));
@@ -211,8 +211,8 @@ public class ScheduleControllerTest {
     @Test
     public void getFullScheduleForRoom() throws Exception {
         mockMvc.perform(get("/schedules/full/rooms")
-                        .param("semesterId", "4")
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("semesterId", "4")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
@@ -229,7 +229,7 @@ public class ScheduleControllerTest {
 
         mockMvc.perform(post("/schedules")
                         .content(objectMapper.writeValueAsString(scheduleSaveDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -283,8 +283,8 @@ public class ScheduleControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        mockMvc.perform(delete("/schedules/{id}", 4)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/schedules/{id}",4)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -298,7 +298,7 @@ public class ScheduleControllerTest {
         scheduleSaveDTO.setRoomId(4L);
 
         mockMvc.perform(post("/schedules").content(objectMapper.writeValueAsString(scheduleSaveDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

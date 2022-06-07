@@ -232,7 +232,7 @@ public class GroupServiceTest {
         semester.setGroups(new HashSet<>(groupList));
         List<Long> groupIds = List.of(1L, 2L);
 
-        when(groupRepository.getGroupsByGroupIds(groupIds)).thenReturn(List.of(group1, group2));
+        when(groupRepository.getGroupsByGroupIds(groupIds)).thenReturn(List.of(group1,group2));
 
         assertEquals(groupList, groupService.getGroupsByGroupIds(groupIds));
     }

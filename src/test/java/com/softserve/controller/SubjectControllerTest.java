@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class SubjectControllerTest {
 
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
@@ -75,7 +75,7 @@ public class SubjectControllerTest {
         subjectDtoForSave.setName("save subject name");
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -86,7 +86,7 @@ public class SubjectControllerTest {
         subjectDtoForUpdate.setName("updated History");
 
         mockMvc.perform(put("/subjects", 5).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(subjectDtoForUpdate.getId()))
                 .andExpect(jsonPath("$.name").value(subjectDtoForUpdate.getName()));
@@ -95,7 +95,7 @@ public class SubjectControllerTest {
     @Test
     public void deleteExistSubject() throws Exception {
         mockMvc.perform(delete("/subjects/{id}", 5)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -110,7 +110,7 @@ public class SubjectControllerTest {
         subjectDTO.setName("Biology");
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -121,7 +121,7 @@ public class SubjectControllerTest {
         subjectDtoForSave.setName(null);
 
         mockMvc.perform(post("/subjects").content(objectMapper.writeValueAsString(subjectDtoForSave))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -133,7 +133,7 @@ public class SubjectControllerTest {
         subjectDtoForUpdate.setName("Astronomy");
 
         mockMvc.perform(put("/subjects", 4).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -145,7 +145,7 @@ public class SubjectControllerTest {
         subjectDtoForUpdate.setName(null);
 
         mockMvc.perform(put("/subjects", 6).content(objectMapper.writeValueAsString(subjectDtoForUpdate))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

@@ -34,12 +34,10 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
@@ -69,14 +67,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = {"classpath:create-students-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class StudentControllerTest {
     @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+    public static final SpringClassRule scr = new SpringClassRule();
 
     @Rule
     public final SpringMethodRule smr = new SpringMethodRule();
 
     private static MockMvc mockMvc;
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private CustomMockMvcAssertions assertions;
 
@@ -99,7 +97,7 @@ public class StudentControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
-        assertions = new CustomMockMvcAssertions(mockMvc, OBJECT_MAPPER, "/students");
+        assertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/students");
 
         studentDTOWithId8L = StudentDTO.builder()
                 .id(8L)
@@ -191,7 +189,7 @@ public class StudentControllerTest {
     )
     public void returnForbiddenIfAuthenticatedUserRoleIsNotManagerOnSave() throws Exception {
         assertThatReturnedForbiddenStatus(post("/students")
-                .content(OBJECT_MAPPER.writeValueAsString(studentDTOWithId8L)));
+                .content(objectMapper.writeValueAsString(studentDTOWithId8L)));
     }
 
     @Test
@@ -202,7 +200,7 @@ public class StudentControllerTest {
     )
     public void returnForbiddenIfAuthenticatedUserRoleIsNotManagerOnUpdate() throws Exception {
         assertThatReturnedForbiddenStatus(put("/students")
-                .content(OBJECT_MAPPER.writeValueAsString(studentDTOWithId8L)));
+                .content(objectMapper.writeValueAsString(studentDTOWithId8L)));
     }
 
     @Test
@@ -338,11 +336,11 @@ public class StudentControllerTest {
                 "must be a well-formed email address"
         );
 
-        return new Object[]{
-                new Object[]{studentDTOWithNullValues, errorListWithNullValues},
-                new Object[]{studentDTOWithValuesLengthsLessThanMin, errorListWithMinLength},
-                new Object[]{studentDTOWithValuesLengthsMoreThanMax, errorListWithMaxLength},
-                new Object[]{studentDTOWithIncorrectEmail, singletonList(incorrectEmailError)},
+        return new Object[] {
+                new Object[] { studentDTOWithNullValues, errorListWithNullValues },
+                new Object[] { studentDTOWithValuesLengthsLessThanMin, errorListWithMinLength },
+                new Object[] { studentDTOWithValuesLengthsMoreThanMax, errorListWithMaxLength },
+                new Object[] { studentDTOWithIncorrectEmail, singletonList(incorrectEmailError) },
         };
     }
 
@@ -420,8 +418,8 @@ public class StudentControllerTest {
 
     private void assertThatReturnedFieldAlreadyExistsException(MockHttpServletRequestBuilder requestBuilder,
                                                                StudentDTO studentDTO) throws Exception {
-        mockMvc.perform(requestBuilder.content(OBJECT_MAPPER.writeValueAsString(studentDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(requestBuilder.content(objectMapper.writeValueAsString(studentDTO))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"))

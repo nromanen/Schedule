@@ -195,8 +195,7 @@ public class SemesterServiceTest {
         newSemester.setStartDay(LocalDate.of(2020, 4, 10));
         newSemester.setEndDay(LocalDate.of(2020, 5, 10));
 
-        when(semesterRepository.getSemesterByDescriptionAndYear(newSemester.getDescription(), newSemester.getYear()))
-                .thenReturn(Optional.of(semesterInDatabase));
+        when(semesterRepository.getSemesterByDescriptionAndYear(newSemester.getDescription(), newSemester.getYear())).thenReturn(Optional.of(semesterInDatabase));
 
         semesterService.save(newSemester);
     }
@@ -300,8 +299,7 @@ public class SemesterServiceTest {
         anotherSemester.setStartDay(LocalDate.of(2020, 10, 1));
         anotherSemester.setEndDay(LocalDate.of(2020, 12, 15));
 
-        when(semesterRepository.getSemesterByDescriptionAndYear(semester.getDescription(), semester.getYear()))
-                .thenReturn(Optional.of(anotherSemester));
+        when(semesterRepository.getSemesterByDescriptionAndYear(semester.getDescription(),semester.getYear())).thenReturn(Optional.of(anotherSemester));
 
         semesterService.update(semester);
     }
@@ -559,12 +557,14 @@ public class SemesterServiceTest {
         semester.setEndDay(LocalDate.of(2020, 5, 10));
         semester.setCurrentSemester(false);
 
-        when(groupRepository.getGroupsByGroupIds(any())).thenReturn(List.of(group1, group2));
+        when(groupRepository.getGroupsByGroupIds(any())).thenReturn(List.of(group1,group2));
 
-        Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, List.of(group1.getId(), group2.getId()));
+        Semester semesterWithGroup = semesterService.addGroupsToSemester(semester, List.of(group1.getId(),group2.getId()));
         assertNotNull(semesterWithGroup);
         assertTrue(semesterWithGroup.getGroups().contains(group1));
         assertTrue(semesterWithGroup.getGroups().contains(group2));
     }
+
+
 
 }

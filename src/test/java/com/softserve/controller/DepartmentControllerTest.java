@@ -31,9 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
 import java.util.Collections;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,7 +61,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = "classpath:create-departments-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class DepartmentControllerTest {
     @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+    public static final SpringClassRule scr = new SpringClassRule();
 
     @Rule
     public final SpringMethodRule smr = new SpringMethodRule();
@@ -143,7 +141,7 @@ public class DepartmentControllerTest {
     @Test
     public void returnBadRequestIfReferencesOnDepartmentExist() throws Exception {
         mockMvc.perform(delete("/departments/{id}", 4)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -168,10 +166,10 @@ public class DepartmentControllerTest {
 
     public Object[] parametersForTestValidationException() {
         String errorMessage = "Name cannot be blank";
-        return new Object[]{
-                new Object[]{null, errorMessage},
-                new Object[]{"", errorMessage},
-                new Object[]{"  ", errorMessage},
+        return new Object[] {
+                new Object[] { null , errorMessage  },
+                new Object[] { "",  errorMessage },
+                new Object[] { "  ",  errorMessage },
         };
     }
 
@@ -213,7 +211,7 @@ public class DepartmentControllerTest {
     private <T> void assertThatReturnedFieldAlreadyExistsException(MockHttpServletRequestBuilder requestBuilder,
                                                                    T groupDTO) throws Exception {
         mockMvc.perform(requestBuilder.content(objectMapper.writeValueAsString(groupDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"))

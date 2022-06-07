@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.config.*;
 import com.softserve.dto.*;
+import com.softserve.entity.Group;
 import com.softserve.exception.apierror.ApiValidationError;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -17,6 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -29,6 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -54,7 +57,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = {"classpath:create-groups-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class GroupControllerTest {
     @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+    public static final SpringClassRule scr = new SpringClassRule();
 
     @Rule
     public final SpringMethodRule smr = new SpringMethodRule();
@@ -175,13 +178,12 @@ public class GroupControllerTest {
         groupDTO.setTitle("sdsdsdsd");
         groupDTO.setDisable(false);
         groupDTO.setAfterId(6L);
-        String groupJSON = """
-                {
-                  "afterId": 6,
-                  "disable": false,
-                  "id": 0,
-                  "title": "sdsdsdsd"
-                }""";
+        String groupJSON = "{\n" +
+                "  \"afterId\": 6,\n" +
+                "  \"disable\": false,\n" +
+                "  \"id\": 0,\n" +
+                "  \"title\": \"sdsdsdsd\"\n" +
+                "}";
         mockMvc.perform(post("/groups/after").content(groupJSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -210,17 +212,16 @@ public class GroupControllerTest {
         groupDTO.setDisable(false);
         groupDTO.setAfterId(4L);
         groupDTO.setId(1L);
-        String groupJSON = """
-                {
-                  "afterId": 4,
-                  "disable": false,
-                  "id": 1,
-                  "title": "sdsdsdsd"
-                }""";
+        String groupJSON = "{\n" +
+                "  \"afterId\": 4,\n" +
+                "  \"disable\": false,\n" +
+                "  \"id\": 1,\n" +
+                "  \"title\": \"sdsdsdsd\"\n" +
+                "}";
         mockMvc.perform(post("/groups/after").content(groupJSON)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType("application/json"));
+                        .andExpect(status().isCreated())
+                        .andExpect(content().contentType("application/json"));
         groupDTO.setAfterId(6L);
         groupJSON = groupJSON.replace("4", "6");
         mockMvc.perform(put("/groups/after").content(groupJSON)
@@ -277,7 +278,7 @@ public class GroupControllerTest {
     @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "USER")
     public void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
         mockMvc.perform(get("/groups/{id}", 4)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
@@ -296,10 +297,10 @@ public class GroupControllerTest {
 
     public Object[] parametersForTestValidationException() {
         String lengthErrorMessage = "Title must be between 2 and 35 characters long";
-        return new Object[]{
-                new Object[]{null, "Title cannot be empty"},
-                new Object[]{"T", lengthErrorMessage},
-                new Object[]{RandomStringUtils.random(36, "abc"), lengthErrorMessage}
+        return new Object[] {
+                new Object[] { null , "Title cannot be empty"  },
+                new Object[] { "T",  lengthErrorMessage },
+                new Object[] { RandomStringUtils.random(36, "abc"), lengthErrorMessage }
         };
     }
 
@@ -325,7 +326,7 @@ public class GroupControllerTest {
     private <T> void assertThatReturnedFieldAlreadyExistsException(MockHttpServletRequestBuilder requestBuilder,
                                                                    T groupDTO) throws Exception {
         mockMvc.perform(requestBuilder.content(objectMapper.writeValueAsString(groupDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"))

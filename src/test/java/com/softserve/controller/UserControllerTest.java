@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UserControllerTest {
 
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
@@ -76,7 +76,7 @@ public class UserControllerTest {
         userDtoForSave.setPassword("Qwerty1!");
 
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userDtoForSave))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -88,7 +88,7 @@ public class UserControllerTest {
         userDtoForUpdate.setPassword("Qwerty1!");
 
         mockMvc.perform(put("/users", 5).content(objectMapper.writeValueAsString(userDtoForUpdate))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(userDtoForUpdate.getId()))
                 .andExpect(jsonPath("$.email").value(userDtoForUpdate.getEmail()));
@@ -98,7 +98,7 @@ public class UserControllerTest {
     @Test
     public void deleteUser() throws Exception {
         mockMvc.perform(delete("/users/{id}", 8)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -114,7 +114,7 @@ public class UserControllerTest {
         userDtoForSave.setPassword("Qwerty1!");
 
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userDtoForSave))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -125,7 +125,7 @@ public class UserControllerTest {
         userCreateDTO.setPassword(null);
         userCreateDTO.setEmail("12341@mail.com");
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userCreateDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
     }
@@ -136,7 +136,7 @@ public class UserControllerTest {
         userCreateDTO.setPassword("Qwerty1!");
         userCreateDTO.setEmail(null);
         mockMvc.perform(post("/users").content(objectMapper.writeValueAsString(userCreateDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -149,7 +149,7 @@ public class UserControllerTest {
         userDtoForUpdate.setPassword("Qwerty1!");
 
         mockMvc.perform(put("/users", 6).content(objectMapper.writeValueAsString(userDtoForUpdate))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -162,7 +162,7 @@ public class UserControllerTest {
         userDtoForUpdate.setPassword("Qwerty1!");
 
         mockMvc.perform(put("/users", 7).content(objectMapper.writeValueAsString(userDtoForUpdate))
-                        .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

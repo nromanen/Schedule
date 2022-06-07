@@ -252,7 +252,7 @@ public class LessonServiceTest {
         lesson.setSemester(semester);
         lesson.setTeacher(teacher);
 
-        List<Integer> expectedResults = List.of(2, 3, 4);
+        List<Integer> expectedResults = List.of(2,3,4);
 
         when(lessonRepository.updateLinkToMeeting(lessonWithSubjectAndType)).thenReturn(2);
         when(lessonRepository.updateLinkToMeeting(lessonWithSubject)).thenReturn(3);
