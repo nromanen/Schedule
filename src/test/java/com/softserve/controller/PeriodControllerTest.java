@@ -42,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PeriodControllerTest {
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
@@ -85,7 +85,7 @@ public class PeriodControllerTest {
         periodDtoForSave.setEndTime(LocalTime.parse("10:00:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -99,7 +99,7 @@ public class PeriodControllerTest {
         periodDtoListForSave.add(periodDtoForList);
 
         mockMvc.perform(post("/classes/all").content(objectMapper.writeValueAsString(periodDtoListForSave))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -114,7 +114,7 @@ public class PeriodControllerTest {
         Period periodForCompare = new PeriodMapperImpl().convertToEntity(periodDtoForUpdate);
 
         mockMvc.perform(put("/classes", 4).content(objectMapper.writeValueAsString(periodDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(periodForCompare.getId()))
                 .andExpect(jsonPath("$.class_name").value(periodForCompare.getName()));
@@ -123,7 +123,7 @@ public class PeriodControllerTest {
     @Test
     public void deleteExistPeriod() throws Exception {
         mockMvc.perform(delete("/classes/{id}", 5)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -139,7 +139,7 @@ public class PeriodControllerTest {
         addPeriodDTO.setStartTime(LocalTime.parse("01:00:00"));
         addPeriodDTO.setEndTime(LocalTime.parse("02:00:00"));
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(addPeriodDTO))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -152,7 +152,7 @@ public class PeriodControllerTest {
         periodDtoForSave.setEndTime(LocalTime.parse("04:00:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
     }
@@ -166,7 +166,7 @@ public class PeriodControllerTest {
         periodDtoForUpdate.setEndTime(LocalTime.parse("14:00:00"));
 
         mockMvc.perform(put("/classes", 6).content(objectMapper.writeValueAsString(periodDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -180,7 +180,7 @@ public class PeriodControllerTest {
         periodDtoForUpdate.setEndTime(LocalTime.parse("14:00:00"));
 
         mockMvc.perform(put("/classes", 5).content(objectMapper.writeValueAsString(periodDtoForUpdate))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -193,7 +193,7 @@ public class PeriodControllerTest {
         periodDtoForSave.setEndTime(LocalTime.parse("04:40:00"));
 
         mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

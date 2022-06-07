@@ -25,6 +25,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
@@ -118,7 +119,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT,
                         AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT,
-                        ALL_TEACHERS_PUBLIC_ENDPOINT, HOME_ENDPOINT,LOGIN_ENDPOINT,ADMIN_ENDPOINT,
+                        ALL_TEACHERS_PUBLIC_ENDPOINT, HOME_ENDPOINT, LOGIN_ENDPOINT, ADMIN_ENDPOINT,
                         FRONTEND_SCHEDULE_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT,
                         GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT, GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT,
                         DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
@@ -142,8 +143,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .exceptionHandling()
-                .authenticationEntryPoint((request, response, e) ->
-                        {
+                .authenticationEntryPoint((request, response, e) -> {
                             response.setContentType("application/json;charset=UTF-8");
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             response.getWriter().write(new JSONObject()
@@ -209,14 +209,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private ClientRegistration.Builder getBuilderOfClient(String client) {
-        switch (client) {
-            case GOOGLE:
-                return CommonOAuth2Provider.GOOGLE.getBuilder(client);
-            case FACEBOOK:
-                return CommonOAuth2Provider.FACEBOOK.getBuilder(client);
-            default:
-                throw new SocialClientRegistrationException("Unknown client");
-        }
+        return switch (client) {
+            case GOOGLE -> CommonOAuth2Provider.GOOGLE.getBuilder(client);
+            case FACEBOOK -> CommonOAuth2Provider.FACEBOOK.getBuilder(client);
+            default -> throw new SocialClientRegistrationException("Unknown client");
+        };
     }
 
     @Bean

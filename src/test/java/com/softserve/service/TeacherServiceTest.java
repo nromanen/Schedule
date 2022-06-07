@@ -41,29 +41,29 @@ public class TeacherServiceTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
-    TeacherRepository teacherRepository;
+    private TeacherRepository teacherRepository;
 
     @Mock
-    TeacherMapper teacherMapper;
+    private TeacherMapper teacherMapper;
 
     @Mock
-    UserService userService;
+    private UserService userService;
 
     @Mock
-    MailService mailService;
+    private MailService mailService;
 
     @InjectMocks
-    TeacherServiceImpl teacherService;
+    private TeacherServiceImpl teacherService;
 
-    Teacher teacherWithoutId;
+    private Teacher teacherWithoutId;
 
-    Teacher teacherWithId1LAndWithUserId1;
+    private Teacher teacherWithId1LAndWithUserId1;
 
-    Teacher teacherWithId1LAndWithoutUser;
+    private Teacher teacherWithId1LAndWithoutUser;
 
-    TeacherDTO teacherDtoWithoutId;
+    private TeacherDTO teacherDtoWithoutId;
 
-    TeacherForUpdateDTO teacherForUpdateDTOWithId1L;
+    private TeacherForUpdateDTO teacherForUpdateDTOWithId1L;
 
     @Before
     public void setUp() {
@@ -138,7 +138,7 @@ public class TeacherServiceTest {
         Teacher actualTeacher = teacherService.delete(expectedTeacher);
 
         assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
-        verify(teacherRepository, times(1)) .delete(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
+        verify(teacherRepository, times(1)).delete(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
     }
 
     @Test
@@ -163,7 +163,7 @@ public class TeacherServiceTest {
         verify(teacherRepository, times(1)).getAllTeacherWithoutUser();
     }
 
-    @Parameters({ "null", "" })
+    @Parameters({"null", ""})
     @Test
     public void saveDTOIfEmailNotExist(@Nullable String teacherEmail) {
         TeacherDTO teacherDTO = teacherDtoWithoutId;
@@ -203,7 +203,7 @@ public class TeacherServiceTest {
         verify(userService, times(1)).automaticRegistration(teacherDTO.getEmail(), ROLE_TEACHER);
     }
 
-    @Parameters({ "null", "" })
+    @Parameters({"null", ""})
     @Test
     public void updateDTOIfEmailNotExist(@Nullable String teacherEmail) {
         TeacherForUpdateDTO teacherDTO = teacherForUpdateDTOWithId1L;
@@ -319,8 +319,6 @@ public class TeacherServiceTest {
         period.setStartTime(LocalTime.parse("10:00:00"));
         period.setEndTime(LocalTime.parse("11:00:00"));
 
-        List<Period> periodList = new ArrayList<>();
-        periodList.add(period);
 
         when(teacherRepository.save(teacher)).thenReturn(teacher);
 

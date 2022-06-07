@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RoomTypeControllerTest {
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
@@ -75,7 +75,7 @@ public class RoomTypeControllerTest {
         roomTypeDTO.setDescription("Another Small auditory");
 
         mockMvc.perform(post("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
@@ -86,7 +86,7 @@ public class RoomTypeControllerTest {
         roomTypeDTO.setDescription("Another Small auditory");
 
         mockMvc.perform(put("/room-types", 4).content(objectMapper.writeValueAsString(roomTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(roomTypeDTO.getId()))
                 .andExpect(jsonPath("$.description").value(roomTypeDTO.getDescription()));
@@ -95,7 +95,7 @@ public class RoomTypeControllerTest {
     @Test
     public void deleteExistRoomType() throws Exception {
         mockMvc.perform(delete("/room-types/{id}", 6)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -110,7 +110,7 @@ public class RoomTypeControllerTest {
         roomTypeDTO.setDescription("small auditory");
 
         mockMvc.perform(post("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -120,8 +120,8 @@ public class RoomTypeControllerTest {
         roomTypeDTO.setDescription("small auditory");
         roomTypeDTO.setId(5L);
 
-        mockMvc.perform(put("/room-types",5).content(objectMapper.writeValueAsString(roomTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/room-types", 5).content(objectMapper.writeValueAsString(roomTypeDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
@@ -132,7 +132,7 @@ public class RoomTypeControllerTest {
         roomTypeDTO.setDescription(null);
 
         mockMvc.perform(post("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -144,7 +144,7 @@ public class RoomTypeControllerTest {
         roomTypeDTO.setDescription(null);
 
         mockMvc.perform(put("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }

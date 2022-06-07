@@ -175,7 +175,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void SaveRoomAfterId() throws Exception {
+    public void saveRoomAfterId() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(4L);
@@ -210,7 +210,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void SetRoomFirstOrder() throws Exception {
+    public void setRoomFirstOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
@@ -227,7 +227,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void UpdateRoomSetOrder() throws Exception {
+    public void updateRoomSetOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
@@ -249,7 +249,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void UpdateRoomWithSameOrder() throws Exception {
+    public void updateRoomWithSameOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);

@@ -25,17 +25,17 @@ public class TranslatorTest {
     public void setUp() {
         dictionary.clear();
 
-        dictionary.put("word", new HashMap<>(){{
+        dictionary.put("word", new HashMap<>() {{
             put(Locale.ENGLISH, "word");
             put(Locale.GERMAN, "wort");
             put(Locale.ITALIAN, "parola");
         }});
-        dictionary.put("car", new HashMap<>(){{
+        dictionary.put("car", new HashMap<>() {{
             put(Locale.ENGLISH, "car");
             put(Locale.GERMAN, "auto");
             put(Locale.UK, "macchina");
         }});
-        dictionary.put("language", new HashMap<>(){{
+        dictionary.put("language", new HashMap<>() {{
             put(Locale.ENGLISH, "language");
             put(Locale.GERMAN, "sprache");
             put(Locale.ITALIAN, "linguaggio");
