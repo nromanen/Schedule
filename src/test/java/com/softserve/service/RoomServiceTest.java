@@ -178,7 +178,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void saveAfterId_WhenSaveAtFirstPositionInSortOrder_ShouldReturnSavedRoom () {
+    public void saveAfterId_WhenSaveAtFirstPositionInSortOrder_ShouldReturnSavedRoom() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
@@ -273,7 +273,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void updateSortOrder_WhenPlaceAtFirstPositionInSortOrder_ShouldReturnUpdatedRoom () {
+    public void updateSortOrder_WhenPlaceAtFirstPositionInSortOrder_ShouldReturnUpdatedRoom() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");

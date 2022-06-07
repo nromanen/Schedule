@@ -28,10 +28,10 @@ import static org.mockito.Mockito.*;
 public class SubjectServiceTest {
 
     @Mock
-    SubjectRepository subjectRepository;
+    private SubjectRepository subjectRepository;
 
     @InjectMocks
-    SubjectServiceImpl subjectService;
+    private SubjectServiceImpl subjectService;
 
     @Test
     public void getSubjectById() {
@@ -101,7 +101,7 @@ public class SubjectServiceTest {
         assertEquals(updatedSubject, oldSubject);
         verify(subjectRepository, times(1)).update(oldSubject);
         verify(subjectRepository, times(1)).countBySubjectId(anyLong());
-        verify(subjectRepository, times(1)).countSubjectsWithNameAndIgnoreWithId(anyLong(),anyString());
+        verify(subjectRepository, times(1)).countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString());
     }
 
     @Test(expected = FieldAlreadyExistsException.class)
@@ -116,7 +116,7 @@ public class SubjectServiceTest {
         when(subjectRepository.countBySubjectId(anyLong())).thenReturn(1L);
         when(subjectRepository.countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString())).thenReturn(1L);
 
-        oldSubject = subjectService.update(updatedSubject);
+        subjectService.update(updatedSubject);
         verify(subjectRepository, times(1)).countBySubjectId(anyLong());
         verify(subjectRepository, times(1)).countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString());
     }
