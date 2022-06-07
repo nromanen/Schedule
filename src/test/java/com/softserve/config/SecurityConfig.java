@@ -209,14 +209,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private ClientRegistration.Builder getBuilderOfClient(String client) {
-        switch (client) {
-            case GOOGLE:
-                return CommonOAuth2Provider.GOOGLE.getBuilder(client);
-            case FACEBOOK:
-                return CommonOAuth2Provider.FACEBOOK.getBuilder(client);
-            default:
-                throw new SocialClientRegistrationException("Unknown client");
-        }
+        return switch (client) {
+            case GOOGLE -> CommonOAuth2Provider.GOOGLE.getBuilder(client);
+            case FACEBOOK -> CommonOAuth2Provider.FACEBOOK.getBuilder(client);
+            default -> throw new SocialClientRegistrationException("Unknown client");
+        };
     }
 
     @Bean

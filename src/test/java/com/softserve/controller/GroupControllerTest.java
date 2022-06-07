@@ -175,12 +175,13 @@ public class GroupControllerTest {
         groupDTO.setTitle("sdsdsdsd");
         groupDTO.setDisable(false);
         groupDTO.setAfterId(6L);
-        String groupJSON = "{\n" +
-                           "  \"afterId\": 6,\n" +
-                           "  \"disable\": false,\n" +
-                           "  \"id\": 0,\n" +
-                           "  \"title\": \"sdsdsdsd\"\n" +
-                           "}";
+        String groupJSON = """
+                {
+                  "afterId": 6,
+                  "disable": false,
+                  "id": 0,
+                  "title": "sdsdsdsd"
+                }""";
         mockMvc.perform(post("/groups/after").content(groupJSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
@@ -209,12 +210,13 @@ public class GroupControllerTest {
         groupDTO.setDisable(false);
         groupDTO.setAfterId(4L);
         groupDTO.setId(1L);
-        String groupJSON = "{\n" +
-                           "  \"afterId\": 4,\n" +
-                           "  \"disable\": false,\n" +
-                           "  \"id\": 1,\n" +
-                           "  \"title\": \"sdsdsdsd\"\n" +
-                           "}";
+        String groupJSON = """
+                {
+                  "afterId": 4,
+                  "disable": false,
+                  "id": 1,
+                  "title": "sdsdsdsd"
+                }""";
         mockMvc.perform(post("/groups/after").content(groupJSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
