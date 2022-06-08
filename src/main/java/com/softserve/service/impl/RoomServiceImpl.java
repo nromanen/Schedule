@@ -87,6 +87,7 @@ public class RoomServiceImpl implements RoomService {
         if (isRoomExists(object)) {
             throw new EntityAlreadyExistsException("Room with this parameters already exists");
         } else {
+            object.setSortOrder(getSortOrderById(object.getId()));
             return roomRepository.update(object);
         }
     }

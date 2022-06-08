@@ -16,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -106,25 +107,21 @@ public class RoomServiceTest {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
-        Room room = new Room();
-        room.setId(1L);
-        room.setName("1 Room");
-        room.setType(roomType);
-        RoomType updatedType = new RoomType();
-        updatedType.setId(2L);
-        updatedType.setDescription("Medium auditory");
-        Room updatedRoom = new Room();
-        updatedRoom.setId(1L);
-        updatedRoom.setName("1 Room updated");
-        updatedRoom.setType(updatedType);
+        Room roomFromDTO = new Room();
+        roomFromDTO.setId(1L);
+        roomFromDTO.setName("1 Room updated");
+        roomFromDTO.setType(roomType);
+        Integer expectedSortOrder = 1;
 
         when(roomRepository.countRoomDuplicates(any(Room.class))).thenReturn(0L);
-        when(roomRepository.update(updatedRoom)).thenReturn(updatedRoom);
+        when(roomRepository.getSortOrderById(anyLong())).thenReturn(Optional.of(expectedSortOrder));
+        when(roomRepository.update(roomFromDTO)).thenReturn(roomFromDTO);
 
-        room = roomService.update(updatedRoom);
+        Room room = roomService.update(roomFromDTO);
         assertNotNull(room);
-        assertEquals(updatedRoom, room);
-        verify(roomRepository, times(1)).update(updatedRoom);
+        assertThat(room).isEqualToComparingFieldByField(roomFromDTO);
+        assertEquals(expectedSortOrder, room.getSortOrder());
+        verify(roomRepository, times(1)).update(roomFromDTO);
         verify(roomRepository, times(1)).countRoomDuplicates(any(Room.class));
     }
 
@@ -178,7 +175,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void saveAfterId_WhenSaveAtFirstPositionInSortOrder_ShouldReturnSavedRoom () {
+    public void saveAfterId_WhenSaveAtFirstPositionInSortOrder_ShouldReturnSavedRoom() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
@@ -273,7 +270,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void updateSortOrder_WhenPlaceAtFirstPositionInSortOrder_ShouldReturnUpdatedRoom () {
+    public void updateSortOrder_WhenPlaceAtFirstPositionInSortOrder_ShouldReturnUpdatedRoom() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");
