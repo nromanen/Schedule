@@ -50,4 +50,4 @@ jobs:
         uses: jwgmeligmeyling/checkstyle-github-action@master
         with:
           title: Code style report
-          path: 'build/reports/checkstyle/checkstyle.xml'
+          path: '**/build/reports/checkstyle/*.xml'
