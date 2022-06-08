@@ -1,8 +1,5 @@
 package com.softserve.service;
 
-import com.softserve.dto.DaysOfWeekWithClassesForTeacherDTO;
-import com.softserve.dto.ScheduleForTeacherDTO;
-import com.softserve.dto.SemesterDTO;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.EvenOdd;
@@ -10,7 +7,6 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.impl.ScheduleServiceImpl;
-import org.hibernate.service.spi.InjectService;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -44,9 +40,9 @@ public class ScheduleServiceTest {
     @Mock
     private MailService mailService;
     @Mock
-    private TeacherMapper teacherMapper;
-    @Mock
     private TemporaryScheduleService temporaryScheduleService;
+    @Mock
+    private TeacherMapper teacherMapper;
 
     @InjectMocks
     private ScheduleServiceImpl scheduleServiceImpl;
@@ -109,7 +105,6 @@ public class ScheduleServiceTest {
         verify(scheduleRepository, times(1)).save(schedule);
     }
 
-
     @Test
     public void update() {
         Group group = new Group();
@@ -162,9 +157,9 @@ public class ScheduleServiceTest {
         when(userService.getById(anyLong())).thenReturn(user);
         when(teacherMapper.teacherToTeacherDTO(any())).thenReturn(teacherDTO);
         when(scheduleRepository.getDaysWhenTeacherHasClassesBySemester(anyLong(), anyLong())).thenReturn(dayOfWeeks);
-        doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(),any());
+        doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(), any());
         scheduleServiceImpl.sendScheduleToTeachers(4L, id, Locale.ENGLISH);
-        verify(mailService, times(id.length)).send(anyString(), anyString(), anyString(), anyString(),any());
+        verify(mailService, times(id.length)).send(anyString(), anyString(), anyString(), anyString(), any());
     }
 
     @Test
@@ -179,7 +174,7 @@ public class ScheduleServiceTest {
         semester.setId(1L);
         TeacherDTO teacherDTO = new TeacherDTO();
         Map<EvenOdd, Map<DayOfWeek, List<TemporarySchedule>>> temporarySchedules = new HashMap<>();
-        temporarySchedules.put(EvenOdd.EVEN,new HashMap<>());
+        temporarySchedules.put(EvenOdd.EVEN, new HashMap<>());
         List<DayOfWeek> dayOfWeeks = new ArrayList<>();
         dayOfWeeks.add(DayOfWeek.MONDAY);
         dayOfWeeks.add(DayOfWeek.TUESDAY);
@@ -189,9 +184,9 @@ public class ScheduleServiceTest {
         when(teacherMapper.teacherToTeacherDTO(any())).thenReturn(teacherDTO);
         when(scheduleRepository.getDaysWhenTeacherHasClassesBySemester(anyLong(), anyLong())).thenReturn(dayOfWeeks);
         when(temporaryScheduleService.getTemporaryScheduleForEvenOddWeeks(any())).thenReturn(temporarySchedules);
-        doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(),any());
+        doNothing().when(mailService).send(anyString(), anyString(), anyString(), anyString(), any());
         scheduleServiceImpl.sendScheduleToTeacher(1L, 1L, Locale.ENGLISH);
-        verify(mailService, times(1)).send(anyString(), anyString(), anyString(), anyString(),any());
+        verify(mailService, times(1)).send(anyString(), anyString(), anyString(), anyString(), any());
     }
 
     @Test
@@ -223,7 +218,6 @@ public class ScheduleServiceTest {
         assertEquals(2, schedules.size());
     }
 
-
     @Test
     public void getAllOrderedByRoomsDaysPeriodsTest() {
         Room room = new Room();
@@ -244,9 +238,8 @@ public class ScheduleServiceTest {
         Map<Room, List<Schedule>> expected = new HashMap<>();
         expected.put(room2, List.of(schedule2));
         expected.put(room, List.of(schedule));
-       Map<Room, List<Schedule>> actual = scheduleServiceImpl.getAllOrdered(1L);
+        Map<Room, List<Schedule>> actual = scheduleServiceImpl.getAllOrdered(1L);
         assertEquals(expected, actual);
         verify(scheduleRepository, times(1)).getAllOrdered(1L);
     }
 }
-

@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Sql(value = "classpath:create-teachers-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class TeacherControllerTest {
     @ClassRule
-    public static final SpringClassRule scr = new SpringClassRule();
+    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
 
     @Rule
     public final SpringMethodRule smr = new SpringMethodRule();
@@ -310,10 +310,10 @@ public class TeacherControllerTest {
                 patronymicLengthIs36
         );
 
-        return new Object[] {
-                new Object[] { teacherDTOWithNullValues, errorListWithNullValues},
-                new Object[] { teacherDTOWithValuesLengthsLessThanMin, errorListWithMinLength },
-                new Object[] { teacherDTOWithValuesLengthsMoreThanMax, errorListWithMaxLength }
+        return new Object[]{
+                new Object[]{teacherDTOWithNullValues, errorListWithNullValues},
+                new Object[]{teacherDTOWithValuesLengthsLessThanMin, errorListWithMinLength},
+                new Object[]{teacherDTOWithValuesLengthsMoreThanMax, errorListWithMaxLength}
         };
     }
 
@@ -421,4 +421,3 @@ public class TeacherControllerTest {
     }
 
 }
-
