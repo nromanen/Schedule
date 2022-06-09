@@ -15,8 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -147,9 +146,7 @@ public class RoomServiceTest {
 
         when(roomRepository.countRoomDuplicates(any(Room.class))).thenReturn(1L);
 
-        room = roomService.update(updatedRoom);
-        assertNotNull(room);
-        assertEquals(updatedRoom, room);
+        roomService.update(updatedRoom);
         verify(roomRepository, times(1)).update(updatedRoom);
         verify(roomRepository, times(1)).countRoomDuplicates(any(Room.class));
     }

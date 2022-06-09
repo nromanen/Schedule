@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RoomControllerTest {
 
     private MockMvc mockMvc;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private WebApplicationContext wac;
@@ -175,7 +175,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void SetRoomAfterId() throws Exception{
+    public void saveRoomAfterId() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(4L);
@@ -192,7 +192,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void SetRoomFirstOrder() throws Exception{
+    public void setRoomFirstOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
@@ -209,7 +209,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void UpdateRoomSetOrder() throws Exception{
+    public void updateRoomSetOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
@@ -231,7 +231,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void UpdateRoomWithSameOrder() throws Exception{
+    public void updateRoomWithSameOrder() throws Exception {
 
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
