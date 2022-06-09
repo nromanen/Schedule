@@ -27,12 +27,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.springframework.mock.web.MockMultipartFile;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -47,24 +49,24 @@ public class StudentServiceTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    @Mock
-    StudentRepository studentRepository;
 
     @InjectMocks
-    StudentServiceImpl studentService;
-    @Mock
-    StudentMapper studentMapper;
-    @Mock
-            UserService userService;
-    @Mock
-            GroupService groupService;
-    @Mock
-            GroupMapper groupMapper;
+    private StudentServiceImpl studentService;
 
+    @Mock
+    private StudentRepository studentRepository;
+    @Mock
+    private UserService userService;
+    @Mock
+    private GroupService groupService;
+    @Mock
+    private StudentMapper studentMapper;
+    @Mock
+    private GroupMapper groupMapper;
 
-    Student studentWithId1L;
-    StudentDTO studentDTOWithId1L;
-    StudentDTO studentDTOWithId2L;
+    private Student studentWithId1L;
+    private StudentDTO studentDTOWithId1L;
+    private StudentDTO studentDTOWithId2L;
 
     @Before
     public void setUp() {
@@ -137,7 +139,7 @@ public class StudentServiceTest {
 
     @Test
     public void update() {
-        Student expected= studentWithId1L;
+        Student expected = studentWithId1L;
         when(studentRepository.update(expected)).thenReturn(expected);
 
         Student actual = studentService.update(expected);
@@ -223,7 +225,7 @@ public class StudentServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionWhenUpdate(){
+    public void throwEntityNotFoundExceptionWhenUpdate() {
         User user = new User();
         user.setId(16L);
         user.setEmail("aware.123db@gmail.com");
@@ -329,7 +331,6 @@ public class StudentServiceTest {
         student1registered.setUser(userWithId1L);
         student1registered.setGroup(group);
 
-
         Student student3 = new Student();
         student3.setName("Viktor");
         student3.setSurname("Hanushchak");
@@ -345,7 +346,6 @@ public class StudentServiceTest {
         student3registered.setPatronymic("Mykolaiovych");
         student3registered.setUser(userWithId2L);
         student3registered.setGroup(group);
-
 
         when(studentMapper.studentImportDTOToStudent(studentImportDTO1)).thenReturn(student1);
         when(studentMapper.studentImportDTOToStudent(studentImportDTO3)).thenReturn(student3);
@@ -387,6 +387,6 @@ public class StudentServiceTest {
                 "text/plain",
                 Files.readAllBytes(Path.of("src/test/resources/test_students.csv")));
 
-        return new Object[] {multipartFileCsv, multipartFileTxt};
+        return new Object[]{multipartFileCsv, multipartFileTxt};
     }
 }

@@ -3,6 +3,7 @@ package com.softserve.util;
 import com.softserve.service.UnitTestCategory;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Category(UnitTestCategory.class)

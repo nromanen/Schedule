@@ -81,18 +81,6 @@ checkstyle {
     showViolations = true
 }
 
-tasks.withType(Checkstyle) {
-    checkstyleMain {
-        reports {
-            xml.destination rootProject.file("build/reports/checkstyle/checkstyle.xml")
-            html.destination rootProject.file("build/reports/checkstyle/checkstyle.html")
-        }
-    }
-    checkstyleTest {
-        ignoreFailures = true
-    }
-}
-
 apply from: "$projectDir/pre-commit.gradle"
 
 dependencies {
