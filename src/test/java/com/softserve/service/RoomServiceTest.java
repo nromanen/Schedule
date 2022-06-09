@@ -226,7 +226,7 @@ public class RoomServiceTest {
         room.setType(roomType);
         Long afterId = 6L;
 
-        when(roomRepository.isExistsById(10L)).thenReturn(true);
+        when(roomRepository.exists(10L)).thenReturn(true);
         when(roomRepository.getSortOrderById(afterId)).thenReturn(Optional.of(3));
         when(roomRepository.getSortOrderById(10L)).thenReturn(Optional.of(10));
         doNothing().when(roomRepository).shiftSortOrderRange(4, 10, RoomRepository.Direction.DOWN);
@@ -253,7 +253,7 @@ public class RoomServiceTest {
         room.setType(roomType);
         Long afterId = 6L;
 
-        when(roomRepository.isExistsById(1L)).thenReturn(true);
+        when(roomRepository.exists(1L)).thenReturn(true);
         when(roomRepository.getSortOrderById(afterId)).thenReturn(Optional.of(3));
         when(roomRepository.getSortOrderById(1L)).thenReturn(Optional.of(1));
         doNothing().when(roomRepository).shiftSortOrderRange(2, 3, RoomRepository.Direction.UP);
@@ -280,7 +280,7 @@ public class RoomServiceTest {
         room.setType(roomType);
         Long afterId = 0L;
 
-        when(roomRepository.isExistsById(3L)).thenReturn(true);
+        when(roomRepository.exists(3L)).thenReturn(true);
         doNothing().when(roomRepository).shiftSortOrderRange(1, null, RoomRepository.Direction.DOWN);
         when(roomRepository.update(room)).thenReturn(room);
 

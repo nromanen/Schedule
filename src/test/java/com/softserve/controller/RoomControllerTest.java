@@ -175,8 +175,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void SaveRoomAfterId() throws Exception {
-
+    public void saveRoomAfterId() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(4L);
         roomTypeDTO.setDescription("Small auditory");
@@ -193,7 +192,6 @@ public class RoomControllerTest {
 
     @Test
     public void saveRoomAfterRoomThatDoesNotExist_ShouldReturn404() throws Exception {
-
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(4L);
         roomTypeDTO.setDescription("Small auditory");
@@ -210,8 +208,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void SetRoomFirstOrder() throws Exception {
-
+    public void setRoomFirstOrder() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Small auditory");
@@ -227,8 +224,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void UpdateRoomSetOrder() throws Exception {
-
+    public void updateRoomSetOrder() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Medium auditory");
@@ -249,8 +245,7 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void UpdateRoomWithSameOrder() throws Exception {
-
+    public void updateRoomWithSameOrder() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Medium auditory");
@@ -273,7 +268,6 @@ public class RoomControllerTest {
 
     @Test
     public void placeAfterRoomThatDoesNotExist_Return404() throws Exception {
-
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Medium auditory");
@@ -292,7 +286,6 @@ public class RoomControllerTest {
 
     @Test
     public void updatedRoomDoesNotExist_ShouldReturn404() throws Exception {
-
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Medium auditory");

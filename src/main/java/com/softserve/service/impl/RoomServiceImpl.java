@@ -163,7 +163,7 @@ public class RoomServiceImpl implements RoomService {
      */
     @Override
     public Room saveAfterId(Room room, Long afterId) {
-        log.info("Entered saveAfterId({},{})", room, afterId);
+        log.trace("Entered saveAfterId({},{})", room, afterId);
         int order;
         if (afterId.equals(0L)) {
             order = 1;
@@ -180,11 +180,11 @@ public class RoomServiceImpl implements RoomService {
      */
     @Override
     public Room updateSortOrder(Room room, Long afterId) {
-        log.info("Entered updateSortOrder({}, {})", room, afterId);
+        log.trace("Entered updateSortOrder({}, {})", room, afterId);
         if (room.getId().equals(afterId)) {
             return room;
         }
-        if (!roomRepository.isExistsById(room.getId())) {
+        if (!roomRepository.exists(room.getId())) {
             throw new EntityNotFoundException(Room.class, "id", room.getId().toString());
         }
         if (afterId.equals(0L)) {
@@ -212,7 +212,7 @@ public class RoomServiceImpl implements RoomService {
      * @throws SortOrderNotExistsException if sort order of the room isn't set
      */
     private Integer getSortOrderById(Long id) {
-        log.debug("Entered getSortOrderById({})", id);
+        log.trace("Entered getSortOrderById({})", id);
         return roomRepository.getSortOrderById(id)
                 .orElseThrow(() -> new SortOrderNotExistsException(Room.class, id));
     }

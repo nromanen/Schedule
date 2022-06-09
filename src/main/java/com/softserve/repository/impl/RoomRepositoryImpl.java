@@ -65,7 +65,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
                     "and r.type.id = :typeId ";
 
     private static final String IS_EXISTS_BY_ID =
-            "SELECT (count(*) > 0) " +
+            "SELECT 1 " +
                     "FROM Room r " +
                     "WHERE r.id = :id";
 
@@ -212,7 +212,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      */
     @Override
     public List<Room> getAllOrdered() {
-        log.info("In getAll()");
+        log.trace("In getAllOrdered()");
         return getSession()
                 .createQuery(GET_ALL_ORDERED, Room.class)
                 .getResultList();
@@ -222,12 +222,12 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      * {@inheritDoc}
      */
     @Override
-    public boolean isExistsById(Long id) {
-        log.info("In isExistsById(id = [{}])", id);
+    public boolean exists(Long id) {
+        log.trace("In exists(id = [{}])", id);
         return getSession()
-                .createQuery(IS_EXISTS_BY_ID, Boolean.class)
+                .createQuery(IS_EXISTS_BY_ID)
                 .setParameter("id", id)
-                .getSingleResult();
+                .uniqueResult() != null;
     }
 
     /**
@@ -235,7 +235,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      */
     @Override
     public Optional<Integer> getLastSortOrder() {
-        log.info("Entered getLastSortOrder()");
+        log.trace("Entered getLastSortOrder()");
         return getSession().createQuery(GET_MAX_SORT_ORDER, Integer.class)
                 .uniqueResultOptional();
     }
@@ -245,7 +245,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      */
     @Override
     public Optional<Integer> getSortOrderById(Long id) {
-        log.info("Entered getSortOrderById({})", id);
+        log.trace("Entered getSortOrderById({})", id);
         return getSession().createQuery(GET_ORDER_BY_ID, Integer.class)
                 .setParameter("id", id)
                 .uniqueResultOptional();
@@ -256,7 +256,7 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      */
     @Override
     public void shiftSortOrderRange(Integer lowerBound, Integer upperBound, Direction direction) {
-        log.info("Entered into shiftSortOrderRange with lowerBound = {}, upperBound = {}, direction = {} ", lowerBound, upperBound, direction);
+        log.trace("Entered into shiftSortOrderRange with lowerBound = {}, upperBound = {}, direction = {} ", lowerBound, upperBound, direction);
         TypedQuery<Room> roomTypedQuery;
         Session session = sessionFactory.getCurrentSession();
         session.disableFilter("roomDisableFilter");

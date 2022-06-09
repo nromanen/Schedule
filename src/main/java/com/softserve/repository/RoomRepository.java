@@ -72,7 +72,7 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
      * @param id the id of the room
      * @return {@code true} if room with given id exists, otherwise {@code false}
      */
-    boolean isExistsById(Long id);
+    boolean exists(Long id);
 
     /**
      * Returns the last occupied position in sort order.
