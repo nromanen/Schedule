@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.TypedQuery;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
@@ -17,60 +18,77 @@ import java.util.Optional;
 @Repository
 @Slf4j
 public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implements RoomRepository {
-    public static final String GET_NEXT_POSITION =
-            "SELECT min(r.sortOrder) FROM Room r WHERE r.sortOrder > :position";
+
     private static final String GET_ALL_QUERY =
             "from Room order by name ASC";
-    private static final String GET_ALL_QUERY_ORDERED =
-            "from Room order by sortOrder ASC , name";
     private static final String CHECK_REFERENCE =
             "select count (s.id) " +
                     "from Schedule s where s.room.id = :roomId";
     private static final String GET_NOT_AVAILABLE_ROOMS_FOR_SCHEDULE =
             "select r1 from Room r1 " +
                     "where r1.id in " +
-                    "(select r.id from Schedule s" +
-                    " join s.room r " +
-                    " where  s.lesson.semester.id = :semesterId " +
+                    "(select r.id from Schedule s " +
+                    "join s.room r " +
+                    "where  s.lesson.semester.id = :semesterId " +
                     "and s.dayOfWeek = :dayOfWeek " +
                     "and s.period.id = :classId )";
     private static final String GET_NOT_AVAILABLE_ROOMS_FOR_SCHEDULE_2 =
             "select r1 from Room r1 " +
                     "where r1.id in " +
-                    "(select r.id from Schedule s" +
-                    " join s.room r " +
-                    " where  s.lesson.semester.id = :semesterId " +
+                    "(select r.id from Schedule s " +
+                    "join s.room r " +
+                    "where  s.lesson.semester.id = :semesterId " +
                     "and s.dayOfWeek = :dayOfWeek " +
                     "and s.period.id = :classId " +
                     "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )";
     private static final String GET_AVAILABLE_ROOMS_FOR_SCHEDULE =
             "select r1 from Room r1 " +
                     "where r1.id not in " +
-                    "(select r.id from Schedule s" +
-                    " join s.room r " +
-                    " where  s.lesson.semester.id = :semesterId " +
+                    "(select r.id from Schedule s " +
+                    "join s.room r " +
+                    "where  s.lesson.semester.id = :semesterId " +
                     "and s.dayOfWeek = :dayOfWeek " +
                     "and s.period.id = :classId )";
     private static final String GET_AVAILABLE_ROOMS_FOR_SCHEDULE_2 =
             "select r1 from Room r1 " +
                     "where r1.id not in " +
-                    "(select r.id from Schedule s" +
-                    " join s.room r " +
-                    " where  s.lesson.semester.id = :semesterId " +
+                    "(select r.id from Schedule s " +
+                    "join s.room r " +
+                    "where  s.lesson.semester.id = :semesterId " +
                     "and s.dayOfWeek = :dayOfWeek " +
                     "and s.period.id = :classId " +
                     "and ( s.evenOdd = :evenOdd or s.evenOdd = 'WEEKLY') )";
+
     private static final String COUNT_ROOM_DUPLICATES =
             "select count(*) from Room r " +
                     "where r.name = :name  and r.id != :id " +
                     "and r.type.id = :typeId ";
-    private static final String GET_MAX_SORTING_ORDER =
-            "SELECT max(r.sortOrder) FROM Room r";
-    private static final String GET_MIN_SORTING_ORDER =
-            "SELECT min(r.sortOrder) FROM Room r";
 
-    private static final String GET_AFTER_ID_SORT_ORDER =
-            "select r.sortOrder from Room r where r.id = :afterId";
+    private static final String IS_EXISTS_BY_ID =
+            "SELECT 1 " +
+                    "FROM Room r " +
+                    "WHERE r.id = :id";
+
+    private static final String GET_ALL_ORDERED =
+            "SELECT r " +
+                    "FROM Room r " +
+                    "ORDER BY r.sortOrder ASC";
+
+    private static final String MOVE_SORT_ORDER =
+            "UPDATE Room r " +
+                    "SET r.sortOrder = r.sortOrder + :offset " +
+                    "WHERE r.sortOrder >= :lowerPosition ";
+
+    private static final String MOVE_SORT_ORDER_RANGE = MOVE_SORT_ORDER + "AND r.sortOrder <= :upperBound";
+
+    private static final String GET_ORDER_BY_ID =
+            "SELECT r.sortOrder " +
+                    "FROM Room r " +
+                    "WHERE r.id = :id";
+
+    private static final String GET_MAX_SORT_ORDER =
+            "SELECT max(r.sortOrder) " +
+                    "FROM Room r";
 
     private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
@@ -194,9 +212,9 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      */
     @Override
     public List<Room> getAllOrdered() {
-        log.info("In getAll()");
-        Session session = getSession();
-        return session.createQuery(GET_ALL_QUERY_ORDERED, Room.class)
+        log.trace("In getAllOrdered()");
+        return getSession()
+                .createQuery(GET_ALL_ORDERED, Room.class)
                 .getResultList();
     }
 
@@ -204,25 +222,21 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      * {@inheritDoc}
      */
     @Override
-    public Optional<Double> getMaxSortOrder() {
-        return getSession().createQuery(GET_MAX_SORTING_ORDER, Double.class).uniqueResultOptional();
+    public boolean exists(Long id) {
+        log.trace("In exists(id = [{}])", id);
+        return getSession()
+                .createQuery(IS_EXISTS_BY_ID)
+                .setParameter("id", id)
+                .uniqueResult() != null;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Optional<Double> getMinSortOrder() {
-        return getSession().createQuery(GET_MIN_SORTING_ORDER, Double.class).uniqueResultOptional();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<Double> getNextPosition(Double position) {
-        return getSession().createQuery(GET_NEXT_POSITION, Double.class)
-                .setParameter("position", position)
+    public Optional<Integer> getLastSortOrder() {
+        log.trace("Entered getLastSortOrder()");
+        return getSession().createQuery(GET_MAX_SORT_ORDER, Integer.class)
                 .uniqueResultOptional();
     }
 
@@ -230,9 +244,36 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      * {@inheritDoc}
      */
     @Override
-    public Optional<Double> getSortOrderAfterId(Long afterId) {
-        return getSession().createQuery(GET_AFTER_ID_SORT_ORDER, Double.class)
-                .setParameter("afterId", afterId)
+    public Optional<Integer> getSortOrderById(Long id) {
+        log.trace("Entered getSortOrderById({})", id);
+        return getSession().createQuery(GET_ORDER_BY_ID, Integer.class)
+                .setParameter("id", id)
                 .uniqueResultOptional();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void shiftSortOrderRange(Integer lowerBound, Integer upperBound, Direction direction) {
+        log.trace("Entered into shiftSortOrderRange with lowerBound = {}, upperBound = {}, direction = {} ", lowerBound, upperBound, direction);
+        TypedQuery<Room> roomTypedQuery;
+        Session session = sessionFactory.getCurrentSession();
+        session.disableFilter("roomDisableFilter");
+        if (upperBound != null) {
+            roomTypedQuery = session.createQuery(MOVE_SORT_ORDER_RANGE);
+            roomTypedQuery.setParameter("upperBound", upperBound);
+        } else {
+            roomTypedQuery = session.createQuery(MOVE_SORT_ORDER);
+        }
+        roomTypedQuery.setParameter("lowerPosition", lowerBound);
+
+        if (direction == Direction.UP) {
+            roomTypedQuery.setParameter("offset", -1);
+        } else {
+            roomTypedQuery.setParameter("offset", 1);
+        }
+        int updated = roomTypedQuery.executeUpdate();
+        log.debug("Updated sortOrder of {} rooms", updated);
     }
 }

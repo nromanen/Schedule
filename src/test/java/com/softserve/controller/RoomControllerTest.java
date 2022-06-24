@@ -176,7 +176,6 @@ public class RoomControllerTest {
 
     @Test
     public void saveRoomAfterId() throws Exception {
-
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(4L);
         roomTypeDTO.setDescription("Small auditory");
@@ -192,8 +191,24 @@ public class RoomControllerTest {
     }
 
     @Test
-    public void setRoomFirstOrder() throws Exception {
+    public void saveRoomAfterRoomThatDoesNotExist_ShouldReturn404() throws Exception {
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(4L);
+        roomTypeDTO.setDescription("Small auditory");
 
+        RoomDTO roomSave = new RoomDTO();
+        roomSave.setName("Save after 123");
+        roomSave.setType(roomTypeDTO);
+
+        mockMvc.perform(post("/rooms/after/{id}", 123)
+                        .content(objectMapper.writeValueAsString(roomSave))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("Room was not found or have not set sort order"));
+    }
+
+    @Test
+    public void setRoomFirstOrder() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Small auditory");
@@ -210,7 +225,6 @@ public class RoomControllerTest {
 
     @Test
     public void updateRoomSetOrder() throws Exception {
-
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Medium auditory");
@@ -232,7 +246,6 @@ public class RoomControllerTest {
 
     @Test
     public void updateRoomWithSameOrder() throws Exception {
-
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription("Medium auditory");
@@ -251,6 +264,42 @@ public class RoomControllerTest {
                 .andExpect(jsonPath("$.id").value(roomForCompare.getId()))
                 .andExpect(jsonPath("$.type").value(roomForCompare.getType()))
                 .andExpect(jsonPath("$.name").value(roomForCompare.getName()));
+    }
+
+    @Test
+    public void placeAfterRoomThatDoesNotExist_Return404() throws Exception {
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(5L);
+        roomTypeDTO.setDescription("Medium auditory");
+
+        RoomDTO roomDtoForUpdate = new RoomDTO();
+        roomDtoForUpdate.setId(5L);
+        roomDtoForUpdate.setName("update with id 2");
+        roomDtoForUpdate.setType(roomTypeDTO);
+
+        mockMvc.perform(put("/rooms/after/{id}", 10)
+                        .content(objectMapper.writeValueAsString(roomDtoForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("Room was not found or have not set sort order"));
+    }
+
+    @Test
+    public void updatedRoomDoesNotExist_ShouldReturn404() throws Exception {
+        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(5L);
+        roomTypeDTO.setDescription("Medium auditory");
+
+        RoomDTO roomDtoForUpdate = new RoomDTO();
+        roomDtoForUpdate.setId(10L);
+        roomDtoForUpdate.setName("update with id 2");
+        roomDtoForUpdate.setType(roomTypeDTO);
+
+        mockMvc.perform(put("/rooms/after/{id}", 20)
+                        .content(objectMapper.writeValueAsString(roomDtoForUpdate))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.message").value("Room was not found"));
     }
 
 }
