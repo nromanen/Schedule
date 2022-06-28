@@ -121,4 +121,5 @@ public class AuthenticationController {
         response.sendRedirect(url + "oauth_login/google");
         return ResponseEntity.ok().body("Ok");
     }
+
 }
