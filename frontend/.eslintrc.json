@@ -54,7 +54,7 @@
       }
     ]
   },
-  "parser": "@babel/eslint-parser",
+  "parser": "babel-eslint",
   "settings": {
     "import/extensions": [".js", ".jsx", ".json"]
   }
