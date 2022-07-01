@@ -19,7 +19,7 @@ public interface GroupMapper {
     GroupDTO groupToGroupDTO(Group group);
 
     @Mapping(target = "students", ignore = true)
-    @Mapping(target = "sortingOrder", ignore = true)
+    @Mapping(target = "sortOrder", ignore = true)
     Group groupDTOToGroup(GroupDTO groupDTO);
 
     GroupForUpdateDTO groupToGroupForUpdateDTO(Group group);
@@ -27,7 +27,7 @@ public interface GroupMapper {
     GroupWithStudentsDTO groupToGroupWithStudentsDTO(Group group);
 
     @Mapping(target = "students", ignore = true)
-    @Mapping(target = "sortingOrder", ignore = true)
+    @Mapping(target = "sortOrder", ignore = true)
     Group groupForUpdateDTOToGroup(GroupForUpdateDTO groupForUpdateDTO);
 
     List<GroupDTO> groupsToGroupDTOs(List<Group> groups);

@@ -76,9 +76,9 @@ public class GroupServiceImpl implements GroupService {
      */
     @Transactional(readOnly = true)
     @Override
-    public List<Group> getAllBySortingOrder() {
-        log.debug("Entered getAllBySortingOrder() method");
-        List<Group> groups = groupRepository.getAllBySortingOrder();
+    public List<Group> getAllBySortOrder() {
+        log.debug("Entered getAllBySortOrder() method");
+        List<Group> groups = groupRepository.getAllBySortOrder();
         log.debug("Retrieved groups. Size: {}", groups.size());
         return groups;
     }
@@ -89,15 +89,15 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public Group saveAfterOrder(Group group, Long afterId) {
-        log.info("Entered getAllBySortingOrder({},{})", afterId, group);
-        Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
+        log.info("Entered saveAfterOrder({},{})", afterId, group);
+        Integer maxOrder = groupRepository.getMaxSortOrder().orElse(0);
         Integer order;
         if (afterId != null) {
-            order = getSortingOrderById(afterId) + 1;
-            group.setSortingOrder(order);
+            order = getSortOrderById(afterId) + 1;
+            group.setSortOrder(order);
             groupRepository.changeGroupOrderOffset(order, maxOrder + 1);
         } else {
-            group.setSortingOrder(1);
+            group.setSortOrder(1);
             groupRepository.changeGroupOrderOffset(0, maxOrder + 1);
         }
         return groupRepository.save(group);
@@ -113,29 +113,29 @@ public class GroupServiceImpl implements GroupService {
         if (!groupRepository.isExistsById(group.getId())) {
             throw new EntityNotFoundException(Group.class, "id", group.getId().toString());
         }
-        Integer maxOrder = groupRepository.getMaxSortingOrder().orElse(0);
+        Integer maxOrder = groupRepository.getMaxSortOrder().orElse(0);
         if (afterId != null) {
-            Integer lowerBound = getSortingOrderById(afterId) + 1;
-            Integer upperBound = Optional.ofNullable(group.getSortingOrder()).orElse(maxOrder + 1) + 1;
-            group.setSortingOrder(lowerBound);
+            Integer lowerBound = getSortOrderById(afterId) + 1;
+            Integer upperBound = Optional.ofNullable(group.getSortOrder()).orElse(maxOrder + 1) + 1;
+            group.setSortOrder(lowerBound);
             groupRepository.changeGroupOrderOffset(lowerBound, upperBound);
         } else {
-            group.setSortingOrder(1);
+            group.setSortOrder(1);
             groupRepository.changeGroupOrderOffset(0, maxOrder + 1);
         }
         return groupRepository.update(group);
     }
 
     /**
-     * Retrieves sorting order by group id.
+     * Retrieves sort order by group id.
      *
      * @param id the id of the group
-     * @return the sorting order of the group
-     * @throws SortOrderNotExistsException if sorting order not exists
+     * @return the sort order of the group
+     * @throws SortOrderNotExistsException if sort order not exists
      */
-    private Integer getSortingOrderById(Long id) {
-        log.debug("Entered getSortingOrderById({})", id);
-        return groupRepository.getSortingOrderById(id)
+    private Integer getSortOrderById(Long id) {
+        log.debug("Entered getSortOrderById({})", id);
+        return groupRepository.getSortOrderById(id)
                 .orElseThrow(() -> new SortOrderNotExistsException(Group.class, id));
     }
 
@@ -162,7 +162,7 @@ public class GroupServiceImpl implements GroupService {
     public Group update(Group group) {
         log.info("In update(entity = [{}]", group);
         checkTitleForUniquenessIgnoringId(group.getTitle(), group.getId());
-        group.setSortingOrder(groupRepository.getSortingOrderById(group.getId()).orElse(null));
+        group.setSortOrder(groupRepository.getSortOrderById(group.getId()).orElse(null));
         return groupRepository.update(group);
     }
 

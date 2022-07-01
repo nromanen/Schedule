@@ -164,7 +164,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void getAllBySortingOrder() throws Exception {
+    public void getAllBySortOrder() throws Exception {
         List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L);
         assertions.assertForGetList(expected, "/groups/ordered");
     }

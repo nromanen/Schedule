@@ -18,11 +18,11 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     public static final String FROM_GROUP = " FROM Group g ";
 
     public static final String GET_NEXT_POSITION
-            = "SELECT min(g.sortingOrder)"
+            = "SELECT min(g.sortOrder)"
             + FROM_GROUP
-            + "WHERE g.sortingOrder > :position";
+            + "WHERE g.sortOrder > :position";
     public static final String GET_ORDER_BY_ID
-            = "SELECT g.sortingOrder"
+            = "SELECT g.sortOrder"
             + FROM_GROUP
             + "WHERE g.id = :id";
     private static final String GET_ALL_QUERY
@@ -61,14 +61,14 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     private static final String GET_ALL_ORDERED
             = "SELECT g"
             + FROM_GROUP
-            + "ORDER BY g.sortingOrder ASC";
-    private static final String GET_MAX_SORTING_ORDER
-            = "SELECT max(g.sortingOrder) "
+            + "ORDER BY g.sortOrder ASC";
+    private static final String GET_MAX_SORT_ORDER
+            = "SELECT max(g.sortOrder) "
             + FROM_GROUP;
     private static final String UPDATE_GROUP_OFFSET
             = "UPDATE Group g "
-            + "SET g.sortingOrder = g.sortingOrder+1 "
-            + "WHERE g.sortingOrder >= :lowerPosition and g.sortingOrder < :upperPosition";
+            + "SET g.sortOrder = g.sortOrder+1 "
+            + "WHERE g.sortOrder >= :lowerPosition and g.sortOrder < :upperPosition";
 
     private Session getSession() {
         Session session = sessionFactory.getCurrentSession();
@@ -106,8 +106,8 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * {@inheritDoc}
      */
     @Override
-    public List<Group> getAllBySortingOrder() {
-        log.debug("Entered getAllBySortingOrder()");
+    public List<Group> getAllBySortOrder() {
+        log.debug("Entered getAllBySortOrder()");
         return getSession()
                 .createQuery(GET_ALL_ORDERED, Group.class)
                 .getResultList();
@@ -117,9 +117,9 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * {@inheritDoc}
      */
     @Override
-    public Optional<Integer> getMaxSortingOrder() {
-        log.debug("Entered getMaxSortingOrder()");
-        return getSession().createQuery(GET_MAX_SORTING_ORDER, Integer.class)
+    public Optional<Integer> getMaxSortOrder() {
+        log.debug("Entered getMaxSortOrder()");
+        return getSession().createQuery(GET_MAX_SORT_ORDER, Integer.class)
                 .uniqueResultOptional();
     }
 
@@ -140,8 +140,8 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * {@inheritDoc}
      */
     @Override
-    public Optional<Integer> getSortingOrderById(Long id) {
-        log.info("Entered getSortingOrderById({})", id);
+    public Optional<Integer> getSortOrderById(Long id) {
+        log.info("Entered getSortOrderById({})", id);
         return getSession().createQuery(GET_ORDER_BY_ID, Integer.class)
                 .setParameter("id", id)
                 .uniqueResultOptional();

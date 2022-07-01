@@ -5,7 +5,7 @@ TRUNCATE
     RESTART IDENTITY
     CASCADE;
 
-insert into "public".groups(id, title, disable, sorting_order) values
+insert into "public".groups(id, title, disable, sort_order) values
 (4,'444', false, 2),
 (5,'555', true, null),
 (6, '666', false, 1);

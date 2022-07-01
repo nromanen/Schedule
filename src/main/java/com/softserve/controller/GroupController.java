@@ -94,11 +94,11 @@ public class GroupController {
 
     @GetMapping("/ordered")
     @ApiOperation(value = "Get the list of all groups sorted by order")
-    public ResponseEntity<List<GroupDTO>> getAllBySortingOrder() {
-        log.debug("Entered getAllBySortingOrder");
+    public ResponseEntity<List<GroupDTO>> getAllBySortOrder() {
+        log.debug("Entered getAllBySortOrder");
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(groupMapper.groupsToGroupDTOs(groupService.getAllBySortingOrder()));
+                .body(groupMapper.groupsToGroupDTOs(groupService.getAllBySortOrder()));
     }
 
     @PostMapping("/after")

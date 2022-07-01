@@ -621,3 +621,9 @@ databaseChangeLog:
             newDataType: int4
             schemaName: public
             tableName: rooms
+  - changeSet:
+      id: 1653908145376-192
+      author: Petro Glinskyi
+      changes:
+        - sql:
+            sql: ALTER TABLE groups RENAME COLUMN sorting_order TO sort_order;
