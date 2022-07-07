@@ -1,9 +1,7 @@
 import { isEmpty } from 'lodash';
-import { sortStrings } from '../utils/sortStrings';
 
 const mapFullSchedule = (schedule, semesterDays, semesterClasses) => {
     const parsedGroupList = schedule.map(({ group }) => group);
-    parsedGroupList.sort((a, b) => sortStrings(a.title, b.title));
     const parsedResultArray = [];
 
     semesterDays.forEach((day) => {

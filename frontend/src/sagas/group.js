@@ -14,7 +14,6 @@ import {
     GROUPS_URL,
     SEMESTERS_URL,
     GROUPS_AFTER_URL,
-    GROUPS_ORDERED_URL,
     DISABLED_GROUPS_URL,
 } from '../constants/axios';
 import { DELETE, POST, PUT } from '../constants/methods';
@@ -68,7 +67,7 @@ function* getDisabledGroups() {
 }
 
 function* getEnabledGroups() {
-    yield call(getGroups, GROUPS_ORDERED_URL);
+    yield call(getGroups, GROUPS_URL);
 }
 
 function* createGroup({ data }) {
