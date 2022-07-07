@@ -114,7 +114,8 @@ public class GroupControllerTest {
 
     @Test
     public void getAllGroups() throws Exception {
-        assertions.assertForGetList(List.of(groupDTOWithID4L, groupDTOWithID6L));
+        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L);
+        assertions.assertForGetList(expected, "/groups");
     }
 
     @Test
@@ -164,12 +165,6 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void getAllBySortOrder() throws Exception {
-        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L);
-        assertions.assertForGetList(expected, "/groups/ordered");
-    }
-
-    @Test
     public void saveAfterGroupWithId() throws Exception {
         GroupOrderDTO groupDTO = new GroupOrderDTO();
         groupDTO.setTitle("sdsdsdsd");
@@ -187,7 +182,7 @@ public class GroupControllerTest {
                 .andExpect(content().contentType("application/json"));
         List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
         groupDTO.setId(1L);
-        assertions.assertForGetList(expected, "/groups/ordered");
+        assertions.assertForGetList(expected, "/groups");
     }
 
     @Test
@@ -199,7 +194,7 @@ public class GroupControllerTest {
         assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after");
         List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);
         groupDTO.setId(1L);
-        assertions.assertForGetList(expected, "/groups/ordered");
+        assertions.assertForGetList(expected, "/groups");
     }
 
     @Test
@@ -226,7 +221,7 @@ public class GroupControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
         List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
-        assertions.assertForGetList(expected, "/groups/ordered");
+        assertions.assertForGetList(expected, "/groups");
     }
 
     @Test
@@ -239,7 +234,7 @@ public class GroupControllerTest {
         groupDTO.setId(1L);
         assertions.assertForUpdate(groupDTO, "/groups/after");
         List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);
-        assertions.assertForGetList(expected, "/groups/ordered");
+        assertions.assertForGetList(expected, "/groups");
     }
 
     @Test
