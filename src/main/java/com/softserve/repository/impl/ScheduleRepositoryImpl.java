@@ -48,7 +48,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             + "s.lesson.subjectForSite, s.lesson.teacher.surname, s.lesson.lessonType ";
 
     private static final String ORDERED_BY_SORTING_ORDER
-            = "ORDER BY g1.sortingOrder ASC";
+            = "ORDER BY g1.sortOrder ASC";
 
     /**
      * {@inheritDoc}
