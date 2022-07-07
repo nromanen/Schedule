@@ -37,7 +37,7 @@ public class GroupController {
         log.info("In getAll ()");
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(groupMapper.groupsToGroupDTOs(groupService.getAllBySortingOrder()));
+                .body(groupMapper.groupsToGroupDTOs(groupService.getAllBySortOrder()));
     }
 
     @GetMapping("/{id}")
