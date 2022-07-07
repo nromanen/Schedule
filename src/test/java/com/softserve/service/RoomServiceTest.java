@@ -200,7 +200,7 @@ public class RoomServiceTest {
     }
 
     @Test(expected = SortOrderNotExistsException.class)
-    public void saveAfterId_WhenSaveAfterNotExistRoom_ShouldThrowSortingOrderNotExistsException() throws SortOrderNotExistsException {
+    public void saveAfterId_WhenSaveAfterNotExistRoom_ShouldThrowSortOrderNotExistsException() throws SortOrderNotExistsException {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
         roomType.setDescription("Small auditory");

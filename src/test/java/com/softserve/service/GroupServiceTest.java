@@ -238,44 +238,44 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getAllBySortingOrder() {
+    public void getAllBySortOrder() {
         List<Group> expected = singletonList(group);
-        when(groupRepository.getAllBySortingOrder()).thenReturn(expected);
+        when(groupRepository.getAllBySortOrder()).thenReturn(expected);
 
-        List<Group> actual = groupService.getAllBySortingOrder();
+        List<Group> actual = groupService.getAllBySortOrder();
 
         assertThat(actual).hasSameSizeAs(expected).isEqualTo(expected);
-        verify(groupRepository).getAllBySortingOrder();
+        verify(groupRepository).getAllBySortOrder();
     }
 
     @Test
     public void saveAfterOrder() {
-        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1));
-        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
+        when(groupRepository.getMaxSortOrder()).thenReturn(Optional.of(1));
+        when(groupRepository.getSortOrderById(1L)).thenReturn(Optional.of(1));
         doNothing().when(groupRepository).changeGroupOrderOffset(2, 2);
         when(groupRepository.save(group)).thenReturn(group);
 
         Group actual = groupService.saveAfterOrder(group, 1L);
         assertEquals(group, actual);
         verify(groupRepository).save(group);
-        verify(groupRepository).getSortingOrderById(1L);
-        verify(groupRepository).getMaxSortingOrder();
+        verify(groupRepository).getSortOrderById(1L);
+        verify(groupRepository).getMaxSortOrder();
         verify(groupRepository).changeGroupOrderOffset(2, 2);
     }
 
     @Test
     @Ignore("we need to check ")
     public void updateGroupOrder() {
-        when(groupRepository.getMaxSortingOrder()).thenReturn(Optional.of(1));
-        when(groupRepository.getSortingOrderById(1L)).thenReturn(Optional.of(1));
+        when(groupRepository.getMaxSortOrder()).thenReturn(Optional.of(1));
+        when(groupRepository.getSortOrderById(1L)).thenReturn(Optional.of(1));
         when(groupRepository.isExistsById(1L)).thenReturn(true);
         when(groupRepository.update(group)).thenReturn(group);
         when(groupRepository.isExistsById(1L)).thenReturn(true);
         Group actual = groupService.updateGroupOrder(group, 1L);
         assertEquals(group, actual);
-        verify(groupRepository).getMaxSortingOrder();
+        verify(groupRepository).getMaxSortOrder();
         verify(groupRepository).update(group);
-        verify(groupRepository).getSortingOrderById(1L);
+        verify(groupRepository).getSortOrderById(1L);
     }
 
 }

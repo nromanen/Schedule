@@ -61,28 +61,28 @@ public interface GroupRepository extends BasicRepository<Group, Long> {
      *
      * @return the list of groups sorted according to the established sort order
      */
-    List<Group> getAllBySortingOrder();
+    List<Group> getAllBySortOrder();
 
     /**
-     * Returns max sorting order.
+     * Returns max sort order.
      *
-     * @return an Optional describing the max sorting order or an empty Optional if none found
+     * @return an Optional describing the max sort order or an empty Optional if none found
      */
-    Optional<Integer> getMaxSortingOrder();
+    Optional<Integer> getMaxSortOrder();
 
     /**
-     * Changes group's sorting order.
+     * Changes group's sort order.
      *
-     * @param lowerBound the lower bound of sorting order
-     * @param upperBound the upper bound of sorting order
+     * @param lowerBound the lower bound of sort order
+     * @param upperBound the upper bound of sort order
      */
     void changeGroupOrderOffset(Integer lowerBound, Integer upperBound);
 
     /**
-     * Retrieves sorting order by group id.
+     * Retrieves sort order by group id.
      *
-     * @param id the id of the group which sorting order needs to be retrieved
-     * @return an Optional describing the sorting order of the group
+     * @param id the id of the group which sort order needs to be retrieved
+     * @return an Optional describing the sort order of the group
      */
-    Optional<Integer> getSortingOrderById(Long id);
+    Optional<Integer> getSortOrderById(Long id);
 }

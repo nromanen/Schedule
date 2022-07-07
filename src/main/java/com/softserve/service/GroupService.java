@@ -74,7 +74,7 @@ public interface GroupService extends BasicService<Group, Long> {
      *
      * @return the list of groups sorted according to the established sort order
      */
-    List<Group> getAllBySortingOrder();
+    List<Group> getAllBySortOrder();
 
     /**
      * Saves group after the specific group to get desired order.
