@@ -7,12 +7,6 @@
   @include displayFlex(center, center, column);
   width: 155px;
   height: 135px;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 2px;
-  border: 1px solid $gray1;
-  background-color: $white;
-  box-shadow: 0 1px 4px $shadow-box;
 
   &__number {
     text-align: center;
@@ -40,8 +34,4 @@
     @include button-icon($blue-btn-hover, $blue, $font-l);
     width: $full-size;
   }
-}
-
-.drag-border-card{
-  box-shadow: 10px 0 5px -2px $blue3;
 }

@@ -1,5 +1,5 @@
 import * as actionTypes from '../actions/actionsType';
-import { sortGroups } from '../helper/sortGroup';
+import {sortGroups} from '../helper/sortGroup';
 
 const initialState = {
     groups: [],

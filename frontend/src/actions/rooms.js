@@ -1,4 +1,5 @@
 import * as actionsType from './actionsType';
+import * as actionTypes from "./actionsType";
 
 export const addRoomSuccess = (room) => ({
     type: actionsType.ADD_ROOM,
@@ -45,9 +46,15 @@ export const setSelectRoomSuccess = (roomId) => ({
     roomId,
 });
 
-export const updateRoomSuccess = (room) => ({
-    type: actionsType.UPDATE_ROOM,
+export const updateRoomSuccess = (room, afterId) => ({
+    type: actionsType.UPDATE_ROOM_SUCCESS,
     room,
+    afterId,
+});
+
+export const selectRoomSuccess = (id) => ({
+    type: actionTypes.SELECT_ROOM_SUCCESS,
+    id,
 });
 
 export const updateRoomStart = (values) => ({
@@ -130,4 +137,10 @@ export const selectRoomType = (typeId) => ({
 export const handleRoomTypeFormSubmitStart = (values) => ({
     type: actionsType.HANDLE_ROOM_TYPE_FORM_SUBMIT_START,
     values,
+});
+
+export const dragAndDropRoomStart = (dragRoom, afterRoomId) => ({
+    type: actionTypes.DRAG_AND_DROP_ROOM_START,
+    dragRoom,
+    afterRoomId,
 });

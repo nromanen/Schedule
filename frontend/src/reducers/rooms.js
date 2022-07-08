@@ -1,4 +1,6 @@
 import * as actionTypes from '../actions/actionsType';
+import {sortGroups} from "../helper/sortGroup";
+import {sortRooms} from "../helper/sortRoom";
 
 const initialState = {
     rooms: [],
@@ -83,6 +85,28 @@ const reducer = (state = initialState, action) => {
         }
         case actionTypes.CLEAR_FREE_ROOMS: {
             return { ...state, freeRooms: [] };
+        }
+
+        case actionTypes.UPDATE_ROOM_SUCCESS: {
+            const rooms = state.rooms.filter((room) => room.id !== action.room.id);
+            const newRooms = sortRooms(rooms, action.room, action.afterId);
+
+            return {
+                ...state,
+                rooms: newRooms,
+                room: {},
+            };
+        }
+
+        case actionTypes.SELECT_ROOM_SUCCESS: {
+            let selectedRoom = state.rooms.find((room) => room.id === +action.id);
+            if (!selectedRoom) {
+                selectedRoom = { id: null };
+            }
+            return {
+                ...state,
+                group: selectedRoom,
+            };
         }
         default:
             return state;

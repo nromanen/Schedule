@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import Button from '@material-ui/core/Button';
+import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import { useTranslation } from 'react-i18next';
 import MenuItem from '@material-ui/core/MenuItem';
 import renderTextField from '../../../share/renderedFields/input';
@@ -16,6 +17,7 @@ import {
     SAVE_BUTTON_LABEL,
     ROOM_Y_LABEL,
     NUMBER_LABEL,
+    FROM_ROOM_LABEL_AFTER,
     ROOM_LABEL,
 } from '../../../constants/translationLabels/formElements';
 import { TYPE_LABEL } from '../../../constants/translationLabels/common';
@@ -31,6 +33,7 @@ const RoomForm = (props) => {
         roomTypes,
         initialize,
         clearRoomItem,
+        rooms,
     } = props;
 
     useEffect(() => {
@@ -75,6 +78,28 @@ const RoomForm = (props) => {
                         </MenuItem>
                     ))}
                 </Field>
+                <Field
+                    className="form-field"
+                    component={SelectField}
+                    name="type"
+                    label={t(FROM_ROOM_LABEL_AFTER)}
+                    validate={[required]}
+                >
+                    <MenuItem value="" className="hidden" disabled />
+                    {rooms.map((room) => (
+                        <MenuItem key={room.id} value={room.id}>
+                            {room.name}
+                        </MenuItem>
+                    ))}
+                </Field>
+                <div className="select_icon">
+                    <span>
+                        <GpsFixedIcon/>
+                    </span>
+                    <span>
+                        Select room on board
+                    </span>
+                </div>
                 <div className="form-buttons-container">
                     <Button
                         className="buttons-style"

@@ -12,6 +12,7 @@ export const TEACHER_URL = 'teachers';
 export const ROOM_ORDERED_URL = 'rooms/ordered';
 export const ROOM_URL = 'rooms';
 export const ROOM_TYPES_URL = 'room-types';
+export const ROOMS_AFTER_URL = '/rooms/after';
 export const FREE_ROOMS_URL = 'rooms/free';
 export const SUBJECT_URL = 'subjects';
 export const STUDENT_URL = 'students';
