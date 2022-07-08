@@ -612,3 +612,20 @@ databaseChangeLog:
       changes:
         - dropSequence:
             sequenceName: temporary_schedule_teacher_id_seq
+  - changeSet:
+      id: 1653908145376-191
+      author: RuslanSlobodian
+      changes:
+        - modifyDataType:
+            columnName: sort_order
+            newDataType: int4
+            schemaName: public
+            tableName: rooms
+  - changeSet:
+      id: 1653908145376-192
+      author: petrokrechunyak
+      changes:
+        - renameColumn:
+            newColumnName: sort_order
+            oldColumnName: sorting_order
+            tableName: groups

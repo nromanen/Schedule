@@ -22,7 +22,7 @@ public interface LessonInfoMapper {
     @Mapping(target = "teacher.disable", ignore = true)
     @Mapping(target = "teacher.userId", ignore = true)
     @Mapping(target = "group.students", ignore = true)
-    @Mapping(target = "group.sortingOrder", ignore = true)
+    @Mapping(target = "group.sortOrder", ignore = true)
     Lesson lessonInfoDTOToLesson(LessonInfoDTO lessonInfoDTO);
 
     @Mapping(source = "semester.id", target = "semesterId")
@@ -31,7 +31,7 @@ public interface LessonInfoMapper {
     @Mapping(target = "semester.groups", ignore = true)
     @Mapping(target = "grouped", ignore = true)
     @Mapping(target = "group.students", ignore = true)
-    @Mapping(target = "group.sortingOrder", ignore = true)
+    @Mapping(target = "group.sortOrder", ignore = true)
     @Mapping(target = "teacher.position", ignore = true)
     @Mapping(target = "teacher.department", ignore = true)
     @Mapping(target = "teacher.disable", ignore = true)

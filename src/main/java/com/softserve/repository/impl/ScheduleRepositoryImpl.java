@@ -47,6 +47,9 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
             + "s.evenOdd, s.period.name, "
             + "s.lesson.subjectForSite, s.lesson.teacher.surname, s.lesson.lessonType ";
 
+    private static final String ORDERED_BY_SORTING_ORDER
+            = "ORDER BY g1.sortOrder ASC";
+
     /**
      * {@inheritDoc}
      */
@@ -125,7 +128,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "where g1.id in " +
                                 "(select g.id from Schedule s join s.lesson.group g " +
                                 "" +
-                                "where s.lesson.semester.id = :semesterId" + NOT_DISABLED_SQL + ")")
+                                "where s.lesson.semester.id = :semesterId" + NOT_DISABLED_SQL + ")" +
+                                ORDERED_BY_SORTING_ORDER)
                 .setParameter(Constants.SEMESTER_ID, semesterId).getResultList();
     }
 

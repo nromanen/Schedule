@@ -33,10 +33,10 @@ insert into "public".semester_period (semester_id, period_id) values
 (6, 5),
 (5, 7);
 
-insert into "public".groups(id, title, disable) values
-(4,'444', false),
-(5,'555', false),
-(6,'666', false);
+insert into "public".groups(id, title, disable, sort_order) values
+(4,'444', false, 1),
+(5,'555', false, 2),
+(6,'666', false, 3);
 
 insert into "public".semester_group (semester_id, group_id) values
 (5, 4),

@@ -35,7 +35,9 @@ public class GroupController {
     @ApiOperation(value = "Get the list of all groups")
     public ResponseEntity<List<GroupDTO>> getAll() {
         log.info("In getAll ()");
-        return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getAll()));
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(groupMapper.groupsToGroupDTOs(groupService.getAllBySortOrder()));
     }
 
     @GetMapping("/{id}")
@@ -89,16 +91,6 @@ public class GroupController {
     public ResponseEntity<List<GroupDTO>> getDisabled() {
         log.info("Enter into getDisabled");
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupsToGroupDTOs(groupService.getDisabled()));
-    }
-
-
-    @GetMapping("/ordered")
-    @ApiOperation(value = "Get the list of all groups sorted by order")
-    public ResponseEntity<List<GroupDTO>> getAllBySortingOrder() {
-        log.debug("Entered getAllBySortingOrder");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(groupMapper.groupsToGroupDTOs(groupService.getAllBySortingOrder()));
     }
 
     @PostMapping("/after")

@@ -38,9 +38,9 @@ public class DepartmentRepositoryImpl extends BasicRepositoryImpl<Department, Lo
     }
 
     /**
-     * Returns the list of all departments with ascending sorting by name from the database.
+     * Returns the list of all departments with ascending sort by name from the database.
      *
-     * @return the list of departments with ascending sorting by name
+     * @return the list of departments with ascending sort by name
      */
     @Override
     public List<Department> getAll() {

@@ -20,7 +20,6 @@ const renderSchedule = (props) => {
     switch (scheduleType) {
         case 'group': {
             const { semester, group, oddArray, evenArray } = groupSchedule;
-
             if (isEmpty(oddArray) || isEmpty(evenArray)) return emptySchedule(t);
             return (
                 <>
