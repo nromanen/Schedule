@@ -29,6 +29,7 @@ const RoomPage = (props) => {
         clearRoomItem,
         setSelectRoomType,
         loading,
+        dragAndDropRoomStart,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -93,6 +94,7 @@ const RoomPage = (props) => {
                                 clearRoomItem={clearRoomItem}
                                 oneRoom={oneRoom}
                                 roomTypes={roomTypes}
+                                rooms={rooms}
                             />
                             <RoomTypeForm
                                 onSubmit={handleRoomTypeFormSubmit}
@@ -114,6 +116,8 @@ const RoomPage = (props) => {
                         rooms={rooms}
                         setSelectRoom={setSelectRoom}
                         loading={loading}
+                        dragAndDropRoomStart={dragAndDropRoomStart}
+                        {...props}
                     />
                 )}
             </div>

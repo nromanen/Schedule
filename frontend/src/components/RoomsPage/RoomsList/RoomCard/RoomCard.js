@@ -17,7 +17,8 @@ const RoomCard = (props) => {
     const { t } = useTranslation('formElements');
 
     return (
-        <Card additionClassName="room-card">
+        <Card>
+            <div className="room-card">
             <div className="cards-btns">
                 {!isDisabled ? (
                     <>
@@ -57,6 +58,7 @@ const RoomCard = (props) => {
             </div>
             <h2 className="room-card-name">{room.name}</h2>
             <p className="room-card-title">{room.type.description}</p>
+            </div>
         </Card>
     );
 };

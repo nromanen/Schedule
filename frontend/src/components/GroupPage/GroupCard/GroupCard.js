@@ -19,6 +19,7 @@ import {
     FORM_STUDENT_ADD_LABEL,
     GROUP_LABEL,
 } from '../../../constants/translationLabels/formElements';
+import Card from "../../../share/Card/Card";
 
 const GroupCard = (props) => {
     const {
@@ -31,7 +32,8 @@ const GroupCard = (props) => {
     } = props;
     const { t } = useTranslation('formElements');
     return (
-        <div className="group-card">
+        <Card>
+            <div className="group-card">
             <div className="group-card-buttons">
                 {!disabled ? (
                     <>
@@ -84,6 +86,7 @@ const GroupCard = (props) => {
                 />
             </Link>
         </div>
+        </Card>
     );
 };
 

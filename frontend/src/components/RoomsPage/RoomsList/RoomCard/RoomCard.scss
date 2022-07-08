@@ -1,5 +1,8 @@
 @import '../../../../styles/variables.scss';
+@import "../../../../styles/mixins.scss";
+
 .room-card {
+    @include displayFlex(center, center, column);
     height: 150px;
     width: 235px;
 

@@ -2,7 +2,7 @@ import { reset } from 'redux-form';
 import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
 
 import * as actionTypes from '../actions/actionsType';
-import { setScheduleLoading } from '../actions';
+import {selectGroupSuccess, setScheduleLoading, updateGroupSuccess} from '../actions';
 
 import { setLoading, setRoomsLoading } from '../actions/loadingIndicator';
 import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
@@ -14,10 +14,10 @@ import {
     ROOM_TYPES_URL,
     FREE_ROOMS_URL,
     BUSY_ROOMS,
-    CURRENT_SEMESTER_URL,
+    CURRENT_SEMESTER_URL, GROUPS_AFTER_URL, ROOMS_AFTER_URL,
 } from '../constants/axios';
-import { ROOM_FORM, ROOM_FORM_TYPE } from '../constants/reduxForms';
-import { createErrorMessage, createMessage } from '../utils/sagaUtils';
+import {GROUP_FORM, ROOM_FORM, ROOM_FORM_TYPE} from '../constants/reduxForms';
+import {createDynamicMessage, createErrorMessage, createMessage} from '../utils/sagaUtils';
 import {
     updateRoomSuccess,
     addRoomSuccess,
@@ -30,6 +30,7 @@ import {
     addRoomTypeSuccess,
     getFreeRoomsSuccess,
     getBusyRoomsSuccess,
+    selectRoomSuccess,
 } from '../actions/rooms';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -39,6 +40,7 @@ import {
 } from '../constants/translationLabels/serviceMessages';
 import { FORM_ROOM_LABEL, FORM_TYPE_LABEL } from '../constants/translationLabels/formElements';
 import { POST, DELETE, PUT } from '../constants/methods';
+import {GROUP, ROOM} from "../constants/names";
 
 export function* getListOfRooms() {
     try {
@@ -73,6 +75,19 @@ export function* updateRoomItem({ values }) {
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
+function* updateRoom({ data, url, afterRoomId}) {
+    try {
+        const res = yield call(axiosCall, url, PUT, data);
+        yield put(updateRoomSuccess(res.data, afterRoomId));
+        yield put(selectRoomSuccess(null));
+        const message = createDynamicMessage(ROOM, UPDATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
+        yield put(reset(ROOM_FORM));
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     }
 }
 
@@ -158,6 +173,7 @@ export function* addRoomTypeItem({ values }) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     }
 }
+
 export function* handleRoomTypeFormSubmit({ values }) {
     try {
         if (values.id) {
@@ -208,6 +224,22 @@ export function* getBusyRooms() {
     }
 }
 
+function* dragAndDropRoom({ dragRoom, afterRoomId }) {
+    try {
+        yield put(setLoading(true));
+        const url = ROOMS_AFTER_URL + "/" + afterRoomId;
+        yield call(updateRoom, {
+            data: { ...dragRoom},
+            url,
+            afterRoomId
+        });
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    } finally {
+        yield put(setLoading(false));
+    }
+}
+
 function* watchRooms() {
     yield takeLatest(actionTypes.GET_LIST_OF_ROOMS_START, getListOfRooms);
     yield takeLatest(actionTypes.GET_LIST_OF_DISABLED_ROOMS_START, getListOfDisabledRooms);
@@ -221,6 +253,7 @@ function* watchRooms() {
     yield takeEvery(actionTypes.HANDLE_ROOM_TYPE_FORM_SUBMIT_START, handleRoomTypeFormSubmit);
     yield takeEvery(actionTypes.TOGGLE_ROOM_VISIBILITY_START, toggleRoomsVisibility);
     yield takeLatest(actionTypes.GET_BUSY_ROOMS_START, getBusyRooms);
+    yield takeEvery(actionTypes.DRAG_AND_DROP_ROOM_START, dragAndDropRoom);
 }
 
 export default watchRooms;

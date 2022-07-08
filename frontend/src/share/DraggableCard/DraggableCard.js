@@ -5,8 +5,8 @@ export const DraggableCard = (props) => {
     const { children, item, dragAndDropItem, setGroupStart } = props;
 
     const styleCard = (e) => {
-        if (e.target.className === 'group-card drag-border-card') {
-            e.target.className = 'group-card';
+        if (e.target.className === 'card drag-border-card') {
+            e.target.className = 'card ';
         }
     };
     const dragStartHandler = (card) => {
@@ -17,8 +17,8 @@ export const DraggableCard = (props) => {
     };
     const dragOverHandler = (e) => {
         e.preventDefault();
-        if (e.target.className === 'group-card') {
-            e.target.className = 'group-card drag-border-card';
+        if (e.target.className === 'card ') {
+            e.target.className = 'card drag-border-card';
         }
     };
     const dropHandler = (e, card) => {

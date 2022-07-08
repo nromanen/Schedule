@@ -11,6 +11,7 @@ import {
     deleteRoomTypeStart,
     handleRoomTypeFormSubmitStart,
     selectRoomType,
+    dragAndDropRoomStart
 } from '../../actions/rooms';
 import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import RoomPage from '../../components/RoomsPage/RoomsPage';
@@ -38,6 +39,7 @@ const mapDispatchToProps = (dispatch) => ({
     setSelectRoom: (roomId) => dispatch(setSelectRoomSuccess(roomId)),
     clearRoomItem: () => dispatch(clearRoomSuccess()),
     setSelectRoomType: (typeId) => dispatch(selectRoomType(typeId)),
+    dragAndDropRoomStart: (dragRoom, afterItemId) => dispatch(dragAndDropRoomStart(dragRoom, afterItemId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);
