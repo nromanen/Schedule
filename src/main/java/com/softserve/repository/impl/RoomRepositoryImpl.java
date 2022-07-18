@@ -244,17 +244,6 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
      * {@inheritDoc}
      */
     @Override
-    public Optional<Integer> getSortOrderById(Long id) {
-        log.trace("Entered getSortOrderById({})", id);
-        return getSession().createQuery(GET_ORDER_BY_ID, Integer.class)
-                .setParameter("id", id)
-                .uniqueResultOptional();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void shiftSortOrderRange(Integer lowerBound, Integer upperBound, Direction direction) {
         log.trace("Entered into shiftSortOrderRange with lowerBound = {}, upperBound = {}, direction = {} ", lowerBound, upperBound, direction);
         TypedQuery<Room> roomTypedQuery;

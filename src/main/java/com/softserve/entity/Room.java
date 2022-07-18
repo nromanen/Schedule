@@ -1,5 +1,6 @@
 package com.softserve.entity;
 
+import com.softserve.entity.interfaces.SortableOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +26,7 @@ import java.io.Serializable;
 
 @Filter(name = "roomDisableFilter", condition = "disable = :disable")
 
-public class Room implements Serializable {
+public class Room implements Serializable, SortableOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
