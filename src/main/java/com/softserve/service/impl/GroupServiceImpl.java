@@ -92,6 +92,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public Group createAfterOrder(Group group, Long afterId) {
+        log.debug("Entered createAfterOrder");
         return sortOrderRepository.createAfterOrder(group, afterId);
     }
 
@@ -101,7 +102,7 @@ public class GroupServiceImpl implements GroupService {
     @Transactional
     @Override
     public Group updateAfterOrder(Group group, Long afterId) {
-        log.debug("Entered");
+        log.debug("Entered updateAfterOrder");
         return sortOrderRepository.updateAfterOrder(group, afterId);
     }
 

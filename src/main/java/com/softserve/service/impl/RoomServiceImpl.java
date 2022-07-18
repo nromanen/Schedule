@@ -168,6 +168,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     @Override
     public Room createAfterOrder(Room room, Long afterId) {
+        log.debug("Entered createAfterOrder");
         return sortOrderRepository.createAfterOrder(room, afterId);
     }
 
@@ -177,6 +178,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     @Override
     public Room updateAfterOrder(Room room, Long afterId) {
+        log.debug("Entered updateAfterOrder");
         return sortOrderRepository.updateAfterOrder(room, afterId);
     }
 }

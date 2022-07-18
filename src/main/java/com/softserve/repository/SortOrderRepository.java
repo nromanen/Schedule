@@ -23,25 +23,6 @@ public class SortOrderRepository<T extends SortableOrder> {
     private Class<?> tClass = SortOrderRepository.class;
     private SessionFactory sessionFactory;
 
-    private final String isExistsById
-            = "SELECT (count(*) > 0)"
-            + "FROM " + tClass.getSimpleName() + " c "
-            + "WHERE c.id = :id";
-
-    private String updateOffset
-            = "UPDATE " + tClass.getSimpleName() + " c "
-            + "SET c.sortOrder = c.sortOrder+1 "
-            + "WHERE c.sortOrder >= :lower AND c.sortOrder < :upper";
-
-    private String getOrderById
-            = "SELECT c.sortOrder "
-            + "FROM " + tClass.getSimpleName() + " c "
-            + "WHERE c.id = :id";
-
-    private String getMaxSortOrder
-            = "SELECT max(c.sortOrder) "
-            + "FROM " + tClass.getSimpleName() + " c";
-
     @Autowired
     public SortOrderRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
