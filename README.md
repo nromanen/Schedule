@@ -1,4 +1,4 @@
-# Class chedule
+# Class schedule
 ## General info
 This repository contains a source code of the Class Schedule Project.
 
