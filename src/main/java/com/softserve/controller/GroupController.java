@@ -95,7 +95,7 @@ public class GroupController {
 
     @PostMapping("/after")
     @ApiOperation(value = "Create group ordered after another")
-    public ResponseEntity<GroupDTO> saveGroupAfter(@RequestBody GroupOrderDTO groupDTO) {
+    public ResponseEntity<GroupDTO> createGroupAfter(@RequestBody GroupOrderDTO groupDTO) {
         log.info("Entered saveGroupAfter({})", groupDTO);
         Group group = groupService.createAfterOrder(groupMapper.groupDTOToGroup(groupDTO), groupDTO.getAfterId());
         return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));

@@ -127,9 +127,6 @@ public class RoomController {
     @PostMapping("/after/{id}")
     @ApiOperation(value = "Create room after id")
     public ResponseEntity<RoomDTO> saveRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
-        if (roomAfterId == null) {
-            throw new IllegalArgumentException();
-        }
         log.trace("Entered saveRoomAfterId({}{})", roomAfterId, roomDTO);
         Room room = roomService.createAfterOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
         return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(room));

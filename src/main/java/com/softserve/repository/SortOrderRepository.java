@@ -17,10 +17,8 @@ import java.util.Optional;
 @Repository
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SortOrderRepository<T extends SortableOrder> {
-    public SortOrderRepository() {
-    }
 
-    private Class<?> tClass = SortOrderRepository.class;
+    private Class<?> clazz;
     private SessionFactory sessionFactory;
 
     @Autowired
@@ -33,7 +31,7 @@ public class SortOrderRepository<T extends SortableOrder> {
         Integer maxOrder = getMaxSortOrder().orElse(0);
         Integer order;
         if (afterId != null && afterId != 0) {
-            order = getSortOrderById(afterId).orElseThrow(() -> new SortOrderNotExistsException(tClass, afterId)) + 1;
+            order = getSortOrderById(afterId).orElseThrow(() -> new SortOrderNotExistsException(clazz, afterId)) + 1;
             t.setSortOrder(order);
             changeOrderOffset(order, maxOrder + 1);
         } else {
@@ -47,14 +45,14 @@ public class SortOrderRepository<T extends SortableOrder> {
     public T updateAfterOrder(T t, Long afterId) {
         log.info("Entered updateAfterOrder({}, {})", t, afterId);
         if (!isExistsById(t.getId())) {
-            throw new EntityNotFoundException(tClass);
+            throw new EntityNotFoundException(clazz);
         }
         if (t.getId().equals(afterId)) {
             return t;
         }
         Integer maxOrder = getMaxSortOrder().orElse(0);
         if (afterId != null && afterId != 0) {
-            Integer lowerBound = getSortOrderById(afterId).orElseThrow(() -> new SortOrderNotExistsException(tClass, afterId)) + 1;
+            Integer lowerBound = getSortOrderById(afterId).orElseThrow(() -> new SortOrderNotExistsException(clazz, afterId)) + 1;
             Integer upperBound = Optional.ofNullable(t.getSortOrder()).orElse(maxOrder + 1) + 1;
             t.setSortOrder(lowerBound);
             changeOrderOffset(lowerBound, upperBound);
@@ -68,32 +66,33 @@ public class SortOrderRepository<T extends SortableOrder> {
 
     public boolean isExistsById(Long id) {
         log.info("In isExistsById(id = [{}])", id);
-        return (boolean) sessionFactory.getCurrentSession()
+        Object o = sessionFactory.getCurrentSession()
                 .createQuery(
-                        "SELECT (count(*) > 0)"
-                        + "FROM " + tClass.getSimpleName() + " c "
+                        "SELECT 1 "
+                        + "FROM " + clazz.getSimpleName() + " c "
                         + "WHERE c.id = :id")
                 .setParameter("id", id)
-                .getSingleResult();
+                .uniqueResult();
+        return o != null;
     }
 
     public void changeOrderOffset(Integer lower, Integer upper) {
         log.info("Entered changeOrderOffset({}, {})", lower, upper);
         TypedQuery<?> typedQuery = sessionFactory.getCurrentSession().createQuery(
-                "UPDATE " + tClass.getSimpleName() + " c "
+                "UPDATE " + clazz.getSimpleName() + " c "
                 + "SET c.sortOrder = c.sortOrder+1 "
                 + "WHERE c.sortOrder >= :lower AND c.sortOrder < :upper");
         typedQuery.setParameter("lower", lower)
                 .setParameter("upper", upper);
         int updated = typedQuery.executeUpdate();
-        log.debug("Updated order of {} {}s", updated, tClass.getSimpleName());
+        log.debug("Updated order of {} {}s", updated, clazz.getSimpleName());
     }
 
     public Optional<Integer> getSortOrderById(Long id) {
         log.info("Entered getSortOrderById({})", id);
         return sessionFactory.getCurrentSession().createQuery(
                         "SELECT c.sortOrder "
-                                + "FROM " + tClass.getSimpleName() + " c "
+                                + "FROM " + clazz.getSimpleName() + " c "
                                 + "WHERE c.id = :id", Integer.class)
                 .setParameter("id", id)
                 .uniqueResultOptional();
@@ -103,11 +102,11 @@ public class SortOrderRepository<T extends SortableOrder> {
         log.debug("Entered getMaxSortOrder()");
         return sessionFactory.getCurrentSession()
                 .createQuery("SELECT max(c.sortOrder) "
-                        + "FROM " + tClass.getSimpleName() + " c", Integer.class)
+                        + "FROM " + clazz.getSimpleName() + " c", Integer.class)
                 .uniqueResultOptional();
     }
 
     public void settClass(Class<?> tClass) {
-        this.tClass = tClass;
+        this.clazz = tClass;
     }
 }
