@@ -5,7 +5,7 @@ import com.softserve.entity.Group;
 import java.util.List;
 import java.util.Set;
 
-public interface GroupService extends BasicService<Group, Long> {
+public interface GroupService extends BasicService<Group, Long>, SortService<Group> {
 
     /**
      * Returns group with students from the repository by the given id.
@@ -75,23 +75,4 @@ public interface GroupService extends BasicService<Group, Long> {
      * @return the list of groups sorted according to the established sort order
      */
     List<Group> getAllBySortOrder();
-
-    /**
-     * Saves group after the specific group to get desired order.
-     *
-     * @param group   the group that must be saved
-     * @param afterId the id of the group after which must be saved the new one
-     * @return the saved group with set order and id
-     */
-    Group saveAfterOrder(Group group, Long afterId);
-
-    /**
-     * Updates the given group order position.
-     *
-     * @param group   group that will be replaced
-     * @param afterId id of the group after which will be placed
-     * @return the updated group with new position
-     * @throws com.softserve.exception.EntityNotFoundException if given group not found
-     */
-    Group updateGroupOrder(Group group, Long afterId);
 }

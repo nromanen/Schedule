@@ -128,7 +128,7 @@ public class RoomController {
     @ApiOperation(value = "Create room after id")
     public ResponseEntity<RoomDTO> saveRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
         log.trace("Entered saveRoomAfterId({}{})", roomAfterId, roomDTO);
-        Room room = roomService.saveAfterId(roomMapper.convertToEntity(roomDTO), roomAfterId);
+        Room room = roomService.createAfterOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
         return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(room));
     }
 
@@ -136,7 +136,7 @@ public class RoomController {
     @ApiOperation(value = "Update room order")
     public ResponseEntity<RoomDTO> upgradeRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
         log.trace("Entered upgradeRoomAfterId({}{})", roomAfterId, roomDTO);
-        Room room = roomService.updateSortOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
+        Room room = roomService.updateAfterOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
         return ResponseEntity.status(HttpStatus.OK).body(roomMapper.convertToDto(room));
     }
 }

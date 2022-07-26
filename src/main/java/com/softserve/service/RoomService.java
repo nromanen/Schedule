@@ -7,7 +7,7 @@ import com.softserve.entity.enums.EvenOdd;
 import java.time.DayOfWeek;
 import java.util.List;
 
-public interface RoomService extends BasicService<Room, Long> {
+public interface RoomService extends BasicService<Room, Long>, SortService<Room> {
 
     /**
      * Returns all free rooms by the given day of the week, period and type of the week.
@@ -73,24 +73,4 @@ public interface RoomService extends BasicService<Room, Long> {
      * @return the list of rooms ordered by sortOrder
      */
     List<Room> getAllOrdered();
-
-    /**
-     * Saves the given room after the specific room id to get desired order. If afterId equal {@code zero}, saves the room at the first position.
-     *
-     * @param room    the room to be saved
-     * @param afterId the id of the room after which to be saved the new one. May be {@code null}
-     * @return the saved room with a set sort order
-     */
-    Room saveAfterId(Room room, Long afterId);
-
-    /**
-     * Updates the sort order of the given room and adjacent rooms in sort order to place the given room after the room with specified id.
-     * If afterId equal {@code zero}, places the room at the first position.
-     *
-     * @param room    the room to be updated
-     * @param afterId the id of the room after which the given room will be placed. May be {@code null}
-     * @return the updated room with a set sort order
-     * @throws com.softserve.exception.EntityNotFoundException if given room not found
-     */
-    Room updateSortOrder(Room room, Long afterId);
 }

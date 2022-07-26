@@ -17,14 +17,6 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
 
     public static final String FROM_GROUP = " FROM Group g ";
 
-    public static final String GET_NEXT_POSITION
-            = "SELECT min(g.sortOrder)"
-            + FROM_GROUP
-            + "WHERE g.sortOrder > :position";
-    public static final String GET_ORDER_BY_ID
-            = "SELECT g.sortOrder"
-            + FROM_GROUP
-            + "WHERE g.id = :id";
     private static final String GET_ALL_QUERY
             = "SELECT g"
             + FROM_GROUP
@@ -62,9 +54,6 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             = "SELECT g"
             + FROM_GROUP
             + "ORDER BY g.sortOrder ASC";
-    private static final String GET_MAX_SORT_ORDER
-            = "SELECT max(g.sortOrder) "
-            + FROM_GROUP;
     private static final String UPDATE_GROUP_OFFSET
             = "UPDATE Group g "
             + "SET g.sortOrder = g.sortOrder+1 "
@@ -117,16 +106,6 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
      * {@inheritDoc}
      */
     @Override
-    public Optional<Integer> getMaxSortOrder() {
-        log.debug("Entered getMaxSortOrder()");
-        return getSession().createQuery(GET_MAX_SORT_ORDER, Integer.class)
-                .uniqueResultOptional();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void changeGroupOrderOffset(Integer lowerBound, Integer upperBound) {
         log.info("Entered changeGroupOffset({}, {})", lowerBound, upperBound);
         TypedQuery<Group> groupTypedQuery = getSession().createQuery(UPDATE_GROUP_OFFSET);
@@ -134,17 +113,6 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
         groupTypedQuery.setParameter("upperPosition", upperBound);
         int updated = groupTypedQuery.executeUpdate();
         log.debug("Updated order of {} groups", updated);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Optional<Integer> getSortOrderById(Long id) {
-        log.info("Entered getSortOrderById({})", id);
-        return getSession().createQuery(GET_ORDER_BY_ID, Integer.class)
-                .setParameter("id", id)
-                .uniqueResultOptional();
     }
 
 
@@ -228,4 +196,5 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
                 .setParameterList("ids", groupIds)
                 .getResultList();
     }
+
 }

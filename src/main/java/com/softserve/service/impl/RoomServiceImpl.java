@@ -5,10 +5,10 @@ import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
-import com.softserve.exception.SortOrderNotExistsException;
 import com.softserve.mapper.RoomForScheduleInfoMapper;
 import com.softserve.repository.RoomRepository;
 import com.softserve.service.RoomService;
+import com.softserve.repository.SortOrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,11 +24,15 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomForScheduleInfoMapper roomForScheduleInfoMapper;
+    private final SortOrderRepository<Room> sortOrderRepository;
 
     @Autowired
-    public RoomServiceImpl(RoomRepository roomRepository, RoomForScheduleInfoMapper roomForScheduleInfoMapper) {
+    public RoomServiceImpl(RoomRepository roomRepository, RoomForScheduleInfoMapper roomForScheduleInfoMapper,
+                           SortOrderRepository<Room> sortOrderRepository) {
         this.roomRepository = roomRepository;
         this.roomForScheduleInfoMapper = roomForScheduleInfoMapper;
+        this.sortOrderRepository = sortOrderRepository;
+        this.sortOrderRepository.settClass(Room.class);
     }
 
     /**
@@ -87,7 +91,7 @@ public class RoomServiceImpl implements RoomService {
         if (isRoomExists(object)) {
             throw new EntityAlreadyExistsException("Room with this parameters already exists");
         } else {
-            object.setSortOrder(getSortOrderById(object.getId()));
+            object.setSortOrder(sortOrderRepository.getSortOrderById(object.getId()).orElse(null));
             return roomRepository.update(object);
         }
     }
@@ -161,59 +165,20 @@ public class RoomServiceImpl implements RoomService {
     /**
      * {@inheritDoc}
      */
+    @Transactional
     @Override
-    public Room saveAfterId(Room room, Long afterId) {
-        log.trace("Entered saveAfterId({},{})", room, afterId);
-        int order;
-        if (afterId.equals(0L)) {
-            order = 1;
-        } else {
-            order = getSortOrderById(afterId) + 1;
-        }
-        roomRepository.shiftSortOrderRange(order, null, RoomRepository.Direction.DOWN);
-        room.setSortOrder(order);
-        return roomRepository.save(room);
+    public Room createAfterOrder(Room room, Long afterId) {
+        log.debug("Entered createAfterOrder");
+        return sortOrderRepository.createAfterOrder(room, afterId);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Transactional
     @Override
-    public Room updateSortOrder(Room room, Long afterId) {
-        log.trace("Entered updateSortOrder({}, {})", room, afterId);
-        if (room.getId().equals(afterId)) {
-            return room;
-        }
-        if (!roomRepository.exists(room.getId())) {
-            throw new EntityNotFoundException(Room.class, "id", room.getId().toString());
-        }
-        if (afterId.equals(0L)) {
-            roomRepository.shiftSortOrderRange(1, null, RoomRepository.Direction.DOWN);
-            room.setSortOrder(1);
-        } else {
-            room.setSortOrder(getSortOrderById(room.getId()));
-            Integer sortOrderOfPrevRoom = getSortOrderById(afterId);
-            if (sortOrderOfPrevRoom > room.getSortOrder()) {
-                roomRepository.shiftSortOrderRange(room.getSortOrder() + 1, sortOrderOfPrevRoom, RoomRepository.Direction.UP);
-                room.setSortOrder(sortOrderOfPrevRoom);
-            } else {
-                roomRepository.shiftSortOrderRange(sortOrderOfPrevRoom + 1, room.getSortOrder(), RoomRepository.Direction.DOWN);
-                room.setSortOrder(sortOrderOfPrevRoom + 1);
-            }
-        }
-        return roomRepository.update(room);
-    }
-
-    /**
-     * Retrieves sort order by room id.
-     *
-     * @param id the id of the room
-     * @return the sort order of the given room id
-     * @throws SortOrderNotExistsException if sort order of the room isn't set
-     */
-    private Integer getSortOrderById(Long id) {
-        log.trace("Entered getSortOrderById({})", id);
-        return roomRepository.getSortOrderById(id)
-                .orElseThrow(() -> new SortOrderNotExistsException(Room.class, id));
+    public Room updateAfterOrder(Room room, Long afterId) {
+        log.debug("Entered updateAfterOrder");
+        return sortOrderRepository.updateAfterOrder(room, afterId);
     }
 }

@@ -1,6 +1,7 @@
 package com.softserve.entity;
 
 import com.opencsv.bean.CsvBindByName;
+import com.softserve.entity.interfaces.SortableOrder;
 import lombok.*;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -27,7 +28,7 @@ import java.util.List;
         @ParamDef(name = "disable", type = "boolean"),
 })
 @Filter(name = "groupDisableFilter", condition = "disable = :disable")
-public class Group implements Serializable {
+public class Group implements Serializable, SortableOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

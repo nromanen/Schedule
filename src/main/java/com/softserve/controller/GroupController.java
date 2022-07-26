@@ -95,9 +95,9 @@ public class GroupController {
 
     @PostMapping("/after")
     @ApiOperation(value = "Create group ordered after another")
-    public ResponseEntity<GroupDTO> saveGroupAfter(@RequestBody GroupOrderDTO groupDTO) {
+    public ResponseEntity<GroupDTO> createGroupAfter(@RequestBody GroupOrderDTO groupDTO) {
         log.info("Entered saveGroupAfter({})", groupDTO);
-        Group group = groupService.saveAfterOrder(groupMapper.groupDTOToGroup(groupDTO), groupDTO.getAfterId());
+        Group group = groupService.createAfterOrder(groupMapper.groupDTOToGroup(groupDTO), groupDTO.getAfterId());
         return ResponseEntity.status(HttpStatus.CREATED).body(groupMapper.groupToGroupDTO(group));
     }
 
@@ -105,7 +105,7 @@ public class GroupController {
     @ApiOperation(value = "Update group order")
     public ResponseEntity<GroupDTO> updateGroupOrder(@RequestBody GroupOrderDTO groupDTO) {
         log.info("Entered updateGroupOrder(({})", groupDTO);
-        Group group = groupService.updateGroupOrder(groupMapper.groupDTOToGroup(groupDTO), groupDTO.getAfterId());
+        Group group = groupService.updateAfterOrder(groupMapper.groupDTOToGroup(groupDTO), groupDTO.getAfterId());
         return ResponseEntity.status(HttpStatus.OK).body(groupMapper.groupToGroupDTO(group));
     }
 }

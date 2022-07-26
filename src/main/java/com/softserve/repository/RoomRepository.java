@@ -82,14 +82,6 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
     Optional<Integer> getLastSortOrder();
 
     /**
-     * Retrieves sort order by room id.
-     *
-     * @param id the id of the room which sort order needs to be retrieved
-     * @return an Optional describing the sort order of the room
-     */
-    Optional<Integer> getSortOrderById(Long id);
-
-    /**
      * Shifts the sort order range by 1 in the specified direction. Bounds are included.
      *
      * @param lowerBound the lower bound of sort order
@@ -97,4 +89,5 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
      * @param direction  the direction of shift
      */
     void shiftSortOrderRange(Integer lowerBound, Integer upperBound, Direction direction);
+
 }
