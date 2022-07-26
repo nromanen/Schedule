@@ -80,7 +80,7 @@ public class SortOrderRepository<T extends SortableOrder> {
         log.info("Entered changeOrderOffset({}, {})", lower, upper);
         TypedQuery<?> typedQuery = sessionFactory.getCurrentSession().createQuery(
                 "UPDATE " + clazz.getSimpleName() + " c "
-                + "SET c.sortOrder = c.sortOrder+1 "
+                + "SET c.sortOrder = c.sortOrder + 1 "
                 + "WHERE c.sortOrder >= :lower AND c.sortOrder < :upper");
         typedQuery.setParameter("lower", lower)
                 .setParameter("upper", upper);
