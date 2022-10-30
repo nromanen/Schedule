@@ -13,8 +13,8 @@ import i18n from '../i18n';
 
 import {
     daysUppercase,
-    numberOfDaysInAWeek,
-    numberOfMilisecondsInADay,
+    // numberOfDaysInAWeek,
+    // numberOfMilisecondsInADay,
 } from '../constants/schedule/days';
 import './renderScheduleTable.scss';
 import { GROUP_Y_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
@@ -43,20 +43,24 @@ const matchDayNumberSysytemToDayName = () => {
     return daysUppercase[now.getDay() - 1];
 };
 
-const getWeekNumber = (startScheduleDate, date) => {
-    const startDay = transformSemesterDate(startScheduleDate);
-
-    const numberOfDays = Math.floor((date - startDay) / numberOfMilisecondsInADay);
-    return Math.ceil((date.getDay() + 1 + numberOfDays) / numberOfDaysInAWeek);
-};
+// const getWeekNumber = (startScheduleDate, date) => {
+//     const startDay = transformSemesterDate(startScheduleDate);
+//
+//     const numberOfDays = Math.floor((date - startDay) / numberOfMilisecondsInADay);
+//     return Math.ceil((date.getDay() + 1 + numberOfDays) / numberOfDaysInAWeek);
+// };
 
 const printWeekNumber = (startScheduleDate) => {
     const date = new Date();
-    return getWeekNumber(startScheduleDate, date);
+    const monday = startScheduleDate;
+    while (monday.getDay() !== 1) {
+        monday.setDate(monday.getDate() - 1);
+    }
+    return (date - monday) % 14;
 };
 
 function isWeekOdd(num) {
-    return num % 2 === 1;
+    return num >= 1 && num <= 7;
 }
 
 const renderClassCell = (classItem) => {

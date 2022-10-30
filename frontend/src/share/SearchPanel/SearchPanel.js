@@ -15,6 +15,7 @@ import {
     COMMON_SHOW_DISABLED,
     COMMON_SHOW_ENABLED,
 } from '../../constants/translationLabels/common';
+import SearchTextField from '../../components/Fields/SearchTextField';
 
 const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) => {
     const { t } = useTranslation('formElements');
@@ -72,13 +73,7 @@ const SearchPanel = ({ SearchChange, showDisabled, showArchived, forLessons }) =
                 />
             ) : null}
 
-            <TextField
-                className="form-field"
-                label={<FaSearch />}
-                placeholder={t(TYPE_TO_SEARCH)}
-                value={term}
-                onChange={onSearchChange}
-            />
+            <SearchTextField value={term} onChange={onSearchChange} />
         </Card>
     );
 };

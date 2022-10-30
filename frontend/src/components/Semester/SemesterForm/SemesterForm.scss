@@ -6,6 +6,17 @@
     width: 375px;
     padding: 25px;
 }
+.react-select__value-container {
+    overflow-y: auto !important;
+    min-height: 55px;
+    max-height: 55px;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+}
+.react-select__multi-value {
+    display: flex;
+    justify-content: space-between;
+}
 
 .semester-checkboxes {
     @include displayFlex(center, start, column);

@@ -34,6 +34,11 @@ import {
 } from '../../constants/translationLabels/formElements';
 import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
 import { getAllPublicTeachersByDepartmentStart } from '../../actions/teachers';
+import EditButton from '../../components/Buttons/EditButton';
+import DeleteButton from '../../components/Buttons/DeleteButton';
+import EnabledButton from '../../components/Buttons/EnabledButton';
+import DisabledButton from '../../components/Buttons/DisabledButton';
+import GetMoreButton from '../../components/Buttons/GetMoreButton';
 
 const DepartmentPage = (props) => {
     const {
@@ -146,9 +151,7 @@ const DepartmentPage = (props) => {
                             <h2 className="subject-card__name">{departmentItem.name}</h2>
                             <div className="cards-btns">
                                 {isDisabled ? (
-                                    <IoMdEye
-                                        className="svg-btn copy-btn"
-                                        title={t(COMMON_SET_ENABLED)}
+                                    <EnabledButton
                                         onClick={() => {
                                             showConfirmDialog(
                                                 departmentItem.id,
@@ -158,9 +161,7 @@ const DepartmentPage = (props) => {
                                     />
                                 ) : (
                                     <>
-                                        <GiSightDisabled
-                                            className="svg-btn copy-btn"
-                                            title={t(COMMON_SET_DISABLED)}
+                                        <DisabledButton
                                             onClick={() => {
                                                 showConfirmDialog(
                                                     departmentItem.id,
@@ -168,34 +169,25 @@ const DepartmentPage = (props) => {
                                                 );
                                             }}
                                         />
-
-                                        <FaEdit
-                                            className="svg-btn edit-btn"
-                                            title={t(EDIT_TITLE)}
-                                            onClick={() => {
-                                                setDepartmentToUpdate(departmentItem.id);
-                                            }}
+                                        <EditButton
+                                            onClick={() => setDepartmentToUpdate(departmentItem.id)}
                                         />
                                     </>
                                 )}
 
-                                <MdDelete
-                                    className="svg-btn delete-btn"
-                                    title={t(DELETE_TITLE)}
-                                    onClick={() => {
-                                        showConfirmDialog(
-                                            departmentItem.id,
-                                            dialogTypes.DELETE_CONFIRM,
-                                        );
-                                    }}
-                                />
-                                <FaChalkboardTeacher
-                                    className="svg-btn delete-btn"
-                                    title={t(SHOW_TEACHER_TITLE)}
+                                <GetMoreButton
                                     onClick={() => {
                                         getAllPublicTeachersByDepartment(departmentItem.id);
                                         getDepartmentByIdService(departmentItem.id);
                                         setIsOpenTeacherDialog(true);
+                                    }}
+                                />
+                                <DeleteButton
+                                    onClick={(_) => {
+                                        showConfirmDialog(
+                                            departmentItem.id,
+                                            dialogTypes.DELETE_CONFIRM,
+                                        );
                                     }}
                                 />
                             </div>

@@ -162,3 +162,5 @@ export const COMMON_TABLE_COLUMNS_SIZE_BASE = 'columns_size_base';
 export const COMMON_TABLE_COLUMNS_SIZE_LARGE = 'columns_size_large';
 export const COMMON_SEARCH_FREE_ROOMS_TITLE = 'common:search_params';
 export const COMMON_FREE_ROOMS_LIST_EMPTY = 'common:free_rooms_list_empty';
+export const COMMON_START_DAY = 'common:start_day';
+export const COMMON_END_DAY = 'common:end_day';

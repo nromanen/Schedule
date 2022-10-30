@@ -71,7 +71,6 @@ const LoginForm = (props) => {
                         component={renderTextField}
                         label={t(EMAIL_LABEL)}
                         error={!!errors}
-                        helperText={errors ? errors.login : null}
                         onChange={(e) => errorHandling(e.target.value)}
                     />
                     <Field

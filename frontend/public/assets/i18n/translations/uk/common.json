@@ -8,8 +8,8 @@
     "edit": "Редагування",
     "semester": "семестру",
     "semester_label": "Семестр",
-    "class_from_label": "З",
-    "class_to_label": "До",
+    "class_from_label": "Початок",
+    "class_to_label": "Кінець",
     "save_button_label": "Зберегти",
     "show_archived": "Відобразити заархівовані",
     "show_regular": "Віобразити звичайні",
@@ -189,5 +189,7 @@
     "columns_size_base": "базові",
     "columns_size_large": "великі",
     "search_params": "Параметри пошуку вільних кімнати",
-    "free_rooms_list_empty": "Список вільних кімнат порожній"
+    "free_rooms_list_empty": "Список вільних кімнат порожній",
+    "start_day": "Початок",
+    "end_day": "Кінець"
 }

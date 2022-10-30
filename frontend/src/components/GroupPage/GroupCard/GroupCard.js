@@ -19,6 +19,10 @@ import {
     FORM_STUDENT_ADD_LABEL,
     GROUP_LABEL,
 } from '../../../constants/translationLabels/formElements';
+import EnabledButton from '../../Buttons/EnabledButton';
+import EditButton from '../../Buttons/EditButton';
+import DisabledButton from '../../Buttons/DisabledButton';
+import DeleteButton from '../../Buttons/DeleteButton';
 
 const GroupCard = (props) => {
     const {
@@ -35,31 +39,21 @@ const GroupCard = (props) => {
             <div className="group-card-buttons">
                 {!disabled ? (
                     <>
-                        <IoMdEye
-                            className="eye-icon-btn"
-                            title={t(COMMON_SET_DISABLED)}
+                        <EnabledButton
                             onClick={() => {
                                 showConfirmDialog(group.id, dialogTypes.SET_VISIBILITY_DISABLED);
                             }}
                         />
-                        <FaEdit
-                            className="edit-icon-btn"
-                            title={t(COMMON_EDIT)}
-                            onClick={() => setGroup(group)}
-                        />
+                        <EditButton onClick={() => setGroup(group)} />
                     </>
                 ) : (
-                    <GiSightDisabled
-                        className="eye-icon-btn"
-                        title={t(COMMON_SET_ENABLED)}
+                    <DisabledButton
                         onClick={() => {
                             showConfirmDialog(group.id, dialogTypes.SET_VISIBILITY_ENABLED);
                         }}
                     />
                 )}
-                <MdDelete
-                    className="delete-icon-btn"
-                    title={t(DELETE_TITLE_LABEL)}
+                <DeleteButton
                     onClick={() => showConfirmDialog(group.id, dialogTypes.DELETE_CONFIRM)}
                 />
                 <Link to={`${GROUP_LIST_LINK}/${group.id}${ADD_STUDENT_LINK}`}>

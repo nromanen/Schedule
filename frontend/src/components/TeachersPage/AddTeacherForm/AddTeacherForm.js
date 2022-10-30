@@ -1,38 +1,41 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Field, reduxForm } from 'redux-form';
-
 import { MenuItem } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import renderTextField from '../../../share/renderedFields/input';
-import { required } from '../../../validation/validateFields';
-
+import { emailValidation, required } from '../../../validation/validateFields';
 import Card from '../../../share/Card/Card';
-
 import { TEACHER_FORM } from '../../../constants/reduxForms';
-
 import './AddTeacherForm.scss';
 import SelectField from '../../../share/renderedFields/select';
 import { getDepartmentByIdService } from '../../../services/departmentService';
 import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
 import {
-    EDIT_TITLE,
     CREATE_TITLE,
+    DEPARTMENT_TEACHER_LABEL,
+    EDIT_TITLE,
+    EMAIL_FIELD,
     SAVE_BUTTON_LABEL,
     TEACHER_A_LABEL,
-    TEACHER_SURNAME,
     TEACHER_FIRST_NAME,
     TEACHER_PATRONYMIC,
     TEACHER_POSITION,
-    EMAIL_FIELD,
-    DEPARTMENT_TEACHER_LABEL,
+    TEACHER_SURNAME,
 } from '../../../constants/translationLabels/formElements';
+import TextFormField from '../../Fields/TextFormField';
+import { academicTitle } from '../../../constants/academicTitle';
 
 const AddTeacherForm = (props) => {
+    const {
+        i18n: { language },
+    } = useTranslation();
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, submitting, reset, departments, teacher, initialize } = props;
+    const { handleSubmit, pristine, submitting, reset, departments, teacher, initialize, valid } =
+        props;
 
     const teacherId = teacher.id;
+    const [isCustom, setIsCustom] = useState(false);
 
     const initializeFormHandler = (teacherData) => {
         const department = teacherData.department ? teacherData.department.id : 0;
@@ -63,50 +66,78 @@ const AddTeacherForm = (props) => {
                 <h2 className="form-title">
                     {teacherId ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(TEACHER_A_LABEL)}
                 </h2>
-
-                <Field
-                    className="form-field"
+                <TextFormField
                     name="surname"
                     id="surname"
-                    component={renderTextField}
                     type="text"
                     placeholder={t(TEACHER_SURNAME)}
                     label={t(TEACHER_SURNAME)}
                     validate={[required]}
                 />
-
-                <Field
-                    className="form-field"
+                <TextFormField
                     name="name"
                     id="name"
-                    component={renderTextField}
                     type="text"
                     placeholder={t(TEACHER_FIRST_NAME)}
                     label={t(TEACHER_FIRST_NAME)}
                     validate={[required]}
                 />
-
-                <Field
-                    className="form-field"
+                <TextFormField
                     name="patronymic"
                     id="patronymic"
-                    component={renderTextField}
                     type="text"
                     placeholder={t(TEACHER_PATRONYMIC)}
                     label={t(TEACHER_PATRONYMIC)}
                     validate={[required]}
                 />
-
-                <Field
-                    className="form-field"
-                    name="position"
-                    id="position"
-                    component={renderTextField}
-                    type="text"
-                    placeholder={t(TEACHER_POSITION)}
-                    label={t(TEACHER_POSITION)}
-                    validate={[required]}
-                />
+                {!isCustom && (
+                    <Field
+                        name="position"
+                        component="select"
+                        onChange={(_, v) => {
+                            if (v === 'custom') {
+                                setIsCustom(true);
+                            }
+                        }}
+                        normalize={(value) => {
+                            if (value === 'custom') {
+                                setIsCustom(true);
+                                return '';
+                            }
+                            return value;
+                        }}
+                        validate={[required]}
+                    >
+                        <option />
+                        {academicTitle.map((title, index) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <option key={index} value={title[language]}>
+                                {title[language]}
+                            </option>
+                        ))}
+                    </Field>
+                )}
+                {isCustom && (
+                    <>
+                        <TextFormField
+                            name="position"
+                            id="position"
+                            type="text"
+                            placeholder={t(TEACHER_POSITION)}
+                            label={t(TEACHER_POSITION)}
+                            validate={[required]}
+                        />
+                        <Button
+                            className="buttons-style"
+                            variant="contained"
+                            onClick={() => {
+                                setIsCustom(false);
+                            }}
+                        >
+                            Вибрати із списку
+                        </Button>
+                    </>
+                )}
                 <Field
                     className="form-field"
                     name="email"
@@ -115,6 +146,7 @@ const AddTeacherForm = (props) => {
                     type="email"
                     placeholder={t(EMAIL_FIELD)}
                     label={t(EMAIL_FIELD)}
+                    validate={emailValidation}
                 />
                 <Field
                     name="department"
@@ -139,7 +171,7 @@ const AddTeacherForm = (props) => {
                         className="buttons-style"
                         variant="contained"
                         color="primary"
-                        disabled={pristine || submitting}
+                        disabled={pristine || submitting || !valid}
                         type="submit"
                     >
                         {t(SAVE_BUTTON_LABEL)}
@@ -147,7 +179,7 @@ const AddTeacherForm = (props) => {
                     <Button
                         className="buttons-style"
                         variant="contained"
-                        disabled={setDisableButton(pristine, submitting, teacher.id)}
+                        disabled={setDisableButton(pristine, submitting, teacher.id) || !valid}
                         onClick={() => {
                             reset();
                             props.onSetSelectedCard(null);

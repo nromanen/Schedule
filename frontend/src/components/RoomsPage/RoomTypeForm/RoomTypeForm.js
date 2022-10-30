@@ -15,6 +15,9 @@ import {
     ADD_TYPE_LABEL,
     NEW_TYPE_LABEL,
 } from '../../../constants/translationLabels/formElements';
+import TextFormField from '../../Fields/TextFormField';
+import EditButton from '../../Buttons/EditButton';
+import DeleteButton from '../../Buttons/DeleteButton';
 
 const RoomTypeForm = (props) => {
     const {
@@ -43,13 +46,11 @@ const RoomTypeForm = (props) => {
         <>
             <Card additionClassName="form-card room-type-card">
                 <form className="room-type-form" onSubmit={handleSubmit}>
-                    <Field
+                    <TextFormField
                         type="text"
                         name="description"
-                        component={renderTextField}
                         placeholder={t(ADD_TYPE_LABEL)}
                         label={t(NEW_TYPE_LABEL)}
-                        className="form-field"
                         variant="outlined"
                     />
                     <div className="btn-type-form-wrapper">
@@ -74,12 +75,8 @@ const RoomTypeForm = (props) => {
                         >
                             <span className="form-types">{roomType.description}</span>
                             <span>
-                                <FaEdit
-                                    className="room-type-icon room-type-icon_edit"
-                                    onClick={() => setSelectRoomType(roomType.id)}
-                                />
-                                <MdDelete
-                                    className="room-type-icon room-type-icon_delete"
+                                <EditButton onClick={() => setSelectRoomType(roomType.id)} />
+                                <DeleteButton
                                     onClick={() => {
                                         showConfirmDialog(
                                             roomType.id,

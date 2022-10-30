@@ -4,6 +4,7 @@ import { Field } from 'redux-form';
 import Button from '@material-ui/core/Button';
 import { isEmpty } from 'lodash';
 import './SemesterForm.scss';
+import moment from 'moment';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 import renderTextField from '../../../share/renderedFields/input';
 import renderMonthPicker from '../../../share/renderedFields/timeSemester';
@@ -29,11 +30,13 @@ import {
     COMMON_YEAR_LABEL,
     COMMON_CHOOSE_GROUPS_BUTTON_LABEL,
     COMMON_SEMESTER_LABEL,
-    COMMON_CLASS_FROM_LABEL,
-    COMMON_CLASS_TO_LABEL,
+    // COMMON_CLASS_FROM_LABEL,
+    // COMMON_CLASS_TO_LABEL,
     COMMON_DAYS_LABEL,
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
     COMMON_SAVE_BUTTON_LABEL,
+    COMMON_START_DAY,
+    COMMON_END_DAY,
 } from '../../../constants/translationLabels/common';
 import SetSemesterCheckboxes from './SemesterCheckboxes';
 import {
@@ -192,14 +195,16 @@ const SemesterForm = (props) => {
                         className="semester-field-input"
                         name="startDay"
                         component={renderMonthPicker}
-                        label={`${t(COMMON_CLASS_FROM_LABEL)}:`}
+                        label={`${t(COMMON_START_DAY)}:`}
+                        placeholder={`${moment({ month: 8, day: 1 }).format('L')}`}
                         validate={[required, lessThanDate]}
                     />
                     <Field
                         className="semester-field-input"
                         name="endDay"
                         component={renderMonthPicker}
-                        label={`${t(COMMON_CLASS_TO_LABEL)}:`}
+                        label={`${t(COMMON_END_DAY)}:`}
+                        placeholder={`${moment({ month: 11, day: 31 }).format('L')}`}
                         validate={[required, greaterThanDate]}
                     />
                 </div>

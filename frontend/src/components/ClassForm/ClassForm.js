@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Field, reduxForm } from 'redux-form';
 
 import { connect } from 'react-redux';
 import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
+import MomentUtils from '@date-io/moment';
 import Card from '../../share/Card/Card';
 
 import './ClassForm.scss';
@@ -34,10 +35,20 @@ import {
 } from '../../constants/translationLabels/formElements';
 import { hourFormat, timeFormat } from '../../constants/formats';
 
+import keyboardTimePicker from '../../share/renderedFields/keyboardTimePicker';
+
 const ClassFormFunc = (props) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, classSchedule, initialize, change } =
-        props;
+    const {
+        handleSubmit,
+        pristine,
+        onReset,
+        submitting,
+        classSchedule,
+        initialize,
+        change,
+        valid,
+    } = props;
     useEffect(() => {
         let initialValues = {};
         if (classSchedule) {
@@ -46,11 +57,17 @@ const ClassFormFunc = (props) => {
         initialize(initialValues);
     }, [classSchedule]);
 
-    const setEndTime = (startTime) =>
+    const setEndTime = (startTime) => {
         change(
             'endTime',
             moment(startTime, timeFormat).add(CLASS_DURATION, hourFormat).format(timeFormat),
         );
+    };
+    const onlyDigits = new RegExp('\\d+');
+    const parsePositiveInt = (value) => {
+        const matches = value.match(onlyDigits);
+        return matches ? parseInt(matches[0]) : '';
+    };
 
     return (
         <Card additionClassName="form-card">
@@ -64,17 +81,17 @@ const ClassFormFunc = (props) => {
                     name="class_name"
                     id="class_name"
                     label={t(CLASS_LABEL)}
-                    type="text"
+                    type="number"
+                    normalize={(value) => parsePositiveInt(value).toString()}
                     validate={[required, uniqueClassName]}
                 />
                 <div className="form-time-block">
                     <Field
-                        component={renderTimePicker}
+                        component={keyboardTimePicker}
                         className="time-input"
                         name="startTime"
                         label={t(CLASS_FROM_LABEL)}
-                        type="time"
-                        validate={[required, lessThanTime, timeIntersect]}
+                        validate={[required, lessThanTime]}
                         onChange={(event, value) => {
                             if (value) {
                                 setEndTime(value);
@@ -82,12 +99,12 @@ const ClassFormFunc = (props) => {
                         }}
                     />
                     <Field
-                        component={renderTimePicker}
+                        component={keyboardTimePicker}
                         className="time-input"
                         name="endTime"
+                        placeholder="9:40"
                         label={t(CLASS_TO_LABEL)}
-                        type="time"
-                        validate={[required, greaterThanTime, timeIntersect]}
+                        validate={[required, greaterThanTime]}
                     />
                 </div>
 
@@ -97,7 +114,7 @@ const ClassFormFunc = (props) => {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={pristine || submitting}
+                        disabled={pristine || submitting || !valid}
                     >
                         {t(SAVE_BUTTON_LABEL)}
                     </Button>
@@ -106,7 +123,7 @@ const ClassFormFunc = (props) => {
                         type="button"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, classSchedule.id)}
-                        onClick={onReset}
+                        onClick={() => initialize({})}
                     >
                         {getClearOrCancelTitle(classSchedule.id, t)}
                     </Button>

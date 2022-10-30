@@ -118,6 +118,7 @@ const MergeRolePage = (props) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => mergeUserAndTeacherHandle()}
+                                disabled={!user || !teacher}
                             >
                                 {t(FORM_MERGE_BUTTON)}
                             </Button>

@@ -1,1 +1,17 @@
- 
+@import "../../styles/colors.scss";
+.class-schedule {
+  &-card-description{
+    &-name {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+    }
+    &-value{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) ;
+      :not(:last-of-type, :first-of-type){
+        text-align: center;
+      }
+  }
+  }
+}
+

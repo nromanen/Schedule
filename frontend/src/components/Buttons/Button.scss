@@ -1,0 +1,22 @@
+@import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
+@import "../../styles/variables.scss";
+.buttons {
+  cursor: pointer;
+  &-delete-button {
+    @include button-icon($delete-color, $delete-color, $font-l);
+  }
+  &-edit-button {
+    @include button-icon($edit-color, $edit-color, $font-l);
+  }
+  &-enabled-disabled-button {
+    @include button-icon($yellow1, $yellow1, $font-l);
+  }
+  &-get-more-button {
+    @include button-icon($green, $green, $font-l);
+  }
+  &-add-user-button {
+    @include button-icon($green, $green, $font-l);
+  }
+
+}

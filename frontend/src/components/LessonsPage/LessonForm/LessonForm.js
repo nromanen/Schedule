@@ -38,6 +38,7 @@ import {
 
 import './LessonForm.scss';
 import '../LessonPage.scss';
+import TextNumberField from '../../Fields/TextNumberField';
 
 const LessonForm = (props) => {
     const { t } = useTranslation('formElements');
@@ -170,13 +171,15 @@ const LessonForm = (props) => {
                                 }
                             />
 
-                            <Field
+                            <TextNumberField
                                 id="hours"
                                 name="hours"
-                                type="tel"
-                                component={renderTextField}
                                 label={t(HOURS_LABEL_SHORT)}
                                 validate={[required, lessThanZero]}
+                                normalize={(value) => {
+                                    value.replace(/\+/, '');
+                                    console.log(value);
+                                }}
                             />
                             <Field
                                 id="grouped"

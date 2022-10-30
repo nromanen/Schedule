@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { HOME_PAGE_LINK, LOGIN_LINK, ADMIN_PAGE_LINK } from '../../constants/links';
+import { ADMIN_PAGE_LINK, HOME_PAGE_LINK, LOGIN_LINK } from '../../constants/links';
 import { authTypes, successAuthMessages } from '../../constants/auth';
-import { GOOGLE_LOGIN_URL } from '../../constants/axios';
 import { userRoles } from '../../constants/userRoles';
 import { snackbarTypes } from '../../constants/snackbarTypes';
 import LoginForm from '../LoginForm/LoginForm';
@@ -11,20 +10,25 @@ import RegistrationForm from '../RegistrationForm/RegistrationForm';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 
 import { resetFormHandler } from '../../helper/formHelper';
-import { handleSnackbarOpenService } from '../../services/snackbarService';
+import {
+    handleSnackbarCloseService,
+    handleSnackbarOpenService,
+} from '../../services/snackbarService';
 import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
 import { GOOGLE } from '../../constants/common';
 
 import './Auth.scss';
 import {
+    ADMIN_TITLE,
+    BROKEN_TOKEN,
+    HOME_TITLE,
     LOGIN_TITLE,
     REGISTRATION_PAGE_TITLE,
-    HOME_TITLE,
-    ADMIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
-    BROKEN_TOKEN,
 } from '../../constants/translationLabels/common';
+import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const Auth = (props) => {
     const {
         authType,
@@ -45,13 +49,13 @@ const Auth = (props) => {
     const url = window.document.location;
     const parser = new URL(url);
 
-    const loginHandler = loginData => {
+    const loginHandler = (loginData) => {
         onAuth(loginData);
         setLoadingForm(true);
         resetFormHandler(LOGIN_FORM);
     };
 
-    const showSuccessMessage = massage => {
+    const showSuccessMessage = (massage) => {
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, t(massage));
     };
 
@@ -66,7 +70,7 @@ const Auth = (props) => {
         showSuccessMessage(successAuthMessages[authType]);
     }, []);
 
-    const registrationHandler = registrationData => {
+    const registrationHandler = (registrationData) => {
         onRegister({
             email: registrationData.email,
             password: registrationData.password,
@@ -76,7 +80,7 @@ const Auth = (props) => {
         setIsResponse(true);
     };
 
-    const resetPasswordHandler = resetPasswordData => {
+    const resetPasswordHandler = (resetPasswordData) => {
         onResetPassword({
             email: resetPasswordData.email,
         });
@@ -85,7 +89,7 @@ const Auth = (props) => {
         setIsResponse(true);
     };
 
-    const socialLoginHandler = data => {
+    const socialLoginHandler = (data) => {
         setLoadingForm(true);
         if (!data.token || data.token.length < 20) {
             props.setError({ login: t(BROKEN_TOKEN) });
@@ -104,7 +108,7 @@ const Auth = (props) => {
     if (parser.search.length > 0) {
         const params = parser.search.split('&');
         if (params) {
-            params.forEach(param => {
+            params.forEach((param) => {
                 const splitedParam = param.split('=');
                 if (splitedParam) {
                     if (splitedParam[0] === '?social' && splitedParam[1] === 'true') {
@@ -163,9 +167,10 @@ const Auth = (props) => {
             document.title = t(LOGIN_TITLE);
             return (
                 <div className="auth-container">
+                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                     <a
                         className="hidden-link"
-                        href={`${process.env.REACT_APP_API_BASE_URL.trim()}${`/${GOOGLE_LOGIN_URL}`}`}
+                        // href={`${process.env.REACT_APP_API_BASE_URL.trim()}${`/${GOOGLE_LOGIN_URL}`}`}
                     >
                         auth via google
                     </a>
@@ -174,6 +179,12 @@ const Auth = (props) => {
                         loginHandler={loginHandler}
                         setError={setError}
                         errors={error}
+                    />
+                    <SnackbarComponent
+                        message={error ? Object.values(error).join(', ') : ''}
+                        type="Error"
+                        isOpen={!!error}
+                        handleSnackbarClose={handleSnackbarCloseService}
                     />
                 </div>
             );
