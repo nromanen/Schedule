@@ -6,16 +6,16 @@ import { useTranslation } from 'react-i18next';
 
 import Card from '../../share/Card/Card';
 import { DEPARTMENT_FORM } from '../../constants/reduxForms';
-import renderTextField from '../../share/renderedFields/input';
-import { required, maxLengthValue, uniqueDepartment } from '../../validation/validateFields';
+import { maxLengthValue, required, uniqueDepartment } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import {
-    EDIT_TITLE,
     CREATE_TITLE,
-    SAVE_BUTTON_LABEL,
     DEPARTMENT_LABEL,
+    EDIT_TITLE,
     NAME_LABEL,
+    SAVE_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
+import TextFormField from '../Fields/TextFormField';
 
 const AddDepartment = (props) => {
     const { t } = useTranslation('formElements');
@@ -33,6 +33,11 @@ const AddDepartment = (props) => {
             }
         }
     }, [department]);
+    const parsePositiveInt = (value) => {
+        const pattern = '/^S*$/';
+        const matches = value.match(pattern);
+        return matches ? value.trim() : '';
+    };
 
     return (
         <Card additionClassName="form-card subject-form">
@@ -41,10 +46,8 @@ const AddDepartment = (props) => {
                 {t(DEPARTMENT_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
-                <Field
-                    className="form-field"
+                <TextFormField
                     name="name"
-                    component={renderTextField}
                     label={`${t(NAME_LABEL)}:`}
                     validate={[required, uniqueDepartment, maxLengthValue]}
                 />

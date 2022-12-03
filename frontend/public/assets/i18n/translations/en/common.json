@@ -131,6 +131,10 @@
     "auditory_label": "room",
     "online_label": "online",
     "place_for_class_label": "Place for class",
+    "week_type_label": "Week type",
+    "even&&odd_label": "even&&odd",
+    "even_label": "even",
+    "odd_label": "odd",
     "days_label": "Days",
     "create": "Create",
     "edit": "Edit",
@@ -191,5 +195,7 @@
     "columns_size_base": "base",
     "columns_size_large": "large",
     "search_params": "Search options for available rooms",
-    "free_rooms_list_empty": "The list of available rooms is empty"
+    "free_rooms_list_empty": "The list of available rooms is empty",
+    "start_day": "Start day",
+    "end_day": "End day"
 }

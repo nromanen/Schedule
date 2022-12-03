@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import './AddSubjectForm.scss';
 import Card from '../../share/Card/Card';
 import { SUBJECT_FORM } from '../../constants/reduxForms';
-import renderTextField from '../../share/renderedFields/input';
 import { required, uniqueSubject, maxLengthValue } from '../../validation/validateFields';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import {
@@ -17,6 +16,7 @@ import {
     SUBJECT_Y_LABEL,
     SUBJECT_LABEL,
 } from '../../constants/translationLabels/formElements';
+import TextFormField from '../Fields/TextFormField';
 
 const AddSubject = (props) => {
     const { t } = useTranslation('formElements');
@@ -42,10 +42,8 @@ const AddSubject = (props) => {
                 {t(SUBJECT_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
-                <Field
-                    className="form-field"
+                <TextFormField
                     name="name"
-                    component={renderTextField}
                     label={`${t(SUBJECT_LABEL)}:`}
                     validate={[required, uniqueSubject, maxLengthValue]}
                 />

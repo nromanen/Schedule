@@ -1,7 +1,5 @@
 import './TeachersList.scss';
 import React from 'react';
-import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
 import { useTranslation } from 'react-i18next';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import Card from '../../../share/Card/Card';
@@ -11,12 +9,14 @@ import { getTeacherFullName } from '../../../helper/renderTeacher';
 import { getShortTitle } from '../../../helper/shortTitle';
 import {
     COMMON_SET_DISABLED,
-    COMMON_EDIT_HOVER_TITLE,
-    COMMON_DELETE_HOVER_TITLE,
     COMMON_SET_ENABLED,
     TEACHER_DEPARTMENT,
 } from '../../../constants/translationLabels/common';
 import { MAX_LENGTH_40 } from '../../../constants/common';
+import DeleteButton from '../../Buttons/DeleteButton';
+import EditButton from '../../Buttons/EditButton';
+import EnabledButton from '../../Buttons/EnabledButton';
+import DisabledButton from '../../Buttons/DisabledButton';
 
 const TeachersCard = (props) => {
     const { t } = useTranslation('common');
@@ -33,9 +33,7 @@ const TeachersCard = (props) => {
             <div className="cards-btns">
                 {!isDisabled ? (
                     <>
-                        <IoMdEye
-                            className="copy-icon-btn"
-                            title={t(COMMON_SET_DISABLED)}
+                        <EnabledButton
                             onClick={() => {
                                 showConfirmDialog(
                                     teacherItem.id,
@@ -43,27 +41,21 @@ const TeachersCard = (props) => {
                                 );
                             }}
                         />
-                        <FaEdit
-                            className="edit-icon-btn"
-                            title={t(COMMON_EDIT_HOVER_TITLE)}
-                            onClick={() => {
+                        <EditButton
+                            onClick={(_) => {
                                 selectedTeacherCard(teacherItem.id);
                             }}
                         />
                     </>
                 ) : (
-                    <GiSightDisabled
-                        className="copy-icon-btn"
-                        title={t(COMMON_SET_ENABLED)}
+                    <DisabledButton
                         onClick={() => {
                             showConfirmDialog(teacherItem.id, dialogTypes.SET_VISIBILITY_ENABLED);
                         }}
                     />
                 )}
-                <MdDelete
-                    className="delete-icon-btn"
-                    title={t(COMMON_DELETE_HOVER_TITLE)}
-                    onClick={() => showConfirmDialog(teacherItem.id, dialogTypes.DELETE_CONFIRM)}
+                <DeleteButton
+                    onClick={(_) => showConfirmDialog(teacherItem.id, dialogTypes.DELETE_CONFIRM)}
                 />
             </div>
             <h2 className="teacher-card__name">

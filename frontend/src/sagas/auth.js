@@ -50,7 +50,11 @@ function* loginToAccount({ payload }) {
     } catch (error) {
         yield put(
             setAuthError({
-                login: createErrorMessage({ response: error.response }),
+                login: createErrorMessage({
+                    response: error.statusCode
+                        ? error.response
+                        : { data: { message: 'Network Error!!!' } },
+                }),
             }),
         );
     } finally {

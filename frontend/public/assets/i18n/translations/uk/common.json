@@ -8,8 +8,8 @@
     "edit": "Редагування",
     "semester": "семестру",
     "semester_label": "Семестр",
-    "class_from_label": "З",
-    "class_to_label": "До",
+    "class_from_label": "Початок",
+    "class_to_label": "Кінець",
     "save_button_label": "Зберегти",
     "show_archived": "Відобразити заархівовані",
     "show_regular": "Віобразити звичайні",
@@ -143,6 +143,10 @@
     "auditory_label": "аудиторія",
     "online_label": "онлайн",
     "place_for_class_label": "Місце проведення заняття",
+    "week_type_label": "Тип тижня",
+    "even&&odd_label": "парний+непарний",
+    "even_label": "парний",
+    "odd_label": "непарний",
     "days_label": "Дні",
     "current_label": "Поточний",
     "default_label": "Дефолтний",
@@ -189,5 +193,7 @@
     "columns_size_base": "базові",
     "columns_size_large": "великі",
     "search_params": "Параметри пошуку вільних кімнати",
-    "free_rooms_list_empty": "Список вільних кімнат порожній"
+    "free_rooms_list_empty": "Список вільних кімнат порожній",
+    "start_day": "Початок",
+    "end_day": "Кінець"
 }

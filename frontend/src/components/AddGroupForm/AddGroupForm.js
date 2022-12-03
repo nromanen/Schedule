@@ -12,9 +12,9 @@ import {
 } from '../../constants/translationLabels/formElements';
 import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
 import { renderAutocompleteField } from '../../helper/renderAutocompleteField';
-import renderTextField from '../../share/renderedFields/input';
 import { minLengthValue, required, uniqueGroup } from '../../validation/validateFields';
 import './AddGroupForms.scss';
+import TextFormField from '../Fields/TextFormField';
 
 export const AddGroup = (props) => {
     const {
@@ -65,12 +65,10 @@ export const AddGroup = (props) => {
                 {t(GROUP_Y_LABEL)}
             </h3>
             <form onSubmit={handleSubmit((data) => submitGroup(data))}>
-                <Field
-                    className="form-field"
+                <TextFormField
                     name="title"
                     id="title"
                     label={`${t(GROUP_LABEL)}:`}
-                    component={renderTextField}
                     validate={[required, uniqueGroup, minLengthValue]}
                 />
                 <Field
@@ -81,7 +79,7 @@ export const AddGroup = (props) => {
                     type="text"
                     values={groupsForAutocomplete}
                     getOptionLabel={(item) => (item ? item.title : '')}
-                ></Field>
+                />
                 <div className="form-buttons-container">
                     <Button
                         size="small"

@@ -1,29 +1,33 @@
 import React from 'react';
+import { KeyboardTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
-import { dateFormat } from '../../constants/formats';
+import { timeFormat } from '../../constants/formats';
 
-const renderMonthPicker = ({
+const keyboardTimePicker = ({
     label,
     input: { value, ...inputProps },
     meta: { touched, invalid, error },
     ...custom
 }) => {
+    console.log(inputProps, custom);
     return (
         <MuiPickersUtilsProvider utils={MomentUtils}>
-            <DatePicker
+            <KeyboardTimePicker
+                ampm={false}
                 minDate={new Date()}
-                placeholder={inputProps.placeholder || '06/09/2022'}
+                placeholder={`${custom.placeholder || '08:20'}`}
                 clearable
-                value={value ? moment(value, dateFormat).toDate() : null}
-                format="DD/MM/YYYY"
+                mask="__:__"
                 error={touched && invalid}
+                format={timeFormat}
                 helperText={touched && error ? touched && error : label}
                 {...inputProps}
                 {...custom}
+                value={value ? moment(value, 'HH:mm').toDate() : null}
             />
         </MuiPickersUtilsProvider>
     );
 };
-export default renderMonthPicker;
+
+export default keyboardTimePicker;

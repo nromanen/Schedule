@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Field } from 'redux-form';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {Field} from 'redux-form';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@material-ui/core/Button';
 import Accordion from '@material-ui/core/Accordion';
@@ -13,34 +13,34 @@ import Card from '../../../share/Card/Card';
 import renderTextField from '../../../share/renderedFields/input';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
-import { isUrl, lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
-import { handleTeacherInfo } from '../../../helper/renderTeacher';
-import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
-import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
-import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
+import {isUrl, lessThanZero, maxLengthValue, required} from '../../../validation/validateFields';
+import {handleTeacherInfo} from '../../../helper/renderTeacher';
+import {getClearOrCancelTitle, setDisableButton} from '../../../helper/disableComponent';
+import {RenderMultiselect} from '../../../share/renderedFields/renderMultiselect';
+import {renderAutocompleteField} from '../../../helper/renderAutocompleteField';
 import LessonLabelForm from '../../../containers/LessonPage/LessonLabelForm';
 
 import {
-    SAVE_BUTTON_LABEL,
-    GROUP_LABEL,
-    SUBJECT_LABEL,
-    NOT_SELECTED_LABEL,
-    GROUPS_LABEL,
-    COPY_GROUPS_LABEL,
     COPY_FOR_BUTTON_LABEL,
-    LINK_TO_MEETING_LABEL,
+    COPY_GROUPS_LABEL,
     FOR_SITE_LABEL,
     FORM_GROUPED_LABEL,
+    GROUP_LABEL,
+    GROUPS_LABEL,
+    HOURS_LABEL_SHORT,
+    LINK_TO_MEETING_LABEL,
+    NOT_SELECTED_LABEL,
+    SAVE_BUTTON_LABEL,
+    SUBJECT_LABEL,
     TEACHER_LABEL,
     TYPE_LABEL,
-    HOURS_LABEL_SHORT,
 } from '../../../constants/translationLabels/formElements';
 
 import './LessonForm.scss';
 import '../LessonPage.scss';
 
 const LessonForm = (props) => {
-    const { t } = useTranslation('formElements');
+    const {t} = useTranslation('formElements');
 
     const {
         handleSubmit,
@@ -102,11 +102,11 @@ const LessonForm = (props) => {
         if (lessonId) {
             initializeFormHandler(lesson);
         } else {
-            initialize({ groups: [group] });
+            initialize({groups: [group]});
         }
     }, [lessonId, group]);
 
-    const valid = !isUniqueError ? { validate: [required] } : { error: isUniqueError };
+    const valid = !isUniqueError ? {validate: [required]} : {error: isUniqueError};
 
     const clearForm = () => {
         reset();
@@ -118,7 +118,7 @@ const LessonForm = (props) => {
         <>
             {groupId ? (
                 <Card additionClassName="lesson-form-card">
-                    <LessonLabelForm />
+                    <LessonLabelForm/>
                     <form onSubmit={handleSubmit} className="lesson-form">
                         <Field
                             name="teacher"
@@ -164,8 +164,8 @@ const LessonForm = (props) => {
                                 getOptionLabel={(lessonType) =>
                                     lessonType
                                         ? t(
-                                              `formElements:lesson_type_${lessonType.toLowerCase()}_label`,
-                                          )
+                                            `formElements:lesson_type_${lessonType.toLowerCase()}_label`,
+                                        )
                                         : ''
                                 }
                             />
@@ -174,9 +174,9 @@ const LessonForm = (props) => {
                                 id="hours"
                                 name="hours"
                                 type="tel"
-                                component={renderTextField}
                                 label={t(HOURS_LABEL_SHORT)}
                                 validate={[required, lessThanZero]}
+                                component={renderTextField}
                             />
                             <Field
                                 id="grouped"
@@ -213,7 +213,7 @@ const LessonForm = (props) => {
                         {!lessonId && (
                             <Accordion>
                                 <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
+                                    expandIcon={<ExpandMoreIcon/>}
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >

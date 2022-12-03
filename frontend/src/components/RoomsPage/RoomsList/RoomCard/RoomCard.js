@@ -11,6 +11,10 @@ import {
 } from '../../../../constants/translationLabels/common';
 import { cardType } from '../../../../constants/cardType';
 import './RoomCard.scss';
+import EnabledButton from '../../../Buttons/EnabledButton';
+import EditButton from '../../../Buttons/EditButton';
+import DisabledButton from '../../../Buttons/DisabledButton';
+import DeleteButton from '../../../Buttons/DeleteButton';
 
 const RoomCard = (props) => {
     const { room, isDisabled, showConfirmDialog, setSelectRoom } = props;
@@ -21,9 +25,7 @@ const RoomCard = (props) => {
             <div className="cards-btns">
                 {!isDisabled ? (
                     <>
-                        <IoMdEye
-                            className="eye-icon-btn"
-                            title={t(COMMON_SET_DISABLED)}
+                        <EnabledButton
                             onClick={() => {
                                 showConfirmDialog(
                                     room.id,
@@ -32,12 +34,10 @@ const RoomCard = (props) => {
                                 );
                             }}
                         />
-                        <FaEdit className="edit-icon-btn" onClick={() => setSelectRoom(room.id)} />
+                        <EditButton onClick={() => setSelectRoom(room.id)} />
                     </>
                 ) : (
-                    <GiSightDisabled
-                        className="eye-icon-btn"
-                        title={t(COMMON_SET_ENABLED)}
+                    <DisabledButton
                         onClick={() => {
                             showConfirmDialog(
                                 room.id,
@@ -48,8 +48,7 @@ const RoomCard = (props) => {
                     />
                 )}
 
-                <MdDelete
-                    className="delete-icon-btn"
+                <DeleteButton
                     onClick={() => {
                         showConfirmDialog(room.id, dialogTypes.DELETE_CONFIRM, cardType.ROOM);
                     }}
