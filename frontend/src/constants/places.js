@@ -4,3 +4,4 @@ const places = {
     ONLINE: 'online',
 };
 export { places };
+

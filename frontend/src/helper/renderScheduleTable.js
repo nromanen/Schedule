@@ -21,6 +21,7 @@ import { GROUP_Y_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels/
 import { EMPTY_SCHEDULE } from '../constants/translationLabels/common';
 import LessonTemporaryCardCell from '../containers/GroupSchedulePage/LessonTemporaryCardCell';
 import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTemporaryCardCell';
+import {getOddEvenTitle} from "../utils/titlesUtil";
 
 const shortid = require('shortid');
 
@@ -50,19 +51,30 @@ const matchDayNumberSysytemToDayName = () => {
 //     return Math.ceil((date.getDay() + 1 + numberOfDays) / numberOfDaysInAWeek);
 // };
 
-const printWeekNumber = (startScheduleDate) => {
+// const printWeekNumber = (startScheduleDate) => {
+//     const date = new Date();
+//     const monday = startScheduleDate;
+//     while (monday.getDay() !== 1) {
+//         monday.setDate(monday.getDate() - 1);
+//     }
+//     return (date - monday) % 14;
+// };
+//
+// function isWeekOdd(num) {
+//     return num >= 1 && num <= 7;
+// }
+export const printWeekNumber = (startScheduleDate) => {
     const date = new Date();
-    const monday = startScheduleDate;
+    const monday = new Date(startScheduleDate);
     while (monday.getDay() !== 1) {
         monday.setDate(monday.getDate() - 1);
     }
-    return (date - monday) % 14;
+    return((date - monday) % 14);
 };
 
-function isWeekOdd(num) {
+export function isWeekOdd(num) {
     return num >= 1 && num <= 7;
 }
-
 const renderClassCell = (classItem) => {
     return `${classItem.class_name}\n\r\n\r${classItem.startTime} - ${classItem.endTime}`;
 };
@@ -334,7 +346,7 @@ const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, curre
 export const renderFullSchedule = (fullResultSchedule) => {
     const { semester, groupList, semesterClasses, resultArray } = fullResultSchedule;
     const { startDay, description, endDay } = semester;
-    const scheduleTitle = `${description} (${startDay}-${endDay})`;
+    const scheduleTitle = `${description} (${startDay}-${endDay}) ${getOddEvenTitle()}`;
     const currentWeekType = isWeekOdd(printWeekNumber(startDay));
     const currentDay = checkSemesterEnd(endDay) ? '' : matchDayNumberSysytemToDayName();
 

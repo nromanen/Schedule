@@ -3,10 +3,14 @@ import { makeFullSchedule } from '../mappers/fullScheduleMapper';
 import { makeTeacherSchedule } from '../mappers/teacherScheduleMapper';
 import { makeGroupSchedule } from '../mappers/groupScheduleMapper';
 import { places } from '../constants/places';
+import {week_types} from "../constants/week_types";
+import {isWeekOdd, printWeekNumber} from "../utils/titlesUtil";
 
 const initialState = {
     items: [],
     place: localStorage.getItem('place') || places.TOGETHER,
+    //week_type: localStorage.getItem('week_type') || isWeekOdd(printWeekNumber())? week_types.ODD: week_types.EVEN,
+    week_type: localStorage.getItem('week_type') ||  week_types.EVEN_ODD,
     availability: {},
     itemsIds: [],
     fullSchedule: [],
@@ -20,11 +24,14 @@ const initialState = {
     defaultSemester: {},
     viewTeacherScheduleResults: 'block-view',
 };
+console.log(localStorage.getItem('week_type') || isWeekOdd(printWeekNumber())? week_types.ODD: week_types.EVEN)
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_PLACE:
             return { ...state, place: action.place };
+        case actionTypes.SET_WEEK_TYPE:
+            return { ...state, week_type: action.week_type };
         case actionTypes.GET_SCHEDULE_ITEMS_SUCCESS:
             return { ...state, items: action.items };
         case actionTypes.GET_CURRENT_SEMESTER_SUCCESS:

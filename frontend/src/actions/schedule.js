@@ -226,6 +226,13 @@ export const setPlace = (place) => {
     };
 };
 
+export const setWeekType = (week_type) => {
+    return {
+        type: actionTypes.SET_WEEK_TYPE,
+        week_type,
+    };
+};
+
 export const selectGroupSchedule = (semesterId, groupId) => {
     return {
         type: actionTypes.SELECT_GROUP_SCHEDULE_START,

@@ -9,6 +9,7 @@ import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';
 import { SCHEDULE_FOR_LINK } from '../../constants/links';
 import { renderSchedule } from '../../helper/renderSchedule';
 import { getScheduleType } from '../../helper/getScheduleType';
+import {useSelector} from "react-redux";
 
 const createSubmitValues = (semester, group, teacher) => ({
     semester,
@@ -20,6 +21,7 @@ const GroupSchedulePage = (props) => {
     const history = useHistory();
     const location = useLocation();
     const { t } = useTranslation('common');
+    const week_type= useSelector((state)=>state.schedule.week_type);
     const {
         defaultSemester,
         scheduleType,
@@ -87,7 +89,7 @@ const GroupSchedulePage = (props) => {
                     <CircularProgress />
                 </section>
             ) : (
-                renderSchedule({ ...props, t })
+                renderSchedule({ ...props, t, week_type })
             )}
         </>
     );

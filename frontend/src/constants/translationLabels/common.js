@@ -130,6 +130,7 @@ export const TEACHER_SCHEDULE_LABEL = 'teacher_schedule_label';
 export const BROKEN_TOKEN = 'broken_token';
 export const SUCCESSFUL_RESET_PASSWORD_MESSAGE = 'successful_reset_password_message';
 export const PLACE_FOR_CLASS_LABEL = 'place_for_class_label';
+export const WEEK_TYPE_LABEL='week_type_label';
 export const COMMON_DO_YOU_WANNA = 'common:do_you_wanna';
 export const COMMON_DO_YOU_WANNA_DISABLE = 'common:do_you_wanna_disable';
 export const COMMON_DELETE_WORD = 'common:delete_word';
