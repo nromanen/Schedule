@@ -1,8 +1,10 @@
 package com.softserve.config;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,14 +13,11 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
-import java.util.Objects;
 import java.util.Properties;
-
-import static org.hibernate.cfg.Environment.*;
 
 @Configuration
 @PropertySource("classpath:hibernate.properties")
@@ -36,81 +35,66 @@ public class DBConfig {
 
     @Bean
     public DataSource getDataSource() {
-        String url;
-        String user;
-        String password;
-        ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        try {
-            dataSource.setDriverClass(Objects.requireNonNull(environment.getProperty(DRIVER)));
-        } catch (PropertyVetoException e) {
-            System.exit(1);
-        }
-
-        url = System.getenv("HEROKU_DB_URL");
-        user = System.getenv("HEROKU_DB_USER");
-        password = System.getenv("HEROKU_DB_PASSWORD");
-
-        if (url == null) {
-            url = Objects.requireNonNull(environment.getProperty(URL));
-        }
-        if (user == null) {
-            user = Objects.requireNonNull(environment.getProperty(USER));
-        }
-        if (password == null) {
-            password = Objects.requireNonNull(environment.getProperty(PASS));
-        }
-
-        dataSource.setJdbcUrl(url);
-        dataSource.setUser(user);
-        dataSource.setPassword(password);
-
-        return dataSource;
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName(environment.getProperty("database.driver_class"));
+        SQLParam param = getParam();
+        config.setJdbcUrl(param.url);
+        config.setUsername(param.user);
+        config.setPassword(param.password);
+        config.setMaximumPoolSize(10);
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        return new HikariDataSource(config);
     }
 
+    private record SQLParam(String url, String user, String password) {}
+
+    private SQLParam getParam() {
+        String url = System.getenv("HEROKU_DB_URL");
+        if (url == null) {
+            url = environment.getProperty("database.url");
+        }
+
+        String user = System.getenv("HEROKU_DB_USER");
+        if (user == null) {
+            user = environment.getProperty("database.username");
+        }
+
+        String password = System.getenv("HEROKU_DB_PASSWORD");
+        if (password == null) {
+            password = environment.getProperty("database.password");
+        }
+        return new SQLParam(url, user, password);
+    }
 
     @Bean
-    @DependsOn("liquibase")
-    public LocalSessionFactoryBean getSessionFactory() {
+//    @DependsOn("liquibase")
+    public LocalSessionFactoryBean getSessionFactory(DataSource dataSource) {
         LocalSessionFactoryBean sessionFactoryBean = new LocalSessionFactoryBean();
-        sessionFactoryBean.setDataSource(getDataSource());
+        sessionFactoryBean.setDataSource(dataSource);
         Properties properties = new Properties();
-
-        String url = System.getenv("HEROKU_DB_URL");
-        String user = System.getenv("HEROKU_DB_USER");
-        String password = System.getenv("HEROKU_DB_PASSWORD");
-        if (url != null && user != null && password != null) {
-            properties.put("hibernate.connection.url", url);
-            properties.put("hibernate.connection.username", user);
-            properties.put("hibernate.connection.password", password);
-        }
-        properties.put(SHOW_SQL, Objects.requireNonNull(environment.getProperty(SHOW_SQL)));
-        properties.put(HBM2DDL_AUTO, Objects.requireNonNull(environment.getProperty(HBM2DDL_AUTO)));
-        properties.put(DIALECT, Objects.requireNonNull(environment.getProperty(DIALECT)));
-
-        properties.put(C3P0_MIN_SIZE, Objects.requireNonNull(environment.getProperty(C3P0_MIN_SIZE)));
-        properties.put(C3P0_MAX_SIZE, Objects.requireNonNull(environment.getProperty(C3P0_MAX_SIZE)));
-        properties.put(C3P0_ACQUIRE_INCREMENT, Objects.requireNonNull(environment.getProperty(C3P0_ACQUIRE_INCREMENT)));
-        properties.put(C3P0_TIMEOUT, Objects.requireNonNull(environment.getProperty(C3P0_TIMEOUT)));
-        properties.put(C3P0_MAX_STATEMENTS, Objects.requireNonNull(environment.getProperty(C3P0_MAX_STATEMENTS)));
-
+        SQLParam param = getParam();
+        properties.put("database.url", param.url);
+        properties.put("hibernate.dialect", environment.getProperty("database.dialect"));
         sessionFactoryBean.setHibernateProperties(properties);
-        sessionFactoryBean.setPackagesToScan(environment.getProperty(ENTITY_PACKAGE));
+        sessionFactoryBean.setPackagesToScan("com.softserve.entity");
 
         return sessionFactoryBean;
     }
 
     @Bean
-    public HibernateTransactionManager getTransactionManager() {
+    public HibernateTransactionManager getTransactionManager(SessionFactory sessionFactory) {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-        transactionManager.setSessionFactory(getSessionFactory().getObject());
+        transactionManager.setSessionFactory(sessionFactory);
         return transactionManager;
     }
 
     @Bean
-    public SpringLiquibase liquibase() {
+    public SpringLiquibase liquibase(DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setChangeLog("classpath:db/changelog/db.changelog-master.yaml");
-        liquibase.setDataSource(getDataSource());
+        liquibase.setDataSource(dataSource);
         liquibase.setShouldRun(environment.getProperty("liquibase.should_run", Boolean.class, Boolean.TRUE));
         return liquibase;
     }

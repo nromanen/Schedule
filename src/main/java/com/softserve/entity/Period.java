@@ -1,11 +1,18 @@
 package com.softserve.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.NamedQuery;
 import lombok.*;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -22,6 +29,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "periods")
 public class Period implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 3666106716845867008L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

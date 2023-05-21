@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collection;
 
 public class JwtUser implements UserDetails {
 
+    @Serial
+    private static final long serialVersionUID = 8073897833466670088L;
     private final Long id;
     private final String email;
     private final String password;

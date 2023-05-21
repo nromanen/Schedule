@@ -1,5 +1,6 @@
 package com.softserve.assertions;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.softserve.exception.apierror.ApiError;
 import com.softserve.exception.apierror.ApiValidationError;
 import org.springframework.http.MediaType;

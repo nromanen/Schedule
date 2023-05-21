@@ -7,6 +7,7 @@ import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.IncorrectEmailException;
 import com.softserve.exception.IncorrectPasswordException;
 import com.softserve.repository.UserRepository;
+import com.softserve.security.jwt.JwtUserFactory;
 import com.softserve.service.MailService;
 import com.softserve.service.UserService;
 import com.softserve.util.Constants;
@@ -15,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -170,6 +173,11 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setPassword(PasswordGeneratingUtil.generatePassword());
         return registration(user, MessageFormat.format(AUTOMATIC_REGISTRATION_MESSAGE, user.getEmail()));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return JwtUserFactory.create(findByEmail(username));
     }
 
     /**

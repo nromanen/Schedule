@@ -11,6 +11,7 @@ import com.softserve.service.*;
 import com.softserve.util.temporary_notification.DeletePeriodVacationNotify;
 import com.softserve.util.temporary_notification.DeleteTeacherVacationNotify;
 import com.softserve.util.temporary_notification.DeleteVacationNotify;
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SerializationUtils;
 import org.hibernate.Hibernate;
@@ -19,7 +20,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

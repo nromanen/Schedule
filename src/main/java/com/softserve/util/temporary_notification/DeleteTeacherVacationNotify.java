@@ -3,12 +3,12 @@ package com.softserve.util.temporary_notification;
 import com.softserve.entity.TemporarySchedule;
 import com.softserve.service.MailService;
 import com.softserve.service.TemporaryScheduleService;
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import javax.mail.MessagingException;
 
 @Slf4j
 @Component

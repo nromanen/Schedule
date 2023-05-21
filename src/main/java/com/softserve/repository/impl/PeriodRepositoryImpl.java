@@ -2,10 +2,10 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Period;
 import com.softserve.repository.PeriodRepository;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,9 +43,9 @@ public class PeriodRepositoryImpl extends BasicRepositoryImpl<Period, Long> impl
     public Optional<Period> findByName(String name) {
         log.info("Enter into findByName method with name: {}", name);
         TypedQuery<Period> query = sessionFactory.getCurrentSession()
-                .createNamedQuery("findName", Period.class)
-                .setMaxResults(1)
-                .setParameter("name", name);
+                                                 .createNamedQuery("findName", Period.class)
+                                                 .setMaxResults(1)
+                                                 .setParameter("name", name);
         List<Period> periods = query.getResultList();
         if (periods.isEmpty()) {
             return Optional.empty();
