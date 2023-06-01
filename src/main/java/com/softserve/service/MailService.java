@@ -2,8 +2,8 @@ package com.softserve.service;
 
 import com.softserve.dto.EmailMessageDTO;
 import com.softserve.entity.TemporarySchedule;
+import jakarta.mail.MessagingException;
 
-import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
 
 public interface MailService {

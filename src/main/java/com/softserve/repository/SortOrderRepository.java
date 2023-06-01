@@ -3,6 +3,7 @@ package com.softserve.repository;
 import com.softserve.entity.interfaces.SortableOrder;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.SortOrderNotExistsException;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
 import java.util.Optional;
 
 @Slf4j

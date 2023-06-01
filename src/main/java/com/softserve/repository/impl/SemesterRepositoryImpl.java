@@ -4,12 +4,12 @@ import com.softserve.entity.Period;
 import com.softserve.entity.Semester;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.util.Constants;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;
@@ -92,8 +92,8 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
     public Optional<Semester> getCurrentSemester() {
         log.info("In getCurrentSemester method");
         TypedQuery<Semester> query = sessionFactory.getCurrentSession()
-                .createNamedQuery("findCurrentSemester", Semester.class)
-                .setMaxResults(1);
+                                                   .createNamedQuery("findCurrentSemester", Semester.class)
+                                                   .setMaxResults(1);
         query.setParameter("currentSemester", true);
         List<Semester> semesters = query.getResultList();
         if (semesters.isEmpty()) {

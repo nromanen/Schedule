@@ -17,8 +17,12 @@ import java.util.Optional;
 
 @Mapper(componentModel = "spring", uses = GroupMapper.class)
 public abstract class StudentMapper {
-    @Autowired
     protected UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
 
     @InheritInverseConfiguration
     @Mapping(target = "email", source = "user", qualifiedByName = "userToEmail")
@@ -43,7 +47,7 @@ public abstract class StudentMapper {
     @Mapping(target = "group", source = "groupDTO")
     public abstract Student studentImportDTOToStudent(StudentImportDTO studentImportDTO);
 
-    @Mapping(target = "user", source = "email", qualifiedByName = "userToEmail")
+    @Mapping(target = "user", source = "email", qualifiedByName = "emailToUser")
     public abstract Student studentDTOToStudent(StudentDTO studentDTO);
 
     @Named("emailToUser")
@@ -58,7 +62,7 @@ public abstract class StudentMapper {
     @Mapping(target = "email", source = "user", qualifiedByName = "userToEmail")
     public abstract StudentWithoutGroupDTO studentToStudentWithoutGroupDTO(Student student);
 
-    @Mapping(target = "user", source = "email", qualifiedByName = "userToEmail")
+    @Mapping(target = "user", source = "email", qualifiedByName = "emailToUser")
     @Mapping(target = "group", ignore = true)
     public abstract Student studentWithoutGroupDTOToStudent(StudentWithoutGroupDTO studentWithoutGroupDTO);
 

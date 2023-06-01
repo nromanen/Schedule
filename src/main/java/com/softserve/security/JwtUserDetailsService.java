@@ -1,6 +1,5 @@
 package com.softserve.security;
 
-import com.softserve.entity.User;
 import com.softserve.security.jwt.JwtUserFactory;
 import com.softserve.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,8 +18,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByEmail(username);
-
-        return JwtUserFactory.create(user);
+        return JwtUserFactory.create(userService.findByEmail(username));
     }
 }

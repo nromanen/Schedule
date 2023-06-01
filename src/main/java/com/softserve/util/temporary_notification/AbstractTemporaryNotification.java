@@ -1,11 +1,11 @@
 package com.softserve.util.temporary_notification;
 
 import com.softserve.entity.TemporarySchedule;
+import jakarta.mail.MessagingException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.mail.MessagingException;
 
 @NoArgsConstructor
 @Setter

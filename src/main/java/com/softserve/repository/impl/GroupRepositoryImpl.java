@@ -2,12 +2,12 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.Group;
 import com.softserve.repository.GroupRepository;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 

@@ -4,6 +4,14 @@ import com.softserve.dto.EmailMessageDTO;
 import com.softserve.entity.TemporarySchedule;
 import com.softserve.exception.MessageNotSendException;
 import com.softserve.service.MailService;
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
+import jakarta.mail.util.ByteArrayDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,19 +24,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.annotation.PostConstruct;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
@@ -122,13 +120,13 @@ public class MailServiceImpl implements MailService {
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
 
         mimeMessage.setFrom(new InternetAddress(credentialsUsername));
-        mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
+        mimeMessage.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiver));
 
         mimeMessage.setSubject(subject);
 
         DataSource fds = new ByteArrayDataSource(bos.toByteArray(), "application/pdf");
 
-        Multipart multipart = new MimeMultipart();
+        MimeMultipart multipart = new MimeMultipart();
 
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setText(message, "utf-8", "html");

@@ -4,13 +4,13 @@ import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.repository.RoomRepository;
 import com.softserve.util.Constants;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Optional;

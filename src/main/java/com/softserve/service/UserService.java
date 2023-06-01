@@ -2,6 +2,8 @@ package com.softserve.service;
 
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.List;
@@ -86,6 +88,8 @@ public interface UserService extends BasicService<User, Long> {
      * @throws com.softserve.exception.IncorrectPasswordException if password was incorrect or not strong enough
      */
     User automaticRegistration(String email, Role role);
+
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
 }
 

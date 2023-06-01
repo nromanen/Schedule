@@ -2,10 +2,10 @@ package com.softserve.repository.impl;
 
 import com.softserve.entity.User;
 import com.softserve.repository.UserRepository;
+import jakarta.persistence.TypedQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 

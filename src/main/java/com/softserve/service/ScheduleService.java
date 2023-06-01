@@ -183,7 +183,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      * @param language   the locale of the message
      * @throws MessagingException if an error occurred while sending the letter
      */
-    void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException;
+    void sendScheduleToTeacher(Long semesterId, Long teacherId, Locale language) throws MessagingException, jakarta.mail.MessagingException;
 
     /**
      * Returns lists of schedules grouped by rooms.

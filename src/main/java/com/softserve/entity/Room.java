@@ -1,5 +1,13 @@
 package com.softserve.entity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import com.softserve.entity.interfaces.SortableOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,9 +16,9 @@ import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.io.Serial;
 import java.io.Serializable;
 
 
@@ -21,12 +29,14 @@ import java.io.Serializable;
 @Table(name = "rooms")
 
 @FilterDef(name = "roomDisableFilter", parameters = {
-        @ParamDef(name = "disable", type = "boolean"),
+        @ParamDef(name = "disable", type = boolean.class),
 })
 
 @Filter(name = "roomDisableFilter", condition = "disable = :disable")
 
 public class Room implements Serializable, SortableOrder {
+    @Serial
+    private static final long serialVersionUID = 2833932227648855541L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

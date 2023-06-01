@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -156,8 +157,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //Handle HttpMessageNotReadableException. Happens when request JSON is malformed.
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers,
-                                                                  HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ServletWebRequest servletWebRequest = (ServletWebRequest) request;
         log.info("{} to {}", servletWebRequest.getHttpMethod(), servletWebRequest.getRequest().getServletPath());
         String error = "Malformed JSON request";
@@ -169,7 +169,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(
             MissingServletRequestParameterException ex, HttpHeaders headers,
-            HttpStatus status, WebRequest request) {
+            HttpStatusCode status, WebRequest request) {
         String error = ex.getParameterName() + " parameter is missing";
         log.error(ex.getMessage());
         return buildResponseEntity(new ApiError(BAD_REQUEST, error, ex));
@@ -180,7 +180,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(
             HttpMediaTypeNotSupportedException ex,
             HttpHeaders headers,
-            HttpStatus status,
+            HttpStatusCode status,
             WebRequest request) {
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
@@ -195,7 +195,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
             HttpHeaders headers,
-            HttpStatus status,
+            HttpStatusCode status,
             WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage("Validation error");
@@ -208,7 +208,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // Handle HttpMessageNotWritableException.
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers,
-                                                                  HttpStatus status, WebRequest request) {
+                                                                  HttpStatusCode status, WebRequest request) {
         String error = "Error writing JSON output";
         log.error(ex.getMessage());
         return buildResponseEntity(new ApiError(INTERNAL_SERVER_ERROR, error, ex));
@@ -217,19 +217,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // Handle NoHandlerFoundException.
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(
-            NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+            NoHandlerFoundException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ApiError apiError = new ApiError(BAD_REQUEST);
         apiError.setMessage("Could not find the " + ex.getHttpMethod() + " method for URL " + ex.getRequestURL());
         apiError.setDebugMessage(ex.getMessage());
         log.error(ex.getMessage());
         return buildResponseEntity(apiError);
-    }
-
-    // Handle javax.persistence.EntityNotFoundException
-    @ExceptionHandler(javax.persistence.EntityNotFoundException.class)
-    protected ResponseEntity<Object> handleEntityNotFound(javax.persistence.EntityNotFoundException ex) {
-        log.error(ex.getMessage());
-        return buildResponseEntity(new ApiError(HttpStatus.NOT_FOUND, ex));
     }
 
     // Handle Exception, handle generic Exception.class

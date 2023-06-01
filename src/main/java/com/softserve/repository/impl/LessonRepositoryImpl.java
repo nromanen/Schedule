@@ -3,13 +3,17 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Lesson;
 import com.softserve.repository.LessonRepository;
 import com.softserve.util.Constants;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 

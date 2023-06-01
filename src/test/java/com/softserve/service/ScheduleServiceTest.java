@@ -7,6 +7,7 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.service.impl.ScheduleServiceImpl;
+import jakarta.mail.MessagingException;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -14,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.mail.MessagingException;
 import java.time.DayOfWeek;
 import java.util.*;
 

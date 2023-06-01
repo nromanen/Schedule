@@ -1,6 +1,6 @@
 package com.softserve.config;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -32,15 +31,11 @@ public class DBConfigTest {
 
     @Bean
     public DataSource getDataSource() {
-        ComboPooledDataSource dataSource = new ComboPooledDataSource();
-        try {
-            dataSource.setDriverClass(Objects.requireNonNull(environment.getProperty(DRIVER)));
-        } catch (PropertyVetoException e) {
-            System.exit(1);
-        }
+        HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty(DRIVER)));
 
         dataSource.setJdbcUrl(Objects.requireNonNull(environment.getProperty(URL)));
-        dataSource.setUser(Objects.requireNonNull(environment.getProperty(USER)));
+        dataSource.setUsername(Objects.requireNonNull(environment.getProperty(USER)));
         dataSource.setPassword(Objects.requireNonNull(environment.getProperty(PASS)));
         return dataSource;
     }

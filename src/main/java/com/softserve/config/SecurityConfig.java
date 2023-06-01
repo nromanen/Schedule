@@ -6,18 +6,17 @@ import com.softserve.security.jwt.JwtConfigurer;
 import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
 import org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService;
@@ -27,6 +26,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,14 +38,14 @@ import java.util.stream.Stream;
 
 @Configuration
 @EnableWebSecurity
-@EnableOAuth2Client
+//@EnableOAuth2Client
 @PropertySource({"classpath:social.properties", "classpath:cors.properties"})
 @ComponentScan(basePackages = {"com.softserve.*"})
 @EnableGlobalMethodSecurity(
         prePostEnabled = true,
         securedEnabled = true,
         jsr250Enabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig{
     private static final String CLIENT_PROPERTY_KEY = "spring.security.oauth2.client.registration.";
     private static final String GOOGLE = "google";
     private static final String FACEBOOK = "facebook";
@@ -79,87 +79,82 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //TEACHER
     private static final String GROUPS_BY_TEACHER_ID_ENDPOINT = "/groups/teacher/{teacherId}";
     private static final String GROUP_WITH_STUDENTS = "/groups/{id}/with-students";
-    private final JwtTokenProvider jwtTokenProvider;
     private final Environment env;
-    private final UserService userService;
 
-
-    @Autowired
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, Environment env, UserService userService) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public SecurityConfig(Environment env) {
         this.env = env;
-        this.userService = userService;
     }
 
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+	    return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .cors()
-                .and()
-                .httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT,
-                        AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT,
-                        ALL_TEACHERS_PUBLIC_ENDPOINT, HOME_ENDPOINT, LOGIN_ENDPOINT, ADMIN_ENDPOINT,
-                        FRONTEND_SCHEDULE_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT,
-                        GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT, GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT,
-                        DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
-                .antMatchers(GROUPS_BY_TEACHER_ID_ENDPOINT, GROUP_WITH_STUDENTS).hasAnyRole("MANAGER", "TEACHER")
-                .antMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
-                        ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT,
-                        DEPARTMENTS_ENDPOINT).hasRole("MANAGER")
-                .anyRequest().authenticated()
-                .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth_login")
-                .and()
-                .clientRegistrationRepository(clientRegistrationRepository())
-                .authorizedClientService(clientService())
-                .userInfoEndpoint()
-                .and()
-                .successHandler(authenticationSuccessHandler())
-                .and()
-                .apply(new JwtConfigurer(jwtTokenProvider));
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationSuccessHandler authenticationSuccessHandler,
+                                           ClientRegistrationRepository clientRegistrationRepository, JwtTokenProvider jwtTokenProvider) throws Exception {
+	    http
+			    .cors()
+			    .and()
+			    .httpBasic().disable()
+			    .csrf().disable()
+			    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			    .and()
+			    .authorizeHttpRequests()
+			    .requestMatchers(FRONTEND_ACTIVATION_PAGE_ENDPOINT, DOWNLOAD_SCHEDULE_ENDPOINT,
+					    AUTH_ENDPOINT, SCHEDULE_FOR_USERS_ENDPOINT, GROUPS_BY_SEMESTER_ID_PUBLIC_ENDPOINT,
+					    ALL_TEACHERS_PUBLIC_ENDPOINT, HOME_ENDPOINT, LOGIN_ENDPOINT, ADMIN_ENDPOINT,
+					    FRONTEND_SCHEDULE_ENDPOINT, ALL_CLASSES_PUBLIC_ENDPOINT, ALL_SEMESTERS_PUBLIC_ENDPOINT,
+					    GROUPS_FOR_DEFAULT_SEMESTER_PUBLIC_ENDPOINT, GROUPS_FOR_CURRENT_SEMESTER_PUBLIC_ENDPOINT,
+					    DEFAULT_SEMESTER_PUBLIC_ENDPOINT).permitAll()
+			    .requestMatchers(GROUPS_BY_TEACHER_ID_ENDPOINT, GROUP_WITH_STUDENTS).hasAnyRole("MANAGER", "TEACHER")
+			    .requestMatchers(MANAGER_ENDPOINT, CLASSES_ENDPOINT, GROUPS_ENDPOINT, LESSONS_ENDPOINT,
+					    ROOMS_ENDPOINT, SUBJECTS_ENDPOINT, TEACHERS_ENDPOINT, SEMESTERS_ENDPOINT, ROOM_TYPES_ENDPOINT,
+					    DEPARTMENTS_ENDPOINT).hasRole("MANAGER")
+			    .anyRequest().authenticated()
+			    .and()
+			    .oauth2Login()
+			    .authorizationEndpoint()
+			    .baseUri("/oauth_login")
+			    .and()
+			    .clientRegistrationRepository(clientRegistrationRepository)
+			    .authorizedClientService(clientService())
+			    .userInfoEndpoint()
+			    .and()
+			    .successHandler(authenticationSuccessHandler)
+			    .and()
+			    .apply(new JwtConfigurer(jwtTokenProvider));
 
-        http
-                .exceptionHandling()
-                .authenticationEntryPoint((request, response, e) -> {
-                            response.setContentType("application/json;charset=UTF-8");
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                            response.getWriter().write(new JSONObject()
-                                    .put("message", "Access denied")
-                                    .toString());
-                        }
-                );
+	    http
+			    .exceptionHandling()
+			    .authenticationEntryPoint((request, response, e) -> {
+						    response.setContentType("application/json;charset=UTF-8");
+						    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+						    response.getWriter().write(new JSONObject()
+								    .put("message", "Access denied")
+								    .toString());
+					    }
+			    );
+        return http.build();
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/v2/api-docs",
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/v2/api-docs",
                 "/configuration/ui",
                 "/swagger-resources/**",
                 "/configuration/security",
                 "/swagger-ui.html",
                 "/favicon.ico",
-                "/**/*.png",
-                "/**/*.gif",
-                "/**/*.svg",
-                "/**/*.jpg",
-                "/**/*.html",
-                "/**/*.css",
-                "/**/*.js",
-                "/**/*.json",
-                "/**/*.map",
+                "/*/*.png",
+                "/*/*.gif",
+                "/*/*.svg",
+                "/*/*.jpg",
+                "/*/*.html",
+                "/*/*.css",
+                "/*/*.js",
+                "/*/*.json",
+                "/*/*.map",
                 "/assets/**",
                 "/webjars/**");
     }
@@ -210,7 +205,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+    public AuthenticationSuccessHandler authenticationSuccessHandler(UserService userService, JwtTokenProvider jwtTokenProvider) {
         return (request, response, authentication) -> {
             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
             User user = userService.createSocialUser(oAuth2User);
