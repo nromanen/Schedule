@@ -1,7 +1,11 @@
 package com.softserve.config;
 
 import com.softserve.entity.User;
+import com.softserve.exception.AuthGoogleEmailDontExistException;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.SocialClientRegistrationException;
+import com.softserve.repository.UserRepository;
+import com.softserve.security.customFilter.GoogleAuthFilter;
 import com.softserve.security.jwt.JwtConfigurer;
 import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
@@ -28,6 +32,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -91,6 +96,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.userService = userService;
     }
 
+    @Autowired
+    private GoogleAuthFilter googleAuthFilter;
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -100,6 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(googleAuthFilter, LogoutFilter.class)
                 .cors()
                 .and()
                 .httpBasic().disable()
@@ -213,11 +222,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return (request, response, authentication) -> {
             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-            User user = userService.createSocialUser(oAuth2User);
 
             String url = env.getProperty("backend.url");
-            String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
-            response.sendRedirect(url + "login?social=true&token=" + jwtToken);
+            String email = oAuth2User.getAttribute("email");
+            try {
+                User user = userService.findByEmail(email);
+
+                String jwtToken = jwtTokenProvider.createToken(user.getEmail(), user.getRole().toString());
+                response.sendRedirect(url + "login?social=true&token=" + jwtToken);
+            } catch (EntityNotFoundException ex) {
+                throw new AuthGoogleEmailDontExistException("Email dont registered in system: ", email);
+            }
         };
     }
 }
