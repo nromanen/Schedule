@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import { FaChalkboardTeacher, FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {GiSightDisabled, IoMdEye} from 'react-icons/all';
+import {FaChalkboardTeacher, FaEdit} from 'react-icons/fa';
+import {MdDelete} from 'react-icons/md';
+import {useTranslation} from 'react-i18next';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import Card from '../../share/Card/Card';
 import AddDepartment from '../../components/AddDepartmentForm/AddDepartmentForm';
-import { search } from '../../helper/search';
+import {search} from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
-import { handleSnackbarCloseService } from '../../services/snackbarService';
+import {handleSnackbarCloseService} from '../../services/snackbarService';
 import {
     clearDepartment,
     createDepartmentService,
@@ -22,18 +22,18 @@ import {
     setEnabledDepartmentService,
     updateDepartmentService,
 } from '../../services/departmentService';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import {setIsOpenConfirmDialog} from '../../actions/dialog';
 import CustomDialog from '../Dialogs/CustomDialog';
 import ShowDepartmentDataDialog from '../../share/DialogWindows/_dialogWindows/ShowDepartmentDataDialog';
-import { dialogTypes } from '../../constants/dialogs';
+import {dialogTypes} from '../../constants/dialogs';
 import {
-    EDIT_TITLE,
-    DEPARTMENT_LABEL,
     DELETE_TITLE,
+    DEPARTMENT_LABEL,
+    EDIT_TITLE,
     SHOW_TEACHER_TITLE,
 } from '../../constants/translationLabels/formElements';
-import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
-import { getAllPublicTeachersByDepartmentStart } from '../../actions/teachers';
+import {COMMON_SET_DISABLED, COMMON_SET_ENABLED} from '../../constants/translationLabels/common';
+import {getAllPublicTeachersByDepartmentStart} from '../../actions/teachers';
 
 const DepartmentPage = (props) => {
     const {

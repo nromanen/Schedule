@@ -1,7 +1,7 @@
 import React from 'react';
-import { Field } from 'redux-form';
-import { useTranslation } from 'react-i18next';
-import { createClasslabel } from '../../../utils/formUtils';
+import {Field} from 'redux-form';
+import {useTranslation} from 'react-i18next';
+import {createClasslabel} from '../../../utils/formUtils';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
 const SetSemesterCheckboxes = (props) => {

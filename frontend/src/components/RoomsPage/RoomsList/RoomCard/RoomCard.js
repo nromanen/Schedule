@@ -1,15 +1,12 @@
 import React from 'react';
-import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
-import { useTranslation } from 'react-i18next';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import { dialogTypes } from '../../../../constants/dialogs';
+import {FaEdit} from 'react-icons/fa';
+import {MdDelete} from 'react-icons/md';
+import {useTranslation} from 'react-i18next';
+import {GiSightDisabled, IoMdEye} from 'react-icons/all';
+import {dialogTypes} from '../../../../constants/dialogs';
 import Card from '../../../../share/Card/Card';
-import {
-    COMMON_SET_DISABLED,
-    COMMON_SET_ENABLED,
-} from '../../../../constants/translationLabels/common';
-import { cardType } from '../../../../constants/cardType';
+import {COMMON_SET_DISABLED, COMMON_SET_ENABLED,} from '../../../../constants/translationLabels/common';
+import {cardType} from '../../../../constants/cardType';
 import './RoomCard.scss';
 
 const RoomCard = (props) => {

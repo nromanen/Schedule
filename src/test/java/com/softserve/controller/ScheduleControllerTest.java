@@ -1,59 +1,50 @@
 package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.config.DBConfigTest;
-import com.softserve.config.MyWebAppInitializer;
-import com.softserve.config.WebMvcConfig;
-import com.softserve.dto.ScheduleSaveDTO;
-import com.softserve.entity.Lesson;
+import com.softserve.dto.*;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.service.*;
+import com.softserve.service.GroupService;
+import com.softserve.service.LessonService;
+import com.softserve.service.SubjectService;
+import com.softserve.service.TeacherService;
 import org.assertj.core.api.SoftAssertions;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsEmptyCollection;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.time.DayOfWeek;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.softserve.entity.enums.LessonType.LECTURE;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Category(IntegrationTestCategory.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
-@WebAppConfiguration
+@Tag("integration")
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
-@Sql(value = "classpath:create-schedule-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class ScheduleControllerTest {
+@Sql(value = "classpath:create-schedule-before.sql")
+class ScheduleControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @Autowired
-    private WebApplicationContext wac;
-
-    @Autowired
-    private ScheduleService scheduleService;
+    private ObjectMapper objectMapper;
 
     @Autowired
     private TeacherService teacherService;
@@ -67,15 +58,8 @@ public class ScheduleControllerTest {
     @Autowired
     private LessonService lessonService;
 
-    @Before
-    public void setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
-    }
-
     @Test
-    public void getListOfAllSchedules() throws Exception {
+    void getListOfAllSchedules() throws Exception {
         mockMvc.perform(get("/schedules").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -83,7 +67,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void getListOfAllSchedulesBySemesterId() throws Exception {
+    void getListOfAllSchedulesBySemesterId() throws Exception {
         mockMvc.perform(get("/schedules/semester").param("semesterId", "4").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -91,7 +75,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void returnEmptyListIfGetListOfAllSchedulesByNoExistSemester() throws Exception {
+    void returnEmptyListIfGetListOfAllSchedulesByNoExistSemester() throws Exception {
         mockMvc.perform(get("/schedules/semester").param("semesterId", "100").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -100,29 +84,49 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void getInfoForNoExistScheduleBySemesterIdByDayOfWeekByEvenOddByClassIdByLessonId() throws Exception {
+    void getInfoForNoExistScheduleBySemesterIdByDayOfWeekByEvenOddByClassIdByLessonId() throws Exception {
+        // Create and save teacher
         Teacher teacher = new Teacher();
         teacher.setPatronymic("Ivanovych");
         teacher.setSurname("Tymysh");
         teacher.setName("Oleg");
         teacher.setPosition("docent");
-        teacherService.save(teacher);
-        Lesson lesson = new Lesson();
-        lesson.setHours(2);
-        lesson.setSubjectForSite("lesson for getInfo");
-        lesson.setLinkToMeeting("some link....");
-        lesson.setLessonType(LECTURE);
-        lesson.setSubject(subjectService.getById(4L));
-        lesson.setGroup(groupService.getById(4L));
-        lesson.setTeacher(teacher);
-        lessonService.save(lesson);
+        Teacher savedTeacher = teacherService.save(teacher);
+
+        // Create TeacherNameDTO
+        TeacherNameDTO teacherNameDTO = new TeacherNameDTO();
+        teacherNameDTO.setId(savedTeacher.getId());
+        teacherNameDTO.setName(savedTeacher.getName());
+        teacherNameDTO.setSurname(savedTeacher.getSurname());
+        teacherNameDTO.setPatronymic(savedTeacher.getPatronymic());
+
+        // Create SubjectDTO
+        SubjectDTO subjectDTO = new SubjectDTO();
+        subjectDTO.setId(4L);
+
+        // Create GroupDTO
+        GroupDTO groupDTO = new GroupDTO();
+        groupDTO.setId(4L);
+
+        // Create LessonInfoDTO
+        LessonInfoDTO lessonDTO = new LessonInfoDTO();
+        lessonDTO.setHours(2);
+        lessonDTO.setSubjectForSite("lesson for getInfo");
+        lessonDTO.setLinkToMeeting("some link....");
+        lessonDTO.setLessonType(LECTURE);
+        lessonDTO.setSubject(subjectDTO);
+        lessonDTO.setGroup(groupDTO);
+        lessonDTO.setTeacher(teacherNameDTO);
+        lessonDTO.setSemesterId(4L);
+
+        LessonInfoDTO savedLesson = lessonService.save(lessonDTO);
 
         mockMvc.perform(get("/schedules/data-before")
                         .param("semesterId", "4")
                         .param("dayOfWeek", "MONDAY")
                         .param("evenOdd", "EVEN")
                         .param("classId", "6")
-                        .param("lessonId", lesson.getId().toString())
+                        .param("lessonId", savedLesson.getId().toString())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -130,7 +134,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void returnBadRequestIfGetInfoForExistScheduleBySemesterIdByDayOfWeekByEvenOddByClassIdByLessonId() throws Exception {
+    void returnBadRequestIfGetInfoForExistScheduleBySemesterIdByDayOfWeekByEvenOddByClassIdByLessonId() throws Exception {
         mockMvc.perform(get("/schedules/data-before")
                         .param("semesterId", "4")
                         .param("dayOfWeek", "MONDAY")
@@ -144,7 +148,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void getFullScheduleForGroup() throws Exception {
+    void getFullScheduleForGroup() throws Exception {
         mockMvc.perform(get("/schedules/full/groups")
                         .param("semesterId", "4")
                         .param("groupId", "4")
@@ -155,7 +159,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void returnEmptyListOfScheduleIfGetFullScheduleForNotFoundedGroup() throws Exception {
+    void returnEmptyListOfScheduleIfGetFullScheduleForNotFoundedGroup() throws Exception {
         mockMvc.perform(get("/schedules/full/groups")
                         .param("semesterId", "4")
                         .param("groupId", "10")
@@ -167,7 +171,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void getFullScheduleForSemester() throws Exception {
+    void getFullScheduleForSemester() throws Exception {
         mockMvc.perform(get("/schedules/full/semester")
                         .param("semesterId", "4")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -177,7 +181,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void returnNotFoundIfGetFullScheduleForNotFoundedSemester() throws Exception {
+    void returnNotFoundIfGetFullScheduleForNotFoundedSemester() throws Exception {
         mockMvc.perform(get("/schedules/full/semester")
                         .param("semesterId", "10")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -187,7 +191,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void getFullScheduleForTeacher() throws Exception {
+    void getFullScheduleForTeacher() throws Exception {
         mockMvc.perform(get("/schedules/full/teachers")
                         .param("semesterId", "4")
                         .param("teacherId", "4")
@@ -198,7 +202,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void returnNotFoundIfGetFullScheduleForNotFoundedTeacher() throws Exception {
+    void returnNotFoundIfGetFullScheduleForNotFoundedTeacher() throws Exception {
         mockMvc.perform(get("/schedules/full/teachers")
                         .param("semesterId", "4")
                         .param("teacherId", "10")
@@ -209,7 +213,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void getFullScheduleForRoom() throws Exception {
+    void getFullScheduleForRoom() throws Exception {
         mockMvc.perform(get("/schedules/full/rooms")
                         .param("semesterId", "4")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -219,7 +223,7 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void saveSchedule() throws Exception {
+    void saveSchedule() throws Exception {
         ScheduleSaveDTO scheduleSaveDTO = new ScheduleSaveDTO();
         scheduleSaveDTO.setDayOfWeek(DayOfWeek.TUESDAY);
         scheduleSaveDTO.setEvenOdd(EvenOdd.ODD);
@@ -234,13 +238,14 @@ public class ScheduleControllerTest {
     }
 
     @Test
-    public void saveScheduleWithGroupedLessons() throws Exception {
+    void saveScheduleWithGroupedLessons() throws Exception {
         ScheduleSaveDTO scheduleSaveDTO = new ScheduleSaveDTO();
         scheduleSaveDTO.setDayOfWeek(DayOfWeek.TUESDAY);
         scheduleSaveDTO.setEvenOdd(EvenOdd.ODD);
         scheduleSaveDTO.setLessonId(8L);
         scheduleSaveDTO.setPeriodId(5L);
         scheduleSaveDTO.setRoomId(4L);
+
         ScheduleSaveDTO scheduleGrouped = new ScheduleSaveDTO();
         scheduleGrouped.setDayOfWeek(DayOfWeek.TUESDAY);
         scheduleGrouped.setEvenOdd(EvenOdd.ODD);
@@ -258,38 +263,42 @@ public class ScheduleControllerTest {
         List<ScheduleSaveDTO> savedSchedules = Arrays.asList(objectMapper.readValue(contentAsString, ScheduleSaveDTO[].class));
 
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(scheduleSaveDTO).isEqualToComparingOnlyGivenFields(savedSchedules.get(0),
-                "dayOfWeek", "evenOdd", "lessonId", "periodId", "roomId");
-        softAssertions.assertThat(scheduleGrouped).isEqualToComparingOnlyGivenFields(savedSchedules.get(1),
-                "dayOfWeek", "evenOdd", "lessonId", "periodId", "roomId");
+        softAssertions.assertThat(savedSchedules.get(0))
+                .usingRecursiveComparison()
+                .comparingOnlyFields("dayOfWeek", "evenOdd", "lessonId", "periodId", "roomId")
+                .isEqualTo(scheduleSaveDTO);
+        softAssertions.assertThat(savedSchedules.get(1))
+                .usingRecursiveComparison()
+                .comparingOnlyFields("dayOfWeek", "evenOdd", "lessonId", "periodId", "roomId")
+                .isEqualTo(scheduleGrouped);
         softAssertions.assertAll();
     }
 
-//  Uncomment when fix response statusCode
-    /*@Test
-    public void saveScheduleIfScheduleIsExist() throws Exception {
+    @Test
+    void saveScheduleIfScheduleIsExist() throws Exception {
+
         ScheduleSaveDTO scheduleSaveDTO = new ScheduleSaveDTO();
         scheduleSaveDTO.setDayOfWeek(DayOfWeek.MONDAY);
         scheduleSaveDTO.setEvenOdd(EvenOdd.EVEN);
         scheduleSaveDTO.setLessonId(4L);
         scheduleSaveDTO.setPeriodId(4L);
         scheduleSaveDTO.setRoomId(4L);
-        scheduleSaveDTO.setSemesterId(4L);
 
         mockMvc.perform(post("/schedules").content(objectMapper.writeValueAsString(scheduleSaveDTO))
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
-    }*/
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(containsString("already exists")));
+    }
 
     @Test
-    public void testDelete() throws Exception {
+    void testDelete() throws Exception {
         mockMvc.perform(delete("/schedules/{id}", 4)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void returnBadRequestIfSaveScheduleWhenEvenOddIsNull() throws Exception {
+    void returnBadRequestIfSaveScheduleWhenEvenOddIsNull() throws Exception {
         ScheduleSaveDTO scheduleSaveDTO = new ScheduleSaveDTO();
         scheduleSaveDTO.setDayOfWeek(DayOfWeek.MONDAY);
         scheduleSaveDTO.setEvenOdd(null);

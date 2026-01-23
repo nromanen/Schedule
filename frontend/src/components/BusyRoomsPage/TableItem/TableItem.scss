@@ -1,89 +1,126 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/variables.scss';
 
+// Main container for each period (contains ODD and EVEN weeks)
 .class-container {
+  position: relative;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 228px; // Fixed height for entire period (ODD + EVEN)
+
+  // Column width variants based on user selection
+  &.responsive-table-column-sm {
+    width: 100px;
+  }
+  &.responsive-table-column-base {
+    width: 130px;
+  }
+  &.responsive-table-column-lg {
+    width: 160px;
+  }
+
+  // Container for single week (ODD or EVEN)
+  // flex: 1 ensures each takes exactly 50% of parent height
+  .class-info-container {
     position: relative;
-    margin: 0;
-    .schedule-card {
-        background-color: $white;
-        margin: 5px;
-        border-radius: 5px;
-        box-shadow: 0 2px 8px $shadow-box;
-    }
-    .class-info-container {
-        position: relative;
-        width: $full-size;
-        height: 114px;
-        padding: 5px;
-        .class-info-data {
-            position: relative;
-            width: $full-size;
-            height: $full-size;
-            padding: 15px;
-            margin: 0px;
-            z-index: 1;
-            &:hover {
-                position: absolute;
-                z-index: 20;
-                height: unset;
-                margin: -5px;
-                min-height: 114px;
-                box-shadow: 0 0 8px 4px $blue-shadow-box;
-                .group-list-container {
-                    display: block;
-                }
-            }
-        }
-    }
-    .group-list-container {
-        display: -webkit-box;
-        text-align: center;
-        overflow: hidden;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-    }
-    .group-list {
-        display: initial;
-        margin: 2px;
-        font-size: $font-xs;
-        font-weight: bold;
-        &:after {
-            content: ',';
-        }
-        &:last-of-type::after {
-            display: none;
-        }
-    }
-    .week-type {
+    width: $full-size;
+    flex: 1;
+    padding: 5px;
+    box-sizing: border-box;
+
+    // Card with lesson data
+    .class-info-data {
+      position: relative;
+      width: $full-size;
+      height: 100%;
+      padding: 15px;
+      margin: 0;
+      z-index: 1;
+
+      // Expanded state on hover - shows full content
+      &:hover {
         position: absolute;
-        left: 10px;
-        top: -4px;
-        color: $gray1;
-        font-size: $font-2xs;
-        &::first-letter {
-            text-transform: uppercase;
+        z-index: 20;
+        height: unset;
+        margin: -5px;
+        min-height: 114px;
+        box-shadow: 0 0 8px 4px $blue-shadow-box;
+
+        .group-list-container {
+          display: block;
+          overflow: visible;
+          -webkit-line-clamp: unset;
+          white-space: normal;
+          word-wrap: break-word;
         }
+      }
     }
-    .possible,
-    .available,
-    .allow {
-        p {
-            color: $black;
-        }
+  }
+
+  // Card styling (background, shadow, etc.)
+  .schedule-card {
+    background-color: $white;
+    margin: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px $shadow-box;
+  }
+
+  // Container for group names list
+  // Uses line-clamp to truncate long lists
+  .group-list-container {
+    display: -webkit-box;
+    text-align: center;
+    overflow: hidden;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  // Individual group name styling
+  .group-list {
+    display: initial;
+    margin: 2px;
+    font-size: $font-xs;
+    font-weight: bold;
+
+    // Add comma after each group name
+    &:after {
+      content: ', ';
     }
-    .possible {
-        background-color: $warning-color;
+    // Remove comma after last group
+    &:last-of-type::after {
+      display: none;
     }
-    .available {
-        background-color: $green1;
+  }
+
+  // Week type label (ODD/EVEN indicator)
+  .week-type {
+    position: absolute;
+    left: 10px;
+    top: -4px;
+    color: $gray1;
+    font-size: $font-2xs;
+
+    &::first-letter {
+      text-transform: uppercase;
     }
-    .allow {
-        background-color: $green2;
+  }
+
+  // Color coding based on room availability
+  .possible,
+  .available,
+  .allow {
+    p {
+      color: $black;
     }
-    .not-allow {
-        background-color: $red2;
-        p {
-            color: $white;
-        }
-    }
+  }
+  .possible { background-color: $warning-color; } // Partially available
+  .available { background-color: $green1; }       // Fully available
+  .allow { background-color: $green2; }           // Allowed
+  .not-allow {                                    // Not available
+    background-color: $red2;
+    p { color: $white; }
+  }
 }

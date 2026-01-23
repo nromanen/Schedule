@@ -1,9 +1,9 @@
-import { connect } from 'react-redux';
-import { getAllScheduleItemsStart } from '../../actions/schedule';
+import {connect} from 'react-redux';
+import {getAllScheduleItemsStart} from '../../actions/schedule';
 import BusyRoomPage from '../../components/BusyRoomsPage/BusyRoomsPage';
-import { getBusyRoomsStart } from '../../actions/rooms';
-import { getClassScheduleListStart } from '../../actions/classes';
-import { setScheduleLoading } from '../../actions';
+import {getBusyRoomsStart} from '../../actions/rooms';
+import {getClassScheduleListStart} from '../../actions/classes';
+import {setScheduleLoading} from '../../actions';
 
 const mapStateToProps = (state) => ({
     busyRooms: state.rooms.rooms,

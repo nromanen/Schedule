@@ -27,16 +27,6 @@ public interface TeacherService extends BasicService<Teacher, Long> {
     Teacher update(TeacherForUpdateDTO teacherForUpdateDTO);
 
     /**
-     * Returns joined teacher with user.
-     *
-     * @param teacherId the id of the teacher
-     * @param userId    the id of the user
-     * @return the joined teacher with user
-     * @throws com.softserve.exception.EntityAlreadyExistsException if user already exist in some teacher/manager or teacher contains some user id
-     */
-    Teacher joinTeacherWithUser(Long teacherId, Long userId);
-
-    /**
      * Returns all disabled teachers.
      *
      * @return the list of disabled teachers

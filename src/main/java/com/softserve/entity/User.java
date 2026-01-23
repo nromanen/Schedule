@@ -1,32 +1,30 @@
 package com.softserve.entity;
 
 import com.softserve.entity.enums.Role;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 
 @NamedQuery(
         name = "findEmail",
-        query = "from User u where u.email= :email"
+        query = "select u from AppUser u where u.email= :email"
 )
 @NamedQuery(
         name = "findToken",
-        query = "from User u where u.token= :token"
+        query = "select u from AppUser u where u.token= :token"
 )
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
-@Entity
+@Entity(name = "AppUser")
 @Table(name = "users")
 public class User implements Serializable {
 

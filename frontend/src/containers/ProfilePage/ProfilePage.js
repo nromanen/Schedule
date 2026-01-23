@@ -1,15 +1,15 @@
 import './ProfilePage.scss';
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect} from 'react';
+import {connect} from 'react-redux';
+import {useTranslation} from 'react-i18next';
 import Card from '../../share/Card/Card';
-import { resetFormHandler } from '../../helper/formHelper';
-import { PROFILE_FORM, TEACHER_FORM } from '../../constants/reduxForms';
+import {resetFormHandler} from '../../helper/formHelper';
+import {PROFILE_FORM, TEACHER_FORM} from '../../constants/reduxForms';
 import ChangePasswordForm from '../../components/ChangePasswordForm/ChangePasswordForm';
-import { getUserProfile, updateUserPassword, updateUserTeacher } from '../../services/userService';
+import {getUserProfile, updateUserPassword, updateUserTeacher} from '../../services/userService';
 import AddTeacherForm from '../../components/TeachersPage/AddTeacherForm/AddTeacherForm';
-import { EMAIL_LABEL } from '../../constants/translationLabels/formElements';
-import { COMMON_MY_PROFILE, DIFFERENT_PASSWORDS } from '../../constants/translationLabels/common';
+import {EMAIL_LABEL} from '../../constants/translationLabels/formElements';
+import {COMMON_MY_PROFILE, DIFFERENT_PASSWORDS} from '../../constants/translationLabels/common';
 
 const ProfilePage = (props) => {
     const { t } = useTranslation('formElements');

@@ -1,7 +1,7 @@
 /* eslint-disable */
 // this functionality doesn't work
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -10,37 +10,37 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
-import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import {DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
 
 import Divider from '@material-ui/core/Divider';
-import { temporaryScheduleRadioTypes } from '../../../constants/temporaryScheduleRadioTypes';
-import { dateFormat } from '../../../constants/formats';
+import {temporaryScheduleRadioTypes} from '../../../constants/temporaryScheduleRadioTypes';
+import {dateFormat} from '../../../constants/formats';
 
 import {
     getTeacherTemporarySchedulesService,
     getTemporarySchedulesService,
     selectTeacherIdService,
 } from '../../../services/temporaryScheduleService';
-import { handleTeacherInfo } from '../../../helper/renderTeacher';
+import {handleTeacherInfo} from '../../../helper/renderTeacher';
 import {
-    FORM_SEMESTER_LABEL,
-    FORM_TEACHER_LABEL,
     FORM_CLASS_FROM_LABEL,
     FORM_CLASS_TO_LABEL,
+    FORM_SEMESTER_LABEL,
+    FORM_TEACHER_LABEL,
 } from '../../../constants/translationLabels/formElements';
 import {
-    HOLIDAY_LABEL,
     DATE_LABEL,
-    TEMPORARY_SCHEDULE_FOR_TEACHER_TITLE,
     FEW_DAYS_LABEL,
+    HOLIDAY_LABEL,
     ONE_DAY_LABEL,
+    TEMPORARY_SCHEDULE_FOR_TEACHER_TITLE,
 } from '../../../constants/translationLabels/common';
 
 const useStyles = makeStyles({

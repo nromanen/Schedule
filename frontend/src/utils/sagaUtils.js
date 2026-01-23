@@ -1,10 +1,7 @@
 import i18n from '../i18n';
-import { FORM_STUDENT_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
-import {
-    BACK_END_ACTION_SUCCESS,
-    BACK_END_SUCCESS_OPERATION,
-} from '../constants/translationLabels/serviceMessages';
-import { GROUP, STUDENT } from '../constants/names';
+import {FORM_GROUP_LABEL, FORM_STUDENT_LABEL} from '../constants/translationLabels/formElements';
+import {BACK_END_ACTION_SUCCESS, BACK_END_SUCCESS_OPERATION,} from '../constants/translationLabels/serviceMessages';
+import {GROUP, STUDENT} from '../constants/names';
 
 export const createErrorMessage = ({ response }) =>
     response ? i18n.t(response.data.message) : 'Error';

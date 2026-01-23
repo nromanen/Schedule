@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { isEmpty } from 'lodash';
-import { setLoadingService } from '../../../services/loadingService';
+import React, {useEffect, useState} from 'react';
+import {isEmpty} from 'lodash';
+import {setLoadingService} from '../../../services/loadingService';
 import ScheduleBoardItem from '../../../containers/EditCurrentSchedule/ScheduleBoardItem';
-import { actionType } from '../../../constants/actionTypes';
+import {actionType} from '../../../constants/actionTypes';
 import './ScheduleBoard.scss';
 
 const ScheduleBoard = (props) => {
@@ -53,7 +53,7 @@ const ScheduleBoard = (props) => {
             return;
         }
         const AddObj = {
-            id: dragItemData.id,
+            // id: dragItemData.id,
             lessonId: dragItemData.id,
             dayOfWeek: dayName,
             periodId: classId,
@@ -95,3 +95,4 @@ const ScheduleBoard = (props) => {
 };
 
 export default ScheduleBoard;
+// export default React.memo(ScheduleBoard);

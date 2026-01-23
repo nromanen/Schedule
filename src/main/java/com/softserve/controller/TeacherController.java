@@ -7,9 +7,9 @@ import com.softserve.entity.Teacher;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.TeacherService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Locale;
 
 @RestController
-@Api(tags = "Teacher API")
+@Tag(name = "Teacher API")
 @Slf4j
 public class TeacherController {
     private final TeacherService teacherService;
@@ -36,14 +36,14 @@ public class TeacherController {
     }
 
     @GetMapping(path = {"/teachers", "/public/teachers"})
-    @ApiOperation(value = "Get the list of all teachers")
+    @Operation(summary = "Get the list of all teachers")
     public ResponseEntity<List<TeacherDTO>> getAll() {
         log.info("Enter into list method");
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAll()));
     }
 
     @GetMapping("/teachers/{id}")
-    @ApiOperation(value = "Get teacher by id")
+    @Operation(summary = "Get teacher by id")
     public ResponseEntity<TeacherDTO> get(@PathVariable("id") Long id) {
         log.info("Enter into get method with id {} ", id);
         Teacher teacher = teacherService.getById(id);
@@ -51,7 +51,7 @@ public class TeacherController {
     }
 
     @PostMapping("/teachers")
-    @ApiOperation(value = "Create new teacher")
+    @Operation(summary = "Create new teacher")
     public ResponseEntity<TeacherDTO> save(@RequestBody TeacherDTO teacherDTO) {
         log.info("Enter into save method with teacherDTO: {}", teacherDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -59,7 +59,7 @@ public class TeacherController {
     }
 
     @PutMapping("/teachers")
-    @ApiOperation(value = "Update existing teacher by id")
+    @Operation(summary = "Update existing teacher by id")
     public ResponseEntity<TeacherForUpdateDTO> update(@RequestBody TeacherForUpdateDTO teacherForUpdateDTO) {
         log.info("Enter into update method with updateTeacherDTO: {}", teacherForUpdateDTO);
         return ResponseEntity.status(HttpStatus.OK)
@@ -67,7 +67,7 @@ public class TeacherController {
     }
 
     @DeleteMapping("/teachers/{id}")
-    @ApiOperation(value = "Delete teacher by id")
+    @Operation(summary = "Delete teacher by id")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         log.info("Enter into delete method with  teacher id: {}", id);
         Teacher teacher = teacherService.getById(id);
@@ -76,21 +76,21 @@ public class TeacherController {
     }
 
     @GetMapping("/teachers/disabled")
-    @ApiOperation(value = "Get the list of disabled teachers")
+    @Operation(summary = "Get the list of disabled teachers")
     public ResponseEntity<List<TeacherDTO>> getDisabled() {
         log.info("Enter into getDisabled");
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getDisabled()));
     }
 
     @GetMapping("/not-registered-teachers")
-    @ApiOperation(value = "Get the list of all teachers, that don't registered in system")
+    @Operation(summary = "Get the list of all teachers, that don't registered in system")
     public ResponseEntity<List<TeacherDTO>> getAllNotRegisteredTeachers() {
         log.info("Enter into getAllNotRegisteredTeachers method");
         return ResponseEntity.ok(teacherMapper.teachersToTeacherDTOs(teacherService.getAllTeacherWithoutUser()));
     }
 
     @GetMapping("/send-pdf-to-email/semester/{id}")
-    @ApiOperation(value = "Send pdf with schedule to teachers emails")
+    @Operation(summary = "Send pdf with schedule to teachers emails")
     public ResponseEntity<Void> sendSchedulesToEmail(@PathVariable("id") Long semesterId,
                                                      @RequestParam Long[] teachersId,
                                                      @RequestParam Locale language) {
@@ -100,8 +100,8 @@ public class TeacherController {
     }
 
     @PostMapping("/teachers/import")
-    @ApiOperation(value = "import teachers from file to database")
-    public ResponseEntity<List<TeacherImportDTO>> importFromCsv(@ApiParam(value = "csv format is required")
+    @Operation(summary = "import teachers from file to database")
+    public ResponseEntity<List<TeacherImportDTO>> importFromCsv(@Parameter(description = "csv format is required")
                                                                 @RequestParam("file") MultipartFile file, @RequestParam Long departmentId) {
         return ResponseEntity.status(HttpStatus.OK).body(teacherService.saveFromFile(file, departmentId));
     }

@@ -1,22 +1,22 @@
 import './TeachersList.scss';
 import React from 'react';
-import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
-import { useTranslation } from 'react-i18next';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
+import {FaEdit} from 'react-icons/fa';
+import {MdDelete} from 'react-icons/md';
+import {useTranslation} from 'react-i18next';
+import {GiSightDisabled, IoMdEye} from 'react-icons/all';
 import Card from '../../../share/Card/Card';
 
-import { dialogTypes } from '../../../constants/dialogs';
-import { getTeacherFullName } from '../../../helper/renderTeacher';
-import { getShortTitle } from '../../../helper/shortTitle';
+import {dialogTypes} from '../../../constants/dialogs';
+import {getTeacherFullName} from '../../../helper/renderTeacher';
+import {getShortTitle} from '../../../helper/shortTitle';
 import {
-    COMMON_SET_DISABLED,
-    COMMON_EDIT_HOVER_TITLE,
     COMMON_DELETE_HOVER_TITLE,
+    COMMON_EDIT_HOVER_TITLE,
+    COMMON_SET_DISABLED,
     COMMON_SET_ENABLED,
     TEACHER_DEPARTMENT,
 } from '../../../constants/translationLabels/common';
-import { MAX_LENGTH_40 } from '../../../constants/common';
+import {MAX_LENGTH_40} from '../../../constants/common';
 
 const TeachersCard = (props) => {
     const { t } = useTranslation('common');

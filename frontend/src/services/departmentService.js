@@ -1,9 +1,9 @@
 import axios from '../helper/axios';
-import { DEPARTMENT_URL } from '../constants/axios';
-import { store } from '../store';
-import { resetFormHandler } from '../helper/formHelper';
-import { DEPARTMENT_FORM } from '../constants/reduxForms';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
+import {DEPARTMENT_URL} from '../constants/axios';
+import {store} from '../store';
+import {resetFormHandler} from '../helper/formHelper';
+import {DEPARTMENT_FORM} from '../constants/reduxForms';
+import {errorHandler, successHandler} from '../helper/handlerAxios';
 import i18n from '../i18n';
 import {
     addDepartment,
@@ -18,10 +18,10 @@ import {
 } from '../actions/departments';
 import {
     BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
     CREATED_LABEL,
+    UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { FORM_DEPARTMENT_LABEL } from '../constants/translationLabels/formElements';
+import {FORM_DEPARTMENT_LABEL} from '../constants/translationLabels/formElements';
 
 export const createDepartmentService = (data) => {
     axios

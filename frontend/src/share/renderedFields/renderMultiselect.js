@@ -1,5 +1,5 @@
 import Multiselect from 'multiselect-react-dropdown';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 
 export const RenderMultiselect = ({
     input,

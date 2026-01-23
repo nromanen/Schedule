@@ -1,17 +1,14 @@
-import { store } from '../store';
+import {store} from '../store';
 
 import axios from '../helper/axios';
-import { GROUP_URL } from '../constants/axios';
-import { GROUP_FORM } from '../constants/reduxForms';
-import { showAllGroupsSuccess, selectGroupSuccess, updateGroupSuccess } from '../actions/index';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
+import {GROUP_URL} from '../constants/axios';
+import {GROUP_FORM} from '../constants/reduxForms';
+import {selectGroupSuccess, showAllGroupsSuccess, updateGroupSuccess} from '../actions/index';
+import {errorHandler, successHandler} from '../helper/handlerAxios';
 import i18n from '../i18n';
-import { resetFormHandler } from '../helper/formHelper';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
-} from '../constants/translationLabels/serviceMessages';
-import { FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
+import {resetFormHandler} from '../helper/formHelper';
+import {BACK_END_SUCCESS_OPERATION, UPDATED_LABEL,} from '../constants/translationLabels/serviceMessages';
+import {FORM_GROUP_LABEL} from '../constants/translationLabels/formElements';
 
 export const showAllGroupsService = () => {
     axios

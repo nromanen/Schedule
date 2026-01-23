@@ -1,5 +1,5 @@
-import { get } from 'lodash';
-import { FULL, GROUP, TEACHER } from '../constants/scheduleTypes';
+import {get} from 'lodash';
+import {FULL, GROUP, TEACHER} from '../constants/scheduleTypes';
 
 export const getScheduleType = (values) => {
     const { group, teacher } = values;

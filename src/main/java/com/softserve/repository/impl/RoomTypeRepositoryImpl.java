@@ -9,38 +9,29 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 public class RoomTypeRepositoryImpl extends BasicRepositoryImpl<RoomType, Long> implements RoomTypeRepository {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Long countRoomTypesWithDescription(String description) {
         log.info("In countRoomTypesWithDescription(description = [{}])", description);
-        return (Long) sessionFactory.getCurrentSession().createQuery("SELECT count (*) FROM RoomType r WHERE r.description = :description")
-                .setParameter("description", description).getSingleResult();
+        return sessionFactory.getCurrentSession()
+                .createQuery("SELECT count(r.id) FROM RoomType r WHERE r.description = :description", Long.class)
+                .setParameter("description", description)
+                .getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Long countByRoomTypeId(Long id) {
         log.info("In countByRoomTypeId(id = [{}])", id);
-        return (Long) sessionFactory.getCurrentSession().createQuery("SELECT count (*) FROM RoomType r WHERE r.id = :id")
-                .setParameter("id", id).getSingleResult();
+        return sessionFactory.getCurrentSession()
+                .createQuery("SELECT count(r.id) FROM RoomType r WHERE r.id = :id", Long.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
-    /**
-     * Checks if given type of room is used in Room table.
-     *
-     * @param roomType the type of room to be checked
-     * @return {@code true} if type of room is used in Room table, otherwise {@code false}
-     */
     @Override
     protected boolean checkReference(RoomType roomType) {
         log.info("In checkReference(roomType = [{}])", roomType);
-        Long count = (Long) sessionFactory.getCurrentSession().createQuery(
-                        "select count (r.id) " +
-                                "from Room r where r.type.id = :roomTypeId")
+        Long count = sessionFactory.getCurrentSession()
+                .createQuery("SELECT count(r.id) FROM Room r WHERE r.type.id = :roomTypeId", Long.class)
                 .setParameter("roomTypeId", roomType.getId())
                 .getSingleResult();
         return count != 0;

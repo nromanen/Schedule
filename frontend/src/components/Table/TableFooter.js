@@ -1,10 +1,10 @@
 import React from 'react';
 import './tableFooter.scss';
 import TablePagination from '@material-ui/core/TablePagination';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
-import { ALL_PAGE, ROWS_PER_PAGE } from '../../constants/translationLabels/formElements';
-import { RenderStudentTableActions } from './Pagination';
+import {ALL_PAGE, ROWS_PER_PAGE} from '../../constants/translationLabels/formElements';
+import {RenderStudentTableActions} from './Pagination';
 
 export const TableFooterComponent = (props) => {
     const { page, setPage, rowsPerPage, setRowsPerPage, items } = props;

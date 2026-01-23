@@ -7,25 +7,24 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.SubjectRepository;
 import com.softserve.service.impl.SubjectServiceImpl;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-@Category(UnitTestCategory.class)
-@RunWith(MockitoJUnitRunner.class)
-public class SubjectServiceTest {
+@Tag("unit")
+@ExtendWith(MockitoExtension.class)
+class SubjectServiceTest {
 
     @Mock
     private SubjectRepository subjectRepository;
@@ -34,7 +33,7 @@ public class SubjectServiceTest {
     private SubjectServiceImpl subjectService;
 
     @Test
-    public void getSubjectById() {
+    void getSubjectById() {
         Subject subject = new Subject();
         subject.setName("some subject");
         subject.setId(1L);
@@ -47,17 +46,17 @@ public class SubjectServiceTest {
         verify(subjectRepository, times(1)).findById(anyLong());
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfSubjectNotFounded() {
+    @Test
+    void throwEntityNotFoundExceptionIfSubjectNotFounded() {
         Subject subject = new Subject();
         subject.setName("some subject");
 
-        subjectService.getById(2L);
+        assertThrows(EntityNotFoundException.class, () -> subjectService.getById(2L));
         verify(subjectRepository, times(1)).findById(2L);
     }
 
     @Test
-    public void saveSubjectIfNameDoesNotExists() {
+    void saveSubjectIfNameDoesNotExists() {
         Subject subject = new Subject();
         subject.setName("some subject");
 
@@ -71,20 +70,20 @@ public class SubjectServiceTest {
         verify(subjectRepository, times(1)).countSubjectsWithName(anyString());
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfNameAlreadyExists() {
+    @Test
+    void throwFieldAlreadyExistsExceptionIfNameAlreadyExists() {
         Subject subject = new Subject();
         subject.setName("some subject");
 
         when(subjectRepository.countSubjectsWithName(anyString())).thenReturn(1L);
 
-        subjectService.save(subject);
-        verify(subjectRepository, times(1)).save(subject);
+        assertThrows(FieldAlreadyExistsException.class, () -> subjectService.save(subject));
+        verify(subjectRepository, never()).save(subject);
         verify(subjectRepository, times(1)).countSubjectsWithName(anyString());
     }
 
     @Test
-    public void updateSubjectIfNameDoesNotExists() {
+    void updateSubjectIfNameDoesNotExists() {
         Subject oldSubject = new Subject();
         oldSubject.setName("some subject");
         oldSubject.setId(1L);
@@ -104,8 +103,8 @@ public class SubjectServiceTest {
         verify(subjectRepository, times(1)).countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString());
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfUpdatedNameAlreadyExists() {
+    @Test
+    void throwFieldAlreadyExistsExceptionIfUpdatedNameAlreadyExists() {
         Subject oldSubject = new Subject();
         oldSubject.setName("some subject");
         oldSubject.setId(1L);
@@ -116,25 +115,25 @@ public class SubjectServiceTest {
         when(subjectRepository.countBySubjectId(anyLong())).thenReturn(1L);
         when(subjectRepository.countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString())).thenReturn(1L);
 
-        subjectService.update(updatedSubject);
+        assertThrows(FieldAlreadyExistsException.class, () -> subjectService.update(updatedSubject));
         verify(subjectRepository, times(1)).countBySubjectId(anyLong());
         verify(subjectRepository, times(1)).countSubjectsWithNameAndIgnoreWithId(anyLong(), anyString());
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfUpdatedSubjectNotFounded() {
+    @Test
+    void throwEntityNotFoundExceptionIfUpdatedSubjectNotFounded() {
         Subject subject = new Subject();
         subject.setName("some subject");
         subject.setId(1L);
 
         when(subjectRepository.countBySubjectId(anyLong())).thenReturn(0L);
 
-        subjectService.update(subject);
+        assertThrows(EntityNotFoundException.class, () -> subjectService.update(subject));
         verify(subjectRepository, times(1)).countBySubjectId(anyLong());
     }
 
     @Test
-    public void getSubjectsWithTypes() {
+    void getSubjectsWithTypes() {
 
         Subject firstSubject = new Subject();
         firstSubject.setName("Organic chemistry");

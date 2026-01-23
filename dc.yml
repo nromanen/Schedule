@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  tomcat:
+    build:
+      context: .
+      dockerfile: Df
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./build/libs:/usr/local/tomcat/webapps
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=schedule
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=schedule
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/dumps:/docker-entrypoint-initdb.d
+      - ./database/dumps:/dumps
+    healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U postgres -d schedule" ]
+        interval: 5s
+        timeout: 5s
+        retries: 5
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:

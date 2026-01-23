@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { CircularProgress } from '@material-ui/core';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {CircularProgress} from '@material-ui/core';
+import {useTranslation} from 'react-i18next';
 import './EditCurrentSchedule.scss';
 import ScheduleLessonsList from '../../containers/EditCurrentSchedule/ScheduleLessonsList';
 import Schedule from '../../containers/EditCurrentSchedule/Schedule';
-import { SCHEDULE_TITLE, USE_PC } from '../../constants/translationLabels/common';
-import { EDIT_SCHEDULE_MIN_WINDOW_SIZE } from '../../constants/windowSizes';
+import {SCHEDULE_TITLE, USE_PC} from '../../constants/translationLabels/common';
+import {EDIT_SCHEDULE_MIN_WINDOW_SIZE} from '../../constants/windowSizes';
 
 const SchedulePage = (props) => {
     const {

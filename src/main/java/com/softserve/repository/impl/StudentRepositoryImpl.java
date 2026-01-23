@@ -14,68 +14,55 @@ public class StudentRepositoryImpl extends BasicRepositoryImpl<Student, Long> im
     private static final String FROM_STUDENT = " FROM Student s ";
 
     private static final String HQL_IS_EXISTS_BY_EMAIL
-            = "SELECT (count(*) > 0)"
+            = "SELECT CASE WHEN count(s.id) > 0 THEN true ELSE false END"
             + FROM_STUDENT
             + "WHERE s.user.email = :email";
 
     private static final String HQL_IS_EXISTS_BY_EMAIL_IN_CURRENT_STUDENT
-            = "SELECT (count(*) > 0)"
+            = "SELECT CASE WHEN count(s.id) > 0 THEN true ELSE false END"
             + FROM_STUDENT
             + "WHERE s.user.email = :email AND s.id = :id";
 
     private static final String GET_STUDENT_WITH_FULL_NAME_SURNAME
-            = "select s" + FROM_STUDENT +
-            "where s.name = :sName and " +
-            "s.surname = :sSurname and " +
+            = "SELECT s" + FROM_STUDENT +
+            "WHERE s.name = :sName AND " +
+            "s.surname = :sSurname AND " +
             "s.patronymic = :sPatronymic";
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Student> getExistingStudent(Student student) {
         return sessionFactory.getCurrentSession()
-                .createQuery(GET_STUDENT_WITH_FULL_NAME_SURNAME)
+                .createQuery(GET_STUDENT_WITH_FULL_NAME_SURNAME, Student.class)
                 .setParameter("sName", student.getName())
                 .setParameter("sSurname", student.getSurname())
                 .setParameter("sPatronymic", student.getPatronymic())
                 .uniqueResultOptional();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEmailInUse(String email) {
-        return (boolean) sessionFactory.getCurrentSession()
-                .createQuery(HQL_IS_EXISTS_BY_EMAIL)
+        return sessionFactory.getCurrentSession()
+                .createQuery(HQL_IS_EXISTS_BY_EMAIL, Boolean.class)
                 .setParameter("email", email)
                 .getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isEmailForThisStudent(String email, Long id) {
-        return (boolean) sessionFactory.getCurrentSession()
-                .createQuery(HQL_IS_EXISTS_BY_EMAIL_IN_CURRENT_STUDENT)
+        return sessionFactory.getCurrentSession()
+                .createQuery(HQL_IS_EXISTS_BY_EMAIL_IN_CURRENT_STUDENT, Boolean.class)
                 .setParameter("email", email)
                 .setParameter("id", id)
                 .getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isIdPresent(Long id) {
-        return (boolean) sessionFactory.getCurrentSession()
-                .createQuery("SELECT (count(*) > 0) "
-                        + "FROM Student s "
-                        + "WHERE s.id = :sId")
+        return sessionFactory.getCurrentSession()
+                .createQuery("SELECT CASE WHEN count(s.id) > 0 THEN true ELSE false END " +
+                        "FROM Student s " +
+                        "WHERE s.id = :sId", Boolean.class)
                 .setParameter("sId", id)
                 .getSingleResult();
     }
-
 }

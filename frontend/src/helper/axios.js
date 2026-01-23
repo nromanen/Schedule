@@ -1,17 +1,39 @@
 import axios from 'axios';
 import { TOKEN_BEGIN } from '../constants/tokenBegin';
 
-let REACT_APP_API_BASE_URL = 'http://localhost:8080/';
-if (process.env.REACT_APP_API_BASE_URL !== undefined) {
-    REACT_APP_API_BASE_URL = process.env.REACT_APP_API_BASE_URL.trim();
-}
 const instance = axios.create({
-    baseURL: REACT_APP_API_BASE_URL,
+    baseURL: process.env.REACT_APP_API_BASE_URL,
 });
 
-const token = localStorage.getItem('token');
-if (token && token.includes(TOKEN_BEGIN)) {
-    instance.defaults.headers.common.Authorization = token;
-}
+instance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token && token.includes(TOKEN_BEGIN)) {
+            config.headers.Authorization = token;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+instance.interceptors.response.use(
+    (response) => {
+        const newToken = response.headers['x-new-token'];
+        if (newToken) {
+            localStorage.setItem('token', `${TOKEN_BEGIN}${newToken}`);
+        }
+        return response;
+    },
+    (error) => {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default instance;

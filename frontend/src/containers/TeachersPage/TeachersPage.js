@@ -1,13 +1,13 @@
-import { connect } from 'react-redux';
-import { selectTeacherCard, setIsOpenConfirmDialog } from '../../actions';
+import {connect} from 'react-redux';
+import {selectTeacherCard, setIsOpenConfirmDialog} from '../../actions';
 import {
     getAllPublicSemestersStart,
     getCurrentSemesterRequsted,
     getDefaultSemesterRequsted,
     sendTeacherScheduleStart,
 } from '../../actions/schedule';
-import { getPublicClassScheduleStart } from '../../actions/classes';
-import { getAllSemestersStart } from '../../actions/semesters';
+import {getPublicClassScheduleStart} from '../../actions/classes';
+import {getAllSemestersStart} from '../../actions/semesters';
 import {
     deleteTeacherStart,
     handleTeacherStart,

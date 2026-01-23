@@ -1,13 +1,13 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import SemesterPage from '../../components/Semester/SemesterPage';
 import {
     getAllSemestersStart,
-    getDisabledSemestersStart,
     getArchivedSemestersStart,
+    getDisabledSemestersStart,
     handleSemesterFormSubmitStart,
 } from '../../actions/semesters';
-import { getEnabledGroupsStart } from '../../actions/groups';
-import { setOpenErrorSnackbar } from '../../actions/snackbar';
+import {getEnabledGroupsStart} from '../../actions/groups';
+import {setOpenErrorSnackbar} from '../../actions/snackbar';
 
 const mapStateToProps = (state) => ({
     archivedSemesters: state.semesters.archivedSemesters,

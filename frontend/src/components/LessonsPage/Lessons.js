@@ -1,8 +1,8 @@
-import { CircularProgress } from '@material-ui/core';
+import {CircularProgress} from '@material-ui/core';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { isEmpty } from 'lodash';
-import { LESSON_NO_LESSON_FOR_GROUP_LABEL } from '../../constants/translationLabels/common';
+import {useTranslation} from 'react-i18next';
+import {isEmpty} from 'lodash';
+import {LESSON_NO_LESSON_FOR_GROUP_LABEL} from '../../constants/translationLabels/common';
 
 import LessonsList from './LessonsList/LessonsList';
 import './LessonPage.scss';

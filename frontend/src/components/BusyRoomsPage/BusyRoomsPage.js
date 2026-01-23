@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { CircularProgress } from '@material-ui/core';
+import React, {useEffect, useState} from 'react';
+import {CircularProgress} from '@material-ui/core';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
-import { useTranslation } from 'react-i18next';
-import { get } from 'lodash';
+import {useTranslation} from 'react-i18next';
+import {get} from 'lodash';
 import './BusyRoomsPage.scss';
 import BusyRoomsTable from './BustRoomsTable/BusyRoomsTable';
-import { COMMON_TABLE_COLUMNS_SIZE } from '../../constants/translationLabels/common';
-import { columnSizeArray } from '../../constants/schedule/schedule';
+import {COMMON_TABLE_COLUMNS_SIZE} from '../../constants/translationLabels/common';
+import {columnSizeArray} from '../../constants/schedule/schedule';
 
 const BusyRoomsPage = (props) => {
     const {

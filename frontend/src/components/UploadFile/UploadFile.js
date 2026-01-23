@@ -1,16 +1,16 @@
 import './UploadFile.scss';
-import React, { useState, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, {useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import BackupIcon from '@material-ui/icons/Backup';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogCloseButton, dialogUploadButton } from '../../constants/dialogs';
+import {dialogCloseButton, dialogUploadButton} from '../../constants/dialogs';
 import {
-    SELECT_FILE,
     EXAMPLE_FILE,
+    FILE_RULES_FOR_EACH_LNE,
     FILE_RULES_FOR_HEADER,
     SELECT_CORRECT_FORMAT,
-    FILE_RULES_FOR_EACH_LNE,
+    SELECT_FILE,
 } from '../../constants/translationLabels/common';
 
 export const UploadFile = (props) => {

@@ -1,4 +1,4 @@
-import { trasformLink } from './trasformLink';
+import {trasformLink} from './trasformLink';
 
 describe('trasformLink function', () => {
     it('should add http for url', () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEqual, isNil } from 'lodash';
+import {isEqual, isNil} from 'lodash';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -11,14 +11,10 @@ import Card from '../share/Card/Card';
 
 import i18n from '../i18n';
 
-import {
-    daysUppercase,
-    numberOfDaysInAWeek,
-    numberOfMilisecondsInADay,
-} from '../constants/schedule/days';
+import {daysUppercase,} from '../constants/schedule/days';
 import './renderScheduleTable.scss';
-import { GROUP_Y_LABEL, FORM_GROUP_LABEL } from '../constants/translationLabels/formElements';
-import { EMPTY_SCHEDULE } from '../constants/translationLabels/common';
+import {FORM_GROUP_LABEL, GROUP_Y_LABEL} from '../constants/translationLabels/formElements';
+import {EMPTY_SCHEDULE} from '../constants/translationLabels/common';
 import LessonTemporaryCardCell from '../containers/GroupSchedulePage/LessonTemporaryCardCell';
 import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTemporaryCardCell';
 
@@ -43,16 +39,45 @@ const matchDayNumberSysytemToDayName = () => {
     return daysUppercase[now.getDay() - 1];
 };
 
-const getWeekNumber = (startScheduleDate, date) => {
-    const startDay = transformSemesterDate(startScheduleDate);
+// const getWeekNumber = (startScheduleDate, date) => {
+//     const startDay = transformSemesterDate(startScheduleDate);
+//
+//     const numberOfDays = Math.floor((date - startDay) / numberOfMilisecondsInADay);
+//     return Math.ceil((date.getDay() + 1 + numberOfDays) / numberOfDaysInAWeek);
+// };
 
-    const numberOfDays = Math.floor((date - startDay) / numberOfMilisecondsInADay);
-    return Math.ceil((date.getDay() + 1 + numberOfDays) / numberOfDaysInAWeek);
-};
+const getWeekParity = (startDate, currentDate = new Date()) => {
+    const semesterStart = startDate instanceof Date ? startDate : new Date(transformSemesterDate(startDate));
+    const targetDate = currentDate instanceof Date ? currentDate : new Date(transformSemesterDate(currentDate));
+
+    semesterStart.setHours(0, 0, 0, 0);
+    targetDate.setHours(0, 0, 0, 0);
+
+    if (targetDate < semesterStart) return 0;
+
+    // Get the day of the week for the semester start (0 = Sunday, 6 = Saturday)
+    const startDay = semesterStart.getDay();
+
+    // Find the first week boundary after semester start
+    const firstWeekBoundary = new Date(semesterStart);
+    if (startDay === 0) {
+        firstWeekBoundary.setDate(semesterStart.getDate() + 7);
+    } else {
+        firstWeekBoundary.setDate(semesterStart.getDate() + (7 - startDay));
+    }
+
+    if (targetDate < firstWeekBoundary) return 1;
+
+    const diffTime = targetDate - firstWeekBoundary;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const additionalWeeks = Math.floor(diffDays / 7) + 1;
+
+    return additionalWeeks + 1;
+}
 
 const printWeekNumber = (startScheduleDate) => {
     const date = new Date();
-    return getWeekNumber(startScheduleDate, date);
+    return getWeekParity(startScheduleDate, date);
 };
 
 function isWeekOdd(num) {
@@ -160,6 +185,9 @@ export const renderGroupCells = (groups, isOdd, weekType, isCurrentDay, dayName)
                     tempCard.skip_render = 1;
                     colspan += 1;
                     classname += ' grouped';
+                }
+                else {
+                    break;
                 }
             }
             return { card, classname, rowspan, colspan };
@@ -330,7 +358,7 @@ const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, curre
 export const renderFullSchedule = (fullResultSchedule) => {
     const { semester, groupList, semesterClasses, resultArray } = fullResultSchedule;
     const { startDay, description, endDay } = semester;
-    const scheduleTitle = `${description} (${startDay}-${endDay})`;
+    const scheduleTitle = `[${getWeekParity(startDay)} ${i18n.t(`week_label`)}] ${'\u00A0'.repeat(5)} ${description} (${startDay}-${endDay})`;
     const currentWeekType = isWeekOdd(printWeekNumber(startDay));
     const currentDay = checkSemesterEnd(endDay) ? '' : matchDayNumberSysytemToDayName();
 

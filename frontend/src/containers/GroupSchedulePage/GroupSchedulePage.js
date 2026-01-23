@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {
     getDefaultSemesterRequsted,
     selectFullSchedule,
@@ -18,6 +18,9 @@ const mapStateToProps = (state) => ({
     teacherData: state.schedule.scheduleTeacher,
     semesterData: state.schedule.scheduleSemester,
     semesters: state.schedule.semesters,
+    notPublished: state.schedule.notPublished,
+    notPublishedMessage: state.schedule.notPublishedMessage,
+    isManager: state.auth.role === 'ROLE_MANAGER' || state.auth.role === 'ROLE_ADMIN',
 });
 
 const mapDispatchToProps = (dispatch) => ({

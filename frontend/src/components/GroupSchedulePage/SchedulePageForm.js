@@ -1,8 +1,8 @@
-import { Button } from '@material-ui/core';
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { MdPlayArrow } from 'react-icons/md';
-import { TEACHER_SCHEDULE_LABEL } from '../../constants/translationLabels/common';
+import {Button} from '@material-ui/core';
+import React, {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
+import {MdPlayArrow} from 'react-icons/md';
+import {TEACHER_SCHEDULE_LABEL} from '../../constants/translationLabels/common';
 import GroupsList from '../../containers/GroupSchedulePage/GroupsList';
 import SemestersList from '../../containers/GroupSchedulePage/SemestersList';
 import TeachersList from '../../containers/GroupSchedulePage/TeachersList';

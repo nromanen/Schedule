@@ -1,5 +1,5 @@
 import * as actionTypes from './actionsType';
-import { TOKEN_BEGIN } from '../constants/tokenBegin';
+import {TOKEN_BEGIN} from '../constants/tokenBegin';
 
 export const authUser = (payload) => ({
     type: actionTypes.AUTH_USER,

@@ -2,6 +2,7 @@ package com.softserve.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class DaysOfWeekWithClassesForRoomDTO {
+public class DaysOfWeekWithClassesForRoomDTO implements Serializable {
     private DayOfWeek day;
     private List<RoomClassesInScheduleDTO> classes;
 }

@@ -1,18 +1,18 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import SemesterList from '../../components/Semester/SemesterList/SemesterList';
 import {
     createArchivedSemesterStart,
+    deleteSemesterStart,
     getArchivedSemesterByIdStart,
     selectSemesterSuccess,
-    updateSemesterStart,
-    deleteSemesterStart,
-    updateSemesterByIdStartSuccess,
-    setSemesterCopyStart,
     setGroupsToSemesterStart,
+    setSemesterCopyStart,
     toggleSemesterVisibilityStart,
+    updateSemesterByIdStartSuccess,
+    updateSemesterStart,
 } from '../../actions/semesters';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
-import { setOpenSuccessSnackbar } from '../../actions/snackbar';
+import {setIsOpenConfirmDialog} from '../../actions/dialog';
+import {setOpenSuccessSnackbar} from '../../actions/snackbar';
 
 const mapStateToProps = (state) => ({
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,

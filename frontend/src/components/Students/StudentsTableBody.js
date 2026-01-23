@@ -4,23 +4,17 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Checkbox from '@material-ui/core/Checkbox';
-import { useTranslation } from 'react-i18next';
-import { FaEdit } from 'react-icons/all';
-import { Delete } from '@material-ui/icons';
-import { Link } from 'react-router-dom';
-import { getTeacherFullName } from '../../helper/renderTeacher';
+import {useTranslation} from 'react-i18next';
+import {FaEdit} from 'react-icons/all';
+import {Delete} from '@material-ui/icons';
+import {Link} from 'react-router-dom';
+import {getTeacherFullName} from '../../helper/renderTeacher';
+import {DELETE_LINK, EDIT_LINK, GROUP_LIST_LINK, SHOW_STUDENTS_LINK, STUDENT_LINK,} from '../../constants/links';
 import {
-    STUDENT_LINK,
-    EDIT_LINK,
-    DELETE_LINK,
-    GROUP_LIST_LINK,
-    SHOW_STUDENTS_LINK,
-} from '../../constants/links';
-import {
-    EDIT_TITLE,
-    SEND_LETTER_LABEL,
-    SELECT_STUDENT,
     DELETE_TITLE_LABEL,
+    EDIT_TITLE,
+    SELECT_STUDENT,
+    SEND_LETTER_LABEL,
 } from '../../constants/translationLabels/formElements';
 
 export const StudentsTableBody = (props) => {

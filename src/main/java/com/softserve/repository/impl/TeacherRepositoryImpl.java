@@ -3,8 +3,6 @@ package com.softserve.repository.impl;
 import com.softserve.entity.Teacher;
 import com.softserve.repository.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Filter;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,96 +10,78 @@ import java.util.Optional;
 
 @Repository
 @Slf4j
-@SuppressWarnings("unchecked")
 public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> implements TeacherRepository {
 
-    private Session getSession() {
-        Session session = sessionFactory.getCurrentSession();
-        Filter filter = session.enableFilter("teachersDisableFilter");
-        filter.setParameter("disable", false);
-        return session;
-    }
+    private static final String DISABLE_FILTER = " AND t.disable = false";
 
-    /**
-     * Returns all teachers from database.
-     *
-     * @return the list of teachers ordered by surname
-     */
+    private static final String GET_ALL_QUERY =
+            "SELECT t FROM Teacher t WHERE t.disable = false ORDER BY t.surname ASC";
+
+    private static final String CHECK_REFERENCE =
+            "SELECT count(l.id) FROM Lesson l WHERE l.teacher.id = :teacherId";
+
+    private static final String FIND_BY_USER_ID =
+            "SELECT t FROM Teacher t WHERE t.userId = :userId" + DISABLE_FILTER;
+
+    private static final String GET_ALL_WITHOUT_USER =
+            "SELECT t FROM Teacher t WHERE t.userId IS NULL" + DISABLE_FILTER;
+
+    private static final String GET_EXISTING_TEACHER =
+            "SELECT t FROM Teacher t " +
+                    "WHERE t.name = :tName " +
+                    "AND t.surname = :tSurname " +
+                    "AND t.patronymic = :tPatronymic " +
+                    "AND t.position = :tPosition" +
+                    DISABLE_FILTER;
+
     @Override
     public List<Teacher> getAll() {
         log.info("Enter into getAll of TeacherRepositoryImpl");
-        Session session = getSession();
-        return session.createQuery("select t from " + basicClass.getName() + " t" +
-                " order by t.surname ASC").getResultList();
+        return getSession()
+                .createQuery(GET_ALL_QUERY, Teacher.class)
+                .getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Teacher update(Teacher entity) {
-        sessionFactory.getCurrentSession().clear();
+        getSession().clear();
         return super.update(entity);
     }
 
-    /**
-     * Checks if teacher is used in Lesson table.
-     *
-     * @param teacher the teacher to be checked
-     * @return {@code true} if exists lesson related with given teacher, otherwise {@code false}
-     */
     @Override
     protected boolean checkReference(Teacher teacher) {
         log.info("In checkReference(teacher = [{}])", teacher);
-        Long count = (Long) sessionFactory.getCurrentSession().createQuery(
-                        "select count (l.id) " +
-                                "from Lesson l where l.teacher.id = :teacherId")
-                .setParameter("teacherId", teacher.getId()).getSingleResult();
-
+        Long count = getSession()
+                .createQuery(CHECK_REFERENCE, Long.class)
+                .setParameter("teacherId", teacher.getId())
+                .getSingleResult();
         return count != 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Teacher> findByUserId(Long userId) {
-        return sessionFactory.getCurrentSession().createQuery(
-                        "select t from Teacher t " +
-                                "where t.userId= :userId")
+        return getSession()
+                .createQuery(FIND_BY_USER_ID, Teacher.class)
                 .setParameter("userId", userId)
                 .uniqueResultOptional();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Teacher> getAllTeacherWithoutUser() {
         log.info("Enter into getAllTeacherWithoutUser of TeacherRepositoryImpl");
-        return sessionFactory.getCurrentSession().createQuery(
-                        "select t from Teacher t " +
-                                " where t.userId = null ")
+        return getSession()
+                .createQuery(GET_ALL_WITHOUT_USER, Teacher.class)
                 .getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<Teacher> getExistingTeacher(Teacher teacher) {
-        return sessionFactory.getCurrentSession().createQuery(
-                        "select t from Teacher t " +
-                                "where t.name = :tName and " +
-                                "t.surname = :tSurname and " +
-                                "t.patronymic = :tPatronymic and " +
-                                "t.position = :tPosition")
+        return getSession()
+                .createQuery(GET_EXISTING_TEACHER, Teacher.class)
                 .setParameter("tName", teacher.getName())
                 .setParameter("tSurname", teacher.getSurname())
                 .setParameter("tPatronymic", teacher.getPatronymic())
                 .setParameter("tPosition", teacher.getPosition())
                 .uniqueResultOptional();
-
     }
-
 }

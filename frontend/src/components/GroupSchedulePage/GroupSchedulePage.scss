@@ -55,6 +55,19 @@ a.pdf_link {
             }
 
             &.lesson {
+                position: relative;
+
+                .lesson-type-triangle {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 16px 16px 0 0;
+                    border-color: transparent;
+                }
+
                 border-right: $regular-border;
                 font-weight: 300;
                 font-size: 0.8em;
@@ -133,4 +146,8 @@ a.pdf_link {
             }
         }
     }
+}
+
+.currentDay {
+    background-color: $azure;
 }

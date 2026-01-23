@@ -1,4 +1,4 @@
-import { getColorByFullness, divideLessonsByOneHourLesson } from './schedule';
+import {divideLessonsByOneHourLesson, getColorByFullness} from './schedule';
 
 const teacherAndSubjectAreTheSame = [
     {

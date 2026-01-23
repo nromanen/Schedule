@@ -1,60 +1,45 @@
 package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softserve.config.DBConfigTest;
-import com.softserve.config.MyWebAppInitializer;
-import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.RoomTypeDTO;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Category(IntegrationTestCategory.class)
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
-@WebAppConfiguration
+@Tag("integration")
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
 @Sql(value = "classpath:create-roomtypes-before.sql")
-public class RoomTypeControllerTest {
-
-    private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+class RoomTypeControllerTest {
 
     @Autowired
-    private WebApplicationContext wac;
+    private MockMvc mockMvc;
 
-    @Before
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
-    public void getAllRoomTypes() throws Exception {
+    void getAllRoomTypes() throws Exception {
         mockMvc.perform(get("/room-types").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void getRoomTypeById() throws Exception {
+    void getRoomTypeById() throws Exception {
         mockMvc.perform(get("/room-types/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -63,24 +48,28 @@ public class RoomTypeControllerTest {
 
     @Test
     @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "USER")
-    public void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
+    void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
         mockMvc.perform(get("/room-types/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void saveRoomTypeIfSavedRoomTypeDoesNotExist() throws Exception {
-        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
-        roomTypeDTO.setId(1L);
-        roomTypeDTO.setDescription("Another Small auditory");
+    void saveRoomType() throws Exception {
+        String roomTypeJSON = """
+            {
+              "description": "Another Small auditory"
+            }
+            """;
 
-        mockMvc.perform(post("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
+        mockMvc.perform(post("/room-types")
+                        .content(roomTypeJSON)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.description").value("Another Small auditory"));
     }
 
     @Test
-    public void updateRoomTypeIfUpdatedDescriptionDoesNotExist() throws Exception {
+    void updateRoomTypeIfUpdatedDescriptionDoesNotExist() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(4L);
         roomTypeDTO.setDescription("Another Small auditory");
@@ -93,19 +82,19 @@ public class RoomTypeControllerTest {
     }
 
     @Test
-    public void deleteExistRoomType() throws Exception {
+    void deleteExistRoomType() throws Exception {
         mockMvc.perform(delete("/room-types/{id}", 6)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void returnNotFoundIfRoomTypeNotFoundedById() throws Exception {
+    void returnNotFoundIfRoomTypeNotFoundedById() throws Exception {
         mockMvc.perform(get("/room-types/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void returnBadRequestIfSavedRoomTypeAlreadyExists() throws Exception {
+    void returnBadRequestIfSavedRoomTypeAlreadyExists() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setDescription("small auditory");
 
@@ -115,7 +104,7 @@ public class RoomTypeControllerTest {
     }
 
     @Test
-    public void returnBadRequestIfUpdatedRoomTypeAlreadyExists() throws Exception {
+    void returnBadRequestIfUpdatedRoomTypeAlreadyExists() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setDescription("small auditory");
         roomTypeDTO.setId(5L);
@@ -126,19 +115,17 @@ public class RoomTypeControllerTest {
     }
 
     @Test
-    public void returnBadRequestIfSavedDescriptionIsNull() throws Exception {
-        RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
-        roomTypeDTO.setId(1L);
-        roomTypeDTO.setDescription(null);
+    void returnBadRequestIfSavedDescriptionIsNull() throws Exception {
+        String roomTypeJSON = "{}";
 
-        mockMvc.perform(post("/room-types").content(objectMapper.writeValueAsString(roomTypeDTO))
+        mockMvc.perform(post("/room-types")
+                        .content(roomTypeJSON)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void returnBadRequestIfUpdatedDescriptionIsNull() throws Exception {
+    void returnBadRequestIfUpdatedDescriptionIsNull() throws Exception {
         RoomTypeDTO roomTypeDTO = new RoomTypeDTO();
         roomTypeDTO.setId(5L);
         roomTypeDTO.setDescription(null);

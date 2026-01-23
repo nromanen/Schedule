@@ -1,7 +1,7 @@
 import React from 'react';
-import { isEmpty } from 'lodash';
-import { FaDoorOpen } from 'react-icons/fa';
-import { TYPE_LABEL, COMMON_FREE_ROOMS_LIST_EMPTY } from '../../constants/translationLabels/common';
+import {isEmpty} from 'lodash';
+import {FaDoorOpen} from 'react-icons/fa';
+import {COMMON_FREE_ROOMS_LIST_EMPTY, TYPE_LABEL} from '../../constants/translationLabels/common';
 import Card from '../../share/Card/Card';
 
 const FreeRoomsCardList = (props) => {

@@ -10,26 +10,25 @@ import com.softserve.repository.UserRepository;
 import com.softserve.service.impl.MailServiceImpl;
 import com.softserve.service.impl.UserServiceImpl;
 import com.softserve.util.PasswordGeneratingUtil;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@Category(UnitTestCategory.class)
-@RunWith(MockitoJUnitRunner.class)
-public class UserServiceTest {
+@Tag("unit")
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
@@ -44,7 +43,7 @@ public class UserServiceTest {
     private UserServiceImpl userService;
 
     @Test
-    public void getUserById() {
+    void getUserById() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword("password");
@@ -57,17 +56,17 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findById(anyLong());
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfUserNotFounded() {
+    @Test
+    void throwEntityNotFoundExceptionIfUserNotFounded() {
         User user = new User();
         user.setId(1L);
 
-        userService.getById(2L);
+        assertThrows(EntityNotFoundException.class, () -> userService.getById(2L));
         verify(userRepository, times(1)).findById(2L);
     }
 
     @Test
-    public void saveUserIfEmailDoesNotExist() {
+    void saveUserIfEmailDoesNotExist() {
         User user = new User();
         user.setEmail("mail@email.com");
         user.setPassword("Qwerty1!");
@@ -82,8 +81,8 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByEmail(user.getEmail());
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfEmailAlreadyExists() {
+    @Test
+    void throwFieldAlreadyExistsExceptionIfEmailAlreadyExists() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword("password");
@@ -91,13 +90,13 @@ public class UserServiceTest {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty1!");
 
-        userService.save(user);
-        verify(userRepository, times(1)).save(user);
+        assertThrows(FieldAlreadyExistsException.class, () -> userService.save(user));
+        verify(userRepository, never()).save(user);
         verify(userRepository, times(1)).findByEmail(user.getEmail());
     }
 
     @Test
-    public void updateUserIfEmailDoesNotExist() {
+    void updateUserIfEmailDoesNotExist() {
         User oldUser = new User();
         oldUser.setEmail("oldEmail@mail.com");
         oldUser.setPassword("oldPassword");
@@ -118,29 +117,27 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByEmail(oldUser.getEmail());
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionIfUpdatedEmailAlreadyExists() {
-        User oldUser = new User();
-        oldUser.setEmail("email@mail.com");
-        oldUser.setPassword("oldPassword");
-        oldUser.setId(1L);
-        User updateUser = new User();
-        updateUser.setEmail("email@mail.com");
-        updateUser.setPassword("updatePassword");
-        updateUser.setId(2L);
+    @Test
+    void throwFieldAlreadyExistsExceptionIfSavedEmailAlreadyExists() {
+        User newUser = new User();
+        newUser.setEmail("email@mail.com");
+        newUser.setPassword("password");
+        newUser.setId(1L);
 
-        when(userRepository.findByEmail(updateUser.getEmail())).thenReturn(Optional.of(updateUser));
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(updateUser));
+        User existingUser = new User();
+        existingUser.setEmail("email@mail.com");
+        existingUser.setId(2L);
 
-        userService.update(oldUser);
+        when(userRepository.findByEmail(newUser.getEmail())).thenReturn(Optional.of(existingUser));
 
-        verify(userRepository, times(1)).update(oldUser);
-        verify(userRepository, times(1)).findById(anyLong());
-        verify(userRepository, times(2)).findByEmail(oldUser.getEmail());
+        assertThrows(FieldAlreadyExistsException.class, () -> userService.save(newUser));
+
+        verify(userRepository, times(1)).findByEmail(newUser.getEmail());
+        verify(userRepository, never()).save(any());
     }
 
     @Test
-    public void getUserByEmail() {
+    void getUserByEmail() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword("password");
@@ -153,17 +150,16 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByEmail(user.getEmail());
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfEmailNotFounded() {
-        User user = new User();
-        user.setEmail("test@email.com");
+    @Test
+    void throwEntityNotFoundExceptionIfEmailNotFounded() {
+        String email = "some@email.com";
 
-        userService.findByEmail("some@email.com");
-        verify(userRepository, times(1)).findByEmail("test@email.com");
+        assertThrows(EntityNotFoundException.class, () -> userService.findByEmail(email));
+        verify(userRepository, times(1)).findByEmail(email);
     }
 
     @Test
-    public void getUserByToken() {
+    void getUserByToken() {
         User user = new User();
         user.setEmail("some@mail.com");
         user.setPassword("mypassword");
@@ -178,20 +174,19 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByToken(anyString());
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfTokenNotFounded() {
+    @Test
+    void throwEntityNotFoundExceptionIfTokenNotFounded() {
         User user = new User();
         user.setEmail("some@mail.com");
         user.setPassword("mypassword");
         user.setId(1L);
         user.setToken("qwerty123!@#");
 
-        userService.findByToken("qflkwrgn");
+        assertThrows(EntityNotFoundException.class, () -> userService.findByToken("qflkwrgn"));
     }
 
     @Test
-    public void registrationUser() {
-        String url = "/sign_up";
+    void registrationUser() {
         User expectedUser = new User();
         expectedUser.setId(1L);
         expectedUser.setEmail("some@mail.com");
@@ -205,7 +200,7 @@ public class UserServiceTest {
         when(encoder.encode(any(CharSequence.class))).thenReturn(expectedUser.getPassword());
 
         User actualUser = userService.registration(expectedUser);
-        assertThat(actualUser).isEqualToComparingFieldByField(expectedUser);
+        assertThat(actualUser).usingRecursiveComparison().isEqualTo(expectedUser);
         verify(userRepository, times(1)).save(expectedUser);
         verify(mailService, times(1)).send(
                 ArgumentMatchers.eq(actualUser.getEmail()),
@@ -215,7 +210,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void automaticRegistration() {
+    void automaticRegistration() {
         User expectedUser = new User();
         expectedUser.setId(1L);
         expectedUser.setEmail("some@mail.com");
@@ -230,7 +225,7 @@ public class UserServiceTest {
 
         User actualUser = userService.automaticRegistration(expectedUser.getEmail(), expectedUser.getRole());
 
-        assertThat(actualUser).isEqualToComparingFieldByField(expectedUser);
+        assertThat(actualUser).usingRecursiveComparison().isEqualTo(expectedUser);
         verify(userRepository, times(1)).save(any());
         verify(mailService, times(1)).send(
                 ArgumentMatchers.eq(actualUser.getEmail()),
@@ -246,18 +241,17 @@ public class UserServiceTest {
                 && actualUser.getPassword() != null;
     }
 
-    @Test(expected = IncorrectPasswordException.class)
-    public void throwIncorrectPasswordExceptionIfEnteredPasswordIsIncorrect() {
-        String url = "/sign_up";
+    @Test
+    void throwIncorrectPasswordExceptionIfEnteredPasswordIsIncorrect() {
         User user = new User();
         user.setPassword("qwert");
         user.setEmail("some@mail.com");
 
-        userService.registration(user);
+        assertThrows(IncorrectPasswordException.class, () -> userService.registration(user));
     }
 
     @Test
-    public void resetPasswordAndSendNewOnEmail() {
+    void resetPasswordAndSendNewOnEmail() {
         User user = new User();
         user.setEmail("some@mail.com");
         user.setPassword("Qwerty1!");
@@ -281,18 +275,15 @@ public class UserServiceTest {
         );
     }
 
-    @Test(expected = IncorrectEmailException.class)
-    public void throwIncorrectEmailExceptionIfEnteredEmailIsIncorrect() {
-        User user = new User();
-        user.setEmail("afvadf");
-        user.setPassword("Qwerty1!");
-        user.setId(1L);
+    @Test
+    void throwIncorrectEmailExceptionIfEnteredEmailIsIncorrect() {
+        String incorrectEmail = "afvadf";
 
-        userService.resetPassword(user.getEmail());
+        assertThrows(IncorrectEmailException.class, () -> userService.resetPassword(incorrectEmail));
     }
 
     @Test
-    public void getAllUsersWithRoleUser() {
+    void getAllUsersWithRoleUser() {
         User user = new User();
         user.setEmail("test@email.com");
         user.setPassword("password");

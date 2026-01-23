@@ -1,4 +1,4 @@
-import { getTeacherForSite } from './renderTeacher';
+import {getTeacherForSite} from './renderTeacher';
 
 export const setValueToTeacherForSiteHandler = (teachers, id, setValue) => {
     const teacher = teachers.find((teacherItem) => teacherItem.id === +id);

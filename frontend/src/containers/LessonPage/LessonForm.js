@@ -1,8 +1,8 @@
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { selectLessonCardSuccess, setUniqueError, selectGroupSuccess } from '../../actions';
+import {connect} from 'react-redux';
+import {reduxForm} from 'redux-form';
+import {selectGroupSuccess, selectLessonCardSuccess, setUniqueError} from '../../actions';
 import LessonForm from '../../components/LessonsPage/LessonForm/LessonForm';
-import { LESSON_FORM } from '../../constants/reduxForms';
+import {LESSON_FORM} from '../../constants/reduxForms';
 
 const mapStateToProps = (state) => ({
     lesson: state.lesson.lesson,

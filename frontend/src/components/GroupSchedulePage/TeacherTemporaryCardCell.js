@@ -1,16 +1,14 @@
-import { isNil } from 'lodash';
+import {isNil} from 'lodash';
 import React from 'react';
-import {
-    COMMON_REGULAR_LESSON_LABEL,
-    COMMON_VACATION_LABEL,
-} from '../../constants/translationLabels/common';
+import {COMMON_REGULAR_LESSON_LABEL, COMMON_VACATION_LABEL,} from '../../constants/translationLabels/common';
 import {
     buildLessonWithRoom,
     prepareTeacherCardRegularCell,
     prepareTitleAndInner,
 } from '../../helper/prepareTeacherCell';
-import { setLink } from '../../helper/setLInk';
+import {setLink} from '../../helper/setLInk';
 import i18n from '../../i18n';
+import { getLessonTypeColor } from '../../constants/lessonTypeColors';
 
 const TeacherTemporaryCardCell = (props) => {
     const { cards, place } = props;
@@ -29,10 +27,15 @@ const TeacherTemporaryCardCell = (props) => {
         const { temporary_schedule: tempSchedule, linkToMeeting } = card;
 
         const meetingLink = linkToMeeting && setLink(card, place);
+        const triangleColor = getLessonTypeColor(card.lessonType);
 
         if (!tempSchedule) {
             return (
                 <>
+                    <div
+                        className="lesson-type-triangle"
+                        style={{ borderTopColor: triangleColor }}
+                    />
                     {prepareTeacherCardRegularCell(card, place)}
                     {meetingLink}
                 </>
@@ -52,13 +55,21 @@ const TeacherTemporaryCardCell = (props) => {
             place,
         )}`;
         return (
-            <p className="temporary-class" title={title}>
-                {inner}
-                {meetingLink}
-            </p>
+            <>
+                <div
+                    className="lesson-type-triangle"
+                    style={{ borderTopColor: triangleColor }}
+                />
+                <p className="temporary-class" title={title}>
+                    {inner}
+                    {meetingLink}
+                </p>
+            </>
         );
     }
+
     const card = cards[0];
+    const triangleColor = getLessonTypeColor(card.lessonType);
 
     inner += buildLessonWithRoom(card, place);
 
@@ -69,10 +80,16 @@ const TeacherTemporaryCardCell = (props) => {
         place,
     });
     return (
-        <p className="temporary-class" title={resTitle}>
-            {resInner}
-            {card.linkToMeeting && setLink(card, place)}
-        </p>
+        <>
+            <div
+                className="lesson-type-triangle"
+                style={{ borderTopColor: triangleColor }}
+            />
+            <p className="temporary-class" title={resTitle}>
+                {resInner}
+                {card.linkToMeeting && setLink(card, place)}
+            </p>
+        </>
     );
 };
 

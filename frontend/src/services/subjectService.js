@@ -1,8 +1,8 @@
-import { store } from '../store';
+import {store} from '../store';
 
 import axios from '../helper/axios';
-import { DISABLED_SUBJECTS_URL, SUBJECT_URL } from '../constants/axios';
-import { SUBJECT_FORM } from '../constants/reduxForms';
+import {DISABLED_SUBJECTS_URL, SUBJECT_URL} from '../constants/axios';
+import {SUBJECT_FORM} from '../constants/reduxForms';
 import {
     addSubject,
     clearSubject,
@@ -13,15 +13,15 @@ import {
     updateSubject,
 } from '../actions/index';
 import i18n from '../i18n';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
-import { resetFormHandler } from '../helper/formHelper';
+import {errorHandler, successHandler} from '../helper/handlerAxios';
+import {resetFormHandler} from '../helper/formHelper';
 import {
     BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
+    UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { FORM_SUBJECT_LABEL } from '../constants/translationLabels/formElements';
+import {FORM_SUBJECT_LABEL} from '../constants/translationLabels/formElements';
 
 export const selectSubjectService = (subjectId) => store.dispatch(selectSubject(subjectId));
 

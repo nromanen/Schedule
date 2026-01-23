@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { isEmpty } from 'lodash';
-import { CircularProgress } from '@material-ui/core';
+import React, {useEffect, useState} from 'react';
+import {isEmpty} from 'lodash';
+import {CircularProgress} from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import DragDropCard from '../DragDropCard';
-import { divideLessonsByOneHourLesson } from '../../../helper/schedule';
-import { FORM_GROUP_LABEL } from '../../../constants/translationLabels/formElements';
+import {divideLessonsByOneHourLesson} from '../../../helper/schedule';
+import {FORM_GROUP_LABEL} from '../../../constants/translationLabels/formElements';
 import {
     CLEAR_SCHEDULE_LABEL,
     COMMON_SELECT_GROUP_SCHEDULE,
     LESSON_NO_LESSON_FOR_GROUP_LABEL,
 } from '../../../constants/translationLabels/common';
 import './ScheduleLessonList.scss';
-import i18n from '../../../i18n';
 
 const ScheduleLessonsList = (props) => {
     const {
@@ -42,7 +41,7 @@ const ScheduleLessonsList = (props) => {
     useEffect(() => {
         setListItems(divideLessonsByOneHourLesson(items, lessons));
         setListLoading(false);
-    }, [lessons]);
+    }, [items, lessons]);
 
     useEffect(() => {
         if (groupId) {

@@ -1,48 +1,61 @@
-import java.time.format.DateTimeFormatter
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 configurations {
     liquibase
 }
 
 dependencies {
-    liquibase group: 'org.liquibase.ext', name: 'liquibase-hibernate5', version: '4.6.2'
+    liquibase group: 'org.liquibase.ext', name: 'liquibase-hibernate5', version: '4.25.1'
 }
 
 Properties hibernateProperties = new Properties()
-hibernateProperties.load(new FileInputStream("src/main/resources/hibernate.properties"))
+def propsFile = file("src/main/resources/liquibase.properties")
+if (propsFile.exists()) {
+    propsFile.withInputStream { hibernateProperties.load(it) }
+} else {
+    println "WARNING: hibernate.properties not found, using defaults"
+}
+
+def dbUrl = System.getenv('DB_URL') ?: hibernateProperties.getProperty('hibernate.connection.url', 'jdbc:postgresql://localhost:5432/schedule')
+def dbUser = System.getenv('DB_USER') ?: hibernateProperties.getProperty('hibernate.connection.username', 'postgres')
+def dbPassword = System.getenv('DB_PASSWORD') ?: hibernateProperties.getProperty('hibernate.connection.password', 'root')
+def dbDriver = hibernateProperties.getProperty('hibernate.connection.driver_class', 'org.postgresql.Driver')
+def hibernateDialect = hibernateProperties.getProperty('hibernate.dialect', 'org.hibernate.dialect.PostgreSQL95Dialect')
+def entityPackage = hibernateProperties.getProperty('hibernate.entity.package', 'com.softserve.entity')
+def changelogPath = hibernateProperties.getProperty('liquibase.changelog.file_path', 'src/main/resources/db/changelog/')
 
 task diffChangelog(type: JavaExec) {
     group = "liquibase"
-    description 'Receives information on differences between two databases you are comparing and creates a changelog file containing deployable changesets.'
+    description = 'Receives information on differences between two databases you are comparing and creates a changelog file containing deployable changesets.'
 
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.liquibase
     mainClass.set("liquibase.integration.commandline.Main")
 
-    args "--changeLogFile=" + hibernateProperties.getProperty('liquibase.changelog.file_path') + timestamp() + "_changelog.yaml"
-    args "--referenceUrl=hibernate:spring:" + hibernateProperties.getProperty('hibernate.entity.package') + "?dialect=" + hibernateProperties.getProperty('hibernate.dialect')
-    args "--url=" + hibernateProperties.getProperty('hibernate.connection.url')
-    args "--username=" + hibernateProperties.getProperty('hibernate.connection.username')
-    args "--password=" + hibernateProperties.getProperty('hibernate.connection.password')
-    args "--driver=" + hibernateProperties.getProperty('hibernate.connection.driver_class')
+    args "--changeLogFile=" + changelogPath + timestamp() + "_changelog.yaml"
+    args "--referenceUrl=hibernate:spring:" + entityPackage + "?dialect=" + hibernateDialect
+    args "--url=" + dbUrl
+    args "--username=" + dbUser
+    args "--password=" + dbPassword
+    args "--driver=" + dbDriver
     args "--logLevel=warn"
     args "diffChangeLog"
 }
 
 task diff(type: JavaExec) {
     group = "liquibase"
-    description 'Compares two databases of the same type, or different types, to one another.'
+    description = 'Compares two databases of the same type, or different types, to one another.'
 
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.liquibase
     mainClass.set("liquibase.integration.commandline.Main")
 
-    args "--referenceUrl=hibernate:spring:" + hibernateProperties.getProperty('hibernate.entity.package') + "?dialect=" + hibernateProperties.getProperty('hibernate.dialect')
-    args "--url=" + hibernateProperties.getProperty('hibernate.connection.url')
-    args "--username=" + hibernateProperties.getProperty('hibernate.connection.username')
-    args "--password=" + hibernateProperties.getProperty('hibernate.connection.password')
-    args "--driver=" + hibernateProperties.getProperty('hibernate.connection.driver_class')
+    args "--referenceUrl=hibernate:spring:" + entityPackage + "?dialect=" + hibernateDialect
+    args "--url=" + dbUrl
+    args "--username=" + dbUser
+    args "--password=" + dbPassword
+    args "--driver=" + dbDriver
     args "--excludeObjects=databasechangelog, databasechangeloglock"
     args "--logLevel=warn"
     args "diff"
@@ -50,17 +63,17 @@ task diff(type: JavaExec) {
 
 task update(type: JavaExec) {
     group = "liquibase"
-    description 'Deploys any changes that are in the changelog file and that have not been deployed to your database yet.'
+    description = 'Deploys any changes that are in the changelog file and that have not been deployed to your database yet.'
 
     classpath sourceSets.main.runtimeClasspath
     classpath configurations.liquibase
     mainClass.set("liquibase.integration.commandline.Main")
 
     args "--changeLogFile=src/main/resources/db/changelog/db.changelog-master.yaml"
-    args "--url=" + hibernateProperties.getProperty('hibernate.connection.url')
-    args "--username=" + hibernateProperties.getProperty('hibernate.connection.username')
-    args "--password=" + hibernateProperties.getProperty('hibernate.connection.password')
-    args "--driver=" + hibernateProperties.getProperty('hibernate.connection.driver_class')
+    args "--url=" + dbUrl
+    args "--username=" + dbUser
+    args "--password=" + dbPassword
+    args "--driver=" + dbDriver
     args "--logLevel=warn"
     args "update"
 }

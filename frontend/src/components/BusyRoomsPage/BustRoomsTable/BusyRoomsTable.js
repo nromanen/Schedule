@@ -2,7 +2,7 @@ import React from 'react';
 import './BusyRoomsTable.scss';
 import TableItem from '../TableItem/TableItem';
 import ScheduleDaySidebar from '../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar';
-import { ROOM_LIST_TITLE } from '../../../constants/translationLabels/common';
+import {ROOM_LIST_TITLE} from '../../../constants/translationLabels/common';
 
 const BusyRoomsTable = (props) => {
     const { busyRooms, days, classes, columnsSize, t } = props;
@@ -26,6 +26,7 @@ const BusyRoomsTable = (props) => {
                                     classes={classes}
                                     t={t}
                                     schedule={schedule}
+                                    columnsSize={columnsSize}
                                 />
                             ) : null;
                         })}

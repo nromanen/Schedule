@@ -1,18 +1,18 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import {
-    handleRoomFormSubmitStart,
-    getListOfRoomsStart,
-    getListOfDisabledRoomsStart,
-    toggleRoomVisibilityStart,
-    deleteRoomStart,
-    setSelectRoomSuccess,
     clearRoomSuccess,
-    getAllRoomTypesStart,
+    deleteRoomStart,
     deleteRoomTypeStart,
+    getAllRoomTypesStart,
+    getListOfDisabledRoomsStart,
+    getListOfRoomsStart,
+    handleRoomFormSubmitStart,
     handleRoomTypeFormSubmitStart,
     selectRoomType,
+    setSelectRoomSuccess,
+    toggleRoomVisibilityStart,
 } from '../../actions/rooms';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import {setIsOpenConfirmDialog} from '../../actions/dialog';
 import RoomPage from '../../components/RoomsPage/RoomsPage';
 
 const mapStateToProps = (state) => ({

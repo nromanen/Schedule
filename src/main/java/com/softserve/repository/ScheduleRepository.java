@@ -205,4 +205,11 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
      * @return the list of schedules
      */
     List<Schedule> getAllOrdered(Long semesterId);
+
+    /**
+     * Get all schedules for semester with all related entities loaded in one query.
+     * @param semesterId the id of the semester
+     * @return the list of schedules with detailed information
+     */
+    List<Schedule> findAllBySemesterWithDetails(Long semesterId);
 }

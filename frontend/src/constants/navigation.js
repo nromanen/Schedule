@@ -9,5 +9,7 @@ export const navigationNames = {
     LESSON_PAGE: 'lessons',
     MERGE_ROLE_PAGE: 'users',
     CHANGES: 'changes',
+    SCHEDULE_PAGE: 'schedules',
     BUSY_ROOMS: 'busy-rooms',
+    TEACHER_LESSONS: 'teacher-lessons',
 };

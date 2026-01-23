@@ -1,18 +1,14 @@
 import './GroupCard.scss';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
-import { FaEdit, FaUserPlus, FaUsers } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
-import { dialogTypes } from '../../../constants/dialogs';
-import { ADD_STUDENT_LINK, GROUP_LIST_LINK, SHOW_STUDENTS_LINK } from '../../../constants/links';
-import { getShortTitle } from '../../../helper/shortTitle';
-import {
-    COMMON_EDIT,
-    COMMON_SET_DISABLED,
-    COMMON_SET_ENABLED,
-} from '../../../constants/translationLabels/common';
+import {useTranslation} from 'react-i18next';
+import {Link} from 'react-router-dom';
+import {GiSightDisabled, IoMdEye} from 'react-icons/all';
+import {FaEdit, FaUserPlus, FaUsers} from 'react-icons/fa';
+import {MdDelete} from 'react-icons/md';
+import {dialogTypes} from '../../../constants/dialogs';
+import {ADD_STUDENT_LINK, GROUP_LIST_LINK, SHOW_STUDENTS_LINK} from '../../../constants/links';
+import {getShortTitle} from '../../../helper/shortTitle';
+import {COMMON_EDIT, COMMON_SET_DISABLED, COMMON_SET_ENABLED,} from '../../../constants/translationLabels/common';
 import {
     DELETE_TITLE_LABEL,
     FORM_SHOW_STUDENTS,

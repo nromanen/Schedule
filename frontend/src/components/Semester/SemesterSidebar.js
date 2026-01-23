@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SemesterForm from '../../containers/SemesterPage/SemesterForm';
 import i18n from '../../i18n';
-import { COMMON_SEMESTER_IS_NOT_UNIQUE } from '../../constants/translationLabels/common';
-import { checkUniqSemester } from '../../validation/storeValidation';
-import { checkSemesterYears } from '../../utils/formUtils';
+import {COMMON_SEMESTER_IS_NOT_UNIQUE} from '../../constants/translationLabels/common';
+import {checkUniqSemester} from '../../validation/storeValidation';
+import {checkSemesterYears} from '../../utils/formUtils';
 
 const SemesterSidebar = (props) => {
     const {

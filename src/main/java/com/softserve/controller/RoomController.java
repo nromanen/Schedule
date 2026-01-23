@@ -8,8 +8,8 @@ import com.softserve.entity.enums.EvenOdd;
 import com.softserve.mapper.RoomForScheduleInfoMapper;
 import com.softserve.mapper.RoomMapper;
 import com.softserve.service.RoomService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 @RestController
-@Api(tags = "Room API")
+@Tag(name = "Room API")
 @RequestMapping("/rooms")
 @Slf4j
 public class RoomController {
@@ -37,7 +37,7 @@ public class RoomController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get the list of all rooms")
+    @Operation(summary = "Get the list of all rooms")
     public ResponseEntity<List<RoomDTO>> list() {
         log.info("Enter into list of RoomController");
         return ResponseEntity.ok().body(roomMapper.convertToDtoList(roomService.getAll()));
@@ -45,7 +45,7 @@ public class RoomController {
 
     @GetMapping("/free")
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Get the list of all free rooms by specific day and period")
+    @Operation(summary = "Get the list of all free rooms by specific day and period")
     public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "semesterId") Long semesterId,
                                                       @RequestParam(value = "classId") Long classId,
                                                       @RequestParam(value = "dayOfWeek") DayOfWeek dayOfWeek,
@@ -57,7 +57,7 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get room info by id")
+    @Operation(summary = "Get room info by id")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RoomDTO> get(@PathVariable("id") long id) {
         log.info("Enter into get of RoomController with id {} ", id);
@@ -66,7 +66,7 @@ public class RoomController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Create new room")
+    @Operation(summary = "Create new room")
     public ResponseEntity<RoomDTO> save(@RequestBody RoomDTO roomDTO) {
         log.info("Enter into save of RoomController with roomDTO: {}", roomDTO);
         Room newRoom = roomService.save(roomMapper.convertToEntity(roomDTO));
@@ -74,7 +74,7 @@ public class RoomController {
     }
 
     @PutMapping
-    @ApiOperation(value = "Update existing room")
+    @Operation(summary = "Update existing room")
     public ResponseEntity<RoomDTO> update(@RequestBody RoomDTO roomDTO) {
         log.info("Enter into update of RoomController with roomDTO: {}", roomDTO);
         Room newRoom = roomService.update(roomMapper.convertToEntity(roomDTO));
@@ -82,7 +82,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete room by id")
+    @Operation(summary = "Delete room by id")
     public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id) {
         log.info("Enter into delete of RoomController with id: {}", id);
         roomService.delete(roomService.getById(id));
@@ -90,14 +90,14 @@ public class RoomController {
     }
 
     @GetMapping("/disabled")
-    @ApiOperation(value = "Get the list of disabled rooms")
+    @Operation(summary = "Get the list of disabled rooms")
     public ResponseEntity<List<RoomDTO>> getDisabled() {
         log.info("Enter into list of RoomController");
         return ResponseEntity.ok().body(roomMapper.convertToDtoList(roomService.getDisabled()));
     }
 
     @GetMapping("/available")
-    @ApiOperation(value = "Get the list of all rooms (available/not available) with status")
+    @Operation(summary = "Get the list of all rooms (available/not available) with status")
     public ResponseEntity<List<RoomForScheduleInfoDTO>> getAvailableAndNotAvailableRoomsForSchedule(
             @RequestParam(value = "semesterId") Long semesterId,
             @RequestParam(value = "classId") Long classId,
@@ -116,7 +116,7 @@ public class RoomController {
     }
 
     @GetMapping("/ordered")
-    @ApiOperation(value = "Get the list of all rooms sorted by order")
+    @Operation(summary = "Get the list of all rooms sorted by order")
     public ResponseEntity<List<RoomDTO>> getAllOrdered() {
         log.info("Entered getAllOrdered");
         return ResponseEntity
@@ -125,7 +125,7 @@ public class RoomController {
     }
 
     @PostMapping("/after/{id}")
-    @ApiOperation(value = "Create room after id")
+    @Operation(summary = "Create room after id")
     public ResponseEntity<RoomDTO> saveRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
         log.trace("Entered saveRoomAfterId({}{})", roomAfterId, roomDTO);
         Room room = roomService.createAfterOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
@@ -133,7 +133,7 @@ public class RoomController {
     }
 
     @PutMapping("/after/{id}")
-    @ApiOperation(value = "Update room order")
+    @Operation(summary = "Update room order")
     public ResponseEntity<RoomDTO> upgradeRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
         log.trace("Entered upgradeRoomAfterId({}{})", roomAfterId, roomDTO);
         Room room = roomService.updateAfterOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);

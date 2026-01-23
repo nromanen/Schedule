@@ -1,31 +1,23 @@
 package com.softserve.entity;
 
 import com.softserve.entity.interfaces.SortableOrder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
 
 @NoArgsConstructor
 @Setter
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "rooms")
-
-@FilterDef(name = "roomDisableFilter", parameters = {
-        @ParamDef(name = "disable", type = "boolean"),
-})
-
-@Filter(name = "roomDisableFilter", condition = "disable = :disable")
-
 public class Room implements Serializable, SortableOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +26,7 @@ public class Room implements Serializable, SortableOrder {
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 2, max = 35, message = "Name must be between 2 and 35 characters long")
     @Column(length = 35, nullable = false)
+    @EqualsAndHashCode.Include
     private String name;
 
     @ManyToOne(targetEntity = RoomType.class)

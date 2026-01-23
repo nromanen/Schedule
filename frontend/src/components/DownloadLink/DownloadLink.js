@@ -1,15 +1,14 @@
 import React from 'react';
-import { MdPictureAsPdf } from 'react-icons/md';
+import {MdPictureAsPdf} from 'react-icons/md';
 import i18n from '../../i18n';
-import {
-    PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL,
-    PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL,
-} from '../../constants/axios';
-import { COMMON_DOWNLOAD_PDF } from '../../constants/translationLabels/common';
+import {PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL, PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL,} from '../../constants/axios';
+import {COMMON_DOWNLOAD_PDF} from '../../constants/translationLabels/common';
+
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
 
 const getDownloadLink = (entityId, semesterId, languageToRequest) => ({
-    group: `${PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL}?groupId=${entityId}&semesterId=${semesterId}${languageToRequest}`,
-    teacher: `${PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL}?teacherId=${entityId}&semesterId=${semesterId}${languageToRequest}`,
+    group: `${BASE_URL}${PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL}?groupId=${entityId}&semesterId=${semesterId}${languageToRequest}`,
+    teacher: `${BASE_URL}${PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL}?teacherId=${entityId}&semesterId=${semesterId}${languageToRequest}`,
 });
 
 const DownloadLink = ({ entity, semesterId, entityId }) => {

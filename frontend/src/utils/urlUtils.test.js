@@ -1,4 +1,4 @@
-import { getDataFromParams } from './urlUtils';
+import {getDataFromParams} from './urlUtils';
 
 describe('getDataFromParams function', () => {
     const location = {};

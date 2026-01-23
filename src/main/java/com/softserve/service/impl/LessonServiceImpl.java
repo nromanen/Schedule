@@ -1,18 +1,24 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.LessonDTO;
+import com.softserve.dto.LessonInfoDTO;
+import com.softserve.dto.LessonWithLinkDTO;
+import com.softserve.dto.SemesterWithGroupsDTO;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
 import com.softserve.entity.Subject;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.mapper.LessonInfoMapper;
 import com.softserve.repository.LessonRepository;
+import com.softserve.repository.SemesterRepository;
+import com.softserve.service.GroupService;
 import com.softserve.service.LessonService;
 import com.softserve.service.SemesterService;
 import com.softserve.service.SubjectService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,168 +30,105 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class LessonServiceImpl implements LessonService {
 
     private final LessonRepository lessonRepository;
     private final SubjectService subjectService;
     private final SemesterService semesterService;
+    private final SemesterRepository semesterRepository;
+    private final LessonInfoMapper lessonInfoMapper;
+    private final GroupService groupService;
 
-    @Autowired
-    public LessonServiceImpl(LessonRepository lessonRepository, SubjectService subjectService, SemesterService semesterService) {
-        this.lessonRepository = lessonRepository;
-        this.subjectService = subjectService;
-        this.semesterService = semesterService;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Transactional(readOnly = true)
-    public Lesson getById(Long id) {
+    public LessonInfoDTO getById(Long id) {
         log.info("In getById(id = [{}])", id);
-        Lesson lesson = lessonRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
-        Hibernate.initialize(lesson.getSemester().getPeriods());
-        Hibernate.initialize(lesson.getSemester().getGroups());
-        return lesson;
+        Lesson lesson = findLessonById(id);
+        return lessonInfoMapper.lessonToLessonInfoDTO(lesson);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson) {
+        log.info("In getGroupedLessonsByLesson(lesson = [{}])", lesson);
+        return lessonRepository.getGroupedLessonsByLesson(lesson);
+    }
+
     @Override
     @Transactional(readOnly = true)
     @Cacheable("lessons")
-    public List<Lesson> getAll() {
+    public List<LessonInfoDTO> getAll() {
         log.info("In getAll()");
         List<Lesson> lessons = lessonRepository.getAll();
-        lessons.forEach(e -> {
-            Hibernate.initialize(e.getSemester().getPeriods());
-            Hibernate.initialize(e.getSemester().getGroups());
-        });
-        return lessonRepository.getAll();
+        return lessonInfoMapper.lessonsToLessonInfoDTOs(lessons);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable(value = "lessons", key = "#teacherId")
-    public List<Lesson> getLessonByTeacher(Long teacherId) {
-        log.info("In getLessonByTeacher()");
-        List<Lesson> lessons = lessonRepository.getLessonByTeacher(teacherId, semesterService.getCurrentSemester().getId());
-        lessons.forEach(e -> {
-            Hibernate.initialize(e.getSemester().getPeriods());
-            Hibernate.initialize(e.getSemester().getGroups());
-        });
-        return lessons;
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Saves new lesson in the repository and automatically assigns
-     * teacher for site by teacher data if teacher for site is empty or null and
-     * subject for site by subject name if subject for site is empty or null.
-     *
-     * @throws EntityAlreadyExistsException if given lesson already exists
-     */
     @Override
     @Transactional
     @CacheEvict(value = "lessons", allEntries = true)
-    public Lesson save(Lesson object) {
-        object.setSemester(semesterService.getCurrentSemester());
-        log.info("In save(entity = [{}]", object);
-        if (isLessonForGroupExists(object)) {
-            throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
-        } else {
-            //Fill in subject for site by subject name (from JSON) if subject for site is empty or null
-            if (object.getSubjectForSite().isEmpty() || object.getSubjectForSite() == null) {
-                Subject subject = subjectService.getById(object.getSubject().getId());
-                object.setSubjectForSite(subject.getName());
-            }
-            return lessonRepository.save(object);
+    public LessonInfoDTO save(LessonInfoDTO lessonInfoDTO) {
+        log.info("In save(lessonInfoDTO = [{}])", lessonInfoDTO);
+        Lesson lesson = lessonInfoMapper.lessonInfoDTOToLesson(lessonInfoDTO);
+        Lesson savedLesson = saveLesson(lesson);
+        return lessonInfoMapper.lessonToLessonInfoDTO(savedLesson);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "lessons", allEntries = true)
+    public List<LessonInfoDTO> saveAll(List<LessonInfoDTO> lessonDTOs) {
+        log.info("In saveAll(lessons = [{}])", lessonDTOs);
+        List<LessonInfoDTO> savedLessons = new ArrayList<>();
+        for (LessonInfoDTO dto : lessonDTOs) {
+            savedLessons.add(save(dto));
         }
+        return savedLessons;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Transactional
     @CacheEvict(value = "lessons", allEntries = true)
-    public List<Lesson> save(List<Lesson> lessons) {
-        log.info("In save(lessons = [{}])", lessons);
-        List<Lesson> lessonsList = new ArrayList<>();
-        lessons.forEach(lesson -> lessonsList.add(save(lesson)));
-
-        return lessonsList;
+    public LessonInfoDTO update(LessonInfoDTO lessonInfoDTO) {
+        log.info("In update(lessonInfoDTO = [{}])", lessonInfoDTO);
+        Lesson lesson = lessonInfoMapper.lessonInfoDTOToLesson(lessonInfoDTO);
+        Lesson updatedLesson = updateLesson(lesson);
+        return lessonInfoMapper.lessonToLessonInfoDTO(updatedLesson);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws EntityAlreadyExistsException if there is already another lesson with parameters as in the given
-     */
     @Override
     @Transactional
     @CacheEvict(value = "lessons", allEntries = true)
-    public Lesson update(Lesson lesson) {
-        lesson.setSemester(semesterService.getCurrentSemester());
-        log.info("In update(entity = [{}]", lesson);
-        if (isLessonForGroupExistsAndIgnoreWithId(lesson)) {
-            throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
-        }
+    public void delete(Long id) {
+        log.info("In delete(id = [{}])", id);
+        Lesson lesson = findLessonById(id);
         if (lesson.isGrouped()) {
-            Lesson oldLesson = getById(lesson.getId());
-            if (!oldLesson.isGrouped()) {
-                lessonRepository.setGrouped(lesson.getId());
-            }
-            boolean isSubjectUpdated = oldLesson.getSubject().getId().longValue() != lesson.getSubject().getId().longValue();
-            boolean isTeacherUpdated = !oldLesson.getTeacher().getId().equals(lesson.getTeacher().getId());
-            lesson = lessonRepository.updateGrouped(oldLesson, lesson, isSubjectUpdated || isTeacherUpdated);
+            lessonRepository.deleteGrouped(lesson);
         } else {
-            lesson = lessonRepository.update(lesson);
+            lessonRepository.delete(lesson);
         }
-        return lesson;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional
-    @CacheEvict(value = "lessons", allEntries = true)
-    public Lesson delete(Lesson object) {
-        log.info("In delete(object = [{}])", object);
-        if (object.isGrouped()) {
-            return lessonRepository.deleteGrouped(object);
-        }
-        return lessonRepository.delete(object);
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "lessons", key = "#groupId")
-    public List<Lesson> getAllForGroup(Long groupId) {
+    @Cacheable(value = "lessons", key = "'group-' + #groupId")
+    public List<LessonInfoDTO> getAllForGroup(Long groupId) {
         log.info("In getAllForGroup(groupId = [{}])", groupId);
-        List<Lesson> lessons = lessonRepository.getAllForGroup(groupId, semesterService.getCurrentSemester().getId());
-        lessons.forEach(e -> {
-            Hibernate.initialize(e.getSemester().getPeriods());
-            Hibernate.initialize(e.getSemester().getGroups());
-        });
-        return lessons;
+        List<Lesson> lessons = lessonRepository.getAllForGroup(
+                groupId, semesterService.getCurrentSemester().getId());
+        return lessonInfoMapper.lessonsToLessonInfoDTOs(lessons);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "lessons", key = "'teacher-' + #teacherId")
+    public List<LessonInfoDTO> getByTeacher(Long teacherId) {
+        log.info("In getByTeacher(teacherId = [{}])", teacherId);
+        List<Lesson> lessons = lessonRepository.getLessonByTeacher(
+                teacherId, semesterService.getCurrentSemester().getId());
+        return lessonInfoMapper.lessonsToLessonInfoDTOs(lessons);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<LessonType> getAllLessonTypes() {
@@ -193,109 +136,119 @@ public class LessonServiceImpl implements LessonService {
         return Arrays.asList(LessonType.values());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Transactional(readOnly = true)
-    public boolean isLessonForGroupExists(Lesson lesson) {
-        log.info("In isLessonForGroupExists(lesson = [{}])", lesson);
-        return lessonRepository.countLessonDuplicates(lesson) != 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public boolean isLessonForGroupExistsAndIgnoreWithId(Lesson lesson) {
-        log.info("In isLessonForGroupExistsAndIgnoreWithId(lesson = [{}])", lesson);
-        return lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    @Cacheable(value = "lessons", key = "#semesterId")
-    public List<Lesson> getLessonsBySemester(Long semesterId) {
-        log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
+    @Cacheable(value = "lessons", key = "'semester-' + #semesterId")
+    public List<LessonInfoDTO> getBySemester(Long semesterId) {
+        log.info("In getBySemester(semesterId = [{}])", semesterId);
         List<Lesson> lessons = lessonRepository.getLessonsBySemester(semesterId);
-        lessons.forEach(e -> {
-            Hibernate.initialize(e.getSemester().getPeriods());
-            Hibernate.initialize(e.getSemester().getGroups());
-        });
-        return lessons;
+        return lessonInfoMapper.lessonsToLessonInfoDTOs(lessons);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional
-    public List<Lesson> copyLessonsFromOneToAnotherSemester(List<Lesson> lessons, Semester toSemester) {
-        log.info("In method copyLessonsFromOneToAnotherSemester with lessons = {} and toSemester = {}", lessons, toSemester);
-        List<Lesson> toLessons = new ArrayList<>();
-        for (Lesson lesson : lessons) {
-            lesson.setSemester(toSemester);
-            toLessons.add(lessonRepository.save(lesson));
-        }
-        return toLessons;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional
-    public Lesson saveLessonDuringCopy(Lesson lesson) {
-        log.info("In method saveLessonDuringCopy with lesson = {}", lesson);
-        return lessonRepository.save(lesson);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Transactional
     @CacheEvict(value = "lessons", allEntries = true)
-    public void deleteLessonBySemesterId(Long semesterId) {
-        log.info("In method deleteLessonBySemesterId with semesterId = {}", semesterId);
+    public List<LessonDTO> copyLessonsToSemester(Long fromSemesterId, Long toSemesterId) {
+        log.info("In copyLessonsToSemester(from = [{}], to = [{}])", fromSemesterId, toSemesterId);
+        Semester toSemester = semesterRepository.findById(toSemesterId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        Semester.class, "id", toSemesterId.toString()));
+
+        List<Lesson> lessons = lessonRepository.getLessonsBySemester(fromSemesterId);
+        List<Lesson> savedLessons = new ArrayList<>();
+
+        for (Lesson lesson : lessons) {
+            lesson.setSemester(toSemester);
+            savedLessons.add(lessonRepository.save(lesson));
+        }
+        return lessonInfoMapper.lessonsToLessonDTOs(savedLessons);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "lessons", allEntries = true)
+    public List<LessonInfoDTO> copyLessonForGroups(Long lessonId, List<Long> groupIds) {
+        log.info("In copyLessonForGroups(lessonId = [{}], groupIds = [{}])", lessonId, groupIds);
+        Lesson lesson = findLessonById(lessonId);
+        List<Lesson> savedLessons = new ArrayList<>();
+
+        for (Long groupId : groupIds) {
+            if (groupService.isExistsById(groupId)) {
+                lesson.setGroup(groupService.getGroupEntityById(groupId));
+                savedLessons.add(lessonRepository.save(lesson));
+            }
+        }
+        return lessonInfoMapper.lessonsToLessonInfoDTOs(savedLessons);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "lessons", allEntries = true)
+    public void deleteBySemesterId(Long semesterId) {
+        log.info("In deleteBySemesterId(semesterId = [{}])", semesterId);
         lessonRepository.deleteLessonsBySemesterId(semesterId);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
-        log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
-        List<Lesson> lessons = lessonRepository.getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson);
-        lessons.forEach(e -> {
-            Hibernate.initialize(e.getSemester().getPeriods());
-            Hibernate.initialize(e.getSemester().getGroups());
-        });
-        return lessons;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public List<Lesson> getAllGroupedLessonsByLesson(Lesson lesson) {
-        return lessonRepository.getGroupedLessonsByLesson(lesson);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Transactional
-    public Integer updateLinkToMeeting(Lesson lesson) {
-        log.info("In service updateLinkToMeeting lesson = [{}]", lesson);
+    @CacheEvict(value = "lessons", allEntries = true)
+    public Integer updateLinkToMeeting(LessonWithLinkDTO lessonWithLinkDTO) {
+        log.info("In updateLinkToMeeting(lessonWithLinkDTO = [{}])", lessonWithLinkDTO);
+        Lesson lesson = lessonInfoMapper.lessonWithLinkDTOToLesson(lessonWithLinkDTO);
         return lessonRepository.updateLinkToMeeting(lesson);
+    }
+
+    // Private helper methods
+
+    private Lesson findLessonById(Long id) {
+        return lessonRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Lesson.class, "id", id.toString()));
+    }
+
+    private Lesson saveLesson(Lesson lesson) {
+        SemesterWithGroupsDTO currentSemesterDTO = semesterService.getCurrentSemester();
+        Semester currentSemester = semesterRepository.findById(currentSemesterDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        Semester.class, "id", currentSemesterDTO.getId().toString()));
+
+        lesson.setSemester(currentSemester);
+
+        if (lessonRepository.countLessonDuplicates(lesson) != 0) {
+            throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
+        }
+
+        if (lesson.getSubjectForSite() == null || lesson.getSubjectForSite().isEmpty()) {
+            Subject subject = subjectService.getById(lesson.getSubject().getId());
+            lesson.setSubjectForSite(subject.getName());
+        }
+
+        return lessonRepository.save(lesson);
+    }
+
+    private Lesson updateLesson(Lesson lesson) {
+        SemesterWithGroupsDTO currentSemesterDTO = semesterService.getCurrentSemester();
+        Semester currentSemester = semesterRepository.findById(currentSemesterDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        Semester.class, "id", currentSemesterDTO.getId().toString()));
+
+        lesson.setSemester(currentSemester);
+
+        if (lessonRepository.countLessonDuplicatesWithIgnoreId(lesson) != 0) {
+            throw new EntityAlreadyExistsException("Lesson with this parameters already exists");
+        }
+
+        if (lesson.isGrouped()) {
+            Lesson oldLesson = findLessonById(lesson.getId());
+            if (!oldLesson.isGrouped()) {
+                lessonRepository.setGrouped(lesson.getId());
+            }
+            boolean isSubjectUpdated = !oldLesson.getSubject().getId()
+                    .equals(lesson.getSubject().getId());
+            boolean isTeacherUpdated = !oldLesson.getTeacher().getId()
+                    .equals(lesson.getTeacher().getId());
+            return lessonRepository.updateGrouped(oldLesson, lesson, isSubjectUpdated || isTeacherUpdated);
+        }
+
+        return lessonRepository.update(lesson);
     }
 }

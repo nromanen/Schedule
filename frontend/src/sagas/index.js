@@ -1,5 +1,5 @@
-import { all } from 'redux-saga/effects';
-import { watchSemester } from './semesters';
+import {all} from 'redux-saga/effects';
+import {watchSemester} from './semesters';
 import groupWatcher from './group';
 import studentWatcher from './student';
 import watchSchedule from './schedule';
@@ -8,6 +8,8 @@ import watchTeachers from './teachers';
 import watchLessons from './lessons';
 import watchRooms from './rooms';
 import watchClasses from './class';
+
+import watchTeacherLessons from './teacherLessons';
 
 export default function* startForman() {
     yield all([
@@ -20,5 +22,6 @@ export default function* startForman() {
         watchRooms(),
         watchClasses(),
         watchTeachers(),
+        watchTeacherLessons(),
     ]);
 }

@@ -1,17 +1,14 @@
 import i18n from 'i18next';
-import {
-    FORM_CANCEL_BUTTON_TITLE,
-    FORM_CHOOSE_BUTTON_TITLE,
-} from './translationLabels/formElements';
+import {FORM_CANCEL_BUTTON_TITLE, FORM_CHOOSE_BUTTON_TITLE,} from './translationLabels/formElements';
 import {
     COMMON_CLOSE_TITLE,
-    CONFIRM_GROUPS,
-    SENT_SCHEDULE,
-    COMMON_UPLOAD_FROM_FILE_TITLE,
-    COMMON_YES_BUTTON_TITLE,
-    COMMON_NO_BUTTON_TITLE,
     COMMON_MOVE_LABEL,
     COMMON_MOVE_TO_GROUP_TITLE,
+    COMMON_NO_BUTTON_TITLE,
+    COMMON_UPLOAD_FROM_FILE_TITLE,
+    COMMON_YES_BUTTON_TITLE,
+    CONFIRM_GROUPS,
+    SENT_SCHEDULE,
 } from './translationLabels/common';
 
 export const dialogTypes = {

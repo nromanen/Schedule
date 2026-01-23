@@ -1,30 +1,30 @@
-import { reset } from 'redux-form';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import {reset} from 'redux-form';
+import {call, put, takeLatest} from 'redux-saga/effects';
 import * as actionTypes from '../actions/actionsType';
 import {
     createLessonSuccess,
-    selectLessonCardSuccess,
-    updateLessonCardSuccess,
     deleteLessonCardSuccess,
+    selectLessonCardSuccess,
     setLessonsCardsStart,
-    setLoading,
     setLessonTypesSuccess,
+    setLoading,
+    updateLessonCardSuccess,
 } from '../actions';
-import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackbar';
-import { createErrorMessage, createMessage } from '../utils/sagaUtils';
-import { DELETE, POST, PUT, GET } from '../constants/methods';
-import { LESSON_FORM } from '../constants/reduxForms';
-import { FORM_LESSON_LABEL } from '../constants/translationLabels/formElements';
-import { LESSON_URL, COPY_LESSON_URL, LESSON_TYPES_URL } from '../constants/axios';
+import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
+import {createErrorMessage, createMessage} from '../utils/sagaUtils';
+import {DELETE, GET, POST, PUT} from '../constants/methods';
+import {LESSON_FORM} from '../constants/reduxForms';
+import {FORM_LESSON_LABEL} from '../constants/translationLabels/formElements';
+import {COPY_LESSON_URL, LESSON_TYPES_URL, LESSON_URL} from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
-    CREATED_LABEL,
-    UPDATED_LABEL,
-    DELETED_LABEL,
     COPIED_LABEL,
+    CREATED_LABEL,
+    DELETED_LABEL,
+    UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { axiosCall } from '../services/axios';
-import { handleFormSubmit } from '../helper/handleFormSubmit';
+import {axiosCall} from '../services/axios';
+import {handleFormSubmit} from '../helper/handleFormSubmit';
 
 export function* createLessonCard({ values, groupId }) {
     try {

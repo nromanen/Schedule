@@ -2,87 +2,63 @@ package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.assertions.CustomMockMvcAssertions;
-import com.softserve.config.*;
-import com.softserve.dto.*;
+import com.softserve.dto.GroupDTO;
+import com.softserve.dto.GroupForUpdateDTO;
+import com.softserve.dto.StudentWithoutGroupDTO;
 import com.softserve.exception.apierror.ApiValidationError;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.*;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Category(IntegrationTestCategory.class)
-@RunWith(JUnitParamsRunner.class)
-@ContextConfiguration(
-        classes = {
-                WebMvcConfig.class,
-                DBConfigTest.class,
-                MyWebAppInitializer.class,
-                SecurityConfig.class,
-                SecurityWebApplicationInitializer.class
-        }
-)
-@WebAppConfiguration
+@Tag("integration")
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 @WithMockUser(
         username = "first@mail.com",
         password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.",
         roles = "MANAGER"
 )
-@Sql(value = {"classpath:create-groups-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class GroupControllerTest {
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule smr = new SpringMethodRule();
-
-    private MockMvc mockMvc;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+@Sql(value = "classpath:create-groups-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+class GroupControllerTest {
 
     @Autowired
-    private WebApplicationContext wac;
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private CustomMockMvcAssertions assertions;
 
     private GroupDTO groupDTOWithID4L;
-
     private GroupDTO disabledGroupDTOWithID5L;
-
     private GroupDTO groupDTOWithID6L;
-
     private StudentWithoutGroupDTO studentDTOWithId4LForGroupWithId4L;
 
-
-    @Before
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
-
+    @BeforeEach
+    void setup() {
         assertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/groups");
 
         groupDTOWithID4L = GroupDTO.builder()
@@ -113,35 +89,31 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void getAllGroups() throws Exception {
+    void getAllGroups() throws Exception {
         List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTOWithID4L);
         assertions.assertForGetList(expected, "/groups");
     }
 
     @Test
-    public void getGroupById() throws Exception {
+    void getGroupById() throws Exception {
         assertions.assertForGet(groupDTOWithID4L, "/groups/4");
     }
 
     @Test
-    @WithMockUser(
-            username = "second@mail.com",
-            password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.",
-            roles = "TEACHER"
-    )
-    @Sql(value = {"classpath:create-lessons-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    public void getByTeacherId() throws Exception {
+    @WithMockUser(username = "second@mail.com", roles = "TEACHER")
+    @Sql(value = "classpath:create-lessons-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void getByTeacherId() throws Exception {
         GroupDTO expectedGroup = GroupDTO.builder().id(4L).disable(false).title("111").build();
         assertions.assertForGetListWithOneEntity(expectedGroup, "/groups/teacher/4");
     }
 
     @Test
-    public void returnNotFoundIfGroupNotFoundedById() throws Exception {
+    void returnNotFoundIfGroupNotFoundedById() throws Exception {
         assertions.assertForGetWhenEntityNotFound(445, "/groups/{id}");
     }
 
     @Test
-    public void getGroupWithStudentsById() throws Exception {
+    void getGroupWithStudentsById() throws Exception {
         mockMvc.perform(get("/groups/4/with-students").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -152,12 +124,12 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void returnNotFoundIfGroupWithStudentsNotFoundedById() throws Exception {
+    void returnNotFoundIfGroupWithStudentsNotFoundedById() throws Exception {
         assertions.assertForGetWhenEntityNotFound(44, "/groups/{id}/with-students");
     }
 
     @Test
-    public void saveGroup() throws Exception {
+    void saveGroup() throws Exception {
         GroupDTO groupDTO = GroupDTO.builder()
                 .title("sdsdsdsd")
                 .build();
@@ -165,87 +137,224 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void saveAfterGroupWithId() throws Exception {
-        GroupOrderDTO groupDTO = new GroupOrderDTO();
-        groupDTO.setTitle("sdsdsdsd");
-        groupDTO.setDisable(false);
-        groupDTO.setAfterId(6L);
-        String groupJSON = "{\n" +
-                           "  \"afterId\": 6,\n" +
-                           "  \"disable\": false,\n" +
-                           "  \"id\": 0,\n" +
-                           "  \"title\": \"sdsdsdsd\"\n" +
-                           "}";
-        mockMvc.perform(post("/groups/after").content(groupJSON)
+    void createGroupAfterExistingGroup() throws Exception {
+        String groupJSON = """
+            {
+              "afterId": 6,
+              "disable": false,
+              "title": "NewGroup"
+            }
+            """;
+
+        mockMvc.perform(post("/groups/after")
+                        .content(groupJSON)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType("application/json"));
-        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
-        groupDTO.setId(1L);
-        assertions.assertForGetList(expected, "/groups");
-    }
+                .andExpect(jsonPath("$.title").value("NewGroup"));
 
-    @Test
-    public void saveAfterGroupWithoutId() throws Exception {
-        GroupDTO groupDTO = GroupDTO.builder()
-                .title("sdsdsdsd")
-                .disable(false)
-                .build();
-        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after");
-        List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);
-        groupDTO.setId(1L);
-        assertions.assertForGetList(expected, "/groups");
-    }
-
-    @Test
-    public void updateGroupOrderWithId() throws Exception {
-        GroupOrderDTO groupDTO = new GroupOrderDTO();
-        groupDTO.setTitle("sdsdsdsd");
-        groupDTO.setDisable(false);
-        groupDTO.setAfterId(4L);
-        groupDTO.setId(1L);
-        String groupJSON = "{\n" +
-                           "  \"afterId\": 4,\n" +
-                           "  \"disable\": false,\n" +
-                           "  \"id\": 1,\n" +
-                           "  \"title\": \"sdsdsdsd\"\n" +
-                           "}";
-        mockMvc.perform(post("/groups/after").content(groupJSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated())
-                .andExpect(content().contentType("application/json"));
-        groupDTO.setAfterId(6L);
-        groupJSON = groupJSON.replace("4", "6");
-        mockMvc.perform(put("/groups/after").content(groupJSON)
-                        .contentType(MediaType.APPLICATION_JSON))
+        // Expected order: 666, NewGroup, 444
+        mockMvc.perform(get("/groups").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"));
-        List<GroupDTO> expected = List.of(groupDTOWithID6L, groupDTO, groupDTOWithID4L);
-        assertions.assertForGetList(expected, "/groups");
+                .andExpect(jsonPath("$[0].title").value("666"))
+                .andExpect(jsonPath("$[1].title").value("NewGroup"))
+                .andExpect(jsonPath("$[2].title").value("444"));
     }
 
     @Test
-    public void updateGroupOrderWithoutId() throws Exception {
+    void createGroupAsFirstWhenNoAfterIdProvided() throws Exception {
+        String groupJSON = """
+            {
+              "disable": false,
+              "title": "FirstGroup"
+            }
+            """;
+
+        mockMvc.perform(post("/groups/after")
+                        .content(groupJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.title").value("FirstGroup"));
+
+        // Expected order: FirstGroup, 666, 444
+        mockMvc.perform(get("/groups").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("FirstGroup"))
+                .andExpect(jsonPath("$[1].title").value("666"))
+                .andExpect(jsonPath("$[2].title").value("444"));
+    }
+
+    @Test
+    void createGroupWithAfterIdZeroShouldBeFirst() throws Exception {
+        String groupJSON = """
+            {
+              "afterId": 0,
+              "disable": false,
+              "title": "FirstGroup"
+            }
+            """;
+
+        mockMvc.perform(post("/groups/after")
+                        .content(groupJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/groups").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("FirstGroup"))
+                .andExpect(jsonPath("$[1].title").value("666"))
+                .andExpect(jsonPath("$[2].title").value("444"));
+    }
+
+    @Test
+    void createGroupAfterLastGroup() throws Exception {
+        String groupJSON = """
+            {
+              "afterId": 4,
+              "disable": false,
+              "title": "LastGroup"
+            }
+            """;
+
+        mockMvc.perform(post("/groups/after")
+                        .content(groupJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/groups").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("666"))
+                .andExpect(jsonPath("$[1].title").value("444"))
+                .andExpect(jsonPath("$[2].title").value("LastGroup"));
+    }
+
+    @Test
+    void createGroupAfterNonExistentGroupShouldFail() throws Exception {
+        String groupJSON = """
+            {
+              "afterId": 999,
+              "disable": false,
+              "title": "NewGroup"
+            }
+            """;
+
+        mockMvc.perform(post("/groups/after")
+                        .content(groupJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateGroupOrderToFirst() throws Exception {
+        String createJSON = """
+            {
+              "afterId": 6,
+              "disable": false,
+              "title": "MovableGroup"
+            }
+            """;
+
+        MvcResult result = mockMvc.perform(post("/groups/after")
+                        .content(createJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        Long createdId = objectMapper.readTree(result.getResponse().getContentAsString())
+                .get("id").asLong();
+
+        String updateJSON = String.format("""
+            {
+              "id": %d,
+              "disable": false,
+              "title": "MovableGroup"
+            }
+            """, createdId);
+
+        mockMvc.perform(put("/groups/after")
+                        .content(updateJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        // Expected order: MovableGroup, 666, 444
+        mockMvc.perform(get("/groups").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("MovableGroup"))
+                .andExpect(jsonPath("$[1].title").value("666"))
+                .andExpect(jsonPath("$[2].title").value("444"));
+    }
+
+    @Test
+    void updateGroupOrderAfterAnotherGroup() throws Exception {
+        // Move group 666 (sort_order=1) after group 444 (sort_order=2)
+        String updateJSON = """
+            {
+              "id": 6,
+              "afterId": 4,
+              "disable": false,
+              "title": "666"
+            }
+            """;
+
+        mockMvc.perform(put("/groups/after")
+                        .content(updateJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/groups").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("444"))
+                .andExpect(jsonPath("$[1].title").value("666"));
+    }
+
+    @Test
+    void updateGroupOrderWithSameAfterIdAsIdShouldNotChange() throws Exception {
+        String updateJSON = """
+            {
+              "id": 4,
+              "afterId": 4,
+              "disable": false,
+              "title": "444"
+            }
+            """;
+
+        mockMvc.perform(put("/groups/after")
+                        .content(updateJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/groups").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("666"))
+                .andExpect(jsonPath("$[1].title").value("444"));
+    }
+
+    @Test
+    void updateNonExistentGroupShouldFail() throws Exception {
+        String updateJSON = """
+            {
+              "id": 999,
+              "afterId": 6,
+              "disable": false,
+              "title": "NonExistent"
+            }
+            """;
+
+        mockMvc.perform(put("/groups/after")
+                        .content(updateJSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void throwFieldAlreadyExistsExceptionForTitleWhenSave() throws Exception {
         GroupDTO groupDTO = GroupDTO.builder()
-                .title("sdsdsdsd")
-                .disable(false)
+                .title(groupDTOWithID4L.getTitle())
                 .build();
-        assertions.assertForSave(groupDTO, GroupControllerTest::matchIgnoringId, "/groups/after");
-        groupDTO.setId(1L);
-        assertions.assertForUpdate(groupDTO, "/groups/after");
-        List<GroupDTO> expected = List.of(groupDTO, groupDTOWithID6L, groupDTOWithID4L);
-        assertions.assertForGetList(expected, "/groups");
-    }
-
-    @Test
-    public void throwFieldAlreadyExistsExceptionForTitleWhenSave() throws Exception {
-        GroupDTO groupDTO = groupDTOWithID4L;
-        groupDTO.setId(null);
         assertThatReturnedFieldAlreadyExistsException(post("/groups"), groupDTO);
     }
 
     @Test
-    public void updateGroup() throws Exception {
+    void updateGroup() throws Exception {
         GroupForUpdateDTO groupForUpdateDTO = GroupForUpdateDTO.builder()
                 .id(groupDTOWithID4L.getId())
                 .title(groupDTOWithID4L.getTitle())
@@ -255,50 +364,50 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void throwFieldAlreadyExistsExceptionForTitleWhenUpdate() throws Exception {
-        GroupDTO groupDTO = groupDTOWithID4L;
-        groupDTO.setTitle(disabledGroupDTOWithID5L.getTitle());
+    void throwFieldAlreadyExistsExceptionForTitleWhenUpdate() throws Exception {
+        GroupDTO groupDTO = GroupDTO.builder()
+                .id(groupDTOWithID4L.getId())
+                .title(disabledGroupDTOWithID5L.getTitle())
+                .build();
         assertThatReturnedFieldAlreadyExistsException(put("/groups"), groupDTO);
     }
 
     @Test
-    public void getAllDisabledGroups() throws Exception {
+    void getAllDisabledGroups() throws Exception {
         assertions.assertForGetListWithOneEntity(disabledGroupDTOWithID5L, "/groups/disabled");
     }
 
     @Test
-    @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "USER")
-    public void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
-        mockMvc.perform(get("/groups/{id}", 4)
-                        .contentType(MediaType.APPLICATION_JSON))
+    @WithMockUser(username = "first@mail.com", roles = "USER")
+    void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
+        mockMvc.perform(get("/groups/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(username = "sixth@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "USER")
-    public void returnForbiddenIfAuthenticatedUserRoleIsNotTeacher() throws Exception {
-        mockMvc.perform(get("/groups/teacher/{teacherId}", 4)
-                        .contentType(MediaType.APPLICATION_JSON))
+    @WithMockUser(username = "sixth@mail.com", roles = "USER")
+    void returnForbiddenIfAuthenticatedUserRoleIsNotTeacher() throws Exception {
+        mockMvc.perform(get("/groups/teacher/{teacherId}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void deleteGroup() throws Exception {
+    void deleteGroup() throws Exception {
         assertions.assertForDelete(5);
     }
 
-    public Object[] parametersForTestValidationException() {
+    static Stream<Object[]> validationExceptionProvider() {
         String lengthErrorMessage = "Title must be between 2 and 35 characters long";
-        return new Object[]{
+        return Stream.of(
                 new Object[]{null, "Title cannot be empty"},
                 new Object[]{"T", lengthErrorMessage},
                 new Object[]{RandomStringUtils.random(36, "abc"), lengthErrorMessage}
-        };
+        );
     }
 
-    @Parameters
-    @Test
-    public void testValidationException(String incorrectTitle, String errorMessage) throws Exception {
+    @ParameterizedTest
+    @MethodSource("validationExceptionProvider")
+    void testValidationException(String incorrectTitle, String errorMessage) throws Exception {
         GroupDTO groupDTO = GroupDTO.builder()
                 .title(incorrectTitle)
                 .build();
@@ -319,10 +428,8 @@ public class GroupControllerTest {
                                                                    T groupDTO) throws Exception {
         mockMvc.perform(requestBuilder.content(objectMapper.writeValueAsString(groupDTO))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(jsonPath("$.message")
-                        .value("Group with provided title already exists"));
+                .andExpect(jsonPath("$.message").value("Group with provided title already exists"));
     }
 }

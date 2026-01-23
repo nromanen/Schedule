@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { get } from 'lodash';
+import React, {useEffect, useState} from 'react';
+import {get} from 'lodash';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogTypes } from '../../constants/dialogs';
-import { cardType } from '../../constants/cardType';
+import {dialogTypes} from '../../constants/dialogs';
+import {cardType} from '../../constants/cardType';
 import AddRoomForm from './RoomForm/RoomForm';
 import RoomTypeForm from './RoomTypeForm/RoomTypeForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';

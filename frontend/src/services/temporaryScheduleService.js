@@ -1,17 +1,13 @@
 ///// this functionality doesn't' work yet
 import axios from '../helper/axios';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
+import {errorHandler, successHandler} from '../helper/handlerAxios';
 import i18n from '../i18n';
-import { store } from '../store';
+import {store} from '../store';
 
-import {
-    TEACHER_TEMPORARY_SCHEDULE,
-    TEMPORARY_SCHEDULE_RANGE_URL,
-    TEMPORARY_SCHEDULE_URL,
-} from '../constants/axios';
-import { actionType } from '../constants/actionTypes';
+import {TEACHER_TEMPORARY_SCHEDULE, TEMPORARY_SCHEDULE_RANGE_URL, TEMPORARY_SCHEDULE_URL,} from '../constants/axios';
+import {actionType} from '../constants/actionTypes';
 
-import { setLoadingService } from './loadingService';
+import {setLoadingService} from './loadingService';
 import {
     selectTeacherId,
     selectTemporarySchedule,
@@ -19,10 +15,10 @@ import {
     setSchedulesAndTemporarySchedules,
     setTemporarySchedules,
 } from '../actions/index';
-import { resetFormHandler } from '../helper/formHelper';
-import { TEMPORARY_SCHEDULE_FORM, TEMPORARY_SCHEDULE_VACATION_FORM } from '../constants/reduxForms';
-import { BACK_END_SUCCESS_OPERATION } from '../constants/translationLabels/serviceMessages';
-import { FORM_TEMPORARY_SCHEDULE_LABEL } from '../constants/translationLabels/formElements';
+import {resetFormHandler} from '../helper/formHelper';
+import {TEMPORARY_SCHEDULE_FORM, TEMPORARY_SCHEDULE_VACATION_FORM} from '../constants/reduxForms';
+import {BACK_END_SUCCESS_OPERATION} from '../constants/translationLabels/serviceMessages';
+import {FORM_TEMPORARY_SCHEDULE_LABEL} from '../constants/translationLabels/formElements';
 
 const handleSuccessMessage = (action) => {
     return i18n.t(BACK_END_SUCCESS_OPERATION, {

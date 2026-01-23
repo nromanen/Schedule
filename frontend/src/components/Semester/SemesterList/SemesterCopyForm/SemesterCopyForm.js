@@ -1,13 +1,13 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import Button from '@material-ui/core/Button';
-import { MdPlayArrow } from 'react-icons/md';
+import {MdPlayArrow} from 'react-icons/md';
 import './SemesterCopyForm.scss';
 import {
-    FORM_SEMESTER_COPY_RED_HINT,
     FORM_SEMESTER_COPY_HINT,
+    FORM_SEMESTER_COPY_RED_HINT,
 } from '../../../../constants/translationLabels/formElements';
-import { TEACHER_SCHEDULE_LABEL } from '../../../../constants/translationLabels/common';
+import {TEACHER_SCHEDULE_LABEL} from '../../../../constants/translationLabels/common';
 import SemesterSelect from './SemesterSelect';
 
 const SemesterCopyForm = (props) => {

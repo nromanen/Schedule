@@ -1,27 +1,27 @@
 import React from 'react';
-import { FaEdit, FaUsers, FaFileArchive } from 'react-icons/fa';
-import { MdDelete, MdDonutSmall } from 'react-icons/md';
-import { useTranslation } from 'react-i18next';
+import {FaEdit, FaFileArchive, FaUsers} from 'react-icons/fa';
+import {MdDelete, MdDonutSmall} from 'react-icons/md';
+import {useTranslation} from 'react-i18next';
 import './SemesterCard.scss';
-import { GiSightDisabled, IoMdEye, FaCopy } from 'react-icons/all';
+import {FaCopy, GiSightDisabled, IoMdEye} from 'react-icons/all';
 import Card from '../../../share/Card/Card';
-import { dialogTypes } from '../../../constants/dialogs';
+import {dialogTypes} from '../../../constants/dialogs';
 import {
-    EDIT_TITLE,
-    DELETE_TITLE,
     COPY_LABEL,
+    DELETE_TITLE,
+    EDIT_TITLE,
     FORM_SHOW_GROUPS,
     SET_DEFAULT_TITLE,
 } from '../../../constants/translationLabels/formElements';
 import {
-    COMMON_SET_DISABLED,
-    COMMON_DAYS_LABEL,
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
-    SEMESTER_LABEL,
+    COMMON_DAYS_LABEL,
     COMMON_MAKE_ARCHIVE,
+    COMMON_SET_DISABLED,
     COMMON_SET_ENABLED,
+    SEMESTER_LABEL,
 } from '../../../constants/translationLabels/common';
-import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
+import {getGroupsOptionsForSelect} from '../../../utils/selectUtils';
 
 const SemesterCard = (props) => {
     const {

@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 
-import { useTranslation } from 'react-i18next';
-import { isEmpty } from 'lodash';
-import { UploadFile } from '../../../components/UploadFile/UploadFile';
+import {useTranslation} from 'react-i18next';
+import {isEmpty} from 'lodash';
+import {UploadFile} from '../../../components/UploadFile/UploadFile';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { GROUP_LABEL } from '../../../constants/translationLabels/formElements';
-import { ShowStudentsOnGroupContent } from '../../../components/Students/ShowStudentsOnGroupContent';
-import {
-    dialogCloseButton,
-    dialogUploadFromFileButton,
-    dialogChooseGroupButton,
-} from '../../../constants/dialogs';
+import {GROUP_LABEL} from '../../../constants/translationLabels/formElements';
+import {ShowStudentsOnGroupContent} from '../../../components/Students/ShowStudentsOnGroupContent';
+import {dialogChooseGroupButton, dialogCloseButton, dialogUploadFromFileButton,} from '../../../constants/dialogs';
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {

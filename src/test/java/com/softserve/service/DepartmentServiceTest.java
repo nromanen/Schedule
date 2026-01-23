@@ -1,18 +1,22 @@
 package com.softserve.service;
 
+import com.softserve.dto.DepartmentDTO;
+import com.softserve.dto.TeacherDTO;
 import com.softserve.entity.Department;
 import com.softserve.entity.Teacher;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
+import com.softserve.mapper.DepartmentMapper;
+import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.DepartmentRepository;
 import com.softserve.service.impl.DepartmentServiceImpl;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,121 +24,163 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@Category(UnitTestCategory.class)
-@RunWith(MockitoJUnitRunner.class)
-public class DepartmentServiceTest {
+@Tag("unit")
+@ExtendWith(MockitoExtension.class)
+class DepartmentServiceTest {
+
     @Mock
     private DepartmentRepository repository;
+
+    @Mock
+    private DepartmentMapper departmentMapper;
+
+    @Mock
+    private TeacherMapper teacherMapper;
 
     @InjectMocks
     private DepartmentServiceImpl service;
 
     private Department department;
+    private DepartmentDTO departmentDTO;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         department = new Department();
         department.setId(1L);
         department.setName("some department");
+
+        departmentDTO = new DepartmentDTO();
+        departmentDTO.setId(1L);
+        departmentDTO.setName("some department");
     }
 
     @Test
-    public void testGetAll() {
-        List<Department> expected = Collections.singletonList(department);
-        when(repository.getAll()).thenReturn(expected);
+    void testGetAll() {
+        List<Department> departments = Collections.singletonList(department);
+        List<DepartmentDTO> expected = Collections.singletonList(departmentDTO);
 
-        List<Department> actual = service.getAll();
+        when(repository.getAll()).thenReturn(departments);
+        when(departmentMapper.departmentsToDepartmentDTOs(departments)).thenReturn(expected);
+
+        List<DepartmentDTO> actual = service.getAll();
 
         assertThat(actual).hasSameSizeAs(expected).hasSameElementsAs(expected);
         verify(repository).getAll();
+        verify(departmentMapper).departmentsToDepartmentDTOs(departments);
     }
 
     @Test
-    public void testGetDisabled() {
-        List<Department> expected = Collections.singletonList(department);
-        when(repository.getDisabled()).thenReturn(expected);
+    void testGetDisabled() {
+        List<Department> departments = Collections.singletonList(department);
+        List<DepartmentDTO> expected = Collections.singletonList(departmentDTO);
 
-        List<Department> actual = service.getDisabled();
+        when(repository.getDisabled()).thenReturn(departments);
+        when(departmentMapper.departmentsToDepartmentDTOs(departments)).thenReturn(expected);
+
+        List<DepartmentDTO> actual = service.getDisabled();
 
         assertThat(actual).hasSameSizeAs(expected).hasSameElementsAs(expected);
         verify(repository).getDisabled();
+        verify(departmentMapper).departmentsToDepartmentDTOs(departments);
     }
 
     @Test
-    public void testDelete() {
-        Department expected = department;
-        when(repository.delete(expected)).thenReturn(expected);
+    void testDelete() {
+        when(repository.findById(1L)).thenReturn(Optional.of(department));
+        when(repository.delete(department)).thenReturn(department);
+        when(departmentMapper.departmentToDepartmentDTO(department)).thenReturn(departmentDTO);
 
-        Department actual = service.delete(expected);
+        DepartmentDTO actual = service.delete(1L);
 
-        assertThat(actual).isEqualToComparingFieldByField(expected);
-        verify(repository).delete(expected);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(departmentDTO);
+        verify(repository).findById(1L);
+        verify(repository).delete(department);
+        verify(departmentMapper).departmentToDepartmentDTO(department);
     }
 
     @Test
-    public void testGetById() {
-        Department expected = department;
-        when(repository.findById(expected.getId())).thenReturn(Optional.of(expected));
+    void testGetById() {
+        when(repository.findById(1L)).thenReturn(Optional.of(department));
+        when(departmentMapper.departmentToDepartmentDTO(department)).thenReturn(departmentDTO);
 
-        Department actual = service.getById(expected.getId());
+        DepartmentDTO actual = service.getById(1L);
 
-        assertThat(actual).isEqualToComparingFieldByField(expected);
-        verify(repository).findById(expected.getId());
+        assertThat(actual).usingRecursiveComparison().isEqualTo(departmentDTO);
+        verify(repository).findById(1L);
+        verify(departmentMapper).departmentToDepartmentDTO(department);
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfDepartmentNotFoundedById() {
+    @Test
+    void throwEntityNotFoundExceptionIfDepartmentNotFoundedById() {
         Long nonExistentId = 2L;
         when(repository.findById(nonExistentId)).thenReturn(Optional.empty());
-        service.getById(nonExistentId);
+
+        assertThrows(EntityNotFoundException.class, () -> service.getById(nonExistentId));
         verify(repository).findById(nonExistentId);
     }
 
     @Test
-    public void testSave() {
-        Department expected = department;
-        when(repository.isExistsByName(expected.getName())).thenReturn(false);
-        when(repository.save(expected)).thenReturn(expected);
+    void testSave() {
+        when(departmentMapper.departmentDTOToDepartment(departmentDTO)).thenReturn(department);
+        when(repository.isExistsByName(department.getName())).thenReturn(false);
+        when(repository.save(department)).thenReturn(department);
+        when(departmentMapper.departmentToDepartmentDTO(department)).thenReturn(departmentDTO);
 
-        Department actual = service.save(expected);
+        DepartmentDTO actual = service.save(departmentDTO);
 
-        assertThat(actual).isEqualToComparingFieldByField(expected);
-        verify(repository).save(expected);
-        verify(repository).isExistsByName(expected.getName());
-    }
-
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionForNameOnSave() {
-        when(repository.isExistsByName(department.getName())).thenReturn(true);
-        service.save(department);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(departmentDTO);
+        verify(departmentMapper).departmentDTOToDepartment(departmentDTO);
         verify(repository).isExistsByName(department.getName());
+        verify(repository).save(department);
+        verify(departmentMapper).departmentToDepartmentDTO(department);
     }
 
     @Test
-    public void update() {
-        Department expected = department;
-        when(repository.isExistsByNameIgnoringId(expected.getName(), expected.getId())).thenReturn(false);
-        when(repository.update(expected)).thenReturn(expected);
+    void throwFieldAlreadyExistsExceptionForNameOnSave() {
+        when(departmentMapper.departmentDTOToDepartment(departmentDTO)).thenReturn(department);
+        when(repository.isExistsByName(department.getName())).thenReturn(true);
 
-        Department actual = service.update(expected);
+        assertThrows(FieldAlreadyExistsException.class, () -> service.save(departmentDTO));
 
-        assertThat(actual).isEqualToComparingFieldByField(expected);
-        verify(repository).update(expected);
-        verify(repository).isExistsByNameIgnoringId(expected.getName(), expected.getId());
+        verify(departmentMapper).departmentDTOToDepartment(departmentDTO);
+        verify(repository).isExistsByName(department.getName());
+        verify(repository, never()).save(any());
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionForNameOnUpdate() {
-        when(repository.isExistsByNameIgnoringId(department.getName(), department.getId())).thenReturn(true);
-        service.update(department);
+    @Test
+    void testUpdate() {
+        when(departmentMapper.departmentDTOToDepartment(departmentDTO)).thenReturn(department);
+        when(repository.isExistsByNameIgnoringId(department.getName(), department.getId())).thenReturn(false);
+        when(repository.update(department)).thenReturn(department);
+        when(departmentMapper.departmentToDepartmentDTO(department)).thenReturn(departmentDTO);
+
+        DepartmentDTO actual = service.update(departmentDTO);
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(departmentDTO);
+        verify(departmentMapper).departmentDTOToDepartment(departmentDTO);
         verify(repository).isExistsByNameIgnoringId(department.getName(), department.getId());
+        verify(repository).update(department);
+        verify(departmentMapper).departmentToDepartmentDTO(department);
     }
 
     @Test
-    public void testGetAllTeachers() {
+    void throwFieldAlreadyExistsExceptionForNameOnUpdate() {
+        when(departmentMapper.departmentDTOToDepartment(departmentDTO)).thenReturn(department);
+        when(repository.isExistsByNameIgnoringId(department.getName(), department.getId())).thenReturn(true);
+
+        assertThrows(FieldAlreadyExistsException.class, () -> service.update(departmentDTO));
+
+        verify(departmentMapper).departmentDTOToDepartment(departmentDTO);
+        verify(repository).isExistsByNameIgnoringId(department.getName(), department.getId());
+        verify(repository, never()).update(any());
+    }
+
+    @Test
+    void testGetAllTeachers() {
         Teacher firstTeacher = new Teacher();
         firstTeacher.setName("Myroniuk");
         firstTeacher.setSurname("Ihor");
@@ -147,12 +193,29 @@ public class DepartmentServiceTest {
         secondTeacher.setPatronymic("Petrivna");
         secondTeacher.setPosition("docent");
 
-        List<Teacher> expectedTeachers = Arrays.asList(firstTeacher, secondTeacher);
-        when(repository.getAllTeachers(3L)).thenReturn(expectedTeachers);
+        List<Teacher> teachers = Arrays.asList(firstTeacher, secondTeacher);
 
-        List<Teacher> actualTeachers = service.getAllTeachers(3L);
+        TeacherDTO firstTeacherDTO = new TeacherDTO();
+        firstTeacherDTO.setName("Myroniuk");
+        firstTeacherDTO.setSurname("Ihor");
+        firstTeacherDTO.setPatronymic("Stepanovych");
+        firstTeacherDTO.setPosition("professor");
 
-        assertThat(actualTeachers).hasSameSizeAs(expectedTeachers).hasSameElementsAs(expectedTeachers);
+        TeacherDTO secondTeacherDTO = new TeacherDTO();
+        secondTeacherDTO.setName("Adamovych");
+        secondTeacherDTO.setSurname("Svitlana");
+        secondTeacherDTO.setPatronymic("Petrivna");
+        secondTeacherDTO.setPosition("docent");
+
+        List<TeacherDTO> expected = Arrays.asList(firstTeacherDTO, secondTeacherDTO);
+
+        when(repository.getAllTeachers(3L)).thenReturn(teachers);
+        when(teacherMapper.teachersToTeacherDTOs(teachers)).thenReturn(expected);
+
+        List<TeacherDTO> actual = service.getAllTeachers(3L);
+
+        assertThat(actual).hasSameSizeAs(expected).hasSameElementsAs(expected);
         verify(repository).getAllTeachers(3L);
+        verify(teacherMapper).teachersToTeacherDTOs(teachers);
     }
 }

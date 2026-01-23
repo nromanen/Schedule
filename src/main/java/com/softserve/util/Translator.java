@@ -6,9 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.ResourceUtils;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -24,8 +25,8 @@ public class Translator {
         if (translator == null) {
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-            try {
-                translator = mapper.readValue(ResourceUtils.getFile("classpath:dictionary.yaml"), Translator.class);
+            try (InputStream inputStream = new ClassPathResource("dictionary.yaml").getInputStream()) {
+                translator = mapper.readValue(inputStream, Translator.class);
             } catch (IOException e) {
                 log.error("Error occurred while parsing file dictionary.yaml", e);
                 translator = new Translator();

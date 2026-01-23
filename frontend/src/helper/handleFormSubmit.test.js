@@ -1,4 +1,4 @@
-import { handleFormSubmit } from './handleFormSubmit';
+import {handleFormSubmit} from './handleFormSubmit';
 
 describe('handleFormSubmit function', () => {
     it('should return updateItem if the values are id', () => {

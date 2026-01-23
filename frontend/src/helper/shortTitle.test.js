@@ -1,4 +1,4 @@
-import { getShortTitle } from './shortTitle';
+import {getShortTitle} from './shortTitle';
 
 describe('getShortTitle function', () => {
     it('should return short title with 2 symbols', () => {

@@ -1,30 +1,30 @@
-import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import React, {useEffect} from 'react';
+import {Field, reduxForm} from 'redux-form';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import './TeacherScheduleForm.scss';
 
-import { MdPlayArrow, MdViewModule, MdViewHeadline } from 'react-icons/md';
+import {MdPlayArrow, MdViewHeadline, MdViewModule} from 'react-icons/md';
 
 import Button from '@material-ui/core/Button';
 
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import * as moment from 'moment';
-import { required, lessThanDate, greaterThanDate } from '../../validation/validateFields';
+import {greaterThanDate, lessThanDate, required} from '../../validation/validateFields';
 
-import { TEACHER_SCHEDULE_FORM } from '../../constants/reduxForms';
+import {TEACHER_SCHEDULE_FORM} from '../../constants/reduxForms';
 import renderMonthPicker from '../../share/renderedFields/timeSemester';
 import Card from '../../share/Card/Card';
-import { CLASS_FROM_LABEL, CLASS_TO_LABEL } from '../../constants/translationLabels/formElements';
+import {CLASS_FROM_LABEL, CLASS_TO_LABEL} from '../../constants/translationLabels/formElements';
 import {
+    COMMON_BLOCK_VIEW,
     COMMON_LIST_VIEW,
     COMMON_SELECT_DATES_FOR_TEACHERS_SCHEDULE,
-    COMMON_BLOCK_VIEW,
     FULL_SCHEDULE_LABEL,
 } from '../../constants/translationLabels/common';
-import { dateFormat } from '../../constants/formats';
-import { setTeacherViewType } from '../../actions';
+import {dateFormat} from '../../constants/formats';
+import {setTeacherViewType} from '../../actions';
 
 const TeacherScheduleForm = (props) => {
     const { t } = useTranslation('formElements');

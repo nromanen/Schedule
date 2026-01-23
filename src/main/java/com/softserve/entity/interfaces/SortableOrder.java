@@ -6,4 +6,6 @@ public interface SortableOrder {
     Integer getSortOrder();
 
     Long getId();
+
+    void setId(Long id);
 }

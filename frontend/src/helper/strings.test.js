@@ -1,4 +1,4 @@
-import { firstStringLetterCapital } from './strings';
+import {firstStringLetterCapital} from './strings';
 
 describe('firstStringLetterCapital function', () => {
     it('should return word with capitalize letter', () => {

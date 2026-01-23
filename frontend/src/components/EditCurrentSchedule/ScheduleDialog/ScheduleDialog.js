@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import { dialogTypes, dialogCloseButton, dialogChooseButton } from '../../../constants/dialogs';
+import {dialogChooseButton, dialogCloseButton, dialogTypes} from '../../../constants/dialogs';
 import {
-    COMMON_SCHEDULE_DIALOG_TITLE,
     COMMON_ROOM_IS_UNAVAILABLE,
+    COMMON_SCHEDULE_DIALOG_TITLE,
     COMMON_TEACHER_IS_UNAVAILABLE,
 } from '../../../constants/translationLabels/common';
-import { FORM_ROOM_LABEL } from '../../../constants/translationLabels/formElements';
+import {FORM_ROOM_LABEL} from '../../../constants/translationLabels/formElements';
 import './ScheduleDialog.scss';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { sortByName } from '../../../helper/sortArray';
+import {sortByName} from '../../../helper/sortArray';
 import '../../../share/DialogWindows/dialog.scss';
 import i18n from '../../../i18n';
-import { getOptionLabelWithAvailable } from '../../../utils/selectUtils';
+import {getOptionLabelWithAvailable} from '../../../utils/selectUtils';
 
 const ScheduleDialog = (props) => {
     const {

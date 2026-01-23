@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { FixedSizeList as List } from 'react-window';
 import ScheduleBoard from '../../../containers/EditCurrentSchedule/ScheduleBoard';
 import ScheduleDialog from '../../../containers/Dialogs/ScheduleDialog';
 import ScheduleDaySidebar from '../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar';
 import './Schedule.scss';
 
-import {
-    NO_CURRENT_SEMESTER,
-    COMMON_GROUP_TITLE,
-} from '../../../constants/translationLabels/common';
+import { COMMON_GROUP_TITLE, NO_CURRENT_SEMESTER } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { addClassDayBoard, removeClassDayBoard } from '../../../helper/schedule';
+
+// Width of a single group column in pixels
+const COLUMN_WIDTH = 150;
 
 const Schedule = (props) => {
     const {
@@ -27,21 +28,47 @@ const Schedule = (props) => {
 
     const [isOpenScheduleDialog, setIsOpenScheduleDialog] = useState(false);
     const [dialogScheduleData, setDialogScheduleData] = useState(null);
+    const [containerWidth, setContainerWidth] = useState(1000);
+    const containerRef = useRef(null);
+    const listRef = useRef(null);
+
     const days = currentSemester.semester_days;
     const classes = currentSemester.semester_classes;
 
+    // Update container width on mount and window resize
     useEffect(() => {
-        if (groupId) {
-            const groupColumn = document.querySelector(`#group-${groupId}`);
-            groupColumn.scrollIntoView({ inline: 'center' });
+        const updateWidth = () => {
+            if (containerRef.current) {
+                setContainerWidth(containerRef.current.clientWidth);
+            }
+        };
+
+        // Delay initial measurement to ensure DOM is ready
+        const timer = setTimeout(updateWidth, 100);
+
+        window.addEventListener('resize', updateWidth);
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('resize', updateWidth);
+        };
+    }, [currentSemester]);
+
+    // Scroll to selected group when groupId changes
+    useEffect(() => {
+        if (groupId && listRef.current) {
+            const groupIndex = groups.findIndex(g => g.id === groupId);
+            if (groupIndex !== -1) {
+                listRef.current.scrollToItem(groupIndex, 'center');
+            }
         }
-    }, [groupId]);
+    }, [groupId, groups]);
 
     const openScheduleDialogWithData = (data) => {
         setDialogScheduleData(data);
         setIsOpenScheduleDialog(true);
     };
 
+    // Handle schedule item update or creation
     const handleChangeSchedule = (roomId, actionData) => {
         const { item, type } = actionData;
         setIsOpenScheduleDialog(false);
@@ -57,6 +84,47 @@ const Schedule = (props) => {
     const handleClose = () => {
         setIsOpenScheduleDialog(false);
     };
+
+    // Memoized column renderer for virtualized list
+    const GroupColumn = useCallback(({ index, style }) => {
+        const group = groups[index];
+        const isSelectedGroup = group.id === groupId;
+
+        return (
+            <div
+                style={style}
+                key={`group-${group.id}`}
+                className={`group-section ${isSelectedGroup ? 'selected-group' : ''}`}
+                id={`group-${group.id}`}
+            >
+                <span className="group-title schedule-card sticky-container">
+                    {group.title}
+                </span>
+                {allLessons.map((lesson) => (
+                    <div
+                        key={`${group.id}-${lesson.id}-${lesson.week}`}
+                        className="board-container"
+                        onMouseOver={() => addClassDayBoard(lesson.dayName, lesson.className)}
+                        onMouseOut={() => removeClassDayBoard(lesson.dayName, lesson.className)}
+                    >
+                        <ScheduleBoard
+                            lesson={lesson}
+                            groupId={group.id}
+                            currentSemester={currentSemester}
+                            openDialogWithData={openScheduleDialogWithData}
+                            dragItemData={dragItemData}
+                            t={t}
+                            isSelectedGroup={isSelectedGroup}
+                            additionClassName="schedule-card schedule-board"
+                        />
+                    </div>
+                ))}
+            </div>
+        );
+    }, [groups, groupId, allLessons, currentSemester, dragItemData, t]);
+
+    // Calculate list height based on lessons count
+    const listHeight = allLessons.length * 80 + 50;
 
     return (
         <>
@@ -76,55 +144,17 @@ const Schedule = (props) => {
                         title={t(COMMON_GROUP_TITLE)}
                         classes={classes}
                     />
-                    <section className="groups-section">
-                        {groups.map((group) => {
-                            const isSelectedGroup = group.id === groupId;
-                            return (
-                                <div
-                                    key={`group-${group.id}`}
-                                    className={`group-section ${
-                                        isSelectedGroup ? 'selected-group' : ''
-                                    }`}
-                                    id={`group-${group.id}`}
-                                >
-                                    <span className="group-title schedule-card sticky-container">
-                                        {group.title}
-                                    </span>
-                                    {allLessons.map((lesson) => {
-                                        return (
-                                            // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
-                                            <div
-                                                key={`${group.id}-${lesson.id}-${lesson.week}`}
-                                                className="board-container"
-                                                onMouseOver={() =>
-                                                    addClassDayBoard(
-                                                        lesson.dayName,
-                                                        lesson.className,
-                                                    )
-                                                }
-                                                onMouseOut={() =>
-                                                    removeClassDayBoard(
-                                                        lesson.dayName,
-                                                        lesson.className,
-                                                    )
-                                                }
-                                            >
-                                                <ScheduleBoard
-                                                    lesson={lesson}
-                                                    groupId={group.id}
-                                                    currentSemester={currentSemester}
-                                                    openDialogWithData={openScheduleDialogWithData}
-                                                    dragItemData={dragItemData}
-                                                    t={t}
-                                                    isSelectedGroup={isSelectedGroup}
-                                                    additionClassName="schedule-card schedule-board"
-                                                />
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            );
-                        })}
+                    <section className="groups-section" ref={containerRef}>
+                        <List
+                            ref={listRef}
+                            layout="horizontal"
+                            height={listHeight}
+                            width={containerWidth}
+                            itemCount={groups.length}
+                            itemSize={COLUMN_WIDTH}
+                        >
+                            {GroupColumn}
+                        </List>
                     </section>
                 </>
             ) : (

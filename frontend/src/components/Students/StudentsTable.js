@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import Table from '@material-ui/core/Table';
 import TableContainer from '@material-ui/core/TableContainer';
 import './StudentTable.scss';
 
-import { TableFooterComponent } from '../Table/TableFooter';
-import { StudentsTableBody } from './StudentsTableBody';
-import { StudentsTableHead } from './StudentsTableHead';
+import {TableFooterComponent} from '../Table/TableFooter';
+import {StudentsTableBody} from './StudentsTableBody';
+import {StudentsTableHead} from './StudentsTableHead';
 
 export const StudentsTable = (props) => {
     const { students, updateStudentSuccess, checkAllStudentsSuccess, setIsDisabledBtnMoveStudent } =

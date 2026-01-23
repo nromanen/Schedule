@@ -1,28 +1,21 @@
 import React from 'react';
 
-import { Field, reduxForm } from 'redux-form';
+import {Field, reduxForm} from 'redux-form';
 
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import renderTextField from '../../share/renderedFields/input';
 
-import { RESET_PASSWORD_FORM } from '../../constants/reduxForms';
+import {RESET_PASSWORD_FORM} from '../../constants/reduxForms';
 
-import { email, required } from '../../validation/validateFields';
-import {
-    EMAIL_LABEL,
-    RESET_PASSWORD_HELPER_TEXT,
-} from '../../constants/translationLabels/formElements';
-import { LOGIN_LINK } from '../../constants/links';
+import {email, required} from '../../validation/validateFields';
+import {EMAIL_LABEL, RESET_PASSWORD_HELPER_TEXT,} from '../../constants/translationLabels/formElements';
+import {LOGIN_LINK} from '../../constants/links';
 import i18n from '../../i18n';
-import {
-    LOGIN_TITLE,
-    RESET_PASSWORD_PAGE_TITLE,
-    RESET_PASSWORD_LABEL,
-} from '../../constants/translationLabels/common';
+import {LOGIN_TITLE, RESET_PASSWORD_LABEL, RESET_PASSWORD_PAGE_TITLE,} from '../../constants/translationLabels/common';
 
 const ResetPasswordForm = (props) => {
     const { handleSubmit, resetPasswordError, setError, isLoading } = props;

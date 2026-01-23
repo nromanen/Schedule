@@ -1,8 +1,8 @@
 import * as actionTypes from '../actions/actionsType';
-import { makeFullSchedule } from '../mappers/fullScheduleMapper';
-import { makeTeacherSchedule } from '../mappers/teacherScheduleMapper';
-import { makeGroupSchedule } from '../mappers/groupScheduleMapper';
-import { places } from '../constants/places';
+import {makeFullSchedule} from '../mappers/fullScheduleMapper';
+import {makeTeacherSchedule} from '../mappers/teacherScheduleMapper';
+import {makeGroupSchedule} from '../mappers/groupScheduleMapper';
+import {places} from '../constants/places';
 
 const initialState = {
     items: [],
@@ -19,6 +19,8 @@ const initialState = {
     currentSemester: {},
     defaultSemester: {},
     viewTeacherScheduleResults: 'block-view',
+    notPublished: false,
+    notPublishedMessage: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -57,6 +59,8 @@ const reducer = (state = initialState, action) => {
             const mappedSchedule = makeFullSchedule(action.schedule);
             return {
                 ...state,
+                notPublished: false,
+                notPublishedMessage: null,
                 fullSchedule: mappedSchedule,
                 groupSchedule: {},
                 teacherSchedule: {},
@@ -66,6 +70,8 @@ const reducer = (state = initialState, action) => {
             const mappedSchedule = makeGroupSchedule(action.schedule);
             return {
                 ...state,
+                notPublished: false,
+                notPublishedMessage: null,
                 groupSchedule: mappedSchedule,
                 teacherSchedule: {},
                 fullSchedule: [],
@@ -87,6 +93,8 @@ const reducer = (state = initialState, action) => {
             const mappedSchedule = makeTeacherSchedule(action.schedule);
             return {
                 ...state,
+                notPublished: false,
+                notPublishedMessage: null,
                 teacherSchedule: mappedSchedule,
                 groupSchedule: {},
                 fullSchedule: [],
@@ -112,6 +120,12 @@ const reducer = (state = initialState, action) => {
             };
         case actionTypes.SET_TEACHER_VIEW_TYPE:
             return { ...state, viewTeacherScheduleResults: action.payload };
+        case actionTypes.SCHEDULE_NOT_PUBLISHED:
+            return {
+                ...state,
+                notPublished: true,
+                notPublishedMessage: action.payload,
+            };
         default:
             return state;
     }

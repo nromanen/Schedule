@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import { selectGroupId } from '../../actions';
+import {connect} from 'react-redux';
+import {selectGroupId} from '../../actions';
 import Search from '../../components/LessonsPage/Search';
 
 const mapStateToProps = (state) => ({

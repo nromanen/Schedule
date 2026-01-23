@@ -1,37 +1,33 @@
-import { connect } from 'react-redux';
-import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
-import { useTranslation } from 'react-i18next';
-import React, { useEffect, useState } from 'react';
+import {connect} from 'react-redux';
+import {FaEdit} from 'react-icons/fa';
+import {MdDelete} from 'react-icons/md';
+import {useTranslation} from 'react-i18next';
+import React, {useEffect, useState} from 'react';
 
 import './SubjectPage.scss';
-import { GiSightDisabled, IoMdEye } from 'react-icons/all';
+import {GiSightDisabled, IoMdEye} from 'react-icons/all';
 import Card from '../../share/Card/Card';
-import { search } from '../../helper/search';
+import {search} from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../Dialogs/CustomDialog';
-import { dialogTypes } from '../../constants/dialogs';
+import {dialogTypes} from '../../constants/dialogs';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
-import { handleSnackbarCloseService } from '../../services/snackbarService';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import {handleSnackbarCloseService} from '../../services/snackbarService';
+import {setIsOpenConfirmDialog} from '../../actions/dialog';
 import {
-    showAllSubjectsService,
-    removeSubjectCardService,
-    handleSubjectService,
-    selectSubjectService,
     clearSubjectService,
-    setEnabledSubjectsService,
-    setDisabledSubjectsService,
     getDisabledSubjectsService,
+    handleSubjectService,
+    removeSubjectCardService,
+    selectSubjectService,
+    setDisabledSubjectsService,
+    setEnabledSubjectsService,
+    showAllSubjectsService,
 } from '../../services/subjectService';
-import {
-    EDIT_TITLE,
-    SUBJECT_Y_LABEL,
-    DELETE_TITLE,
-} from '../../constants/translationLabels/formElements';
-import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
+import {DELETE_TITLE, EDIT_TITLE, SUBJECT_Y_LABEL,} from '../../constants/translationLabels/formElements';
+import {COMMON_SET_DISABLED, COMMON_SET_ENABLED} from '../../constants/translationLabels/common';
 
 const SubjectPage = (props) => {
     const { t } = useTranslation('formElements');

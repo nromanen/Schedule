@@ -1,8 +1,5 @@
-import { isNil, isEmpty } from 'lodash';
-import {
-    CLEAR_BUTTON_LABEL,
-    CANCEL_BUTTON_TITLE,
-} from '../constants/translationLabels/formElements';
+import {isEmpty, isNil} from 'lodash';
+import {CANCEL_BUTTON_TITLE, CLEAR_BUTTON_LABEL,} from '../constants/translationLabels/formElements';
 
 export const setDisableButton = (pristine, submitting, id) => {
     if (!pristine || !isNil(id)) {

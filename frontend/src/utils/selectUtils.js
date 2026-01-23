@@ -1,7 +1,7 @@
-import { isEmpty } from 'lodash';
+import {isEmpty} from 'lodash';
 import i18n from '../i18n';
-import { COMMON_AVAILABLE, COMMON_UNAVAILABLE } from '../constants/translationLabels/common';
-import { getFirstLetter } from '../helper/renderTeacher';
+import {COMMON_AVAILABLE, COMMON_UNAVAILABLE} from '../constants/translationLabels/common';
+import {getFirstLetter} from '../helper/renderTeacher';
 
 export const getGroupsOptionsForSelect = (groupOptions) => {
     if (!isEmpty(groupOptions)) {

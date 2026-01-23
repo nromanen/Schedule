@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import LessonTemporaryCardCell from '../../components/GroupSchedulePage/LessonTemporaryCardCell';
 
 const mapStateToProps = (state) => ({

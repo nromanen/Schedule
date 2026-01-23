@@ -1,12 +1,9 @@
 package com.softserve.entity;
 
 import lombok.*;
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Entity
@@ -16,10 +13,6 @@ import java.io.Serializable;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
-@FilterDef(name = "departmentDisableFilter", parameters = {
-        @ParamDef(name = "disable", type = "boolean"),
-})
-@Filter(name = "departmentDisableFilter", condition = "disable = :disable")
 public class Department implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

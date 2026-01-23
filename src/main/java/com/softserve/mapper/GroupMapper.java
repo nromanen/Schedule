@@ -13,9 +13,11 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import java.util.Collection;
 import java.util.List;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, uses = StudentMapper.class)
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface GroupMapper {
+
     GroupDTO groupToGroupDTO(Group group);
 
     @Mapping(target = "students", ignore = true)
@@ -24,6 +26,7 @@ public interface GroupMapper {
 
     GroupForUpdateDTO groupToGroupForUpdateDTO(Group group);
 
+    @Mapping(target = "students", ignore = true)  // ігноруємо студентів тут
     GroupWithStudentsDTO groupToGroupWithStudentsDTO(Group group);
 
     @Mapping(target = "students", ignore = true)
@@ -31,6 +34,7 @@ public interface GroupMapper {
     Group groupForUpdateDTOToGroup(GroupForUpdateDTO groupForUpdateDTO);
 
     List<GroupDTO> groupsToGroupDTOs(List<Group> groups);
+    List<GroupDTO> groupsToGroupDTOs(Collection<Group> groups);
 
     @ToGroupInRoom
     @Mapping(source = "id", target = "groupId")
@@ -38,6 +42,4 @@ public interface GroupMapper {
     GroupDTOInRoomSchedule groupToGroupDTOInRoomSchedule(Group group);
 
     List<GroupDTOInRoomSchedule> toGroupDTOInRoomSchedule(List<Group> group);
-
-    List<GroupDTO> groupsToGroupDTOs(Collection<Group> groups);
 }

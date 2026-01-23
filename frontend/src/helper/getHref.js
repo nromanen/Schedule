@@ -1,5 +1,5 @@
 import React from 'react';
-import { COMMON_LINK_TO_MEETING_WORD } from '../constants/translationLabels/common';
+import {COMMON_LINK_TO_MEETING_WORD} from '../constants/translationLabels/common';
 import i18n from '../i18n';
 
 export const getHref = (link) => (

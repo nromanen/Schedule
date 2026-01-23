@@ -1,29 +1,29 @@
-import React, { useState } from 'react';
-import { FaEdit, MdDelete } from 'react-icons/all';
-import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
+import React, {useState} from 'react';
+import {FaEdit, MdDelete} from 'react-icons/all';
+import {useTranslation} from 'react-i18next';
+import {connect} from 'react-redux';
 
 import Divider from '@material-ui/core/Divider';
 import shortId from 'shortid';
 import Card from '../../../share/Card/Card';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { dialogTypes } from '../../../constants/dialogs';
+import {dialogTypes} from '../../../constants/dialogs';
 
 import {
     deleteTemporaryScheduleService,
     selectTemporaryScheduleService,
     selectVacationService,
 } from '../../../services/temporaryScheduleService';
-import { setIsOpenConfirmDialog } from '../../../actions/dialog';
-import { cardType } from '../../../constants/cardType';
+import {setIsOpenConfirmDialog} from '../../../actions/dialog';
+import {cardType} from '../../../constants/cardType';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
-import { getTeacherForSite } from '../../../helper/renderTeacher';
+import {getTeacherForSite} from '../../../helper/renderTeacher';
 import {
-    EDIT_HOVER_TITLE,
-    DELETE_HOVER_TITLE,
-    HOLIDAY_LABEL,
     DATE_LABEL,
+    DELETE_HOVER_TITLE,
+    EDIT_HOVER_TITLE,
     FOR_ALL,
+    HOLIDAY_LABEL,
 } from '../../../constants/translationLabels/common';
 
 const TemporaryScheduleList = (props) => {

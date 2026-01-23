@@ -1,5 +1,5 @@
-import { shallow } from 'enzyme';
-import { getHref } from './getHref';
+import {shallow} from 'enzyme';
+import {getHref} from './getHref';
 
 describe('getHref function', () => {
     it('should return link with href', () => {

@@ -1,6 +1,6 @@
-import { isEmpty } from 'lodash';
-import { filterClassesArray } from '../utils/sheduleUtils';
-import { sortStrings } from '../utils/sortStrings';
+import {isEmpty} from 'lodash';
+import {filterClassesArray} from '../utils/sheduleUtils';
+import {sortStrings} from '../utils/sortStrings';
 
 const mapTeacherSchedule = (days) => {
     const parsedEvenArray = [];

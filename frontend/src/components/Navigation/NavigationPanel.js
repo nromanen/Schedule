@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Paper from '@material-ui/core/Paper';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import './NavigationPanel.scss';
-import { general, tabsComponents } from '../../constants/navigationComponents';
-import { ADMIN_PAGE_LINK } from '../../constants/links';
-import { COMMON_MORE_LABEL } from '../../constants/translationLabels/common';
+import {general, tabsComponents} from '../../constants/navigationComponents';
+import {ADMIN_PAGE_LINK} from '../../constants/links';
+import {COMMON_MORE_LABEL} from '../../constants/translationLabels/common';
 
 const NavigationPanel = () => {
     const history = useHistory();

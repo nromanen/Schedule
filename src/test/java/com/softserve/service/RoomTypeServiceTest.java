@@ -5,23 +5,22 @@ import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.repository.RoomTypeRepository;
 import com.softserve.service.impl.RoomTypeServiceImpl;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@Category(UnitTestCategory.class)
-@RunWith(MockitoJUnitRunner.class)
+@Tag("unit")
+@ExtendWith(MockitoExtension.class)
 public class RoomTypeServiceTest {
 
     @Mock
@@ -44,13 +43,10 @@ public class RoomTypeServiceTest {
         verify(roomTypeRepository, times(1)).findById(anyLong());
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfRoomTypeNotExists() {
-        RoomType roomType = new RoomType();
-        roomType.setId(1L);
-        roomType.setDescription("1 rooType");
+    @Test
+    void throwEntityNotFoundExceptionIfRoomTypeNotExists() {
+        assertThrows(EntityNotFoundException.class, () -> roomTypeService.getById(2L));
 
-        roomTypeService.getById(2L);
         verify(roomTypeRepository, times(1)).findById(2L);
     }
 
@@ -70,7 +66,7 @@ public class RoomTypeServiceTest {
         verify(roomTypeRepository, times(1)).countRoomTypesWithDescription(anyString());
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
+    @Test
     public void throwFieldAlreadyExistsExceptionIfSavedDescriptionAlreadyExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
@@ -78,8 +74,9 @@ public class RoomTypeServiceTest {
 
         when(roomTypeRepository.countRoomTypesWithDescription(anyString())).thenReturn(1L);
 
-        roomTypeService.save(roomType);
-        verify(roomTypeRepository, times(1)).save(roomType);
+        assertThrows(FieldAlreadyExistsException.class, () -> roomTypeService.save(roomType));
+
+        verify(roomTypeRepository, never()).save(roomType);
         verify(roomTypeRepository, times(1)).countRoomTypesWithDescription(anyString());
     }
 
@@ -104,7 +101,7 @@ public class RoomTypeServiceTest {
         verify(roomTypeRepository, times(1)).countRoomTypesWithDescription(anyString());
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
+    @Test
     public void throwFieldAlreadyExistsExceptionIfUpdatedDescriptionAlreadyExists() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
@@ -116,12 +113,12 @@ public class RoomTypeServiceTest {
         when(roomTypeRepository.countByRoomTypeId(anyLong())).thenReturn(1L);
         when(roomTypeRepository.countRoomTypesWithDescription(anyString())).thenReturn(1L);
 
-        roomTypeService.update(updatedRoomType);
+        assertThrows(FieldAlreadyExistsException.class, () -> roomTypeService.update(updatedRoomType));
         verify(roomTypeRepository, times(1)).countByRoomTypeId(anyLong());
         verify(roomTypeRepository, times(1)).countRoomTypesWithDescription(anyString());
     }
 
-    @Test(expected = EntityNotFoundException.class)
+    @Test
     public void updateWhenRoomTypeNotFound() {
         RoomType roomType = new RoomType();
         roomType.setId(1L);
@@ -129,7 +126,7 @@ public class RoomTypeServiceTest {
 
         when(roomTypeRepository.countByRoomTypeId(anyLong())).thenReturn(0L);
 
-        roomTypeService.update(roomType);
-        verify(roomTypeRepository, times(1)).update(roomType);
+        assertThrows(EntityNotFoundException.class, () -> roomTypeService.update(roomType));
+        verify(roomTypeRepository, never()).update(roomType);
     }
 }

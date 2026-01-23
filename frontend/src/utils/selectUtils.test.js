@@ -1,11 +1,11 @@
 import {
-    setOptions,
-    setSemesterOptions,
-    setDepartmentOptions,
     getGroupsOptionsForSelect,
     getOptionLabelWithAvailable,
+    setDepartmentOptions,
+    setOptions,
+    setSemesterOptions,
 } from './selectUtils';
-import { COMMON_AVAILABLE, COMMON_UNAVAILABLE } from '../constants/translationLabels/common';
+import {COMMON_AVAILABLE, COMMON_UNAVAILABLE} from '../constants/translationLabels/common';
 import i18n from '../i18n';
 
 const group = [

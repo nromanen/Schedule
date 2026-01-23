@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
-public class ScheduleForCopyDTO {
+public class ScheduleForCopyDTO implements Serializable {
     private Long id;
     private DayOfWeek dayOfWeek;
     private EvenOdd evenOdd;

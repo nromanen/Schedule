@@ -1,5 +1,5 @@
-import { isEmpty } from 'lodash';
-import { GROUPED } from '../constants/common';
+import {isEmpty} from 'lodash';
+import {GROUPED} from '../constants/common';
 
 export const search = (items, term, arr) => {
     const termTmp = term.trim();

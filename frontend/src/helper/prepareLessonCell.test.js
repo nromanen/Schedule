@@ -1,5 +1,5 @@
-import { prepareLessonCardCell, prepareLessonSubCardCell } from './prepareLessonCell';
-import { places } from '../constants/places';
+import {prepareLessonCardCell, prepareLessonSubCardCell} from './prepareLessonCell';
+import {places} from '../constants/places';
 
 describe('prepareLessonCardCell function', () => {
     it('should return empty string if card is null or undefined', () => {

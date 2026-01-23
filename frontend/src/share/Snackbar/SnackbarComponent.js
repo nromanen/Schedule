@@ -1,8 +1,8 @@
 import React from 'react';
 
 import Snackbar from '@material-ui/core/Snackbar';
-import { snackbarTypes } from '../../constants/snackbarTypes';
-import { Alert } from '../Alerts';
+import {snackbarTypes} from '../../constants/snackbarTypes';
+import {Alert} from '../Alerts';
 
 const SnackbarComponent = (props) => {
     const { message, type, isOpen, handleSnackbarClose } = props;

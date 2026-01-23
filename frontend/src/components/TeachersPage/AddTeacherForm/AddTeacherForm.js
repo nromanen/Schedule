@@ -1,31 +1,31 @@
-import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import React, {useEffect} from 'react';
+import {Field, reduxForm} from 'redux-form';
 
-import { MenuItem } from '@material-ui/core';
+import {MenuItem} from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import renderTextField from '../../../share/renderedFields/input';
-import { required } from '../../../validation/validateFields';
+import {required} from '../../../validation/validateFields';
 
 import Card from '../../../share/Card/Card';
 
-import { TEACHER_FORM } from '../../../constants/reduxForms';
+import {TEACHER_FORM} from '../../../constants/reduxForms';
 
 import './AddTeacherForm.scss';
 import SelectField from '../../../share/renderedFields/select';
-import { getDepartmentByIdService } from '../../../services/departmentService';
-import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
+import {getDepartmentByIdService} from '../../../services/departmentService';
+import {getClearOrCancelTitle, setDisableButton} from '../../../helper/disableComponent';
 import {
-    EDIT_TITLE,
     CREATE_TITLE,
+    DEPARTMENT_TEACHER_LABEL,
+    EDIT_TITLE,
+    EMAIL_FIELD,
     SAVE_BUTTON_LABEL,
     TEACHER_A_LABEL,
-    TEACHER_SURNAME,
     TEACHER_FIRST_NAME,
     TEACHER_PATRONYMIC,
     TEACHER_POSITION,
-    EMAIL_FIELD,
-    DEPARTMENT_TEACHER_LABEL,
+    TEACHER_SURNAME,
 } from '../../../constants/translationLabels/formElements';
 
 const AddTeacherForm = (props) => {

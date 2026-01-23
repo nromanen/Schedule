@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { get } from 'lodash';
+import React, {useEffect} from 'react';
+import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+import {get} from 'lodash';
 
-import { CircularProgress } from '@material-ui/core';
-import { activateUser } from '../../actions';
+import {CircularProgress} from '@material-ui/core';
+import {activateUser} from '../../actions';
 
-import { LOGIN_LINK } from '../../constants/links';
-import { snackbarTypes } from '../../constants/snackbarTypes';
+import {LOGIN_LINK} from '../../constants/links';
+import {snackbarTypes} from '../../constants/snackbarTypes';
 
-import { handleSnackbarOpenService } from '../../services/snackbarService';
-import { VERIFYING_TOKEN, TOKEN_ERROR } from '../../constants/translationLabels/common';
+import {handleSnackbarOpenService} from '../../services/snackbarService';
+import {TOKEN_ERROR, VERIFYING_TOKEN} from '../../constants/translationLabels/common';
 
 import './ActivationPage.scss';
 

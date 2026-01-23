@@ -20,6 +20,16 @@
         display: inline-block;
         margin: 5px;
         padding: 16px 10px;
+
+        .lesson-type-stripe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 4px 0 0 4px;
+        }
+
         .lesson-title {
             display: -webkit-box;
             width: 130px;

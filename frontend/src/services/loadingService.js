@@ -1,6 +1,6 @@
-import { store } from '../store';
+import {store} from '../store';
 
-import { setLoading, setScheduleLoading, setSemesterLoading } from '../actions/index';
+import {setLoading, setScheduleLoading, setSemesterLoading} from '../actions/index';
 
 export const setLoadingService = (isLoading) => {
     store.dispatch(setLoading(isLoading));

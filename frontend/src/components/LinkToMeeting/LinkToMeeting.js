@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { IoMdLink } from 'react-icons/all';
+import React, {useState} from 'react';
+import {IoMdLink} from 'react-icons/all';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogTypes } from '../../constants/dialogs';
+import {dialogTypes} from '../../constants/dialogs';
 import './LinkToMeeting.scss';
 
 const LinkToMeeting = (props) => {

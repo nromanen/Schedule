@@ -1,9 +1,6 @@
-import { connect } from 'react-redux';
-import {
-    checkAvailabilityChangeRoomScheduleStart,
-    deleteScheduleItemStart,
-} from '../../actions/schedule';
-import { selectGroupId, getLessonsByGroupStart } from '../../actions';
+import {connect} from 'react-redux';
+import {checkAvailabilityChangeRoomScheduleStart, deleteScheduleItemStart,} from '../../actions/schedule';
+import {getLessonsByGroupStart, selectGroupId} from '../../actions';
 import ScheduleBoardItem from '../../components/EditCurrentSchedule/ScheduleBoard/ScheduleBoardItem';
 
 const mapStateToProps = (state) => ({

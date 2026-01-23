@@ -2,62 +2,54 @@ package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.assertions.CustomMockMvcAssertions;
-import com.softserve.config.DBConfigTest;
-import com.softserve.config.MyWebAppInitializer;
-import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.DepartmentDTO;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.exception.apierror.ApiValidationError;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.core.IsNull;
-import org.junit.*;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.hasSize;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Category(IntegrationTestCategory.class)
-@RunWith(JUnitParamsRunner.class)
-@ContextConfiguration(classes = {WebMvcConfig.class, DBConfigTest.class, MyWebAppInitializer.class})
-@WebAppConfiguration
+@Tag("integration")
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "MANAGER")
-@Sql(value = "classpath:create-teachers-before.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class TeacherControllerTest {
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+@Sql(value = "classpath:create-teachers-before.sql")
+class TeacherControllerTest {
 
-    @Rule
-    public final SpringMethodRule smr = new SpringMethodRule();
-
+    @Autowired
     private MockMvc mockMvc;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private TeacherDTO teacherDtoWithId1L;
 
@@ -75,11 +67,8 @@ public class TeacherControllerTest {
     @Autowired
     private WebApplicationContext wac;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
 
         assertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/teachers");
 
@@ -197,129 +186,57 @@ public class TeacherControllerTest {
                 .andExpect(status().isOk());
     }
 
-    public Object[] parametersForTestValidationException() {
+    static Stream<Arguments> validationExceptionProvider() {
+        // Null values
         TeacherDTO teacherDTOWithNullValues = new TeacherDTO();
-        ApiValidationError nameIsNull = new ApiValidationError(
-                "Teacher",
-                "name",
-                null,
-                "Name cannot be empty"
-        );
-        ApiValidationError positionIsNull = new ApiValidationError(
-                "Teacher",
-                "position",
-                null,
-                "Position cannot be empty"
-        );
-        ApiValidationError surnameIsNull = new ApiValidationError(
-                "Teacher",
-                "surname",
-                null,
-                "Surname cannot be empty"
-        );
-        ApiValidationError patronymicIsNull = new ApiValidationError(
-                "Teacher",
-                "patronymic",
-                null,
-                "Patronymic cannot be empty"
-        );
         List<ApiValidationError> errorListWithNullValues = Arrays.asList(
-                nameIsNull,
-                positionIsNull,
-                surnameIsNull,
-                patronymicIsNull
+                new ApiValidationError("Teacher", "name", null, "Name cannot be empty"),
+                new ApiValidationError("Teacher", "position", null, "Position cannot be empty"),
+                new ApiValidationError("Teacher", "surname", null, "Surname cannot be empty"),
+                new ApiValidationError("Teacher", "patronymic", null, "Patronymic cannot be empty")
         );
 
+        // Min length violation
         String wordWithLength1 = "T";
-
         TeacherDTO teacherDTOWithValuesLengthsLessThanMin = new TeacherDTO();
         teacherDTOWithValuesLengthsLessThanMin.setName(wordWithLength1);
         teacherDTOWithValuesLengthsLessThanMin.setSurname(wordWithLength1);
         teacherDTOWithValuesLengthsLessThanMin.setPosition(wordWithLength1);
         teacherDTOWithValuesLengthsLessThanMin.setPatronymic(wordWithLength1);
 
-        ApiValidationError nameLengthIs1 = new ApiValidationError(
-                "Teacher",
-                "name",
-                wordWithLength1,
-                "Name must be between 2 and 35 characters long"
-        );
-
-        ApiValidationError positionLengthIs1 = new ApiValidationError(
-                "Teacher",
-                "position",
-                wordWithLength1,
-                "Position must be between 2 and 35 characters long"
-        );
-        ApiValidationError surnameLengthIs1 = new ApiValidationError(
-                "Teacher",
-                "surname",
-                wordWithLength1,
-                "Surname must be between 2 and 35 characters long"
-        );
-        ApiValidationError patronymicLengthIs1 = new ApiValidationError(
-                "Teacher",
-                "patronymic",
-                wordWithLength1,
-                "Patronymic must be between 2 and 35 characters long"
-        );
+        String lengthErrorMessage = "must be between 2 and 35 characters long";
         List<ApiValidationError> errorListWithMinLength = Arrays.asList(
-                nameLengthIs1,
-                positionLengthIs1,
-                surnameLengthIs1,
-                patronymicLengthIs1
+                new ApiValidationError("Teacher", "name", wordWithLength1, "Name " + lengthErrorMessage),
+                new ApiValidationError("Teacher", "position", wordWithLength1, "Position " + lengthErrorMessage),
+                new ApiValidationError("Teacher", "surname", wordWithLength1, "Surname " + lengthErrorMessage),
+                new ApiValidationError("Teacher", "patronymic", wordWithLength1, "Patronymic " + lengthErrorMessage)
         );
 
+        // Max length violation
         String wordWithLength36 = RandomStringUtils.random(36, "abc");
-
         TeacherDTO teacherDTOWithValuesLengthsMoreThanMax = new TeacherDTO();
         teacherDTOWithValuesLengthsMoreThanMax.setName(wordWithLength36);
         teacherDTOWithValuesLengthsMoreThanMax.setSurname(wordWithLength36);
         teacherDTOWithValuesLengthsMoreThanMax.setPosition(wordWithLength36);
         teacherDTOWithValuesLengthsMoreThanMax.setPatronymic(wordWithLength36);
 
-        ApiValidationError nameLengthIs36 = new ApiValidationError(
-                "Teacher",
-                "name",
-                wordWithLength36,
-                "Name must be between 2 and 35 characters long"
-        );
-
-        ApiValidationError positionLengthIs36 = new ApiValidationError(
-                "Teacher",
-                "position",
-                wordWithLength36,
-                "Position must be between 2 and 35 characters long"
-        );
-        ApiValidationError surnameLengthIs36 = new ApiValidationError(
-                "Teacher",
-                "surname",
-                wordWithLength36,
-                "Surname must be between 2 and 35 characters long"
-        );
-        ApiValidationError patronymicLengthIs36 = new ApiValidationError(
-                "Teacher",
-                "patronymic",
-                wordWithLength36,
-                "Patronymic must be between 2 and 35 characters long"
-        );
         List<ApiValidationError> errorListWithMaxLength = Arrays.asList(
-                nameLengthIs36,
-                positionLengthIs36,
-                surnameLengthIs36,
-                patronymicLengthIs36
+                new ApiValidationError("Teacher", "name", wordWithLength36, "Name " + lengthErrorMessage),
+                new ApiValidationError("Teacher", "position", wordWithLength36, "Position " + lengthErrorMessage),
+                new ApiValidationError("Teacher", "surname", wordWithLength36, "Surname " + lengthErrorMessage),
+                new ApiValidationError("Teacher", "patronymic", wordWithLength36, "Patronymic " + lengthErrorMessage)
         );
 
-        return new Object[]{
-                new Object[]{teacherDTOWithNullValues, errorListWithNullValues},
-                new Object[]{teacherDTOWithValuesLengthsLessThanMin, errorListWithMinLength},
-                new Object[]{teacherDTOWithValuesLengthsMoreThanMax, errorListWithMaxLength}
-        };
+        return Stream.of(
+                Arguments.of(teacherDTOWithNullValues, errorListWithNullValues),
+                Arguments.of(teacherDTOWithValuesLengthsLessThanMin, errorListWithMinLength),
+                Arguments.of(teacherDTOWithValuesLengthsMoreThanMax, errorListWithMaxLength)
+        );
     }
 
-    @Parameters
-    @Test
-    public void testValidationException(TeacherDTO teacherDTO, List<ApiValidationError> errorList) throws Exception {
+    @ParameterizedTest
+    @MethodSource("validationExceptionProvider")
+    void testValidationException(TeacherDTO teacherDTO, List<ApiValidationError> errorList) throws Exception {
         assertions.assertForValidationErrorsOnSave(errorList, teacherDTO);
     }
 

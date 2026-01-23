@@ -1,32 +1,32 @@
-import { reset } from 'redux-form';
-import { call, put, takeLatest } from 'redux-saga/effects';
-import { axiosCall } from '../services/axios';
+import {reset} from 'redux-form';
+import {call, put, takeLatest} from 'redux-saga/effects';
+import {axiosCall} from '../services/axios';
 import * as actionTypes from '../actions/actionsType';
 
-import { CLASS_URL, PUBLIC_CLASSES_URL } from '../constants/axios';
-import { CLASS_FORM } from '../constants/reduxForms';
+import {CLASS_URL, PUBLIC_CLASSES_URL} from '../constants/axios';
+import {CLASS_FORM} from '../constants/reduxForms';
 import {
     addClassScheduleSuccess,
-    getClassScheduleListSuccess,
-    getClassScheduleByIdSuccess,
-    deleteClassScheduleSuccess,
-    updateClassScheduleSuccess,
     clearClassScheduleSuccess,
+    deleteClassScheduleSuccess,
+    getClassScheduleByIdSuccess,
+    getClassScheduleListSuccess,
     getPublicClassScheduleSuccess,
+    updateClassScheduleSuccess,
 } from '../actions/classes';
 
-import { setLoading } from '../actions';
+import {setLoading} from '../actions';
 
-import { GET, PUT, POST, DELETE } from '../constants/methods';
-import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
+import {DELETE, GET, POST, PUT} from '../constants/methods';
+import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
 import {
     BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
+    UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { FORM_CLASS_LABEL } from '../constants/translationLabels/formElements';
-import { createErrorMessage, createMessage } from '../utils/sagaUtils';
+import {FORM_CLASS_LABEL} from '../constants/translationLabels/formElements';
+import {createErrorMessage, createMessage} from '../utils/sagaUtils';
 
 export function* getClassScheduleList() {
     try {

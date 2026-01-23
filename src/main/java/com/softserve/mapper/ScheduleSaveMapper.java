@@ -22,6 +22,7 @@ public interface ScheduleSaveMapper {
     @Mapping(source = "dayOfWeek", target = "dayOfWeek")
     @Mapping(source = "evenOdd", target = "evenOdd")
     @Mapping(source = "lessonId", target = "lesson.id")
+    @Mapping(target = "id", ignore = true)
     Schedule scheduleSaveDTOToSchedule(ScheduleSaveDTO scheduleSaveDTO);
 
     List<Schedule> scheduleSaveDTOsListToSchedulesList(List<ScheduleSaveDTO> scheduleSaveDTOs);

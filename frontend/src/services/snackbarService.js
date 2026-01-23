@@ -1,6 +1,6 @@
-import { store } from '../store';
+import {store} from '../store';
 
-import { setOpenSnackbar } from '../actions/index';
+import {setOpenSnackbar} from '../actions/index';
 
 export const handleSnackbarOpenService = (isOpen, type, message) => {
     store.dispatch(

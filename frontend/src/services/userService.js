@@ -1,22 +1,14 @@
 import axios from '../helper/axios';
-import { store } from '../store';
-import {
-    MERGE_USER_AND_TEACHER_URL,
-    USERS_URL,
-    USER_PROFILE,
-    UPDATE_USER_PROFILE,
-} from '../constants/axios';
-import { setUsers, setUser, setTeacher } from '../actions/index';
+import {store} from '../store';
+import {MERGE_USER_AND_TEACHER_URL, UPDATE_USER_PROFILE, USER_PROFILE, USERS_URL,} from '../constants/axios';
+import {setTeacher, setUser, setUsers} from '../actions/index';
 
 import i18n from '../i18n';
-import { setLoadingService } from './loadingService';
-import { getTeachersWithoutAccount } from './teacherService';
-import { errorHandler, successHandler } from '../helper/handlerAxios';
-import {
-    BACK_END_SUCCESS_OPERATION,
-    SUCCESSFULLY_MERGED,
-} from '../constants/translationLabels/serviceMessages';
-import { FORM_USER_LABEL, FORM_TEACHER_LABEL } from '../constants/translationLabels/formElements';
+import {setLoadingService} from './loadingService';
+import {getTeachersWithoutAccount} from './teacherService';
+import {errorHandler, successHandler} from '../helper/handlerAxios';
+import {BACK_END_SUCCESS_OPERATION, SUCCESSFULLY_MERGED,} from '../constants/translationLabels/serviceMessages';
+import {FORM_TEACHER_LABEL, FORM_USER_LABEL} from '../constants/translationLabels/formElements';
 
 export const getUsersService = () => {
     axios

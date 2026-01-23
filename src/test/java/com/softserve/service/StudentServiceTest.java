@@ -15,17 +15,16 @@ import com.softserve.mapper.GroupMapper;
 import com.softserve.mapper.StudentMapper;
 import com.softserve.repository.StudentRepository;
 import com.softserve.service.impl.StudentServiceImpl;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.IOException;
@@ -34,21 +33,21 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@Category(UnitTestCategory.class)
-@RunWith(JUnitParamsRunner.class)
-public class StudentServiceTest {
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
+@Tag("unit")
+@ExtendWith(MockitoExtension.class)
+class StudentServiceTest {
 
+    private static final String TEST_STUDENTS_FILE_PATH = "src/test/resources/test_students.csv";
 
     @InjectMocks
     private StudentServiceImpl studentService;
@@ -68,8 +67,8 @@ public class StudentServiceTest {
     private StudentDTO studentDTOWithId1L;
     private StudentDTO studentDTOWithId2L;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
 
         User userWithId1L = new User();
         userWithId1L.setId(1L);
@@ -105,7 +104,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void getAll() {
+    void getAll() {
         List<Student> expected = singletonList(studentWithId1L);
         when(studentRepository.getAll()).thenReturn(expected);
 
@@ -116,58 +115,59 @@ public class StudentServiceTest {
     }
 
     @Test
-    public void getById() {
+    void getById() {
         Student expected = studentWithId1L;
         when(studentRepository.findById(expected.getId())).thenReturn(Optional.of(expected));
 
         Student actual = studentService.getById(expected.getId());
 
-        assertThat(actual).isEqualToComparingFieldByField(expected);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
         verify(studentRepository).findById(expected.getId());
     }
 
     @Test
-    public void save() {
+    void save() {
         Student expected = studentWithId1L;
         when(studentRepository.save(expected)).thenReturn(expected);
 
         Student actual = studentService.save(expected);
 
-        assertThat(actual).isEqualToComparingFieldByField(expected);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
         verify(studentRepository).save(expected);
     }
 
     @Test
-    public void update() {
+    void update() {
         Student expected = studentWithId1L;
         when(studentRepository.update(expected)).thenReturn(expected);
 
         Student actual = studentService.update(expected);
 
-        assertThat(actual).isEqualToComparingFieldByField(expected);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
         verify(studentRepository).update(expected);
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Student expected = studentWithId1L;
         when(studentRepository.delete(expected)).thenReturn(expected);
 
         Student actual = studentService.delete(expected);
 
-        assertThat(actual).isEqualToComparingFieldByField(expected);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
         verify(studentRepository).delete(expected);
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionWhenGetById() {
+    @Test
+    void throwEntityNotFoundExceptionWhenGetById() {
         when(studentRepository.findById(1L)).thenReturn(Optional.empty());
-        studentService.getById(1L);
+
+        assertThrows(EntityNotFoundException.class, () -> studentService.getById(1L));
         verify(studentRepository).findById(1L);
     }
 
-    @Test(expected = FieldAlreadyExistsException.class)
-    public void throwFieldAlreadyExistsExceptionWhenSave() {
+    @Test
+    void throwFieldAlreadyExistsExceptionWhenSave() {
         User user = new User();
         user.setId(16L);
         user.setEmail("aware.123db@gmail.com");
@@ -191,11 +191,12 @@ public class StudentServiceTest {
         when(studentMapper.studentDTOToStudent(expected)).thenReturn(student);
         when(userService.findSocialUser(expected.getEmail())).thenReturn(Optional.of(user));
         when(studentRepository.isEmailInUse(anyString())).thenReturn(true);
-        studentService.save(expected);
+
+        assertThrows(FieldAlreadyExistsException.class, () -> studentService.save(expected));
     }
 
-    @Test(expected = FieldNullException.class)
-    public void throwFieldNullExceptionWhenSave() {
+    @Test
+    void throwFieldNullExceptionWhenSave() {
         Student student = new Student();
         student.setId(null);
         student.setName("Name");
@@ -206,11 +207,11 @@ public class StudentServiceTest {
 
         StudentDTO expected = studentDTOWithId2L;
         when(studentMapper.studentDTOToStudent(expected)).thenReturn(student);
-        studentService.save(expected);
+        assertThrows(FieldNullException.class, () -> studentService.save(expected));
     }
 
-    @Test(expected = FieldNullException.class)
-    public void throwFieldNullExceptionWhenUpdate() {
+    @Test
+    void throwFieldNullExceptionWhenUpdate() {
         Student student = new Student();
         student.setId(null);
         student.setName("Name");
@@ -221,11 +222,12 @@ public class StudentServiceTest {
 
         StudentDTO expected = studentDTOWithId2L;
         when(studentMapper.studentDTOToStudent(expected)).thenReturn(student);
-        studentService.update(expected);
+
+        assertThrows(FieldNullException.class, () -> studentService.update(expected));
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionWhenUpdate() {
+    @Test
+    void throwEntityNotFoundExceptionWhenUpdate() {
         User user = new User();
         user.setId(16L);
         user.setEmail("aware.123db@gmail.com");
@@ -248,12 +250,31 @@ public class StudentServiceTest {
         StudentDTO expected = studentDTOWithId1L;
         when(studentMapper.studentDTOToStudent(expected)).thenReturn(student);
         when(studentRepository.isIdPresent(student.getId())).thenReturn(false);
-        studentService.update(expected);
+        assertThrows(EntityNotFoundException.class, () -> studentService.update(expected));
     }
 
-    @Test
-    @Parameters(method = "parametersToTestImport")
-    public void importStudentsFromFile(MockMultipartFile multipartFile) {
+    static Stream<Arguments> parametersToTestImport() throws IOException {
+        byte[] fileContent = Files.readAllBytes(Path.of(TEST_STUDENTS_FILE_PATH));
+
+        MockMultipartFile multipartFileCsv = new MockMultipartFile("file",
+                "students.csv",
+                "text/csv",
+                fileContent);
+
+        MockMultipartFile multipartFileTxt = new MockMultipartFile("file",
+                "students.txt",
+                "text/plain",
+                fileContent);
+
+        return Stream.of(
+                Arguments.of(multipartFileCsv),
+                Arguments.of(multipartFileTxt)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("parametersToTestImport")
+    void importStudentsFromFile(MockMultipartFile multipartFile) {
 
         User userWithId1L = new User();
         userWithId1L.setId(1L);
@@ -270,7 +291,7 @@ public class StudentServiceTest {
         Group group = new Group();
         group.setId(10L);
         GroupDTO groupDTO = new GroupDTO();
-        group.setId(10L);
+        groupDTO.setId(10L);
 
         List<StudentImportDTO> expectedStudents = new ArrayList<>();
 
@@ -358,8 +379,8 @@ public class StudentServiceTest {
         when(studentService.save(studentDTO1)).thenReturn(student1);
         when(studentService.save(studentDTO3)).thenReturn(student3);
 
-        when(groupService.getById(anyLong())).thenReturn(group);
-        when(groupMapper.groupToGroupDTO(group)).thenReturn(groupDTO);
+        when(groupService.getById(anyLong())).thenReturn(groupDTO);
+        when(groupMapper.groupDTOToGroup(groupDTO)).thenReturn(group);
 
         when(studentMapper.studentImportDTOToStudent(studentImportDTO1)).thenReturn(student1);
         when(studentMapper.studentToStudentImportDTO(student1registered)).thenReturn(studentImportDTO1);
@@ -373,20 +394,5 @@ public class StudentServiceTest {
         verify(studentRepository).save(student3);
         verify(studentRepository).getExistingStudent(student1);
         verify(studentRepository).getExistingStudent(student3);
-    }
-
-    private Object[] parametersToTestImport() throws IOException {
-
-        MockMultipartFile multipartFileCsv = new MockMultipartFile("file",
-                "students.csv",
-                "text/csv",
-                Files.readAllBytes(Path.of("src/test/resources/test_students.csv")));
-
-        MockMultipartFile multipartFileTxt = new MockMultipartFile("file",
-                "students.txt",
-                "text/plain",
-                Files.readAllBytes(Path.of("src/test/resources/test_students.csv")));
-
-        return new Object[]{multipartFileCsv, multipartFileTxt};
     }
 }

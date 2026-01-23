@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import { setPlace } from '../../actions/schedule';
+import {connect} from 'react-redux';
+import {setPlace} from '../../actions/schedule';
 import SelectPlace from '../../components/GroupSchedulePage/SelectPlace';
 
 const mapStateToProps = (state) => ({

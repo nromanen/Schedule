@@ -1,8 +1,8 @@
 import React from 'react';
 import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
-import { MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
-import { dateFormat } from '../../constants/formats';
+import {DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
+import {dateFormat} from '../../constants/formats';
 
 const renderMonthPicker = ({
     label,

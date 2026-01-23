@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Field } from 'redux-form';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {Field} from 'redux-form';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@material-ui/core/Button';
 import Accordion from '@material-ui/core/Accordion';
@@ -13,27 +13,27 @@ import Card from '../../../share/Card/Card';
 import renderTextField from '../../../share/renderedFields/input';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 
-import { isUrl, lessThanZero, maxLengthValue, required } from '../../../validation/validateFields';
-import { handleTeacherInfo } from '../../../helper/renderTeacher';
-import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
-import { RenderMultiselect } from '../../../share/renderedFields/renderMultiselect';
-import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
+import {isUrl, lessThanZero, maxLengthValue, required} from '../../../validation/validateFields';
+import {handleTeacherInfo} from '../../../helper/renderTeacher';
+import {getClearOrCancelTitle, setDisableButton} from '../../../helper/disableComponent';
+import {RenderMultiselect} from '../../../share/renderedFields/renderMultiselect';
+import {renderAutocompleteField} from '../../../helper/renderAutocompleteField';
 import LessonLabelForm from '../../../containers/LessonPage/LessonLabelForm';
 
 import {
-    SAVE_BUTTON_LABEL,
-    GROUP_LABEL,
-    SUBJECT_LABEL,
-    NOT_SELECTED_LABEL,
-    GROUPS_LABEL,
-    COPY_GROUPS_LABEL,
     COPY_FOR_BUTTON_LABEL,
-    LINK_TO_MEETING_LABEL,
+    COPY_GROUPS_LABEL,
     FOR_SITE_LABEL,
     FORM_GROUPED_LABEL,
+    GROUP_LABEL,
+    GROUPS_LABEL,
+    HOURS_LABEL_SHORT,
+    LINK_TO_MEETING_LABEL,
+    NOT_SELECTED_LABEL,
+    SAVE_BUTTON_LABEL,
+    SUBJECT_LABEL,
     TEACHER_LABEL,
     TYPE_LABEL,
-    HOURS_LABEL_SHORT,
 } from '../../../constants/translationLabels/formElements';
 
 import './LessonForm.scss';

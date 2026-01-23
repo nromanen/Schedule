@@ -1,5 +1,5 @@
 import * as actionTypes from './actionsType';
-import { snackbarTypes } from '../constants/snackbarTypes';
+import {snackbarTypes} from '../constants/snackbarTypes';
 
 export const setOpenSnackbar = (res) => {
     return {

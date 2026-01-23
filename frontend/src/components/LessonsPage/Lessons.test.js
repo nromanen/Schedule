@@ -1,6 +1,6 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
-import { CircularProgress } from '@material-ui/core';
+import {mount, shallow} from 'enzyme';
+import {CircularProgress} from '@material-ui/core';
 import Lessons from './Lessons';
 
 const onClickOpen = jest.fn();

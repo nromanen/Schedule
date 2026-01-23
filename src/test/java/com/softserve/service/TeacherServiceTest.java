@@ -5,41 +5,34 @@ import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.Period;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
-import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.impl.TeacherServiceImpl;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import junitparams.converters.Nullable;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.softserve.entity.enums.Role.ROLE_TEACHER;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@Category(UnitTestCategory.class)
-@RunWith(JUnitParamsRunner.class)
-public class TeacherServiceTest {
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
-
+@Tag("unit")
+@ExtendWith(MockitoExtension.class)
+class TeacherServiceTest {
     @Mock
     private TeacherRepository teacherRepository;
 
@@ -48,9 +41,6 @@ public class TeacherServiceTest {
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private MailService mailService;
 
     @InjectMocks
     private TeacherServiceImpl teacherService;
@@ -65,8 +55,8 @@ public class TeacherServiceTest {
 
     private TeacherForUpdateDTO teacherForUpdateDTOWithId1L;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         String name = "Name1";
         String surname = "Surname1";
         String patronymic = "Patronymic1";
@@ -118,7 +108,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    public void getAll() {
+    void getAll() {
         List<Teacher> expectedTeachers = Collections.singletonList(teacherWithId1LAndWithUserId1);
         when(teacherRepository.getAll()).thenReturn(expectedTeachers);
 
@@ -129,7 +119,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
         expectedTeacher.setUserId(null);
         when(teacherRepository.delete(argThat(t -> deepEqualsForTeachers(t, expectedTeacher))))
@@ -137,12 +127,12 @@ public class TeacherServiceTest {
 
         Teacher actualTeacher = teacherService.delete(expectedTeacher);
 
-        assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
+        assertThat(actualTeacher).usingRecursiveComparison().isEqualTo(expectedTeacher);
         verify(teacherRepository, times(1)).delete(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
     }
 
     @Test
-    public void getDisabled() {
+    void getDisabled() {
         List<Teacher> expectedTeachers = Collections.singletonList(teacherWithId1LAndWithUserId1);
         when(teacherRepository.getDisabled()).thenReturn(expectedTeachers);
 
@@ -153,7 +143,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    public void getTeachersWithoutUsers() {
+    void getTeachersWithoutUsers() {
         List<Teacher> expectedTeachers = Collections.singletonList(teacherWithId1LAndWithoutUser);
         when(teacherRepository.getAllTeacherWithoutUser()).thenReturn(expectedTeachers);
 
@@ -163,9 +153,9 @@ public class TeacherServiceTest {
         verify(teacherRepository, times(1)).getAllTeacherWithoutUser();
     }
 
-    @Parameters({"null", ""})
-    @Test
-    public void saveDTOIfEmailNotExist(@Nullable String teacherEmail) {
+    @ParameterizedTest
+    @NullAndEmptySource
+    void saveDTOIfEmailNotExist(String teacherEmail) {
         TeacherDTO teacherDTO = teacherDtoWithoutId;
         teacherDTO.setEmail(teacherEmail);
         Teacher expectedTeacher = teacherWithId1LAndWithoutUser;
@@ -176,13 +166,13 @@ public class TeacherServiceTest {
 
         Teacher actualTeacher = teacherService.save(teacherDTO);
 
-        assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
+        assertThat(actualTeacher).usingRecursiveComparison().isEqualTo(expectedTeacher);
         verify(teacherRepository, times(1)).save(argThat(u -> deepEqualsForTeachersExcludingId(u, expectedTeacher)));
         verify(teacherMapper, times(1)).teacherDTOToTeacher(teacherDTO);
     }
 
     @Test
-    public void saveDTOIfEmailExists() {
+    void saveDTOIfEmailExists() {
         TeacherDTO teacherDTO = teacherDtoWithoutId;
         Teacher teacherAfterMapper = teacherWithoutId;
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
@@ -197,15 +187,15 @@ public class TeacherServiceTest {
 
         Teacher actualTeacher = teacherService.save(teacherDTO);
 
-        assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
+        assertThat(actualTeacher).usingRecursiveComparison().isEqualTo(expectedTeacher);
         verify(teacherRepository, times(1)).save(argThat(u -> deepEqualsForTeachersExcludingId(u, expectedTeacher)));
         verify(teacherMapper, times(1)).teacherDTOToTeacher(teacherDTO);
         verify(userService, times(1)).automaticRegistration(teacherDTO.getEmail(), ROLE_TEACHER);
     }
 
-    @Parameters({"null", ""})
-    @Test
-    public void updateDTOIfEmailNotExist(@Nullable String teacherEmail) {
+    @ParameterizedTest
+    @NullAndEmptySource
+    void updateDTOIfEmailNotExist(String teacherEmail) {
         TeacherForUpdateDTO teacherDTO = teacherForUpdateDTOWithId1L;
         teacherDTO.setEmail(teacherEmail);
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
@@ -216,13 +206,15 @@ public class TeacherServiceTest {
 
         Teacher actualTeacher = teacherService.update(teacherDTO);
 
-        assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
+        assertThat(actualTeacher)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedTeacher);
         verify(teacherRepository, times(1)).update(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
         verify(teacherMapper, times(1)).teacherForUpdateDTOToTeacher(teacherDTO);
     }
 
     @Test
-    public void updateDTOIfEmailAndUserIdExist() {
+    void updateDTOIfEmailAndUserIdExist() {
         TeacherForUpdateDTO teacherDTO = teacherForUpdateDTOWithId1L;
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
 
@@ -240,7 +232,7 @@ public class TeacherServiceTest {
 
         Teacher actualTeacher = teacherService.update(teacherDTO);
 
-        assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
+        assertThat(actualTeacher).usingRecursiveComparison().isEqualTo(expectedTeacher);
         verify(teacherRepository, times(1)).update(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
         verify(teacherMapper, times(1)).teacherForUpdateDTOToTeacher(teacherDTO);
         verify(teacherRepository, times(1)).findById(1L);
@@ -249,7 +241,7 @@ public class TeacherServiceTest {
     }
 
     @Test
-    public void updateDTOIfEmailExistsAndUserIdNotExist() {
+    void updateDTOIfEmailExistsAndUserIdNotExist() {
         TeacherForUpdateDTO teacherDTO = teacherForUpdateDTOWithId1L;
         Teacher teacherAfterMapper = teacherWithId1LAndWithoutUser;
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
@@ -265,7 +257,7 @@ public class TeacherServiceTest {
 
         Teacher actualTeacher = teacherService.update(teacherDTO);
 
-        assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
+        assertThat(actualTeacher).usingRecursiveComparison().isEqualTo(expectedTeacher);
         verify(teacherRepository, times(1)).update(argThat(t -> deepEqualsForTeachers(t, expectedTeacher)));
         verify(teacherMapper, times(1)).teacherForUpdateDTOToTeacher(teacherDTO);
         verify(userService, times(1)).automaticRegistration(teacherDTO.getEmail(), ROLE_TEACHER);
@@ -273,25 +265,25 @@ public class TeacherServiceTest {
     }
 
     @Test
-    public void getById() {
+    void getById() {
         Teacher expectedTeacher = teacherWithId1LAndWithUserId1;
         when(teacherRepository.findById(1L)).thenReturn(Optional.of(expectedTeacher));
 
         Teacher actualTeacher = teacherService.getById(1L);
 
-        assertThat(actualTeacher).isEqualToComparingFieldByField(expectedTeacher);
-        verify(teacherRepository, times(1)).findById(1L);
-    }
-
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfTeacherNotFoundedById() {
-        when(teacherRepository.findById(1L)).thenReturn(Optional.empty());
-        teacherService.getById(1L);
+        assertThat(actualTeacher).usingRecursiveComparison().isEqualTo(expectedTeacher);
         verify(teacherRepository, times(1)).findById(1L);
     }
 
     @Test
-    public void getTeacherByUserId() {
+    void throwEntityNotFoundExceptionIfTeacherNotFoundedById() {
+        when(teacherRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> teacherService.getById(1L));
+        verify(teacherRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void getTeacherByUserId() {
         Teacher teacher = teacherWithId1LAndWithUserId1;
         when(teacherRepository.findByUserId(1L)).thenReturn(Optional.of(teacher));
 
@@ -302,15 +294,15 @@ public class TeacherServiceTest {
         verify(teacherRepository, times(1)).findByUserId(1L);
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void throwEntityNotFoundExceptionIfTeacherNotFoundedByUserId() {
+    @Test
+    void throwEntityNotFoundExceptionIfTeacherNotFoundedByUserId() {
         when(teacherRepository.findByUserId(1L)).thenReturn(Optional.empty());
-        teacherService.findByUserId(1L);
+        assertThrows(EntityNotFoundException.class, () -> teacherService.findByUserId(1L));
         verify(teacherRepository, times(1)).findByUserId(1L);
     }
 
     @Test
-    public void saveTeacher() {
+    void saveTeacher() {
         Teacher teacher = teacherWithId1LAndWithoutUser;
 
         Period period = new Period();
@@ -324,81 +316,8 @@ public class TeacherServiceTest {
 
         Teacher result = teacherService.save(teacher);
 
-        assertThat(result).isEqualToComparingFieldByField(teacher);
+        assertThat(result).usingRecursiveComparison().isEqualTo(teacher);
         verify(teacherRepository, times(1)).save(teacher);
-    }
-
-    @Test
-    public void joinTeacherWithUserIfUserIdFromTeacherIsNullAndUserRoleFromUserIsNotTeacher() {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("somePassword");
-        user.setEmail("some@mail.com");
-        Teacher teacher = new Teacher();
-        teacher.setPosition("docent");
-        teacher.setPatronymic("Ivanovych");
-        teacher.setSurname("Ivanov");
-        teacher.setName("Ivan");
-        teacher.setId(1L);
-
-        when(userService.getById(1L)).thenReturn(user);
-        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
-        when(userService.update(user)).thenReturn(user);
-        when(teacherRepository.update(teacher)).thenReturn(teacher);
-
-        Teacher result = teacherService.joinTeacherWithUser(teacher.getId(), user.getId());
-        assertNotNull(result);
-        assertEquals(result.getUserId(), user.getId());
-        assertEquals(ROLE_TEACHER, user.getRole());
-        verify(userService, timeout(1)).getById(anyLong());
-        verify(userService, times(1)).update(any(User.class));
-        verify(teacherRepository, times(1)).findById(anyLong());
-        verify(teacherRepository, times(1)).update(teacher);
-        verify(mailService, times(1)).send(
-                ArgumentMatchers.eq(user.getEmail()),
-                ArgumentMatchers.contains("Teacher"),
-                ArgumentMatchers.contains(user.getEmail())
-        );
-    }
-
-    @Test(expected = EntityAlreadyExistsException.class)
-    public void throwEntityAlreadyExistsExceptionIfUserIdFromTeacherAlreadyExists() {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("somePassword");
-        user.setEmail("some@mail.com");
-        Teacher teacher = new Teacher();
-        teacher.setPosition("docent");
-        teacher.setPatronymic("Ivanovych");
-        teacher.setSurname("Ivanov");
-        teacher.setName("Ivan");
-        teacher.setId(1L);
-        teacher.setUserId(1L);
-
-        when(userService.getById(1L)).thenReturn(user);
-        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
-
-        teacherService.joinTeacherWithUser(teacher.getId(), user.getId());
-    }
-
-    @Test(expected = EntityAlreadyExistsException.class)
-    public void throwEntityAlreadyExistsExceptionIfUserRoleFromUserIsTeacher() {
-        User user = new User();
-        user.setId(1L);
-        user.setPassword("somePassword");
-        user.setEmail("some@mail.com");
-        user.setRole(ROLE_TEACHER);
-        Teacher teacher = new Teacher();
-        teacher.setPosition("docent");
-        teacher.setPatronymic("Ivanovych");
-        teacher.setSurname("Ivanov");
-        teacher.setName("Ivan");
-        teacher.setId(1L);
-
-        when(userService.getById(1L)).thenReturn(user);
-        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
-
-        teacherService.joinTeacherWithUser(teacher.getId(), user.getId());
     }
 
     private boolean equalsForUsersByIdAndEmail(User user1, User user2) {

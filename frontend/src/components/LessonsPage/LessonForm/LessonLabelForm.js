@@ -1,10 +1,6 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-    EDIT_TITLE,
-    CREATE_TITLE,
-    LESSON_LABEL,
-} from '../../../constants/translationLabels/formElements';
+import {useTranslation} from 'react-i18next';
+import {CREATE_TITLE, EDIT_TITLE, LESSON_LABEL,} from '../../../constants/translationLabels/formElements';
 import './LessonForm.scss';
 
 const LessonLabelForm = (props) => {

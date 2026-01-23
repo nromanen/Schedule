@@ -1,20 +1,20 @@
 import './GroupPage.scss';
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { isEmpty } from 'lodash';
-import { useTranslation } from 'react-i18next';
-import { CircularProgress } from '@material-ui/core';
-import { goToGroupPage } from '../../helper/pageRedirection';
-import { dialogTypes } from '../../constants/dialogs';
-import { GROUP_Y_LABEL } from '../../constants/translationLabels/formElements';
-import { search } from '../../helper/search';
+import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
+import {isEmpty} from 'lodash';
+import {useTranslation} from 'react-i18next';
+import {CircularProgress} from '@material-ui/core';
+import {goToGroupPage} from '../../helper/pageRedirection';
+import {dialogTypes} from '../../constants/dialogs';
+import {GROUP_Y_LABEL} from '../../constants/translationLabels/formElements';
+import {search} from '../../helper/search';
 import GroupCard from './GroupCard/GroupCard';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
 import ShowStudentsOnGroupDialog from '../../containers/Students/ShowStudentsOnGroupDialog';
-import { ADD_STUDENT_ACTION, SHOW_STUDENTS_ACTION } from '../../constants/actionsUrl';
-import { DraggableCard } from '../../share/DraggableCard/DraggableCard';
+import {ADD_STUDENT_ACTION, SHOW_STUDENTS_ACTION} from '../../constants/actionsUrl';
+import {DraggableCard} from '../../share/DraggableCard/DraggableCard';
 
 const GroupList = (props) => {
     const {

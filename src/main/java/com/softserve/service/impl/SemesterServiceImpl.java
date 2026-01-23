@@ -1,19 +1,20 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.SemesterDTO;
+import com.softserve.dto.SemesterWithGroupsDTO;
 import com.softserve.entity.*;
 import com.softserve.exception.*;
+import com.softserve.mapper.SemesterMapper;
 import com.softserve.repository.GroupRepository;
 import com.softserve.repository.LessonRepository;
 import com.softserve.repository.ScheduleRepository;
 import com.softserve.repository.SemesterRepository;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
@@ -24,79 +25,197 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Transactional
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class SemesterServiceImpl implements SemesterService {
 
     private final SemesterRepository semesterRepository;
     private final ScheduleRepository scheduleRepository;
     private final LessonRepository lessonRepository;
     private final GroupRepository groupRepository;
-
     private final PeriodService periodService;
+    private final SemesterMapper semesterMapper;
 
-    private final List<DayOfWeek> workDaysList = Arrays.asList(DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
-            DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY);
+    private static final List<DayOfWeek> WORK_DAYS = Arrays.asList(
+            DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+            DayOfWeek.THURSDAY, DayOfWeek.FRIDAY
+    );
 
-    @Autowired
-    public SemesterServiceImpl(SemesterRepository semesterRepository,
-                               PeriodService periodService,
-                               GroupRepository groupRepository,
-                               ScheduleRepository scheduleService,
-                               LessonRepository lessonRepository) {
-        this.semesterRepository = semesterRepository;
-        this.periodService = periodService;
-        this.groupRepository = groupRepository;
-        this.scheduleRepository = scheduleService;
-        this.lessonRepository = lessonRepository;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Cacheable(value = "map", key = "#id")
     @Override
-    public Semester getById(Long id) {
+    @Transactional(readOnly = true)
+    @Cacheable(value = "semesters", key = "#id")
+    public SemesterWithGroupsDTO getById(Long id) {
         log.info("In getById(id = [{}])", id);
-        Semester semester = semesterRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Semester.class, "id", id.toString()));
-        Hibernate.initialize(semester.getDaysOfWeek());
-        Hibernate.initialize(semester.getPeriods());
-        Hibernate.initialize(semester.getGroups());
-        return semester;
+        Semester semester = findByIdOrThrow(id);
+        return semesterMapper.semesterToSemesterWithGroupsDTO(semester);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Cacheable(value = "semesterList")
     @Override
-    public List<Semester> getAll() {
+    @Transactional(readOnly = true)
+    @Cacheable(value = "semestersList")
+    public List<SemesterWithGroupsDTO> getAll() {
         log.debug("In getAll()");
-        return semesterRepository.getAll();
+        return semesterMapper.semestersToSemesterWithGroupsDTOs(semesterRepository.getAll());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @CacheEvict(value = "semesterList", allEntries = true)
     @Override
-    public Semester save(Semester semester) {
-        log.info("In save(entity = [{}]", semester);
+    @Caching(evict = {
+            @CacheEvict(value = "semesters", allEntries = true),
+            @CacheEvict(value = "semestersList", allEntries = true)
+    })
+    public SemesterWithGroupsDTO save(SemesterWithGroupsDTO semesterDTO) {
+        log.info("In save(semesterDTO = [{}])", semesterDTO);
+        Semester semester = semesterMapper.semesterWithGroupsDTOToSemester(semesterDTO);
         checkConstraints(semester);
         fillDefaultValues(semester);
-        setCurrentToFalse(semester);
-        setDefaultToFalse(semester);
-        return semesterRepository.save(semester);
+        handleCurrentSemester(semester);
+        handleDefaultSemester(semester);
+        Semester saved = semesterRepository.save(semester);
+        return semesterMapper.semesterToSemesterWithGroupsDTO(saved);
     }
 
-    /**
-     * Checks constraints for the given semester.
-     *
-     * @param semester the semester to be checked
-     * @throws IncorrectTimeException       if the start time of the period was after its end or the start time was equal to the end time
-     * @throws EntityAlreadyExistsException if semester already exists with given description and year
-     */
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "semesters", allEntries = true),
+            @CacheEvict(value = "semestersList", allEntries = true),
+            @CacheEvict(value = "currentSemester", allEntries = true),
+            @CacheEvict(value = "defaultSemester", allEntries = true)
+    })
+    public SemesterWithGroupsDTO update(SemesterWithGroupsDTO semesterDTO) {
+        log.debug("In update(semesterDTO = [{}])", semesterDTO);
+        Semester semester = semesterMapper.semesterWithGroupsDTOToSemester(semesterDTO);
+        findByIdOrThrow(semester.getId());
+        checkConstraints(semester);
+
+        if (isPeriodsWithLessonsCanNotBeRemoved(semester)) {
+            throw new UsedEntityException("Cannot remove periods that have lessons in schedule");
+        }
+        if (isDaysWithLessonsCanNotBeRemoved(semester)) {
+            throw new UsedEntityException("Cannot remove days that have lessons in schedule");
+        }
+
+        handleCurrentSemester(semester);
+        handleDefaultSemester(semester);
+        Semester updated = semesterRepository.update(semester);
+        return semesterMapper.semesterToSemesterWithGroupsDTO(updated);
+    }
+
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "semesters", allEntries = true),
+            @CacheEvict(value = "semestersList", allEntries = true),
+            @CacheEvict(value = "currentSemester", allEntries = true),
+            @CacheEvict(value = "defaultSemester", allEntries = true)
+    })
+    public void delete(Long id) {
+        log.debug("In delete(id = [{}])", id);
+        Semester semester = findByIdOrThrow(id);
+        semesterRepository.delete(semester);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "currentSemester")
+    public SemesterWithGroupsDTO getCurrentSemester() {
+        log.debug("In getCurrentSemester");
+        Semester semester = semesterRepository.getCurrentSemester()
+                .orElseThrow(() -> new ScheduleConflictException("Current semester for managers work isn't specified"));
+        return semesterMapper.semesterToSemesterWithGroupsDTO(semester);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "defaultSemester")
+    public SemesterWithGroupsDTO getDefaultSemester() {
+        log.debug("In getDefaultSemester");
+        Semester semester = semesterRepository.getDefaultSemester()
+                .orElseThrow(() -> new ScheduleConflictException("Default semester isn't specified"));
+        return semesterMapper.semesterToSemesterWithGroupsDTO(semester);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<SemesterDTO> getDisabled() {
+        log.debug("In getDisabled()");
+        return semesterMapper.semestersToSemesterDTOs(semesterRepository.getDisabled());
+    }
+
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "semesters", allEntries = true),
+            @CacheEvict(value = "semestersList", allEntries = true),
+            @CacheEvict(value = "currentSemester", allEntries = true)
+    })
+    public SemesterDTO changeCurrentSemester(Long semesterId) {
+        log.debug("In changeCurrentSemester(semesterId = [{}])", semesterId);
+        semesterRepository.updateAllSemesterCurrentToFalse();
+        semesterRepository.setCurrentSemester(semesterId);
+        Semester semester = findByIdOrThrow(semesterId);
+        return semesterMapper.semesterToSemesterDTO(semester);
+    }
+
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "semesters", allEntries = true),
+            @CacheEvict(value = "semestersList", allEntries = true),
+            @CacheEvict(value = "defaultSemester", allEntries = true)
+    })
+    public SemesterDTO changeDefaultSemester(Long semesterId) {
+        log.debug("In changeDefaultSemester(semesterId = [{}])", semesterId);
+        semesterRepository.updateAllSemesterDefaultToFalse();
+        semesterRepository.setDefaultSemester(semesterId);
+        Semester semester = findByIdOrThrow(semesterId);
+        return semesterMapper.semesterToSemesterDTO(semester);
+    }
+
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "semesters", allEntries = true),
+            @CacheEvict(value = "semestersList", allEntries = true)
+    })
+    public SemesterWithGroupsDTO addGroupsToSemester(Long semesterId, List<Long> groupIds) {
+        log.info("In addGroupsToSemester(semesterId = [{}], groupIds = [{}])", semesterId, groupIds);
+        Semester semester = findByIdOrThrow(semesterId);
+        List<Group> groups = groupRepository.getGroupsByGroupIds(groupIds);
+        semester.setGroups(new HashSet<>(groups));
+        Semester updated = semesterRepository.update(semester);
+        return semesterMapper.semesterToSemesterWithGroupsDTO(updated);
+    }
+
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "semesters", key = "#toSemesterId"),
+            @CacheEvict(value = "semestersList", allEntries = true),
+            @CacheEvict(value = "semesterSchedules", key = "#toSemesterId"),
+            @CacheEvict(value = "scheduleDTO", key = "#toSemesterId"),
+            @CacheEvict(value = "scheduleForGroup", allEntries = true),
+            @CacheEvict(value = "scheduleForTeacher", allEntries = true)
+    })
+    public SemesterWithGroupsDTO copySemester(Long fromSemesterId, Long toSemesterId) {
+        log.info("In copySemester(fromSemesterId = [{}], toSemesterId = [{}])", fromSemesterId, toSemesterId);
+        Semester toSemester = findByIdOrThrow(toSemesterId);
+        Semester fromSemester = findByIdOrThrow(fromSemesterId);
+        List<Schedule> schedules = scheduleRepository.getScheduleBySemester(fromSemesterId);
+
+        if (shouldClearSemesterContent(toSemester)) {
+            clearSemesterContent(toSemester);
+        }
+
+        copyContent(fromSemester, toSemester);
+        copySchedules(schedules, copyLessons(schedules, toSemester));
+
+        Semester updated = semesterRepository.update(toSemester);
+        return semesterMapper.semesterToSemesterWithGroupsDTO(updated);
+    }
+
+    // ==================== Private methods ====================
+
+    private Semester findByIdOrThrow(Long id) {
+        return semesterRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Semester.class, "id", id.toString()));
+    }
+
     private void checkConstraints(Semester semester) {
         if (isTimeInvalid(semester)) {
             throw new IncorrectTimeException("The end day cannot be before the start day");
@@ -106,351 +225,48 @@ public class SemesterServiceImpl implements SemesterService {
         }
     }
 
-    /**
-     * Checks update constraints for the given semester.
-     *
-     * @param semester the semester to be checked
-     * @throws UsedEntityException if semester have schedule and can not be removed,
-     *                             if one or more days in a semester have lessons and can not be removed,
-     *                             if one or more classes in a semester have lessons and can not be removed
-     */
-    private void checkUpdateConstraints(Semester semester) {
-        checkConstraints(semester);
-        if (isScheduleWithLessonsCanNotBeRemoved(semester)) {
-            throw new UsedEntityException("Semester have Schedule and can not be removed");
-        }
-        if (isDaysWithLessonsCanNotBeRemoved(semester)) {
-            throw new UsedEntityException("One or more days in a semester have lessons and can not be removed");
-        }
-        if (isPeriodsWithLessonsCanNotBeRemoved(semester)) {
-            throw new UsedEntityException("One or more classes in a semester have lessons and can not be removed");
-        }
-    }
-
-    /**
-     * Fills the semester by default values.
-     *
-     * @param semester the semester to be filled
-     */
     private void fillDefaultValues(Semester semester) {
         if (CollectionUtils.isEmpty(semester.getDaysOfWeek())) {
-            semester.setDaysOfWeek(new HashSet<>(workDaysList));
+            semester.setDaysOfWeek(new HashSet<>(WORK_DAYS));
         }
         if (CollectionUtils.isEmpty(semester.getPeriods())) {
             semester.setPeriods(new HashSet<>(periodService.getFirstFourPeriods()));
         }
     }
 
-    /**
-     * Sets current semester in the repository to {@code false} while saving new current semester or updating current semester.
-     *
-     * @param semester the semester to be saved or updated
-     */
-    private void setCurrentToFalse(Semester semester) {
+    private void handleCurrentSemester(Semester semester) {
         if (semester.isCurrentSemester()) {
             semesterRepository.updateAllSemesterCurrentToFalse();
             semesterRepository.setCurrentSemester(semester.getId());
         }
     }
 
-    /**
-     * Sets default semester in the repository to {@code false} while saving new default semester or updating default semester.
-     *
-     * @param semester the semester to be saved or updated
-     */
-    private void setDefaultToFalse(Semester semester) {
+    private void handleDefaultSemester(Semester semester) {
         if (semester.isDefaultSemester()) {
             semesterRepository.updateAllSemesterDefaultToFalse();
             semesterRepository.setDefaultSemester(semester.getId());
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws UsedEntityException if the given semester has not passed checkUpdateConstraints
-     */
-    @Caching(put = {@CachePut(value = "map", key = "#semester.id")},
-            evict = {@CacheEvict(value = "semesterList", allEntries = true)})
-    @Override
-    public Semester update(Semester semester) {
-        log.debug("In update(entity = [{}]", semester);
-        checkUpdateConstraints(semester);
-        setCurrentToFalse(semester);
-        setDefaultToFalse(semester);
-        return semesterRepository.update(semester);
+    private boolean isTimeInvalid(Semester semester) {
+        return semester.getStartDay().isAfter(semester.getEndDay()) ||
+                semester.getStartDay().equals(semester.getEndDay());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @CacheEvict(value = "map", key = "#object.id")
-    @Override
-    public Semester delete(Semester object) {
-        log.debug("In delete(object = [{}])", object);
-        return semesterRepository.delete(object);
+    private boolean isSemesterExists(Long semesterId, String description, int year) {
+        return semesterRepository.getSemesterByDescriptionAndYear(description, year)
+                .map(existing -> !existing.getId().equals(semesterId))
+                .orElse(false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Semester getCurrentSemester() {
-        log.debug("In getCurrentSemester");
-        Semester semester = semesterRepository.getCurrentSemester().orElseThrow(
-                () -> new ScheduleConflictException("Current semester for managers work isn't specified"));
-        Hibernate.initialize(semester.getDaysOfWeek());
-        Hibernate.initialize(semester.getPeriods());
-        Hibernate.initialize(semester.getGroups());
-        return semester;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Semester getDefaultSemester() {
-        log.debug("In getDefaultSemester");
-        Semester semester = semesterRepository.getDefaultSemester().orElseThrow(
-                () -> new ScheduleConflictException("Default semester isn't specified"));
-        Hibernate.initialize(semester.getDaysOfWeek());
-        Hibernate.initialize(semester.getPeriods());
-        Hibernate.initialize(semester.getGroups());
-        return semester;
-    }
-
-    /**
-     * Checks the start and end days of the semester.
-     *
-     * @param object the semester that will be checked
-     * @return {@code true} if the end time is before the start time or equals, otherwise return {@code false}
-     */
-    private boolean isTimeInvalid(Semester object) {
-        log.info("Enter into isTimeInvalid  with entity: {}", object);
-        return object.getStartDay().isAfter(object.getEndDay()) ||
-                object.getStartDay().equals(object.getEndDay());
-    }
-
-    /**
-     * Check existence of the given semester.
-     *
-     * @param semesterId  the id of the semester
-     * @param description the string represents the description of the semester
-     * @param year        the year of the semester
-     * @return {@code true} if the given semester exists in the repository
-     */
-    private boolean isSemesterExists(long semesterId, String description, int year) {
-        log.info("In isSemesterExists (semesterId = [{}],description = [{}], year = [{}])", semesterId, description, year);
-        Semester existingSemester = semesterRepository.getSemesterByDescriptionAndYear(description, year).orElse(null);
-        if (existingSemester == null) {
-            return false;
-        }
-        return existingSemester.getId() != semesterId;
-    }
-
-    /**
-     * Checks if days with lessons are not removed from the updated semester.
-     *
-     * @param semester the semester that will be checked before updating
-     * @return {@code true} if one or more days with lessons have been removed from the updated semester,
-     * {@code false} if days with lessons have not been removed
-     */
     private boolean isDaysWithLessonsCanNotBeRemoved(Semester semester) {
-        log.debug("Enter into isDaysWithLessonsCanBeRemoved with entity: {}", semester);
         List<DayOfWeek> daysInSchedule = semesterRepository.getDaysWithLessonsBySemesterId(semester.getId());
         return !semester.getDaysOfWeek().containsAll(daysInSchedule);
     }
 
-    /**
-     * Checks if semester with schedule are not removed from the updated semester.
-     *
-     * @param semester the semester that will be checked before updating
-     * @return {@code true} if schedule have been removed from the updated semester;
-     * {@code false} if schedule have not been removed.
-     */
-    private boolean isScheduleWithLessonsCanNotBeRemoved(Semester semester) {
-        log.debug("Enter into isScheduleWithLessonsCanNotBeRemoved with entity: {}", semester);
-        List<Schedule> scheduleInSemester = scheduleRepository.getScheduleBySemester(semester.getId());
-        return CollectionUtils.isNotEmpty(scheduleInSemester);
-    }
-
-    /**
-     * Checks if periods with lessons are not removed from the updated semester.
-     *
-     * @param semester the semester that will be checked before updating
-     * @return {@code true} if one or more periods with lessons have been removed from the updated semester,
-     * {@code false} if periods with lessons have not been removed.
-     */
     private boolean isPeriodsWithLessonsCanNotBeRemoved(Semester semester) {
-        log.debug("Enter into isPeriodsWithLessonsCanNotBeRemoved with entity: {}", semester);
         List<Period> periodsInSchedule = semesterRepository.getPeriodsWithLessonsBySemesterId(semester.getId());
         return !semester.getPeriods().containsAll(periodsInSchedule);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Semester> getDisabled() {
-        log.debug("Enter into getAll of getDisabled");
-        List<Semester> semesters = semesterRepository.getDisabled();
-        for (Semester semester : semesters) {
-            Hibernate.initialize(semester.getDaysOfWeek());
-            Hibernate.initialize(semester.getPeriods());
-            Hibernate.initialize(semester.getGroups());
-        }
-        return semesters;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @CacheEvict(value = "semesterList", allEntries = true)
-    @Override
-    public Semester changeCurrentSemester(Long semesterId) {
-        log.debug("In changeCurrentSemester(Long semesterId = [{}])", semesterId);
-        semesterRepository.updateAllSemesterCurrentToFalse();
-        semesterRepository.setCurrentSemester(semesterId);
-        return getById(semesterId);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @CacheEvict(value = "semesterList", allEntries = true)
-    @Override
-    public Semester changeDefaultSemester(Long semesterId) {
-        log.debug("In changeDefaultSemester(Long semesterId = [{}])", semesterId);
-        semesterRepository.updateAllSemesterDefaultToFalse();
-        semesterRepository.setDefaultSemester(semesterId);
-        return getById(semesterId);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @CacheEvict(value = "semesterList", allEntries = true)
-    @Override
-    public Semester addGroupToSemester(Semester semester, Group group) {
-        log.debug("In addGroupToSemester (semester = [{}], group = [{}])", semester, group);
-        Set<Group> groups = semester.getGroups();
-        if (groups == null) {
-            groups = new HashSet<>();
-        }
-        groups.add(group);
-        semester.setGroups(groups);
-        return semester;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @CacheEvict(value = "semesterList", allEntries = true)
-    @Override
-    public Semester addGroupsToSemester(Semester semester, List<Long> groupIds) {
-        log.info("In addGroupsToSemester (semester = [{}], groupIds = [{}])", semester, groupIds);
-        List<Group> groups = groupRepository.getGroupsByGroupIds(groupIds);
-        Set<Group> groupSet = new HashSet<>(groups);
-        semester.setGroups(groupSet);
-        semesterRepository.update(semester);
-        log.debug("Semester groups has been updated");
-        return semester;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Semester addDaysOfWeekToSemester(Semester semester, Set<DayOfWeek> daysOfWeek) {
-        log.debug("In addDaysOfWeekToSemester (semester = [{}], daysOfWeek = [{}])", semester, daysOfWeek);
-
-        Set<DayOfWeek> days = semester.getDaysOfWeek();
-
-        if (days == null) {
-            days = new HashSet<>();
-        }
-        days.addAll(daysOfWeek);
-        semester.setDaysOfWeek(days);
-        return semester;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Semester addPeriodsToSemester(Semester semester, Set<Period> periods) {
-        log.debug("In addPeriodsToSemester (semester = [{}], periods = [{}])", semester, periods);
-
-        Set<Period> periodsSemester = semester.getPeriods();
-
-        if (periodsSemester == null) {
-            periodsSemester = new HashSet<>();
-        }
-        periodsSemester.addAll(periods);
-        semester.setPeriods(periodsSemester);
-        return semester;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Semester deleteGroupFromSemester(Semester semester, Group group) {
-        log.debug("In deleteGroupFromSemester (semester = [{}], group = [{}])", semester, group);
-        Set<Group> groups = semester.getGroups();
-        groups.remove(group);
-        update(semester);
-        return semester;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Semester deleteAllContentFromSemester(Semester semester) {
-        log.debug("In deleteAllContentFromSemester (semester = [{}] )", semester);
-        Set<Group> groups = new HashSet<>();
-        Set<Period> periods = new HashSet<>();
-        Set<DayOfWeek> dayOfWeeks = new HashSet<>();
-        semester.setGroups(groups);
-        semester.setPeriods(periods);
-        semester.setDaysOfWeek(dayOfWeeks);
-        return semester;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Semester deleteGroupsFromSemester(Semester semester, List<Group> groups) {
-        log.debug("In deleteGroupsFromSemester (semester = [{}], group = [{}])", semester, groups);
-        groups.forEach(group -> deleteGroupFromSemester(semester, group));
-        return semester;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Semester copySemester(Long fromSemesterId, Long toSemesterId) {
-        log.info("In copySemester (fromSemesterId = [{}], toSemesterId = [{}])", fromSemesterId, toSemesterId);
-        Semester toSemester = getById(toSemesterId);
-        Semester fromSemester = getById(fromSemesterId);
-        List<Schedule> schedules = scheduleRepository.getScheduleBySemester(fromSemesterId);
-
-        if (shouldClearSemesterContent(toSemester)) {
-            deleteAllContentFromSemester(toSemester);
-        }
-
-        addGroupsToSemester(toSemester, fromSemester.getGroups().stream().map(Group::getId).collect(Collectors.toList()));
-        addDaysOfWeekToSemester(toSemester, fromSemester.getDaysOfWeek());
-        addPeriodsToSemester(toSemester, fromSemester.getPeriods());
-
-        Set<Lesson> lessonSet = schedules.stream().map(Schedule::getLesson).collect(Collectors.toSet());
-
-        copySchedules(schedules, copyLessons(lessonSet, toSemester));
-
-        return update(toSemester);
     }
 
     private boolean shouldClearSemesterContent(Semester semester) {
@@ -459,41 +275,55 @@ public class SemesterServiceImpl implements SemesterService {
                 || CollectionUtils.isNotEmpty(semester.getDaysOfWeek());
     }
 
-    private Map<Long, Lesson> copyLessons(Set<Lesson> lessonSet, Semester toSemester) {
-        log.debug("In copyLessons (lessonSet = [{}], toSemester = [{}])", lessonSet, toSemester);
-        Map<Long, Lesson> oldToNewLessonMap = new HashMap<>();
+    private void clearSemesterContent(Semester semester) {
+        semester.setGroups(new HashSet<>());
+        semester.setPeriods(new HashSet<>());
+        semester.setDaysOfWeek(new HashSet<>());
+    }
 
+    private void copyContent(Semester from, Semester to) {
+        List<Long> groupIds = from.getGroups().stream()
+                .map(Group::getId)
+                .collect(Collectors.toList());
+        List<Group> groups = groupRepository.getGroupsByGroupIds(groupIds);
+        to.setGroups(new HashSet<>(groups));
+        to.getDaysOfWeek().addAll(from.getDaysOfWeek());
+        to.getPeriods().addAll(from.getPeriods());
+    }
+
+    private Map<Long, Lesson> copyLessons(List<Schedule> schedules, Semester toSemester) {
+        Set<Lesson> lessonSet = schedules.stream()
+                .map(Schedule::getLesson)
+                .collect(Collectors.toSet());
+
+        Map<Long, Lesson> oldToNewLessonMap = new HashMap<>();
         for (Lesson lesson : lessonSet) {
-            Lesson lessonNew = new Lesson();
-            lessonNew.setSemester(toSemester);
-            lessonNew.setHours(lesson.getHours());
-            lessonNew.setLessonType(lesson.getLessonType());
-            lessonNew.setSubjectForSite(lesson.getSubjectForSite());
-            lessonNew.setGroup(lesson.getGroup());
-            lessonNew.setSubject(lesson.getSubject());
-            lessonNew.setTeacher(lesson.getTeacher());
-            lessonNew.setGrouped(lesson.isGrouped());
-            lessonNew.setLinkToMeeting(lesson.getLinkToMeeting());
-            Lesson lessonNewSaved = lessonRepository.save(lessonNew);
-            oldToNewLessonMap.put(lesson.getId(), lessonNewSaved);
+            Lesson newLesson = new Lesson();
+            newLesson.setSemester(toSemester);
+            newLesson.setHours(lesson.getHours());
+            newLesson.setLessonType(lesson.getLessonType());
+            newLesson.setSubjectForSite(lesson.getSubjectForSite());
+            newLesson.setGroup(lesson.getGroup());
+            newLesson.setSubject(lesson.getSubject());
+            newLesson.setTeacher(lesson.getTeacher());
+            newLesson.setGrouped(lesson.isGrouped());
+            newLesson.setLinkToMeeting(lesson.getLinkToMeeting());
+            Lesson saved = lessonRepository.save(newLesson);
+            oldToNewLessonMap.put(lesson.getId(), saved);
         }
         return oldToNewLessonMap;
     }
 
-    private List<Schedule> copySchedules(List<Schedule> schedules, Map<Long, Lesson> oldToNewLessonMap) {
-        log.debug("In copySchedules (schedules = [{}], oldToNewLessonMap = [{}])", schedules, oldToNewLessonMap);
-        List<Schedule> scheduleSaved = new ArrayList<>();
-
+    private void copySchedules(List<Schedule> schedules, Map<Long, Lesson> oldToNewLessonMap) {
         for (Schedule schedule : schedules) {
-            Schedule scheduleNew = new Schedule();
-            scheduleNew.setDayOfWeek(schedule.getDayOfWeek());
-            scheduleNew.setEvenOdd(schedule.getEvenOdd());
-            scheduleNew.setLesson(oldToNewLessonMap.get(schedule.getLesson().getId()));
-            scheduleNew.setPeriod(schedule.getPeriod());
-            scheduleNew.setRoom(schedule.getRoom());
-            scheduleSaved.add(scheduleRepository.save(scheduleNew));
+            Schedule newSchedule = new Schedule();
+            newSchedule.setDayOfWeek(schedule.getDayOfWeek());
+            newSchedule.setEvenOdd(schedule.getEvenOdd());
+            newSchedule.setLesson(oldToNewLessonMap.get(schedule.getLesson().getId()));
+            newSchedule.setPeriod(schedule.getPeriod());
+            newSchedule.setRoom(schedule.getRoom());
+            scheduleRepository.save(newSchedule);
         }
-        return scheduleSaved;
     }
-
 }
+

@@ -1,10 +1,10 @@
 import {
-    prepareTeacherCardCell,
-    buildLessonWithRoom,
-    prepareTeacherCardRegularCell,
     buildGroupNumber,
+    buildLessonWithRoom,
+    prepareTeacherCardCell,
+    prepareTeacherCardRegularCell,
 } from './prepareTeacherCell';
-import { places } from '../constants/places';
+import {places} from '../constants/places';
 
 const cardData = {
     room: '1 к. 11 ауд.',

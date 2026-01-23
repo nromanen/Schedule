@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import React, {useEffect} from 'react';
+import {Field, reduxForm} from 'redux-form';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import Card from '../../share/Card/Card';
 
 import './ClassForm.scss';
@@ -13,26 +13,26 @@ import renderTextField from '../../share/renderedFields/input';
 import renderTimePicker from '../../share/renderedFields/time';
 
 import {
-    required,
     greaterThanTime,
     lessThanTime,
-    uniqueClassName,
+    required,
     timeIntersect,
+    uniqueClassName,
 } from '../../validation/validateFields';
 
-import { CLASS_FORM } from '../../constants/reduxForms';
-import { CLASS_DURATION } from '../../constants/common';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {CLASS_FORM} from '../../constants/reduxForms';
+import {CLASS_DURATION} from '../../constants/common';
+import {getClearOrCancelTitle, setDisableButton} from '../../helper/disableComponent';
 import {
-    EDIT_TITLE,
-    CREATE_TITLE,
-    SAVE_BUTTON_LABEL,
-    CLASS_LABEL,
     CLASS_FROM_LABEL,
+    CLASS_LABEL,
     CLASS_TO_LABEL,
     CLASS_Y_LABEL,
+    CREATE_TITLE,
+    EDIT_TITLE,
+    SAVE_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
-import { hourFormat, timeFormat } from '../../constants/formats';
+import {hourFormat, timeFormat} from '../../constants/formats';
 
 const ClassFormFunc = (props) => {
     const { t } = useTranslation('formElements');

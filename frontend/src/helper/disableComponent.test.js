@@ -1,12 +1,5 @@
-import {
-    setDisableButton,
-    getClearOrCancelTitle,
-    setDisabledSaveButtonSemester,
-} from './disableComponent';
-import {
-    CLEAR_BUTTON_LABEL,
-    CANCEL_BUTTON_TITLE,
-} from '../constants/translationLabels/formElements';
+import {getClearOrCancelTitle, setDisableButton, setDisabledSaveButtonSemester,} from './disableComponent';
+import {CANCEL_BUTTON_TITLE, CLEAR_BUTTON_LABEL,} from '../constants/translationLabels/formElements';
 import i18n from '../i18n';
 
 const semester = {

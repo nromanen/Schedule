@@ -2,7 +2,7 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
-import { DialogContent, Dialog, DialogTitle, DialogActions } from '@material-ui/core';
+import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
 
 import './dialog.scss';
 import dialogMapper from './dialogMapper';

@@ -1,5 +1,5 @@
-import { get } from 'lodash';
-import { getTeacherWithPosition } from '../helper/renderTeacher';
+import {get} from 'lodash';
+import {getTeacherWithPosition} from '../helper/renderTeacher';
 
 const getSemesterTitle = (semester) => {
     if (!semester) return '';

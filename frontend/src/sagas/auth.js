@@ -1,30 +1,24 @@
-import { call, put, delay, takeLatest, takeEvery } from 'redux-saga/effects';
+import {call, delay, put, takeEvery, takeLatest} from 'redux-saga/effects';
 import jwtDecode from 'jwt-decode';
 import * as actionTypes from '../actions/actionsType';
 
+import {ACTIVATE_ACCOUNT_URL, LOGIN_URL, LOGOUT_URL, REGISTRATION_URL, RESET_PASSWORD_URL,} from '../constants/axios';
 import {
-    ACTIVATE_ACCOUNT_URL,
-    LOGIN_URL,
-    LOGOUT_URL,
-    REGISTRATION_URL,
-    RESET_PASSWORD_URL,
-} from '../constants/axios';
-import {
-    logout,
-    authAutoLogout,
-    resetUserPasswordSuccess,
     activateSuccess,
-    registerUserSuccess,
+    authAutoLogout,
     authSuccess,
+    logout,
+    registerUserSuccess,
+    resetUserPasswordSuccess,
     setAuthError,
 } from '../actions';
-import { axiosCall } from '../services/axios';
-import { GOOGLE } from '../constants/common';
-import { TOKEN_BEGIN } from '../constants/tokenBegin';
+import {axiosCall} from '../services/axios';
+import {GOOGLE} from '../constants/common';
+import {TOKEN_BEGIN} from '../constants/tokenBegin';
 import axios from '../helper/axios';
-import { setAuthLoading } from '../actions/loadingIndicator';
-import { POST, PUT } from '../constants/methods';
-import { createErrorMessage } from '../utils/sagaUtils';
+import {setAuthLoading} from '../actions/loadingIndicator';
+import {POST, PUT} from '../constants/methods';
+import {createErrorMessage} from '../utils/sagaUtils';
 
 function* loginToAccount({ payload }) {
     try {

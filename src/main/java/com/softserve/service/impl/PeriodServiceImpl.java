@@ -9,6 +9,7 @@ import com.softserve.repository.PeriodRepository;
 import com.softserve.service.PeriodService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ public class PeriodServiceImpl implements PeriodService {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable("allPeriods")
     public List<Period> getAll() {
         log.info("Enter into getAll of PeriodServiceImpl");
         return periodRepository.getAll();

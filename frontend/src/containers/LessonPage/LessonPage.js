@@ -1,22 +1,22 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import '../../components/LessonsPage/LessonPage.scss';
 import LessonPage from '../../components/LessonsPage/LessonPage';
 import {
     copyLessonCardStart,
     deleteLessonCardStart,
+    getEnabledGroupsStart,
     getLessonsByGroupStart,
     getLessonTypesStart,
-    selectLessonCardSuccess,
-    setUniqueError,
-    setIsOpenConfirmDialog,
     selectGroupId,
     selectGroupSuccess,
-    getEnabledGroupsStart,
+    selectLessonCardSuccess,
+    setIsOpenConfirmDialog,
+    setUniqueError,
 } from '../../actions';
-import { setOpenErrorSnackbar } from '../../actions/snackbar';
-import { copyLessonsFromSemesterStart, getAllSemestersStart } from '../../actions/semesters';
-import { handleLessonStart } from '../../actions/lesson';
-import { showAllTeachersStart } from '../../actions/teachers';
+import {setOpenErrorSnackbar} from '../../actions/snackbar';
+import {copyLessonsFromSemesterStart, getAllSemestersStart} from '../../actions/semesters';
+import {handleLessonStart} from '../../actions/lesson';
+import {showAllTeachersStart} from '../../actions/teachers';
 
 const mapStateToProps = (state) => ({
     lessons: state.lesson.lessons,

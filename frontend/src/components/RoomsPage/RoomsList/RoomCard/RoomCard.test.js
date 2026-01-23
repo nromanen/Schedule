@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import {mount} from 'enzyme';
 import RoomCard from './RoomCard';
 
 const showConfirmDialog = jest.fn();

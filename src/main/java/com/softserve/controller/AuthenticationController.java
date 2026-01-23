@@ -8,12 +8,13 @@ import com.softserve.entity.User;
 import com.softserve.mapper.UserMapper;
 import com.softserve.security.jwt.JwtTokenProvider;
 import com.softserve.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,24 +23,22 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.softserve.service.impl.UserServiceImpl.PASSWORD_FOR_SOCIAL_USER;
 
 @RestController
 @RequestMapping("/auth")
-@Api(tags = "Authentication API")
+@Tag(name = "Authentication API")
 @Slf4j
-@PropertySource({"classpath:cors.properties"})
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final UserMapper userMapper;
-    @Value("${backend.url}")
+
+    @Value("${app.backend.url}")
     private String url;
 
     @Autowired
@@ -52,7 +51,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-in")
-    @ApiOperation(value = "Get credentials  for login")
+    @Operation(summary = "Get credentials  for login")
     public ResponseEntity<Object> signIn(@RequestBody AuthenticationRequestDTO requestDto) {
         log.info("Enter into signIn method with user email {}", requestDto.getEmail());
         User user = userService.findSocialUser(requestDto.getEmail()).orElseThrow(() ->
@@ -70,7 +69,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-up")
-    @ApiOperation(value = "Get credentials for registration")
+    @Operation(summary = "Get credentials for registration")
     public ResponseEntity<MessageDTO> signUp(@RequestBody RegistrationRequestDTO registrationDTO) {
         log.info("Enter into signUp method with user email {}", registrationDTO.getEmail());
         User user = userMapper.toCreateUser(registrationDTO);
@@ -82,7 +81,7 @@ public class AuthenticationController {
     }
 
     @PutMapping("/activation-account")
-    @ApiOperation(value = "Update token after activation successfully account")
+    @Operation(summary = "Update token after activation successfully account")
     public ResponseEntity<MessageDTO> activationAccount(@RequestParam("token") String token) {
         log.info("Enter into activationAccount method");
         User user = userService.findByToken(token);
@@ -93,7 +92,7 @@ public class AuthenticationController {
     }
 
     @PutMapping("/reset-password")
-    @ApiOperation(value = "Reset password by email")
+    @Operation(summary = "Reset password by email")
     public ResponseEntity<MessageDTO> resetPassword(@RequestParam("email") String email) {
         log.info("Enter into resetPassword method  with email:{}", email);
         userService.resetPassword(email);
@@ -102,7 +101,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-out")
-    @ApiOperation(value = "Making the logout")
+    @Operation(summary = "Making the logout")
     public void signOut(HttpServletRequest rq, HttpServletResponse rs) {
         log.info("Enter into signOut method");
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
@@ -110,7 +109,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/social/login-success")
-    @ApiOperation(value = "Get token after successful sign in via social network")
+    @Operation(summary = "Get token after successful sign in via social network")
     public ResponseEntity<MessageDTO> getLoginInfo(@RequestParam("token") String token) {
         log.info("Enter into getLoginInfo method");
         return ResponseEntity.ok().body(new MessageDTO(token));

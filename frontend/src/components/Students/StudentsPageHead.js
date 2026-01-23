@@ -1,6 +1,6 @@
 import React from 'react';
 import './StudentTable.scss';
-import { STUDENTS_LABEL, STUDENT_LABEL } from '../../constants/translationLabels/formElements';
+import {STUDENT_LABEL, STUDENTS_LABEL} from '../../constants/translationLabels/formElements';
 
 export const StudentsPageHead = (props) => {
     const { students, t } = props;

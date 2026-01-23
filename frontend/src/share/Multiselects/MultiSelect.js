@@ -1,14 +1,10 @@
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 import ReactSelect from 'react-select';
 import './MultiSelect.scss';
-import { useTranslation } from 'react-i18next';
-import {
-    SCHEDULE_FOR_SEMESTER,
-    CHOOSE_TEACHER,
-    ALL_TEACHERS,
-} from '../../constants/translationLabels/common';
+import {useTranslation} from 'react-i18next';
+import {ALL_TEACHERS, CHOOSE_TEACHER, SCHEDULE_FOR_SEMESTER,} from '../../constants/translationLabels/common';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogCancelButton, dialogSendSchedule } from '../../constants/dialogs';
+import {dialogCancelButton, dialogSendSchedule} from '../../constants/dialogs';
 
 const MultiSelect = (props) => {
     const { t } = useTranslation('common');

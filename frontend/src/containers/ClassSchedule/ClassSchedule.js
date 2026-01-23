@@ -1,37 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
 
-import { FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
+import {FaEdit} from 'react-icons/fa';
+import {MdDelete} from 'react-icons/md';
 
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import ClassForm from '../../components/ClassForm/ClassForm';
 import Card from '../../share/Card/Card';
 import CustomDialog from '../Dialogs/CustomDialog';
-import { dialogTypes } from '../../constants/dialogs';
-import { cardType } from '../../constants/cardType';
+import {dialogTypes} from '../../constants/dialogs';
+import {cardType} from '../../constants/cardType';
 
 import {
     classFormHandler,
-    getClassScheduleListStart,
-    getClassScheduleByIdStart,
-    deleteClassScheduleStart,
     clearClassScheduleSuccess,
+    deleteClassScheduleStart,
+    getClassScheduleByIdStart,
+    getClassScheduleListStart,
 } from '../../actions/classes';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import {setIsOpenConfirmDialog} from '../../actions/dialog';
 
-import { handleSnackbarOpenService } from '../../services/snackbarService';
-import { snackbarTypes } from '../../constants/snackbarTypes';
+import {handleSnackbarOpenService} from '../../services/snackbarService';
+import {snackbarTypes} from '../../constants/snackbarTypes';
 import {
-    CLASS_LABEL,
     CLASS_FROM_LABEL,
+    CLASS_LABEL,
     CLASS_TO_LABEL,
     MAX_COUNT_CLASSES_REACHED,
 } from '../../constants/translationLabels/formElements';
-import {
-    COMMON_EDIT_HOVER_TITLE,
-    COMMON_DELETE_HOVER_TITLE,
-} from '../../constants/translationLabels/common';
+import {COMMON_DELETE_HOVER_TITLE, COMMON_EDIT_HOVER_TITLE,} from '../../constants/translationLabels/common';
 
 const ClassSchedule = (props) => {
     const { t } = useTranslation('formElements');

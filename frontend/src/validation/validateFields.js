@@ -1,38 +1,35 @@
 import * as moment from 'moment';
 import {
     checkUniqClassName,
+    checkUniqSemester,
+    checkUniqueDepartment,
     checkUniqueGroup,
     checkUniqueRoomName,
     checkUniqueSubject,
     timeIntersectService,
-    checkUniqSemester,
-    checkUniqueDepartment,
 } from './storeValidation';
 import i18n from '../i18n';
-import { validation } from '../constants/validation';
+import {validation} from '../constants/validation';
 import {
-    EMAIL_MESSAGE,
-    LESS_THAN_FIELD_MESSAGE,
-    BIGGER_THAN_FIELD_MESSAGE,
-    REQUIRED_MESSAGE,
-    BIGGER_THAN_ZERO_MESSAGE,
-    BIGGER_THAN_THIS_YEAR_MESSAGE,
     BIGGER_THAN_CHAR_MESSAGE,
+    BIGGER_THAN_FIELD_MESSAGE,
+    BIGGER_THAN_THIS_YEAR_MESSAGE,
+    BIGGER_THAN_ZERO_MESSAGE,
+    EMAIL_MESSAGE,
     LESS_THAN_CHAR_MESSAGE,
+    LESS_THAN_FIELD_MESSAGE,
     PASSWORD_MESSAGE,
+    REQUIRED_MESSAGE,
     URL_MESSAGE,
 } from '../constants/translationLabels/validationMessages';
-import {
-    FORM_CLASS_FROM_LABEL,
-    FORM_CLASS_TO_LABEL,
-} from '../constants/translationLabels/formElements';
-import { dateFormat } from '../constants/formats';
+import {FORM_CLASS_FROM_LABEL, FORM_CLASS_TO_LABEL,} from '../constants/translationLabels/formElements';
+import {dateFormat} from '../constants/formats';
 
 export const required = (value) => (value ? undefined : i18n.t(REQUIRED_MESSAGE));
 
 export const isUrl = (value) => {
     const validationUrl = value?.match(
-        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g,
+        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g,
     );
     if (value && validationUrl == null) return i18n.t(URL_MESSAGE);
     return '';

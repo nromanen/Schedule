@@ -1,6 +1,6 @@
-import { connect } from 'react-redux';
-import { getFreeRoomsStart, clearFreeRooms } from '../../actions/rooms';
-import { getClassScheduleListStart } from '../../actions/classes';
+import {connect} from 'react-redux';
+import {clearFreeRooms, getFreeRoomsStart} from '../../actions/rooms';
+import {getClassScheduleListStart} from '../../actions/classes';
 import FreeRooms from '../../components/FreeRoomsDialog/FreeRoomsDialog';
 
 const mapStateToProps = (state) => ({

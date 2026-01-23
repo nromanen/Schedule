@@ -1,44 +1,44 @@
-import { reset } from 'redux-form';
-import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
+import {reset} from 'redux-form';
+import {call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 
 import * as actionTypes from '../actions/actionsType';
-import { setScheduleLoading } from '../actions';
+import {setScheduleLoading} from '../actions';
 
-import { setLoading, setRoomsLoading } from '../actions/loadingIndicator';
-import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
-import { axiosCall } from '../services/axios';
+import {setLoading, setRoomsLoading} from '../actions/loadingIndicator';
+import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
+import {axiosCall} from '../services/axios';
 import {
-    ROOM_URL,
-    ROOM_ORDERED_URL,
-    DISABLED_ROOMS_URL,
-    ROOM_TYPES_URL,
-    FREE_ROOMS_URL,
     BUSY_ROOMS,
     CURRENT_SEMESTER_URL,
+    DISABLED_ROOMS_URL,
+    FREE_ROOMS_URL,
+    ROOM_ORDERED_URL,
+    ROOM_TYPES_URL,
+    ROOM_URL,
 } from '../constants/axios';
-import { ROOM_FORM, ROOM_FORM_TYPE } from '../constants/reduxForms';
-import { createErrorMessage, createMessage } from '../utils/sagaUtils';
+import {ROOM_FORM, ROOM_FORM_TYPE} from '../constants/reduxForms';
+import {createErrorMessage, createMessage} from '../utils/sagaUtils';
 import {
-    updateRoomSuccess,
     addRoomSuccess,
-    getListOfRoomsSuccess,
-    getListOfDisabledRoomsSuccess,
-    deleteRoomSuccess,
-    getAllRoomTypesSuccess,
-    deleteRoomTypeSuccess,
-    updateRoomTypeSuccess,
     addRoomTypeSuccess,
-    getFreeRoomsSuccess,
+    deleteRoomSuccess,
+    deleteRoomTypeSuccess,
+    getAllRoomTypesSuccess,
     getBusyRoomsSuccess,
+    getFreeRoomsSuccess,
+    getListOfDisabledRoomsSuccess,
+    getListOfRoomsSuccess,
+    updateRoomSuccess,
+    updateRoomTypeSuccess,
 } from '../actions/rooms';
 import {
     BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
+    UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { FORM_ROOM_LABEL, FORM_TYPE_LABEL } from '../constants/translationLabels/formElements';
-import { POST, DELETE, PUT } from '../constants/methods';
+import {FORM_ROOM_LABEL, FORM_TYPE_LABEL} from '../constants/translationLabels/formElements';
+import {DELETE, POST, PUT} from '../constants/methods';
 
 export function* getListOfRooms() {
     try {

@@ -1,7 +1,7 @@
 import {
-    COMMON_TABLE_COLUMNS_SIZE_SMALL,
     COMMON_TABLE_COLUMNS_SIZE_BASE,
     COMMON_TABLE_COLUMNS_SIZE_LARGE,
+    COMMON_TABLE_COLUMNS_SIZE_SMALL,
 } from '../translationLabels/common';
 
 export const columnSizeArray = [

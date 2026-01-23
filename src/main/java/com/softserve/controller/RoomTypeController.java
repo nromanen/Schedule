@@ -4,8 +4,8 @@ import com.softserve.dto.RoomTypeDTO;
 import com.softserve.entity.RoomType;
 import com.softserve.mapper.RoomTypeMapper;
 import com.softserve.service.RoomTypeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Api(tags = "Room Type API")
+@Tag(name = "Room Type API")
 @RequestMapping("/room-types")
 @Slf4j
 public class RoomTypeController {
@@ -30,7 +30,7 @@ public class RoomTypeController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get the list of all room types")
+    @Operation(summary = "Get the list of all room types")
     public ResponseEntity<List<RoomTypeDTO>> list() {
         log.info("In list ()");
         List<RoomType> roomTypes = roomTypeService.getAll();
@@ -38,7 +38,7 @@ public class RoomTypeController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get room type info by id")
+    @Operation(summary = "Get room type info by id")
     public ResponseEntity<RoomTypeDTO> get(@PathVariable("id") long id) {
         log.info("In get(id = [{}])", id);
         RoomType roomType = roomTypeService.getById(id);
@@ -46,7 +46,7 @@ public class RoomTypeController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Create new room type")
+    @Operation(summary = "Create new room type")
     public ResponseEntity<RoomTypeDTO> save(@RequestBody RoomTypeDTO roomTypeDTO) {
         log.info("In save (roomTypeDTO = [{}])", roomTypeDTO);
         RoomType roomType = roomTypeService.save(roomTypeMapper.roomTypeDTOTRoomType(roomTypeDTO));
@@ -54,7 +54,7 @@ public class RoomTypeController {
     }
 
     @PutMapping
-    @ApiOperation(value = "Update existing room type by id")
+    @Operation(summary = "Update existing room type by id")
     public ResponseEntity<RoomTypeDTO> update(@RequestBody RoomTypeDTO roomTypeDTO) {
         log.info("In update (roomTypeDTO = [{}])", roomTypeDTO);
         RoomType roomType = roomTypeService.update(roomTypeMapper.roomTypeDTOTRoomType(roomTypeDTO));
@@ -62,7 +62,7 @@ public class RoomTypeController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete room type by id")
+    @Operation(summary = "Delete room type by id")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         RoomType roomType = roomTypeService.getById(id);

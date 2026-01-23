@@ -1,5 +1,5 @@
-import { cloneDeep, isEmpty } from 'lodash';
-import { daysObject } from '../constants/schedule/days';
+import {cloneDeep, isEmpty} from 'lodash';
+import {daysObject} from '../constants/schedule/days';
 
 const transformClassDays = (classDay) => {
     const lessons = [];

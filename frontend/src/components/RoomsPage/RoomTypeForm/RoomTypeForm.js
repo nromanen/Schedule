@@ -1,20 +1,16 @@
-import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect} from 'react';
+import {Field, reduxForm} from 'redux-form';
+import {useTranslation} from 'react-i18next';
 import Button from '@material-ui/core/Button';
-import { MdDelete } from 'react-icons/md';
-import { FaEdit } from 'react-icons/fa';
-import { ROOM_FORM_TYPE } from '../../../constants/reduxForms';
-import { cardType } from '../../../constants/cardType';
-import { dialogTypes } from '../../../constants/dialogs';
+import {MdDelete} from 'react-icons/md';
+import {FaEdit} from 'react-icons/fa';
+import {ROOM_FORM_TYPE} from '../../../constants/reduxForms';
+import {cardType} from '../../../constants/cardType';
+import {dialogTypes} from '../../../constants/dialogs';
 import Card from '../../../share/Card/Card';
 import renderTextField from '../../../share/renderedFields/input';
 import './RoomTypeForm.scss';
-import {
-    SAVE_BUTTON_LABEL,
-    ADD_TYPE_LABEL,
-    NEW_TYPE_LABEL,
-} from '../../../constants/translationLabels/formElements';
+import {ADD_TYPE_LABEL, NEW_TYPE_LABEL, SAVE_BUTTON_LABEL,} from '../../../constants/translationLabels/formElements';
 
 const RoomTypeForm = (props) => {
     const {

@@ -1,0 +1,68 @@
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/variables.scss';
+@import '../../styles/mixins.scss';
+
+.teacher-lessons-wrapper {
+    margin-bottom: 50px;
+    @include displayFlex(start, flex-start);
+
+    @media (max-width: $md-m) {
+        @include displayFlex(stretch, center);
+        flex-wrap: wrap;
+    }
+}
+
+.teacher-lessons-sidebar {
+    position: sticky;
+    top: 16px;
+    margin-bottom: 100px;
+
+    .sidebar-card {
+        width: 320px;
+        text-align: center;
+        padding: 16px;
+        border-radius: 5px;
+        box-shadow: 0 2px 8px $shadow-box;
+
+        .sidebar-title {
+            margin: 0 0 16px 0;
+            font-size: $font-l;
+            font-weight: 500;
+            color: $black;
+        }
+
+        .teacher-dropdown {
+            width: $full-size;
+
+            .MuiFormControl-root {
+                width: $full-size;
+            }
+        }
+    }
+
+    @media (max-width: $md-m) {
+        position: unset;
+        margin-bottom: 20px;
+    }
+}
+
+.teacher-lessons-list {
+    @include displayFlex(center, flex-start, column);
+    width: $full-size;
+    padding: 0 16px;
+
+    .loading-container {
+        @include displayCenter();
+        padding: 40px;
+        color: $gray;
+    }
+
+    .no-lessons-message,
+    .select-teacher-message {
+        @include displayCenter();
+        padding: 40px;
+        color: $gray;
+        font-size: $font-m;
+    }
+}

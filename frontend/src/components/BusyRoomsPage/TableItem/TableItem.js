@@ -1,16 +1,12 @@
 import React from 'react';
-import { isEmpty } from 'lodash';
+import {isEmpty} from 'lodash';
 import Card from '@material-ui/core/Card';
 import './TableItem.scss';
-import {
-    addClassDayBoard,
-    removeClassDayBoard,
-    getColorByFullness,
-} from '../../../helper/schedule';
-import { GroupTitle } from './GroupTitle';
+import {addClassDayBoard, getColorByFullness, removeClassDayBoard,} from '../../../helper/schedule';
+import {GroupTitle} from './GroupTitle';
 
 const TableItem = (props) => {
-    const { classes, schedule, index } = props;
+    const { classes, schedule, index, columnsSize } = props;
 
     const findItemInArray = (array, equalTo) => {
         return array.find((classItem) => classItem.class_id === equalTo);
@@ -26,7 +22,7 @@ const TableItem = (props) => {
                 key={`${index}_${classIndex.toString()}`}
                 onMouseOver={() => addClassDayBoard(schedule.day, scheduleClass.class_name)}
                 onMouseOut={() => removeClassDayBoard(schedule.day, scheduleClass.class_name)}
-                className="class-container"
+                className={`class-container responsive-table-column-${columnsSize}`}
             >
                 <div className="class-info-container">
                     <Card

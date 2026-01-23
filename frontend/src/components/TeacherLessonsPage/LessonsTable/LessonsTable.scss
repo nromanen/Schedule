@@ -1,0 +1,247 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
+
+.lessons-table-wrapper {
+    width: $full-size;
+}
+
+.lessons-table-container {
+    width: $full-size;
+    overflow-x: auto;
+
+    .lessons-table {
+        min-width: 900px;
+
+        .MuiTableHead-root {
+            background-color: $gray2;
+
+            .MuiTableCell-head {
+                font-weight: 600;
+                color: $black;
+                white-space: nowrap;
+            }
+        }
+
+        .subject-header-row {
+            background-color: $blue1;
+
+            .subject-header {
+                @include displayFlex(center, flex-start);
+                gap: 8px;
+
+                .expand-button {
+                    padding: 4px;
+                }
+
+                .subject-title {
+                    font-weight: 600;
+                    font-size: $font-s;
+                    color: $blue4;
+                }
+
+                .delete-subject-link-button {
+                    color: $delete-color;
+                    padding: 4px;
+                    margin-left: 8px;
+
+                    &:hover {
+                        background-color: rgba($red, 0.1);
+                    }
+                }
+            }
+
+            .subject-link-wrapper {
+                @include displayFlex(center, flex-end);
+                gap: 8px;
+
+                .subject-link-input {
+                    width: 250px;
+
+                    .MuiOutlinedInput-root {
+                        background-color: $white;
+                    }
+
+                    .MuiOutlinedInput-input {
+                        padding: 8px 12px;
+                    }
+                }
+
+                .subject-link-button {
+                    white-space: nowrap;
+                }
+
+                .delete-subject-link-button {
+                    color: $delete-color;
+                    padding: 4px;
+
+                    &:hover {
+                        background-color: rgba($red, 0.1);
+                    }
+                }
+            }
+        }
+
+        .lesson-group-row {
+            &:hover {
+                background-color: $table-row-hover-color;
+            }
+
+            &.type-last-row {
+                td {
+                    border-bottom: 2px solid $blue3;
+                }
+            }
+
+            .groups-cell {
+                @include displayFlex(center, flex-start);
+                gap: 4px;
+
+                .expand-button {
+                    padding: 4px;
+                }
+
+                .expand-placeholder {
+                    display: inline-block;
+                    width: 28px;
+                }
+
+                .groups-list {
+                    font-size: $font-xs;
+                }
+            }
+
+            .grouped-icon {
+                color: $green;
+            }
+
+            .link-cell {
+                max-width: 200px;
+
+                .link-wrapper {
+                    @include displayFlex(center, flex-start);
+                    gap: 4px;
+
+                    .link-text {
+                        @include displayFlex(center, flex-start);
+                        gap: 4px;
+                        color: $link;
+                        cursor: pointer;
+                        text-decoration: none;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+
+                    .no-link {
+                        color: $gray;
+                        font-style: italic;
+                    }
+                }
+            }
+
+            .new-link-cell {
+                min-width: 250px;
+
+                .new-link-wrapper {
+                    @include displayFlex(center, flex-start);
+                    gap: 8px;
+
+                    .new-link-input {
+                        flex: 1;
+
+                        .MuiOutlinedInput-input {
+                            padding: 8px 12px;
+                        }
+                    }
+
+                    .apply-button {
+                        color: $create-color;
+
+                        &:hover {
+                            background-color: rgba($green, 0.1);
+                        }
+
+                        &:disabled {
+                            color: $gray3;
+                        }
+                    }
+
+                    .delete-link-button {
+                        color: $delete-color;
+                        padding: 2px;
+
+                        &:hover {
+                            background-color: rgba($red, 0.1);
+                        }
+                    }
+                }
+            }
+        }
+
+        .expanded-header {
+            background-color: $blue1;
+        }
+
+        .expanded-row {
+            background-color: $blue1;
+
+            &:hover {
+                background-color: $blue2 !important;
+            }
+        }
+    }
+}
+
+.unsaved-input {
+    .MuiOutlinedInput-root {
+        background-color: rgba($yellow1, 0.2);
+
+        .MuiOutlinedInput-notchedOutline {
+            border-color: $yellow1;
+            border-width: 2px;
+        }
+
+        &:hover .MuiOutlinedInput-notchedOutline {
+            border-color: $yellow1;
+        }
+
+        &.Mui-focused .MuiOutlinedInput-notchedOutline {
+            border-color: $yellow1;
+        }
+    }
+}
+
+.global-link-section {
+    margin-top: 24px;
+    padding: 16px;
+    background-color: $gray2;
+    border-radius: 4px;
+
+    .global-link-controls {
+        @include displayFlex(center, flex-start);
+        gap: 16px;
+
+        .global-link-input {
+            flex: 1;
+            max-width: 400px;
+
+            .MuiOutlinedInput-root {
+                background-color: $white;
+            }
+        }
+
+        .global-link-button {
+            white-space: nowrap;
+        }
+
+        .delete-all-button {
+            white-space: nowrap;
+            margin-left: auto;
+        }
+    }
+}

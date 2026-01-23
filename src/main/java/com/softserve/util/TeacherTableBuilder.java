@@ -286,7 +286,8 @@ public class TeacherTableBuilder extends BaseTableBuilder {
     private List<String> getLinksFromLessonsInScheduleDTOs(List<LessonForTeacherScheduleDTO> lessons) {
         return lessons.stream()
                 .map(LessonForTeacherScheduleDTO::getLinkToMeeting)
+                .filter(link -> link != null && !link.isBlank())
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
     }
 }

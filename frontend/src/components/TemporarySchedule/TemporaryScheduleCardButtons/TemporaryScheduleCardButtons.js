@@ -1,11 +1,8 @@
 import React from 'react';
-import { FaEdit, MdDelete } from 'react-icons/all';
-import { useTranslation } from 'react-i18next';
-import { selectTemporaryScheduleService } from '../../../services/temporaryScheduleService';
-import {
-    COMMON_EDIT_HOVER_TITLE,
-    COMMON_DELETE_HOVER_TITLE,
-} from '../../../constants/translationLabels/common';
+import {FaEdit, MdDelete} from 'react-icons/all';
+import {useTranslation} from 'react-i18next';
+import {selectTemporaryScheduleService} from '../../../services/temporaryScheduleService';
+import {COMMON_DELETE_HOVER_TITLE, COMMON_EDIT_HOVER_TITLE,} from '../../../constants/translationLabels/common';
 
 const TemporaryScheduleCardButtons = (props) => {
     const { t } = useTranslation('common');

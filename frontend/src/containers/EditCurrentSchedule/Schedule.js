@@ -1,6 +1,6 @@
-import { connect } from 'react-redux';
-import { addItemsToScheduleStart, editRoomItemToScheduleStart } from '../../actions/schedule';
-import { getLessonsByGroupStart, selectGroupId, setScheduleLoading } from '../../actions';
+import {connect} from 'react-redux';
+import {addItemsToScheduleStart, editRoomItemToScheduleStart} from '../../actions/schedule';
+import {getLessonsByGroupStart, selectGroupId, setScheduleLoading} from '../../actions';
 import Schedule from '../../components/EditCurrentSchedule/Schedule/Schedule';
 
 const mapStateToProps = (state) => ({

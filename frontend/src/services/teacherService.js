@@ -1,8 +1,8 @@
-import { store } from '../store';
+import {store} from '../store';
 import axios from '../helper/axios';
-import { errorHandler } from '../helper/handlerAxios';
-import { TEACHERS_WITHOUT_ACCOUNT_URL } from '../constants/axios';
-import { showAllTeachersSuccess } from '../actions';
+import {errorHandler} from '../helper/handlerAxios';
+import {TEACHERS_WITHOUT_ACCOUNT_URL} from '../constants/axios';
+import {showAllTeachersSuccess} from '../actions';
 
 export const getTeachersWithoutAccount = () => {
     // will be replace in userService

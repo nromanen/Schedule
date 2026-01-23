@@ -1,24 +1,24 @@
-import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import React, {useEffect} from 'react';
+import {Field, reduxForm} from 'redux-form';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import MenuItem from '@material-ui/core/MenuItem';
 import renderTextField from '../../../share/renderedFields/input';
 import SelectField from '../../../share/renderedFields/select';
-import { ROOM_FORM } from '../../../constants/reduxForms';
-import { required, uniqueRoomName } from '../../../validation/validateFields';
+import {ROOM_FORM} from '../../../constants/reduxForms';
+import {required, uniqueRoomName} from '../../../validation/validateFields';
 import Card from '../../../share/Card/Card';
 import './RoomForm.scss';
-import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
+import {getClearOrCancelTitle, setDisableButton} from '../../../helper/disableComponent';
 import {
-    EDIT_TITLE,
     CREATE_TITLE,
-    SAVE_BUTTON_LABEL,
-    ROOM_Y_LABEL,
+    EDIT_TITLE,
     NUMBER_LABEL,
     ROOM_LABEL,
+    ROOM_Y_LABEL,
+    SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { TYPE_LABEL } from '../../../constants/translationLabels/common';
+import {TYPE_LABEL} from '../../../constants/translationLabels/common';
 
 const RoomForm = (props) => {
     const { t } = useTranslation('formElements');

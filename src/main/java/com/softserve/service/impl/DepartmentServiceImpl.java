@@ -1,9 +1,12 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.DepartmentDTO;
+import com.softserve.dto.TeacherDTO;
 import com.softserve.entity.Department;
-import com.softserve.entity.Teacher;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
+import com.softserve.mapper.DepartmentMapper;
+import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.DepartmentRepository;
 import com.softserve.service.DepartmentService;
 import lombok.RequiredArgsConstructor;
@@ -14,104 +17,83 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository repository;
+    private final DepartmentMapper departmentMapper;
+    private final TeacherMapper teacherMapper;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Department getById(Long id) {
+    public DepartmentDTO getById(Long id) {
         log.info("In getById(id = [{}])", id);
+        Department department = findDepartmentById(id);
+        return departmentMapper.departmentToDepartmentDTO(department);
+    }
+
+    @Override
+    public List<DepartmentDTO> getAll() {
+        log.info("In getAll()");
+        return departmentMapper.departmentsToDepartmentDTOs(repository.getAll());
+    }
+
+    @Override
+    @Transactional
+    public DepartmentDTO save(DepartmentDTO departmentDTO) {
+        log.info("In save(departmentDTO = [{}])", departmentDTO);
+        Department department = departmentMapper.departmentDTOToDepartment(departmentDTO);
+        checkNameForUniqueness(department.getName());
+        Department savedDepartment = repository.save(department);
+        return departmentMapper.departmentToDepartmentDTO(savedDepartment);
+    }
+
+    @Override
+    @Transactional
+    public DepartmentDTO update(DepartmentDTO departmentDTO) {
+        log.info("In update(departmentDTO = [{}])", departmentDTO);
+        Department department = departmentMapper.departmentDTOToDepartment(departmentDTO);
+        checkNameForUniquenessIgnoringId(department.getName(), department.getId());
+        Department updatedDepartment = repository.update(department);
+        return departmentMapper.departmentToDepartmentDTO(updatedDepartment);
+    }
+
+    @Override
+    @Transactional
+    public DepartmentDTO delete(Long id) {
+        log.info("In delete(id = [{}])", id);
+        Department department = findDepartmentById(id);
+        Department deletedDepartment = repository.delete(department);
+        return departmentMapper.departmentToDepartmentDTO(deletedDepartment);
+    }
+
+    @Override
+    public List<DepartmentDTO> getDisabled() {
+        log.info("In getDisabled()");
+        return departmentMapper.departmentsToDepartmentDTOs(repository.getDisabled());
+    }
+
+    @Override
+    public List<TeacherDTO> getAllTeachers(Long departmentId) {
+        log.info("In getAllTeachers(departmentId = [{}])", departmentId);
+        return teacherMapper.teachersToTeacherDTOs(repository.getAllTeachers(departmentId));
+    }
+
+    private Department findDepartmentById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Department.class, "id", id.toString()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Department> getAll() {
-        log.info("In getAll()");
-        return repository.getAll();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws FieldAlreadyExistsException if there is a department with a name as the given department has
-     */
-    @Override
-    public Department save(Department object) {
-        log.info("In save(entity = [{}]", object);
-        checkNameForUniqueness(object);
-        return repository.save(object);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws FieldAlreadyExistsException if there is a department with a name as the given department has
-     */
-    @Override
-    public Department update(Department object) {
-        log.info("In update(entity = [{}]", object);
-        checkNameForUniquenessIgnoringId(object);
-        return repository.update(object);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Department delete(Department object) {
-        log.info("In delete(entity = [{}])", object);
-        return repository.delete(object);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Department> getDisabled() {
-        log.info("Enter into getAll of getDisabled");
-        return repository.getDisabled();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Teacher> getAllTeachers(Long departmentId) {
-        log.info("Enter into getAllTeachers with department id {}", departmentId);
-        return repository.getAllTeachers(departmentId);
-    }
-
-    /**
-     * Checks if there is no department with the same name as the given department in the repository.
-     *
-     * @param object the department
-     * @throws FieldAlreadyExistsException if there is a department with the name as the given department has
-     */
-    private void checkNameForUniqueness(Department object) {
-        if (repository.isExistsByName(object.getName())) {
-            throw new FieldAlreadyExistsException(Department.class, "name", object.getName());
+    private void checkNameForUniqueness(String name) {
+        if (repository.isExistsByName(name)) {
+            throw new FieldAlreadyExistsException(Department.class, "name", name);
         }
     }
 
-    /**
-     * Checks the uniqueness of the department name in the repository.
-     *
-     * @param object the department
-     * @throws FieldAlreadyExistsException if the name of the given department not unique
-     */
-    private void checkNameForUniquenessIgnoringId(Department object) {
-        if (repository.isExistsByNameIgnoringId(object.getName(), object.getId())) {
-            throw new FieldAlreadyExistsException(Department.class, "name", object.getName());
+    private void checkNameForUniquenessIgnoringId(String name, Long id) {
+        if (repository.isExistsByNameIgnoringId(name, id)) {
+            throw new FieldAlreadyExistsException(Department.class, "name", name);
         }
     }
 }

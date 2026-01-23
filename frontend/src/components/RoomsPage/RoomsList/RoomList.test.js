@@ -1,6 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { CircularProgress } from '@material-ui/core';
+import {mount} from 'enzyme';
+import {CircularProgress} from '@material-ui/core';
 import RoomList from './RoomsList';
 
 const props = {

@@ -1,11 +1,11 @@
-import { reduxForm, change, untouch } from 'redux-form';
-import { connect } from 'react-redux';
+import {change, reduxForm, untouch} from 'redux-form';
+import {connect} from 'react-redux';
 
-import { FREE_ROOMS } from '../../constants/reduxForms';
+import {FREE_ROOMS} from '../../constants/reduxForms';
 
-import { getAllSemestersStart } from '../../actions/semesters';
-import { setRoomsLoading } from '../../actions/loadingIndicator';
-import { getFreeRoomsStart } from '../../actions/rooms';
+import {getAllSemestersStart} from '../../actions/semesters';
+import {setRoomsLoading} from '../../actions/loadingIndicator';
+import {getFreeRoomsStart} from '../../actions/rooms';
 import FreeRoomForm from '../../components/FreeRoomsDialog/freeRoomForm';
 
 const mapStateToProps = (state) => ({

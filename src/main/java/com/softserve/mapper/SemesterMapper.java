@@ -9,7 +9,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = GroupMapper.class)
+@Mapper(componentModel = "spring", uses = {GroupMapper.class, PeriodMapper.class})
 public interface SemesterMapper {
     SemesterDTO semesterToSemesterDTO(Semester semester);
 

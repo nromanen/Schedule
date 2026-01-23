@@ -162,3 +162,5 @@ export const COMMON_TABLE_COLUMNS_SIZE_BASE = 'columns_size_base';
 export const COMMON_TABLE_COLUMNS_SIZE_LARGE = 'columns_size_large';
 export const COMMON_SEARCH_FREE_ROOMS_TITLE = 'common:search_params';
 export const COMMON_FREE_ROOMS_LIST_EMPTY = 'common:free_rooms_list_empty';
+
+export const TEACHER_LESSONS_TITLE = 'teacher_lessons_title';

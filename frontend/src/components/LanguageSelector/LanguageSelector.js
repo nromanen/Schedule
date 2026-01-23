@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import './LanguageSelector.scss';
-import { languageShorthands } from '../../constants/languages/shorthands';
-import { languageTitles } from '../../constants/languages/titles';
+import {languageShorthands} from '../../constants/languages/shorthands';
+import {languageTitles} from '../../constants/languages/titles';
 import ukIcon from '../../share/icons/uk.png';
 import uaIcon from '../../share/icons/ua.png';
 

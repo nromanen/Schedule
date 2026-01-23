@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { MdExpandMore } from 'react-icons/all';
-import { connect } from 'react-redux';
+import React, {useState} from 'react';
+import {MdExpandMore} from 'react-icons/all';
+import {connect} from 'react-redux';
 
 import Divider from '@material-ui/core/Divider';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -13,11 +13,11 @@ import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import TemporaryScheduleCard from '../TemporaryScheduleCard/TemporaryScheduleCard';
 import TemporaryScheduleCardButtons from '../TemporaryScheduleCardButtons/TemporaryScheduleCardButtons';
 
-import { cardType } from '../../../constants/cardType';
+import {cardType} from '../../../constants/cardType';
 
-import { deleteTemporaryScheduleService } from '../../../services/temporaryScheduleService';
-import { setIsOpenConfirmDialog } from '../../../actions/dialog';
-import { dialogTypes } from '../../../constants/dialogs';
+import {deleteTemporaryScheduleService} from '../../../services/temporaryScheduleService';
+import {setIsOpenConfirmDialog} from '../../../actions/dialog';
+import {dialogTypes} from '../../../constants/dialogs';
 
 const ScheduleAndTemporaryScheduleList = (props) => {
     const schedulesAndTemporarySchedules = props.schedulesAndTemporarySchedules || [];

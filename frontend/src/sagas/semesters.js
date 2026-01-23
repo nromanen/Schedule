@@ -1,46 +1,43 @@
-import { call, put, takeLatest, takeEvery, select } from 'redux-saga/effects';
-import { reset } from 'redux-form';
+import {call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
+import {reset} from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
-import { setLoading } from '../actions/loadingIndicator';
-import { setOpenSuccessSnackbar, setOpenErrorSnackbar } from '../actions/snackbar';
+import {setLoading} from '../actions/loadingIndicator';
+import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
 import {
+    addSemesterSuccess,
+    deleteSemesterSuccess,
     getAllSemestersSuccess,
     getArchivedSemestersSuccess,
-    updateSemesterSuccess,
-    selectSemesterSuccess,
-    deleteSemesterSuccess,
-    addSemesterSuccess,
     moveToArchivedSemesterSuccess,
+    selectSemesterSuccess,
+    updateSemesterSuccess,
 } from '../actions/semesters';
-import { setScheduleType, getFullScheduleSuccess } from '../actions/schedule';
-import { axiosCall } from '../services/axios';
+import {getFullScheduleSuccess, setScheduleType} from '../actions/schedule';
+import {axiosCall} from '../services/axios';
 import i18n from '../i18n';
 import {
-    DISABLED_SEMESTERS_URL,
-    SEMESTERS_URL,
-    SEMESTER_COPY_URL,
-    LESSONS_FROM_SEMESTER_COPY_URL,
     ARCHIVE_SEMESTER,
     ARCHIVED_SEMESTERS_URL,
     DEFAULT_SEMESTER_URL,
+    DISABLED_SEMESTERS_URL,
+    LESSONS_FROM_SEMESTER_COPY_URL,
+    SEMESTER_COPY_URL,
+    SEMESTERS_URL,
 } from '../constants/axios';
 import {
+    ARCHIVED_LABEL,
     BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
+    COPIED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
     SEMESTER_SERVICE_IS_ACTIVE,
-    COPIED_LABEL,
-    ARCHIVED_LABEL,
+    UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import {
-    FORM_LESSON_LABEL,
-    FORM_SEMESTER_LABEL,
-} from '../constants/translationLabels/formElements';
-import { SEMESTER_FORM } from '../constants/reduxForms';
-import { createErrorMessage, createMessage } from '../utils/sagaUtils';
-import { handleFormSubmit } from '../helper/handleFormSubmit';
-import { POST, DELETE, PUT } from '../constants/methods';
+import {FORM_LESSON_LABEL, FORM_SEMESTER_LABEL,} from '../constants/translationLabels/formElements';
+import {SEMESTER_FORM} from '../constants/reduxForms';
+import {createErrorMessage, createMessage} from '../utils/sagaUtils';
+import {handleFormSubmit} from '../helper/handleFormSubmit';
+import {DELETE, POST, PUT} from '../constants/methods';
 
 const getSemestersState = (state) => state.semesters.semesters;
 

@@ -1,29 +1,25 @@
 import React from 'react';
 
-import { Field, reduxForm } from 'redux-form';
-import { useTranslation } from 'react-i18next';
+import {Field, reduxForm} from 'redux-form';
+import {useTranslation} from 'react-i18next';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Card from '@material-ui/core/Card';
 import renderTextField from '../../share/renderedFields/input';
 import '../../styles/forms.scss';
-import { REGISTRATION_FORM } from '../../constants/reduxForms';
+import {REGISTRATION_FORM} from '../../constants/reduxForms';
 
-import { email, password, required } from '../../validation/validateFields';
-import { LOGIN_LINK } from '../../constants/links';
+import {email, password, required} from '../../validation/validateFields';
+import {LOGIN_LINK} from '../../constants/links';
 import {
-    REGISTRATION_PAGE_TITLE,
-    LOGIN_TITLE,
     ACCOUNT_EXIST,
     CREATE_ACCOUNT,
     DIFFERENT_PASSWORDS,
+    LOGIN_TITLE,
+    REGISTRATION_PAGE_TITLE,
 } from '../../constants/translationLabels/common';
-import {
-    PASSWORD_LABEL,
-    RETYPE_PASSWORD_LABEL,
-    EMAIL_LABEL,
-} from '../../constants/translationLabels/formElements';
+import {EMAIL_LABEL, PASSWORD_LABEL, RETYPE_PASSWORD_LABEL,} from '../../constants/translationLabels/formElements';
 
 const RegistrationForm = (props) => {
     const { handleSubmit, errors, setError, registrationHandler, isLoading } = props;

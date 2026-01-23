@@ -1,44 +1,46 @@
-@import "../../../styles/variables.scss";
-@import "../../../styles/colors.scss";
-@import "../../../styles/mixins.scss";
+@import '../../../styles/variables';
+@import '../../../styles/colors';
+@import '../../../styles/mixins';
+
+.busy-rooms-table-container {
+    --column-width-sm: 100px;
+    --column-width-base: 130px;
+    --column-width-lg: 160px;
+    --period-height: 114px;
+    --room-title-height: 50px;
+    --cell-margin: 2px;
+
+    display: flex;
+}
 
 .view-rooms {
     margin: 0;
     display: flex;
+
+    .busy-room-section {
+        display: flex;
+        flex-direction: column;
+
+        &:hover {
+            outline: 2px solid $blue3;
+            color: $blue;
+        }
+    }
+
     .busy-room-title {
         @include displayFlex(center, center);
-        height: 50px;
+        height: var(--room-title-height);
         padding: 10px 7px;
-        margin: 5px;
+        margin: var(--cell-margin);
         font-size: $font-xs;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+
     .responsive-table-column {
-        &-sm {
-            width: 100px;
-        }
-        &-base {
-            width: 130px;
-        }
-        &-lg {
-            width: 160px;
-        }
-    }
-    .busy-room-section {
-        &:hover {
-            position: relative;
-            color: $blue;
-            &::after {
-                position: absolute;
-                top: 0;
-                content: '';
-                width: $full-size;
-                height: 100%;
-                background: none;
-                border: 2px solid $blue3;
-            }
-        }
+        &-sm { width: var(--column-width-sm); }
+        &-base { width: var(--column-width-base); }
+        &-lg { width: var(--column-width-lg); }
     }
 }

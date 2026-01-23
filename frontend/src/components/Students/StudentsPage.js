@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import MovingGroupsDialog from '../../share/DialogWindows/_dialogWindows/MovingGroupsDialog';
-import { StudentsTable } from './StudentsTable';
+import {StudentsTable} from './StudentsTable';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogTypes } from '../../constants/dialogs';
+import {dialogTypes} from '../../constants/dialogs';
 import AddStudentDialog from '../../share/DialogWindows/_dialogWindows/AddStudentDialog';
-import { STUDENT } from '../../constants/names';
+import {STUDENT} from '../../constants/names';
 
 export const StudentsPage = (props) => {
     const {

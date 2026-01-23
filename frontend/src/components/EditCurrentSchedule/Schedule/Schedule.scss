@@ -9,12 +9,28 @@
     }
 }
 
+//.groups-section {
+//    position: relative;
+//    margin: 0;
+//    padding-top: 15px;
+//    display: flex;
+//}
+
 .groups-section {
     position: relative;
     margin: 0;
     padding-top: 15px;
+    margin-right: 10px;
     display: flex;
+    flex: 1;
+    overflow: hidden;
+
+    > div {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+    }
 }
+
 .schedule-table {
     .no-current-semester {
         margin: 10% auto 0;

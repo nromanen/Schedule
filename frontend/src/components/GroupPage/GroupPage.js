@@ -1,9 +1,9 @@
 import './GroupPage.scss';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import GroupList from './GroupList';
 import Sidebar from './Sidebar';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
-import { handleSnackbarCloseService } from '../../services/snackbarService';
+import {handleSnackbarCloseService} from '../../services/snackbarService';
 import AddGroup from '../../containers/GroupPage/GroupForm';
 
 const GroupPage = (props) => {

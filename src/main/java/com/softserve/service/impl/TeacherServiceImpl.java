@@ -8,24 +8,25 @@ import com.softserve.entity.Department;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.FieldNullException;
 import com.softserve.mapper.TeacherMapper;
+import com.softserve.repository.DepartmentRepository;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.DepartmentService;
-import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
 import com.softserve.util.CsvFileParser;
+import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,28 +34,22 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final UserService userService;
-    private final MailService mailService;
     private final DepartmentService departmentService;
     private final TeacherMapper teacherMapper;
+    private final DepartmentRepository departmentRepository;
 
-    @Autowired
-    public TeacherServiceImpl(TeacherRepository teacherRepository, UserService userService, MailService mailService,
-                              TeacherMapper teacherMapper, DepartmentService departmentService) {
-        this.teacherRepository = teacherRepository;
-        this.userService = userService;
-        this.mailService = mailService;
-        this.teacherMapper = teacherMapper;
-        this.departmentService = departmentService;
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "teachers", key = "#id")
     public Teacher getById(Long id) {
         log.info("Enter into getById of TeacherServiceImpl with id {}", id);
         return teacherRepository.findById(id).orElseThrow(
@@ -65,8 +60,10 @@ public class TeacherServiceImpl implements TeacherService {
      * {@inheritDoc}
      */
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "teachersList")
     public List<Teacher> getAll() {
-        log.info("Enter into getAll()");
+        log.info("In getAll()");
         return teacherRepository.getAll();
     }
 
@@ -74,6 +71,7 @@ public class TeacherServiceImpl implements TeacherService {
      * {@inheritDoc}
      */
     @Override
+    @CacheEvict(value = {"teachers", "teachersList"}, allEntries = true)
     public Teacher save(Teacher teacher) {
         log.info("Enter into save method with entity:{}", teacher);
         return teacherRepository.save(teacher);
@@ -115,6 +113,8 @@ public class TeacherServiceImpl implements TeacherService {
      * {@inheritDoc}
      */
     @Override
+//    @CacheEvict(value = "teachers", key = "#teacher.id")
+    @CacheEvict(value = {"teachers", "teachersList"}, allEntries = true)
     public Teacher update(Teacher teacher) {
         log.info("Enter into update method with entity:{}", teacher);
         return teacherRepository.update(teacher);
@@ -124,6 +124,8 @@ public class TeacherServiceImpl implements TeacherService {
      * {@inheritDoc}
      */
     @Override
+//    @CacheEvict(value = "teachers", key = "#teacher.id")
+    @CacheEvict(value = {"teachers", "teachersList"}, allEntries = true)
     public Teacher delete(Teacher teacher) {
         log.info("Enter into delete method with entity:{}", teacher);
         if (teacher.getUserId() != null) {
@@ -141,37 +143,6 @@ public class TeacherServiceImpl implements TeacherService {
     public List<Teacher> getDisabled() {
         log.info("Enter into getAll of getDisabled");
         return teacherRepository.getDisabled();
-    }
-
-    /**
-     * The method used for join Teacher and User.
-     *
-     * @param teacherId Long teacherId used to find Teacher by it
-     * @param userId    Long userId used to find User by it
-     * @return Teacher entity
-     * @throws EntityAlreadyExistsException when user already exist in some teacher/manager or teacher contains some userId
-     */
-    @Override
-    public Teacher joinTeacherWithUser(Long teacherId, Long userId) {
-        log.info("Enter into joinTeacherWithUser method with teacherId {} and userId:{}", teacherId, userId);
-        User user = userService.getById(userId);
-        Teacher getTeacher = getById(teacherId);
-
-        if (user.getRole() != Role.ROLE_USER || getTeacher.getUserId() != null) {
-            throw new EntityAlreadyExistsException("You cannot doing this action.");
-        }
-
-        getTeacher.setUserId(userId);
-        user.setRole(Role.ROLE_TEACHER);
-        userService.update(user);
-
-        String message = "Hello, " + user.getEmail() + ".\n" +
-                "You received this email, because you now have all the teacher rights in the system.\n" +
-                "Congratulations!";
-        String subject = "You - Teacher";
-        mailService.send(user.getEmail(), subject, message);
-
-        return update(getTeacher);
     }
 
     /**
@@ -236,12 +207,13 @@ public class TeacherServiceImpl implements TeacherService {
 
     public TeacherImportDTO saveTeacher(Long departmentId, TeacherImportDTO teacher) {
         try {
-
             Optional<User> userOptional = userService.findSocialUser(teacher.getEmail());
             Teacher newTeacher = teacherMapper.teacherImportDTOToTeacher(teacher);
             Optional<Teacher> teacherFromBase = teacherRepository.getExistingTeacher(newTeacher);
 
-            Department department = departmentService.getById(departmentId);
+            Department department = departmentRepository.findById(departmentId)
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            Department.class, "id", departmentId.toString()));
 
             if (userOptional.isEmpty() && teacherFromBase.isEmpty()) {
                 return registerAndSaveNewTeacher(teacher, newTeacher, department);

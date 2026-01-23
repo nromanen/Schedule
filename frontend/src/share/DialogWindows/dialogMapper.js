@@ -1,18 +1,18 @@
 import React from 'react';
 import i18n from '../../i18n';
-import { dialogTypes, dialogYesButton, dialogNoButton } from '../../constants/dialogs';
+import {dialogNoButton, dialogTypes, dialogYesButton} from '../../constants/dialogs';
 import {
+    COMMON_ARE_YOU_SURE,
+    COMMON_DELETE_WORD,
     COMMON_DO_YOU_WANNA,
     COMMON_DO_YOU_WANNA_DISABLE,
-    COMMON_DELETE_WORD,
     COMMON_DO_YOU_WANNA_SHOW,
-    COMMON_THIS_CARD_TYPE,
     COMMON_GO_TO_MEETING_WORD,
     COMMON_SET_DEFAULT_WORD,
-    COMMON_ARE_YOU_SURE,
+    COMMON_THIS_CARD_TYPE,
 } from '../../constants/translationLabels/common';
 
-import { FORM_SEMESTER_ELEMENT } from '../../constants/translationLabels/formElements';
+import {FORM_SEMESTER_ELEMENT} from '../../constants/translationLabels/formElements';
 
 const dialogMapper = (props) => {
     const {

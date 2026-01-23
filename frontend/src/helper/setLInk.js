@@ -1,7 +1,7 @@
 import React from 'react';
 import LinkToMeeting from '../components/LinkToMeeting/LinkToMeeting';
-import { places } from '../constants/places';
-import { getHref } from './getHref';
+import {places} from '../constants/places';
+import {getHref} from './getHref';
 
 export const setLink = (card, place) => {
     if (place === places.TOGETHER) {

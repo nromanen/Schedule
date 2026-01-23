@@ -1,7 +1,8 @@
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { COPY_LESSONS_FROM_SEMESTER_FORM } from '../../constants/reduxForms';
-import CopyLessonsFromSemesterForm from '../../components/LessonsPage/CopyLessonsFromSemesterForm/CopyLessonsFromSemesterForm';
+import {connect} from 'react-redux';
+import {reduxForm} from 'redux-form';
+import {COPY_LESSONS_FROM_SEMESTER_FORM} from '../../constants/reduxForms';
+import CopyLessonsFromSemesterForm
+    from '../../components/LessonsPage/CopyLessonsFromSemesterForm/CopyLessonsFromSemesterForm';
 
 const mapStateToProps = (state) => ({
     semesters: state.semesters.semesters,

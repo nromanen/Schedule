@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { FaDoorOpen } from 'react-icons/fa';
+import {FaDoorOpen} from 'react-icons/fa';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import FreeRoomForm from '../../containers/Rooms/FreeRoomsForm';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogCloseButton } from '../../constants/dialogs';
+import {dialogCloseButton} from '../../constants/dialogs';
 import './FreeRoomsDialog.scss';
-import { FIND_FREE_ROOM } from '../../constants/translationLabels/formElements';
+import {FIND_FREE_ROOM} from '../../constants/translationLabels/formElements';
 import FreeRoomsCardList from './FreeRoomsCardList';
 
 const FreeRoomsDialog = (props) => {

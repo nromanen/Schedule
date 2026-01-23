@@ -1,9 +1,9 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { Field } from 'redux-form';
-import { FORM_TEACHER_LABEL } from '../../constants/translationLabels/formElements';
-import { renderAutocompleteField } from '../../helper/renderAutocompleteField';
-import { getTeacherFullName } from '../../helper/renderTeacher';
+import {useTranslation} from 'react-i18next';
+import {Field} from 'redux-form';
+import {FORM_TEACHER_LABEL} from '../../constants/translationLabels/formElements';
+import {renderAutocompleteField} from '../../helper/renderAutocompleteField';
+import {getTeacherFullName} from '../../helper/renderTeacher';
 
 const TeachersList = (props) => {
     const { teachers, handleChange } = props;

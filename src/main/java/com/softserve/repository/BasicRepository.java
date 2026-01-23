@@ -52,4 +52,6 @@ public interface BasicRepository<T extends Serializable, I extends Serializable>
      * @return the list of disabled entities
      */
     List<T> getDisabled();
+
+    List<T> getEnabled();
 }

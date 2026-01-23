@@ -3,6 +3,7 @@ package com.softserve.repository.impl;
 import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.BasicRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,97 +15,102 @@ import java.util.Optional;
 
 @Slf4j
 @Repository
-@SuppressWarnings("unchecked")
 public abstract class BasicRepositoryImpl<T extends Serializable, I extends Serializable> implements BasicRepository<T, I> {
 
     protected final Class<T> basicClass;
-
-    @Autowired
     protected SessionFactory sessionFactory;
+    private String entityName;
 
-    @Autowired
+
     protected BasicRepositoryImpl() {
         basicClass = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Autowired
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    protected Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
+
+    protected String getEntityName() {
+        if (entityName == null) {
+            jakarta.persistence.Entity entityAnnotation = basicClass.getAnnotation(jakarta.persistence.Entity.class);
+            if (entityAnnotation != null && !entityAnnotation.name().isEmpty()) {
+                entityName = entityAnnotation.name();
+            } else {
+                entityName = basicClass.getSimpleName();
+            }
+            log.info("Entity name for {} is {}", basicClass.getName(), entityName);
+        }
+            return entityName;
+    }
+
+
     @Override
     public List<T> getAll() {
         log.info("In getAll()");
-        return sessionFactory.getCurrentSession()
-                .createQuery("from " + basicClass.getName())
+        return getSession()
+                .createQuery("SELECT t FROM " + getEntityName() + " t", basicClass)
                 .getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<T> findById(I id) {
         log.info("In findById(id = [{}])", id);
-        return Optional.ofNullable(sessionFactory.getCurrentSession().get(basicClass, id));
+        return Optional.ofNullable(getSession().get(basicClass, id));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public T save(T entity) {
         log.info("In save(entity = [{}]", entity);
-        sessionFactory.getCurrentSession()
-                .save(entity);
+        getSession()
+                .persist(entity);
         return entity;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
+
     @Override
     public T update(T entity) {
         log.info("In update(entity = [{}]", entity);
-        sessionFactory.getCurrentSession()
-                .update(entity);
-        return entity;
+        return getSession()
+                .merge(entity);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public T delete(T entity) {
         log.info("In delete(entity = [{}])", entity);
         if (checkReference(entity)) {
             throw new DeleteDisabledException(entity.getClass());
         }
-        sessionFactory.getCurrentSession()
+        getSession()
                 .remove(entity);
         return entity;
     }
 
-    /**
-     * Checks if entity is used in another tables.
-     *
-     * @param entity the entity to be checked
-     * @return {@code true} if entity is used in another tables, otherwise {@code false}
-     */
     protected boolean checkReference(T entity) {
         log.info("In checkReference(entity = [{}])", entity);
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<T> getDisabled() {
         log.info("In getDisabled");
-        return sessionFactory.getCurrentSession().createQuery(
-                        "from " + basicClass.getName() + " tableName" +
-                                " where tableName.disable = true ")
+        return getSession()
+                .createQuery("SELECT t FROM " + getEntityName() + " t WHERE t.disable = true", basicClass)
+                .getResultList();
+    }
+
+    @Override
+    public List<T> getEnabled() {
+        log.info("In getEnabled");
+        return getSession()
+                .createQuery("SELECT t FROM " + getEntityName() + " t WHERE t.disable = false", basicClass)
                 .getResultList();
     }
 }

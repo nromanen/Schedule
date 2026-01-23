@@ -238,7 +238,7 @@ public class GroupTableBuilder extends BaseTableBuilder {
     private String getLinkTextFromLessonsInScheduleDTO(LessonsInScheduleDTO lessons) {
         StringBuilder stringBuilder = new StringBuilder();
         String link = lessons.getLinkToMeeting();
-        if (link == null) {
+        if (link == null || link.isBlank()) {
             return null;
         }
         stringBuilder.append(link);

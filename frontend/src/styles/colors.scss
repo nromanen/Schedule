@@ -51,3 +51,19 @@ $danger-background-color: $red1;
 $edit-color: $blue;
 $delete-color: $red;
 $create-color: $green;
+
+//Lesson types - synchronize with constants/lessonTypeColors.js
+$lesson-type-lecture: #689F38;
+$lesson-type-lecture-light: #F1F8E9;
+
+$lesson-type-laboratory: $blue;
+$lesson-type-laboratory-light: #E8F4FD;
+
+$lesson-type-practical: #F9A825;
+$lesson-type-practical-light: #FFF8E1;
+
+$lesson-type-seminar: #8E24AA;
+$lesson-type-seminar-light: #F3E5F5;
+
+$lesson-type-default: $gray;
+$lesson-type-default-light: #F5F5F5;

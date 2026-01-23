@@ -1,11 +1,11 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import './StudentTable.scss';
-import { isEmpty } from 'lodash';
-import { CircularProgress } from '@material-ui/core';
+import {isEmpty} from 'lodash';
+import {CircularProgress} from '@material-ui/core';
 import StudentsPage from '../../containers/Students/StudentsPage';
-import { StudentsPageHead } from './StudentsPageHead';
-import { NO_EXIST_STUDENTS_AT_GROUP } from '../../constants/translationLabels/formElements';
+import {StudentsPageHead} from './StudentsPageHead';
+import {NO_EXIST_STUDENTS_AT_GROUP} from '../../constants/translationLabels/formElements';
 
 export const ShowStudentsOnGroupContent = (props) => {
     const { students, loading } = props;

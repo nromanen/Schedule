@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 import PropTypes from 'prop-types';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 
-import {
-    COPY_TO_SAME_GROUP_ERROR,
-    COMMON_CHOOSE_GROUP,
-} from '../../../constants/translationLabels/common';
+import {COMMON_CHOOSE_GROUP, COPY_TO_SAME_GROUP_ERROR,} from '../../../constants/translationLabels/common';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { dialogCloseButton, dialogChooseButton } from '../../../constants/dialogs';
+import {dialogChooseButton, dialogCloseButton} from '../../../constants/dialogs';
 import './CopyLessonDialog.scss';
 
 const CopyLessonDialog = (props) => {

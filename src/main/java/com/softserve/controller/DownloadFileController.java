@@ -5,7 +5,7 @@ import com.softserve.dto.ScheduleForTeacherDTO;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.service.ScheduleService;
 import com.softserve.util.PdfReportGenerator;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -19,17 +19,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 
 @AllArgsConstructor
 @RestController
-@Api(tags = "Download files API")
+@Tag(name = "Download files API")
 @RequestMapping("/download")
 @Slf4j
 public class DownloadFileController {
 
     private final ScheduleService scheduleService;
+
+    private String encodeFilename(String filename) {
+        String encoded = URLEncoder.encode(filename, StandardCharsets.UTF_8).replace("+", "%20");
+        return "inline; filename=\"schedule.pdf\"; filename*=UTF-8''" + encoded;
+    }
 
     @GetMapping(value = "/schedule-for-teacher-in-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<InputStreamResource> teacherSchedulesReport(@RequestParam Long teacherId,
@@ -42,8 +49,9 @@ public class DownloadFileController {
 
         HttpHeaders headers = new HttpHeaders();
         String fileName = "schedule for "
-                .concat(TeacherMapper.teacherDTOToTeacherForSite(schedule.getTeacher()));
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=".concat(fileName).concat(".pdf"));
+                .concat(TeacherMapper.teacherDTOToTeacherForSite(schedule.getTeacher()))
+                .concat(".pdf");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, encodeFilename(fileName));
 
         return ResponseEntity
                 .ok()
@@ -63,8 +71,8 @@ public class DownloadFileController {
         HttpHeaders headers = new HttpHeaders();
         String fileName = "schedule for "
                 .concat(schedule.getGroup().getTitle())
-                .concat(" group");
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=".concat(fileName).concat(".pdf"));
+                .concat(" group.pdf");
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, encodeFilename(fileName));
 
         return ResponseEntity
                 .ok()

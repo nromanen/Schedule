@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 
 @ToString
 @Getter
 @Setter
 @NoArgsConstructor
-public class ScheduleSaveDTO {
+public class ScheduleSaveDTO implements Serializable {
     private Long id;
     private Long periodId;
     private Long lessonId;

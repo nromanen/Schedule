@@ -1,5 +1,5 @@
-import { combineReducers } from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import {combineReducers} from 'redux';
+import {reducer as formReducer} from 'redux-form';
 
 import teachers from './teachers';
 import lesson from './lesson';
@@ -17,6 +17,7 @@ import users from './users';
 import departments from './departments';
 import students from './students';
 import dialog from './dialog';
+import teacherLessons from './teacherLessons';
 
 const rootReducer = combineReducers({
     lesson,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
     departments,
     students,
     dialog,
+    teacherLessons,
 
     form: formReducer,
 });

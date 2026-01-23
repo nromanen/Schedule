@@ -1,19 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Field } from 'redux-form';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Field} from 'redux-form';
 import Button from '@material-ui/core/Button';
-import { isEmpty } from 'lodash';
+import {isEmpty} from 'lodash';
 import './SemesterForm.scss';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 import renderTextField from '../../../share/renderedFields/input';
 import renderMonthPicker from '../../../share/renderedFields/timeSemester';
 import MultiselectForGroups from '../../../share/Multiselects/MultiSelectForGroups';
-import {
-    required,
-    minYearValue,
-    lessThanDate,
-    greaterThanDate,
-} from '../../../validation/validateFields';
+import {greaterThanDate, lessThanDate, minYearValue, required,} from '../../../validation/validateFields';
 import {
     getClearOrCancelTitle,
     setDisableButton,
@@ -21,27 +16,24 @@ import {
 } from '../../../helper/disableComponent';
 import Card from '../../../share/Card/Card';
 import {
-    COMMON_EDIT,
-    COMMON_CREATE,
-    COMMON_SEMESTER,
-    COMMON_CURRENT_LABEL,
-    COMMON_DEFAULT_LABEL,
-    COMMON_YEAR_LABEL,
     COMMON_CHOOSE_GROUPS_BUTTON_LABEL,
-    COMMON_SEMESTER_LABEL,
     COMMON_CLASS_FROM_LABEL,
-    COMMON_CLASS_TO_LABEL,
-    COMMON_DAYS_LABEL,
     COMMON_CLASS_SCHEDULE_MANAGEMENT_TITLE,
+    COMMON_CLASS_TO_LABEL,
+    COMMON_CREATE,
+    COMMON_CURRENT_LABEL,
+    COMMON_DAYS_LABEL,
+    COMMON_DEFAULT_LABEL,
+    COMMON_EDIT,
     COMMON_SAVE_BUTTON_LABEL,
+    COMMON_SEMESTER,
+    COMMON_SEMESTER_LABEL,
+    COMMON_YEAR_LABEL,
 } from '../../../constants/translationLabels/common';
 import SetSemesterCheckboxes from './SemesterCheckboxes';
-import {
-    initialCheckboxesStateForDays,
-    initialCheckboxesStateForClasses,
-} from '../../../utils/formUtils';
-import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
-import { SEMESTER_FORM } from '../../../constants/reduxForms';
+import {initialCheckboxesStateForClasses, initialCheckboxesStateForDays,} from '../../../utils/formUtils';
+import {getGroupsOptionsForSelect} from '../../../utils/selectUtils';
+import {SEMESTER_FORM} from '../../../constants/reduxForms';
 
 const SemesterForm = (props) => {
     const { t } = useTranslation('formElements');

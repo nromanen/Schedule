@@ -4,13 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
 @Setter
@@ -19,10 +16,6 @@ import java.io.Serializable;
 @Entity
 @EqualsAndHashCode
 @Table(name = "teachers")
-@FilterDef(name = "teachersDisableFilter", parameters = {
-        @ParamDef(name = "disable", type = "boolean"),
-})
-@Filter(name = "teachersDisableFilter", condition = "disable = :disable")
 public class Teacher implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

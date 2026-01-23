@@ -1,21 +1,21 @@
-import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import {connect} from 'react-redux';
+import React, {useEffect} from 'react';
+import {Field, reduxForm} from 'redux-form';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 import './AddSubjectForm.scss';
 import Card from '../../share/Card/Card';
-import { SUBJECT_FORM } from '../../constants/reduxForms';
+import {SUBJECT_FORM} from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
-import { required, uniqueSubject, maxLengthValue } from '../../validation/validateFields';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {maxLengthValue, required, uniqueSubject} from '../../validation/validateFields';
+import {getClearOrCancelTitle, setDisableButton} from '../../helper/disableComponent';
 import {
-    EDIT_TITLE,
     CREATE_TITLE,
+    EDIT_TITLE,
     SAVE_BUTTON_LABEL,
-    SUBJECT_Y_LABEL,
     SUBJECT_LABEL,
+    SUBJECT_Y_LABEL,
 } from '../../constants/translationLabels/formElements';
 
 const AddSubject = (props) => {

@@ -1,6 +1,6 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import ShowStudentsOnGroupDialog from '../../share/DialogWindows/_dialogWindows/ShowStudentsOnGroupDialog';
-import { getAllStudentsStart, uploadStudentsToGroupStart } from '../../actions/students';
+import {getAllStudentsStart, uploadStudentsToGroupStart} from '../../actions/students';
 
 const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.studentsLoading,

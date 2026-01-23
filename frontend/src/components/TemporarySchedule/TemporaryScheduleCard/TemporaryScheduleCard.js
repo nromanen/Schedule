@@ -1,12 +1,12 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {
     GROUP_LABEL,
     ROOM_LABEL,
     SUBJECT_LABEL,
     TEACHER_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { COMMON_CLASS_SCHEDULE, SEMESTER_LABEL } from '../../../constants/translationLabels/common';
+import {COMMON_CLASS_SCHEDULE, SEMESTER_LABEL} from '../../../constants/translationLabels/common';
 
 const TemporaryScheduleCard = (props) => {
     const { t } = useTranslation('formElements');

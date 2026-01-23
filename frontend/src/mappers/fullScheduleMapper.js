@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import {isEmpty} from 'lodash';
 
 const mapFullSchedule = (schedule, semesterDays, semesterClasses) => {
     const parsedGroupList = schedule.map(({ group }) => group);

@@ -1,15 +1,15 @@
-import { connect } from 'react-redux';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import {connect} from 'react-redux';
+import {setIsOpenConfirmDialog} from '../../actions/dialog';
 import {
     clearGroupStart,
     deleteGroupStart,
+    dragAndDropGroupStart,
     getDisabledGroupsStart,
     getEnabledGroupsStart,
     selectGroupSuccess,
     toggleDisabledStatus,
-    dragAndDropGroupStart,
 } from '../../actions/groups';
-import { deleteStudentStart } from '../../actions/students';
+import {deleteStudentStart} from '../../actions/students';
 import GroupPage from '../../components/GroupPage/GroupPage';
 
 const mapStateToProps = (state) => ({

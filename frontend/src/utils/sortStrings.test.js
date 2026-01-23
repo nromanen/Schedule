@@ -1,4 +1,4 @@
-import { sortStrings } from './sortStrings';
+import {sortStrings} from './sortStrings';
 
 describe('sortStrings function', () => {
     it('should return -1 if the first string is less than the second string', () => {

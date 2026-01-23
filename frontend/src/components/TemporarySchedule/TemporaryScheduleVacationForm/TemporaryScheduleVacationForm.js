@@ -1,9 +1,9 @@
 /* eslint-disable */
 // this functionality doesn't work
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
-import { Field, reduxForm } from 'redux-form';
+import {Field, reduxForm} from 'redux-form';
 
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -11,33 +11,30 @@ import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TEMPORARY_SCHEDULE_VACATION_FORM } from '../../../constants/reduxForms';
+import {TEMPORARY_SCHEDULE_VACATION_FORM} from '../../../constants/reduxForms';
 import renderMonthPicker from '../../../share/renderedFields/timeSemester';
 import Card from '../../../share/Card/Card';
 
-import { greaterThanDate, lessThanDate, required } from '../../../validation/validateFields';
+import {greaterThanDate, lessThanDate, required} from '../../../validation/validateFields';
 
-import { handleTeacherInfo } from '../../../helper/renderTeacher';
+import {handleTeacherInfo} from '../../../helper/renderTeacher';
 
-import {
-    selectTeacherIdService,
-    selectVacationService,
-} from '../../../services/temporaryScheduleService';
+import {selectTeacherIdService, selectVacationService,} from '../../../services/temporaryScheduleService';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 import {
-    SAVE_BUTTON_LABEL,
-    CLEAR_BUTTON_LABEL,
     CLASS_FROM_LABEL,
     CLASS_TO_LABEL,
-    FORM_TEACHER_LABEL,
-    FOR_TEACHER,
-    EDIT_VACATION_FORM,
+    CLEAR_BUTTON_LABEL,
     CREATE_VACATION_FORM,
+    EDIT_VACATION_FORM,
+    FOR_TEACHER,
+    FORM_TEACHER_LABEL,
+    SAVE_BUTTON_LABEL,
 } from '../../../constants/translationLabels/formElements';
 import {
-    COMMON_NOTIFY_LABEL,
-    COMMON_FEW_DAYS_LABEL,
     COMMON_DATE_LABEL,
+    COMMON_FEW_DAYS_LABEL,
+    COMMON_NOTIFY_LABEL,
     FOR_ALL,
 } from '../../../constants/translationLabels/common';
 

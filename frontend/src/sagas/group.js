@@ -1,42 +1,32 @@
-import { call, takeEvery, put, select, takeLatest } from 'redux-saga/effects';
-import { reset } from 'redux-form';
-import { GROUP_FORM } from '../constants/reduxForms';
+import {call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
+import {reset} from 'redux-form';
+import {GROUP_FORM} from '../constants/reduxForms';
 import * as actionTypes from '../actions/actionsType';
-import { setLoading } from '../actions/loadingIndicator';
-import { createErrorMessage, createDynamicMessage, createMessage } from '../utils/sagaUtils';
+import {setLoading} from '../actions/loadingIndicator';
+import {createDynamicMessage, createErrorMessage, createMessage} from '../utils/sagaUtils';
+import {setOpenErrorSnackbar, setOpenInfoSnackbar, setOpenSuccessSnackbar,} from '../actions/snackbar';
+import {DISABLED_GROUPS_URL, GROUP_URL, GROUPS_AFTER_URL, GROUPS_URL, SEMESTERS_URL,} from '../constants/axios';
+import {DELETE, POST, PUT} from '../constants/methods';
+import {axiosCall} from '../services/axios';
+import {FORM_CHOSEN_SEMESTER_LABEL} from '../constants/translationLabels/formElements';
 import {
-    setOpenSuccessSnackbar,
-    setOpenErrorSnackbar,
-    setOpenInfoSnackbar,
-} from '../actions/snackbar';
-import {
-    GROUP_URL,
-    GROUPS_URL,
-    SEMESTERS_URL,
-    GROUPS_AFTER_URL,
-    DISABLED_GROUPS_URL,
-} from '../constants/axios';
-import { DELETE, POST, PUT } from '../constants/methods';
-import { axiosCall } from '../services/axios';
-import { FORM_CHOSEN_SEMESTER_LABEL } from '../constants/translationLabels/formElements';
-import {
-    UPDATED_LABEL,
+    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
     CREATED_LABEL,
     DELETED_LABEL,
-    CHOSEN_SEMESTER_HAS_NOT_GROUPS,
     SERVICE_MESSAGE_GROUP_LABEL,
+    UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 import {
-    getGroupByIdSuccess,
-    showAllGroupsSuccess,
-    deleteGroupSuccess,
-    updateGroupSuccess,
-    selectGroupSuccess,
     clearGroupSuccess,
     createGroupSuccess,
+    deleteGroupSuccess,
+    getGroupByIdSuccess,
+    selectGroupSuccess,
+    showAllGroupsSuccess,
+    updateGroupSuccess,
 } from '../actions';
-import { GROUP } from '../constants/names';
-import { handleFormSubmit } from '../helper/handleFormSubmit';
+import {GROUP} from '../constants/names';
+import {handleFormSubmit} from '../helper/handleFormSubmit';
 
 const getGroupsState = (state) => state.groups.groups;
 

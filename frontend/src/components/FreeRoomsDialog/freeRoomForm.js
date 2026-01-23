@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Field } from 'redux-form';
-import { isNil } from 'lodash';
+import React, {useEffect, useState} from 'react';
+import {Field} from 'redux-form';
+import {isNil} from 'lodash';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
-import { useTranslation } from 'react-i18next';
-import { required } from '../../validation/validateFields';
+import {useTranslation} from 'react-i18next';
+import {required} from '../../validation/validateFields';
 import SelectField from '../../share/renderedFields/select';
 import './FreeRoomsDialog.scss';
 import {
-    FORM_SEMESTER_FREE_ROOMS,
-    FORM_WEEK_FREE_ROOMS,
-    FORM_DAY_FREE_ROOMS,
     FORM_CLASS_FREE_ROOMS,
+    FORM_DAY_FREE_ROOMS,
+    FORM_SEMESTER_FREE_ROOMS,
     FORM_SUBMIT_BUTTON_LABEL,
+    FORM_WEEK_FREE_ROOMS,
 } from '../../constants/translationLabels/formElements';
-import { COMMON_SEARCH_FREE_ROOMS_TITLE } from '../../constants/translationLabels/common';
+import {COMMON_SEARCH_FREE_ROOMS_TITLE} from '../../constants/translationLabels/common';
 
 const FreeRoomForm = (props) => {
     const {

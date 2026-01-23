@@ -1,8 +1,8 @@
-import { MenuItem, Select } from '@material-ui/core';
+import {MenuItem, Select} from '@material-ui/core';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
-import { places } from '../../constants/places';
-import { PLACE_FOR_CLASS_LABEL } from '../../constants/translationLabels/common';
+import {useTranslation} from 'react-i18next';
+import {places} from '../../constants/places';
+import {PLACE_FOR_CLASS_LABEL} from '../../constants/translationLabels/common';
 
 const SelectPlace = (props) => {
     const { place, changePlace } = props;

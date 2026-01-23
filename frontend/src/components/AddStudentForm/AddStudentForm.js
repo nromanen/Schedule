@@ -1,19 +1,19 @@
 import Button from '@material-ui/core/Button';
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Field } from 'redux-form';
+import React, {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Field} from 'redux-form';
 import './AddStudentForm.scss';
-import { required } from '../../validation/validateFields';
+import {required} from '../../validation/validateFields';
 import renderTextField from '../../share/renderedFields/input';
 import renderSelectField from '../../share/renderedFields/select';
-import { TYPE_LABEL, CANCEL_BUTTON_LABEL } from '../../constants/translationLabels/common';
+import {CANCEL_BUTTON_LABEL, TYPE_LABEL} from '../../constants/translationLabels/common';
 import {
+    CLEAR_BUTTON_LABEL,
     EMAIL_FIELD,
     NAME_PLACEHOLDER,
-    SAVE_BUTTON_LABEL,
-    CLEAR_BUTTON_LABEL,
-    SURNAME_PLACEHOLDER,
     PATRONYMIC_PLACEHOLDER,
+    SAVE_BUTTON_LABEL,
+    SURNAME_PLACEHOLDER,
 } from '../../constants/translationLabels/formElements';
 
 export const AddStudentForm = (props) => {

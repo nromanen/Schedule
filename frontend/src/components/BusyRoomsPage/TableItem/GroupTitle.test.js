@@ -1,6 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { GroupTitle } from './GroupTitle';
+import {mount} from 'enzyme';
+import {GroupTitle} from './GroupTitle';
 import i18n from '../../../i18n';
 
 const props = {

@@ -3,11 +3,11 @@ import './StudentTable.scss';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHead from '@material-ui/core/TableHead';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import Checkbox from '@material-ui/core/Checkbox';
 import {
-    SELECT_ALL,
     EMAIL_LABEL,
+    SELECT_ALL,
     STUDENT_ACTIONS,
     STUDENT_FULL_NAME,
 } from '../../constants/translationLabels/formElements';

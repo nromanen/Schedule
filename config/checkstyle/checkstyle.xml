@@ -39,6 +39,11 @@
 
         <property name="basedir" value="${basedir}"/>
     -->
+
+    <module name="SuppressionFilter">
+        <property name="file" value="${config_loc}/suppressions.xml"/>
+    </module>
+
     <property name="severity" value="error"/>
 
     <property name="fileExtensions" value="java, properties, xml"/>

@@ -1,15 +1,16 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Lesson;
+import com.softserve.entity.Semester;
 import com.softserve.repository.LessonRepository;
 import com.softserve.util.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import jakarta.persistence.criteria.*;  // 1. javax → jakarta
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,105 +19,119 @@ import java.util.List;
 public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> implements LessonRepository {
 
     private static final String SELECT_GROUPED
-            = "select l from Lesson l "
-            + "where l.grouped = true "
-            + "and l.subject.id = :subjectId "
-            + "and l.hours = :hours "
-            + "and l.teacher.id = :teacherId "
-            + "and l.semester.id = :semesterId "
-            + "and l.lessonType = :lessonType "
-            + "and l.subjectForSite = :subjectForSite";
+            = "SELECT l FROM Lesson l "
+            + "WHERE l.grouped = true "
+            + "AND l.subject.id = :subjectId "
+            + "AND l.hours = :hours "
+            + "AND l.teacher.id = :teacherId "
+            + "AND l.semester.id = :semesterId "
+            + "AND l.lessonType = :lessonType "
+            + "AND l.subjectForSite = :subjectForSite";
 
     private static final String SET_GROUPED
-            = "update Lesson "
-            + "set grouped = true "
-            + "where id = :id";
+            = "UPDATE Lesson "
+            + "SET grouped = true "
+            + "WHERE id = :id";
 
     private static final String UPDATE_GROUPED_TEACHER_OR_SUBJECT
-            = "update Lesson "
-            + "set subject.id = :subjectId, "
+            = "UPDATE Lesson "
+            + "SET subject.id = :subjectId, "
             + "hours = :hours, "
             + "teacher.id = :teacherId, "
             + "lessonType = :lessonType, "
             + "subjectForSite = :subjectForSite, "
             + "linkToMeeting = :linkToMeeting "
-            + "where grouped = true "
-            + "and subject.id = :initialSubjectId "
-            + "and teacher.id = :initialTeacherId "
-            + "and semester.id = :initialSemesterId";
+            + "WHERE grouped = true "
+            + "AND subject.id = :initialSubjectId "
+            + "AND teacher.id = :initialTeacherId "
+            + "AND semester.id = :initialSemesterId";
 
     private static final String UPDATE_GROUPED
-            = "update Lesson "
-            + "set subject.id = :subjectId, "
+            = "UPDATE Lesson "
+            + "SET subject.id = :subjectId, "
             + "hours = :hours, "
             + "teacher.id = :teacherId, "
             + "lessonType = :lessonType, "
             + "subjectForSite = :subjectForSite, "
             + "linkToMeeting = :linkToMeeting "
-            + "where grouped = true "
-            + "and subject.id = :initialSubjectId "
-            + "and hours = :initialHours "
-            + "and teacher.id = :initialTeacherId "
-            + "and semester.id = :initialSemesterId "
-            + "and lessonType = :initialLessonType "
-            + "and subjectForSite = :initialSubjectForSite";
+            + "WHERE grouped = true "
+            + "AND subject.id = :initialSubjectId "
+            + "AND hours = :initialHours "
+            + "AND teacher.id = :initialTeacherId "
+            + "AND semester.id = :initialSemesterId "
+            + "AND lessonType = :initialLessonType "
+            + "AND subjectForSite = :initialSubjectForSite";
 
     private static final String DELETE_GROUPED
-            = "delete Lesson l "
-            + "where l.grouped = true "
-            + "and l.subject.id = :subjectId "
-            + "and l.hours = :hours "
-            + "and l.teacher.id = :teacherId "
-            + "and l.semester.id = :semesterId "
-            + "and l.lessonType = :lessonType "
-            + "and l.subjectForSite = :subjectForSite";
+            = "DELETE FROM Lesson l "
+            + "WHERE l.grouped = true "
+            + "AND l.subject.id = :subjectId "
+            + "AND l.hours = :hours "
+            + "AND l.teacher.id = :teacherId "
+            + "AND l.semester.id = :semesterId "
+            + "AND l.lessonType = :lessonType "
+            + "AND l.subjectForSite = :subjectForSite";
 
     private static final String COUNT_QUERY
-            = "select count (s.id) "
-            + "from Schedule s "
-            + "where s.lesson.id = :lessonId";
+            = "SELECT count(s.id) "
+            + "FROM Schedule s "
+            + "WHERE s.lesson.id = :lessonId";
 
-    private static final String GET_BY_SEMESTER_ID
-            = "select l from Lesson l "
-            + "where l.semester.id= :semesterId "
-            + "order by l.subjectForSite ASC ";
+    private static final String GET_BY_SEMESTER_ID =
+            "SELECT DISTINCT l FROM Lesson l " +
+                    "JOIN FETCH l.semester s " +
+                    "LEFT JOIN FETCH s.periods " +
+                    "LEFT JOIN FETCH s.groups " +
+                    "WHERE l.semester.id = :semesterId " +
+                    "ORDER BY l.subjectForSite ASC";
 
-    private static final String GET_SUBJECT_TEACHER_SEMESTER
-            = "select l from Lesson l " +
-            "where l.subject.id= :subjectId " +
-            "and l.teacher.id= :teacherId " +
-            "and l.semester.id= :semesterId " +
-            "and l.lessonType= :lessonType " +
-            "and l.id != :lessonId";
+    private static final String GET_SUBJECT_TEACHER_SEMESTER =
+            "SELECT DISTINCT l FROM Lesson l " +
+                    "JOIN FETCH l.semester s " +
+                    "LEFT JOIN FETCH s.periods " +
+                    "LEFT JOIN FETCH s.groups " +
+                    "WHERE l.subject.id = :subjectId " +
+                    "AND l.teacher.id = :teacherId " +
+                    "AND l.semester.id = :semesterId " +
+                    "AND l.lessonType = :lessonType " +
+                    "AND l.id <> :lessonId";
 
     private static final String DELETE_BY_SEMESTER_ID
-            = "delete from Lesson l " +
-            "where l.id " +
-            "in (select les.id " +
-            "from Lesson les " +
-            "where les.semester.id = :semesterId)";
+            = "DELETE FROM Lesson l " +
+            "WHERE l.id " +
+            "IN (SELECT les.id " +
+            "FROM Lesson les " +
+            "WHERE les.semester.id = :semesterId)";
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Lesson> getAll() {
         log.info("In getAll()");
-        CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
-        CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
-        Root<Lesson> from = cq.from(Lesson.class);
-        cq.where(cb.equal(from.get(Constants.TEACHER).get(Constants.DISABLE), false),
-                cb.equal(from.get(Constants.SUBJECT).get(Constants.DISABLE), false),
-                cb.equal(from.get(Constants.GROUP).get(Constants.DISABLE), false));
-        cq.orderBy(cb.asc(from.get(Constants.SUBJECT_FOR_SITE)));
+        Session session = sessionFactory.getCurrentSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
 
-        TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
-        return tq.getResultList();
+        CriteriaQuery<Lesson> cq1 = cb.createQuery(Lesson.class);
+        Root<Lesson> from1 = cq1.from(Lesson.class);
+        Fetch<Lesson, Semester> semesterFetch = from1.fetch(Constants.SEMESTER, JoinType.LEFT);
+        semesterFetch.fetch("periods", JoinType.LEFT);
+
+        cq1.where(
+                cb.equal(from1.get(Constants.TEACHER).get(Constants.DISABLE), false),
+                cb.equal(from1.get(Constants.SUBJECT).get(Constants.DISABLE), false),
+                cb.equal(from1.get(Constants.GROUP).get(Constants.DISABLE), false)
+        );
+        cq1.orderBy(cb.asc(from1.get(Constants.SUBJECT_FOR_SITE)));
+        cq1.distinct(true);
+
+        List<Lesson> lessons = session.createQuery(cq1).getResultList();
+
+        lessons.stream()
+                .map(Lesson::getSemester)
+                .distinct()
+                .forEach(s -> Hibernate.initialize(s.getGroups()));
+
+        return lessons;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Lesson> getAllForGroup(Long groupId, Long semesterId) {
         log.info("In getAllForGroup(groupId = [{}])", groupId);
@@ -124,41 +139,49 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
         Root<Lesson> from = cq.from(Lesson.class);
 
-        cq.where(cb.equal(from.get(Constants.TEACHER).get(Constants.DISABLE), false),
-                cb.equal(from.get(Constants.SUBJECT).get(Constants.DISABLE), false),
+        Fetch<Lesson, Semester> semesterFetch = from.fetch(Constants.SEMESTER, JoinType.LEFT);
+        semesterFetch.fetch("periods", JoinType.LEFT);
+        semesterFetch.fetch("groups", JoinType.LEFT);
 
+        cq.where(
+                cb.equal(from.get(Constants.TEACHER).get(Constants.DISABLE), false),
+                cb.equal(from.get(Constants.SUBJECT).get(Constants.DISABLE), false),
                 cb.equal(from.get(Constants.GROUP).get(Constants.DISABLE), false),
                 cb.equal(from.get(Constants.GROUP).get(Constants.ID), groupId),
-                cb.equal(from.get(Constants.SEMESTER).get(Constants.ID), semesterId));
+                cb.equal(from.get(Constants.SEMESTER).get(Constants.ID), semesterId)
+        );
+
         cq.orderBy(cb.asc(from.get(Constants.SUBJECT_FOR_SITE)));
-        TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
-        return tq.getResultList();
+        cq.distinct(true);
+
+        return sessionFactory.getCurrentSession().createQuery(cq).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Lesson> getLessonByTeacher(Long teacherId, Long semesterId) {
-        log.info("In getLessonByTeacher(groupId = [{}])", teacherId);
+        log.info("In getLessonByTeacher(teacherId = [{}])", teacherId);
         CriteriaBuilder cb = sessionFactory.getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<Lesson> cq = cb.createQuery(Lesson.class);
         Root<Lesson> from = cq.from(Lesson.class);
 
-        cq.where(cb.equal(from.get(Constants.TEACHER).get(Constants.DISABLE), false),
+        Fetch<Lesson, Semester> semesterFetch = from.fetch(Constants.SEMESTER, JoinType.LEFT);
+        semesterFetch.fetch("periods", JoinType.LEFT);
+        semesterFetch.fetch("groups", JoinType.LEFT);
+
+        cq.where(
+                cb.equal(from.get(Constants.TEACHER).get(Constants.DISABLE), false),
                 cb.equal(from.get(Constants.TEACHER).get(Constants.ID), teacherId),
                 cb.equal(from.get(Constants.SUBJECT).get(Constants.DISABLE), false),
-
                 cb.equal(from.get(Constants.GROUP).get(Constants.DISABLE), false),
-                cb.equal(from.get(Constants.SEMESTER).get(Constants.ID), semesterId));
+                cb.equal(from.get(Constants.SEMESTER).get(Constants.ID), semesterId)
+        );
+
         cq.orderBy(cb.asc(from.get(Constants.SUBJECT_FOR_SITE)));
-        TypedQuery<Lesson> tq = sessionFactory.getCurrentSession().createQuery(cq);
-        return tq.getResultList();
+        cq.distinct(true);
+
+        return sessionFactory.getCurrentSession().createQuery(cq).getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Long countLessonDuplicates(Lesson lesson) {
         log.info("In countLessonDuplicates(lesson = [{}])", lesson);
@@ -179,9 +202,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return query.getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Long countLessonDuplicatesWithIgnoreId(Lesson lesson) {
         log.info("In countLessonDuplicates(lesson = [{}])", lesson);
@@ -207,9 +227,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return query.getSingleResult();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Lesson> getLessonsBySemester(Long semesterId) {
         log.info("In getLessonsBySemester(semesterId = [{}])", semesterId);
@@ -223,13 +240,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
     public void deleteLessonsBySemesterId(Long semesterId) {
         log.info("In deleteLessonBySemesterId(semesterId = [{}])", semesterId);
         sessionFactory.getCurrentSession()
-                .createQuery(DELETE_BY_SEMESTER_ID)
-                .setParameter(Constants.SEMESTER_ID, semesterId).executeUpdate();
+                .createMutationQuery(DELETE_BY_SEMESTER_ID)
+                .setParameter(Constants.SEMESTER_ID, semesterId)
+                .executeUpdate();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Lesson> getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(Lesson lesson) {
         log.info("In getLessonsBySubjectIdTeacherIdSemesterIdLessonTypeAndExcludeCurrentLessonId(lesson = [{}]", lesson);
@@ -243,9 +258,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getResultList();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Lesson> getGroupedLessonsByLesson(Lesson lesson) {
         log.info("getGroupedLessonsByLessonId(lesson = [{}]", lesson);
@@ -260,12 +272,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .getResultList();
     }
 
-    /**
-     * Checks if lesson is used in Schedule table.
-     *
-     * @param lesson the lesson entity to be checked
-     * @return {@code true} if lesson is used in Schedule table, otherwise {@code false}
-     */
     @Override
     protected boolean checkReference(Lesson lesson) {
         log.info("In checkReference(lesson = [{}])", lesson);
@@ -275,9 +281,6 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return count != 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Integer updateLinkToMeeting(Lesson lesson) {
         log.info("In repository updateLinkToMeeting lesson = [{}]", lesson);
@@ -302,20 +305,19 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
 
         criteriaUpdate.where(predicates.toArray(new Predicate[0]));
 
-        return sessionFactory.getCurrentSession().createQuery(criteriaUpdate).executeUpdate();
+        return sessionFactory.getCurrentSession().createMutationQuery(criteriaUpdate).executeUpdate();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Lesson updateGrouped(Lesson oldLesson, Lesson updatedLesson, boolean isTeacherOrSubjectUpdated) {
         log.info("Entered updateGroup({}, {})", oldLesson, updatedLesson);
         Session currentSession = sessionFactory.getCurrentSession();
-        Query<Lesson> query = isTeacherOrSubjectUpdated
-                ? currentSession.createQuery(UPDATE_GROUPED_TEACHER_OR_SUBJECT)
-                : currentSession.createQuery(UPDATE_GROUPED);
-        query = query.setParameter("initialSubjectId", oldLesson.getSubject().getId())
+
+        var query = currentSession.createMutationQuery(
+                isTeacherOrSubjectUpdated ? UPDATE_GROUPED_TEACHER_OR_SUBJECT : UPDATE_GROUPED
+        );
+
+        query.setParameter("initialSubjectId", oldLesson.getSubject().getId())
                 .setParameter("initialTeacherId", oldLesson.getTeacher().getId())
                 .setParameter("initialSemesterId", oldLesson.getSemester().getId())
                 .setParameter("linkToMeeting", updatedLesson.getLinkToMeeting())
@@ -324,24 +326,23 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
                 .setParameter(Constants.TEACHER_ID, updatedLesson.getTeacher().getId())
                 .setParameter(Constants.LESSON_TYPE, updatedLesson.getLessonType())
                 .setParameter(Constants.SUBJECT_FOR_SITE, updatedLesson.getSubjectForSite());
-        query = isTeacherOrSubjectUpdated
-                ? query
-                : query.setParameter("initialSubjectForSite", oldLesson.getSubjectForSite())
-                .setParameter("initialHours", oldLesson.getHours())
-                .setParameter("initialLessonType", oldLesson.getLessonType());
+
+        if (!isTeacherOrSubjectUpdated) {
+            query.setParameter("initialSubjectForSite", oldLesson.getSubjectForSite())
+                    .setParameter("initialHours", oldLesson.getHours())
+                    .setParameter("initialLessonType", oldLesson.getLessonType());
+        }
+
         int updated = query.executeUpdate();
         log.debug("Updated group lessons {}", updated);
         return updatedLesson;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Lesson deleteGrouped(Lesson lesson) {
         log.info("Entered deleteGrouped({})", lesson);
         int deleted = sessionFactory.getCurrentSession()
-                .createQuery(DELETE_GROUPED)
+                .createMutationQuery(DELETE_GROUPED)
                 .setParameter(Constants.SUBJECT_ID, lesson.getSubject().getId())
                 .setParameter(Constants.HOURS, lesson.getHours())
                 .setParameter(Constants.TEACHER_ID, lesson.getTeacher().getId())
@@ -353,14 +354,11 @@ public class LessonRepositoryImpl extends BasicRepositoryImpl<Lesson, Long> impl
         return lesson;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int setGrouped(Long lessonId) {
         log.info("Entered setGrouped({})", lessonId);
         return sessionFactory.getCurrentSession()
-                .createQuery(SET_GROUPED)
+                .createMutationQuery(SET_GROUPED)
                 .setParameter(Constants.ID, lessonId)
                 .executeUpdate();
     }

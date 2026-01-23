@@ -2,81 +2,57 @@ package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.assertions.CustomMockMvcAssertions;
-import com.softserve.config.DBConfigTest;
-import com.softserve.config.MyWebAppInitializer;
-import com.softserve.config.SecurityConfig;
-import com.softserve.config.SecurityWebApplicationInitializer;
-import com.softserve.config.WebMvcConfig;
 import com.softserve.dto.GroupDTO;
 import com.softserve.dto.StudentDTO;
 import com.softserve.exception.apierror.ApiValidationError;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@Category(IntegrationTestCategory.class)
-@RunWith(JUnitParamsRunner.class)
-@ContextConfiguration(
-        classes = {
-                WebMvcConfig.class,
-                DBConfigTest.class,
-                MyWebAppInitializer.class,
-                SecurityConfig.class,
-                SecurityWebApplicationInitializer.class
-        }
-)
-@WebAppConfiguration
+@Tag("integration")
+@SpringBootTest
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 @WithMockUser(
         username = "first@mail.com",
         password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.",
         roles = "MANAGER"
 )
-@Sql(value = {"classpath:create-students-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-public class StudentControllerTest {
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+@Sql(value = {"classpath:create-students-before.sql"})
+class StudentControllerTest {
 
-    @Rule
-    public final SpringMethodRule smr = new SpringMethodRule();
+    @Autowired
+    private MockMvc mockMvc;
 
-    private static MockMvc mockMvc;
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private CustomMockMvcAssertions assertions;
 
@@ -91,15 +67,9 @@ public class StudentControllerTest {
             .title("First Title")
             .build();
 
-    @Autowired
-    private WebApplicationContext wac;
-
-    @Before
-    public void setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
-        assertions = new CustomMockMvcAssertions(mockMvc, OBJECT_MAPPER, "/students");
+    @BeforeEach
+    void setup() {
+        assertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/students");
 
         studentDTOWithId8L = StudentDTO.builder()
                 .id(8L)
@@ -136,22 +106,21 @@ public class StudentControllerTest {
                 .email("Fourth@test.com")
                 .group(groupDTO)
                 .build();
-
     }
 
     @Test
-    public void getAllStudents() throws Exception {
+    void getAllStudents() throws Exception {
         assertions.assertForGetList(asList(
                 studentDTOWithId8L, studentDTOWithId9L, studentDTOWithId10L, studentDTOWithId12L));
     }
 
     @Test
-    public void getStudentById() throws Exception {
+    void getStudentById() throws Exception {
         assertions.assertForGet(studentDTOWithId8L, "/students/8");
     }
 
     @Test
-    public void saveStudent() throws Exception {
+    void saveStudent() throws Exception {
         StudentDTO expected = studentDTOWithId8L;
         expected.setId(null);
         expected.setEmail("dfdfdf@gmail.com");
@@ -159,19 +128,19 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void throwFieldAlreadyExistsExceptionWhenSave() throws Exception {
+    void throwFieldAlreadyExistsExceptionWhenSave() throws Exception {
         StudentDTO studentDTO = studentDTOWithId8L;
         studentDTO.setId(null);
         assertThatReturnedFieldAlreadyExistsException(post("/students"), studentDTO);
     }
 
     @Test
-    public void updateStudent() throws Exception {
+    void updateStudent() throws Exception {
         assertions.assertForUpdate(studentDTOWithId10L);
     }
 
     @Test
-    public void throwFieldAlreadyExistsExceptionWhenUpdate() throws Exception {
+    void throwFieldAlreadyExistsExceptionWhenUpdate() throws Exception {
         StudentDTO studentDTO = studentDTOWithId8L;
         studentDTO.setId(null);
         studentDTO.setEmail(studentDTOWithId9L.getEmail());
@@ -179,7 +148,7 @@ public class StudentControllerTest {
     }
 
     @Test
-    public void deleteStudent() throws Exception {
+    void deleteStudent() throws Exception {
         assertions.assertForDelete(8);
     }
 
@@ -189,9 +158,9 @@ public class StudentControllerTest {
             password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.",
             roles = "USER"
     )
-    public void returnForbiddenIfAuthenticatedUserRoleIsNotManagerOnSave() throws Exception {
+    void returnForbiddenIfAuthenticatedUserRoleIsNotManagerOnSave() throws Exception {
         assertThatReturnedForbiddenStatus(post("/students")
-                .content(OBJECT_MAPPER.writeValueAsString(studentDTOWithId8L)));
+                .content(objectMapper.writeValueAsString(studentDTOWithId8L)));
     }
 
     @Test
@@ -200,9 +169,9 @@ public class StudentControllerTest {
             password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.",
             roles = "USER"
     )
-    public void returnForbiddenIfAuthenticatedUserRoleIsNotManagerOnUpdate() throws Exception {
+    void returnForbiddenIfAuthenticatedUserRoleIsNotManagerOnUpdate() throws Exception {
         assertThatReturnedForbiddenStatus(put("/students")
-                .content(OBJECT_MAPPER.writeValueAsString(studentDTOWithId8L)));
+                .content(objectMapper.writeValueAsString(studentDTOWithId8L)));
     }
 
     @Test
@@ -211,151 +180,99 @@ public class StudentControllerTest {
             password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.",
             roles = "USER"
     )
-    public void returnForbiddenIfAuthenticatedUserRoleIsNotManagerOnDelete() throws Exception {
+    void returnForbiddenIfAuthenticatedUserRoleIsNotManagerOnDelete() throws Exception {
         assertThatReturnedForbiddenStatus(delete("/students/4"));
     }
 
-    public Object[] parametersForTestValidationException() {
+    static Stream<Object[]> validationExceptionProvider() {
         String objectError = "Student";
+        GroupDTO group = GroupDTO.builder()
+                .id(1L)
+                .disable(false)
+                .title("First Title")
+                .build();
 
-        //Object 1
+        // Object 1
         StudentDTO studentDTOWithNullValues = new StudentDTO();
         studentDTOWithNullValues.setEmail("12345Asd@test.com");
         ApiValidationError nameIsNullError = new ApiValidationError(
-                objectError,
-                "name",
-                null,
-                "Name cannot be empty"
-        );
+                objectError, "name", null, "Name cannot be empty");
         ApiValidationError surnameIsNullError = new ApiValidationError(
-                objectError,
-                "surname",
-                null,
-                "Surname cannot be empty"
-        );
+                objectError, "surname", null, "Surname cannot be empty");
         ApiValidationError patronymicIsNullError = new ApiValidationError(
-                objectError,
-                "patronymic",
-                null,
-                "Patronymic cannot be empty"
-        );
+                objectError, "patronymic", null, "Patronymic cannot be empty");
         ApiValidationError groupIsNullError = new ApiValidationError(
-                objectError,
-                "group",
-                null,
-                "Group cannot be null"
-        );
+                objectError, "group", null, "Group cannot be null");
 
         List<ApiValidationError> errorListWithNullValues = Arrays.asList(
-                nameIsNullError,
-                surnameIsNullError,
-                patronymicIsNullError,
-                groupIsNullError
-        );
+                nameIsNullError, surnameIsNullError, patronymicIsNullError, groupIsNullError);
 
-        //Object 2
+        // Object 2
         String wordWithLength1 = "T";
         StudentDTO studentDTOWithValuesLengthsLessThanMin = StudentDTO.builder()
                 .name(wordWithLength1)
                 .surname(wordWithLength1)
                 .patronymic(wordWithLength1)
                 .email("studenttttt@gmail.com")
-                .group(groupDTO)
+                .group(group)
                 .build();
 
         ApiValidationError nameLengthIs1Error = new ApiValidationError(
-                objectError,
-                "name",
-                wordWithLength1,
-                "Name must be between 2 and 35 characters long"
-        );
+                objectError, "name", wordWithLength1, "Name must be between 2 and 35 characters long");
         ApiValidationError surnameLengthIs1Error = new ApiValidationError(
-                objectError,
-                "surname",
-                wordWithLength1,
-                "Surname must be between 2 and 35 characters long"
-        );
+                objectError, "surname", wordWithLength1, "Surname must be between 2 and 35 characters long");
         ApiValidationError patronymicLengthIs1Error = new ApiValidationError(
-                objectError,
-                "patronymic",
-                wordWithLength1,
-                "Patronymic must be between 2 and 35 characters long"
-        );
+                objectError, "patronymic", wordWithLength1, "Patronymic must be between 2 and 35 characters long");
         List<ApiValidationError> errorListWithMinLength = Arrays.asList(
-                nameLengthIs1Error,
-                surnameLengthIs1Error,
-                patronymicLengthIs1Error
-        );
+                nameLengthIs1Error, surnameLengthIs1Error, patronymicLengthIs1Error);
 
-        //Object 3
+        // Object 3
         String wordWithLength55 = RandomStringUtils.random(45, "abc") + "@gmail.com";
         StudentDTO studentDTOWithValuesLengthsMoreThanMax = StudentDTO.builder()
                 .name(wordWithLength55)
                 .surname(wordWithLength55)
                 .patronymic(wordWithLength55)
                 .email("studentttttt@gmail.com")
-                .group(groupDTO)
+                .group(group)
                 .build();
 
         ApiValidationError nameLengthIs55Error = new ApiValidationError(
-                objectError,
-                "name",
-                wordWithLength55,
-                "Name must be between 2 and 35 characters long"
-        );
+                objectError, "name", wordWithLength55, "Name must be between 2 and 35 characters long");
         ApiValidationError surnameLengthIs55Error = new ApiValidationError(
-                objectError,
-                "surname",
-                wordWithLength55,
-                "Surname must be between 2 and 35 characters long"
-        );
+                objectError, "surname", wordWithLength55, "Surname must be between 2 and 35 characters long");
         ApiValidationError patronymicLengthIs55Error = new ApiValidationError(
-                objectError,
-                "patronymic",
-                wordWithLength55,
-                "Patronymic must be between 2 and 35 characters long"
-        );
+                objectError, "patronymic", wordWithLength55, "Patronymic must be between 2 and 35 characters long");
         List<ApiValidationError> errorListWithMaxLength = Arrays.asList(
-                nameLengthIs55Error,
-                surnameLengthIs55Error,
-                patronymicLengthIs55Error
-        );
+                nameLengthIs55Error, surnameLengthIs55Error, patronymicLengthIs55Error);
 
-        //Last Object
-        objectError = "User";
+        // Last Object
         String incorrectEmail = "saass";
         StudentDTO studentDTOWithIncorrectEmail = StudentDTO.builder()
                 .name("sdsdsd")
                 .surname("dsdsds")
                 .patronymic("ddsd")
                 .email(incorrectEmail)
-                .group(groupDTO)
+                .group(group)
                 .build();
         ApiValidationError incorrectEmailError = new ApiValidationError(
-                objectError,
-                "email",
-                incorrectEmail,
-                "must be a well-formed email address"
-        );
+                "User", "email", incorrectEmail, "must be a well-formed email address");
 
-        return new Object[]{
+        return Stream.of(
                 new Object[]{studentDTOWithNullValues, errorListWithNullValues},
                 new Object[]{studentDTOWithValuesLengthsLessThanMin, errorListWithMinLength},
                 new Object[]{studentDTOWithValuesLengthsMoreThanMax, errorListWithMaxLength},
-                new Object[]{studentDTOWithIncorrectEmail, singletonList(incorrectEmailError)},
-        };
+                new Object[]{studentDTOWithIncorrectEmail, singletonList(incorrectEmailError)}
+        );
     }
 
-    @Parameters
-    @Test
-    //GZ
-    public void testValidationException(StudentDTO studentDTO, List<ApiValidationError> errorList) throws Exception {
+    @ParameterizedTest
+    @MethodSource("validationExceptionProvider")
+    void testValidationException(StudentDTO studentDTO, List<ApiValidationError> errorList) throws Exception {
         assertions.assertForValidationErrorsOnSave(errorList, studentDTO);
     }
 
     @Test
-    public void saveStudentsFromFile() throws Exception {
-
+    void saveStudentsFromFile() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile("file",
                 "students.csv",
                 "text/csv",
@@ -420,7 +337,7 @@ public class StudentControllerTest {
 
     private void assertThatReturnedFieldAlreadyExistsException(MockHttpServletRequestBuilder requestBuilder,
                                                                StudentDTO studentDTO) throws Exception {
-        mockMvc.perform(requestBuilder.content(OBJECT_MAPPER.writeValueAsString(studentDTO))
+        mockMvc.perform(requestBuilder.content(objectMapper.writeValueAsString(studentDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
@@ -439,7 +356,7 @@ public class StudentControllerTest {
         );
     }
 
-    public void assertThatReturnedForbiddenStatus(MockHttpServletRequestBuilder requestBuilder) throws Exception {
+    private void assertThatReturnedForbiddenStatus(MockHttpServletRequestBuilder requestBuilder) throws Exception {
         mockMvc.perform(requestBuilder.contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }

@@ -1,4 +1,4 @@
-import { sortByName } from './sortArray';
+import {sortByName} from './sortArray';
 
 const array = [{ name: '1 к. 11 ауд.' }, { name: '1 к. 18 ауд.' }, { name: '1 к. 15 ауд.' }];
 const expectedArray = [

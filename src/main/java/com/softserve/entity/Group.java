@@ -3,14 +3,10 @@ package com.softserve.entity;
 import com.opencsv.bean.CsvBindByName;
 import com.softserve.entity.interfaces.SortableOrder;
 import lombok.*;
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.OrderBy;
-import org.hibernate.annotations.ParamDef;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +16,10 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
-@Entity
+@Entity(name = "StudentGroup")
 @EqualsAndHashCode
 @Table(name = "groups")
 @Builder(toBuilder = true)
-@FilterDef(name = "groupDisableFilter", parameters = {
-        @ParamDef(name = "disable", type = "boolean"),
-})
-@Filter(name = "groupDisableFilter", condition = "disable = :disable")
 public class Group implements Serializable, SortableOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +34,7 @@ public class Group implements Serializable, SortableOrder {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "group")
-    @OrderBy(clause = "surname ASC")
+    @OrderBy("surname ASC")
     @Builder.Default
     private List<Student> students = new ArrayList<>();
 

@@ -1,6 +1,6 @@
-import { shallow } from 'enzyme';
-import { setLink } from './setLInk';
-import { places } from '../constants/places';
+import {shallow} from 'enzyme';
+import {setLink} from './setLInk';
+import {places} from '../constants/places';
 
 const card = { link: 'https://www.google.com/' };
 

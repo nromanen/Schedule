@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import GroupsList from '../../components/GroupSchedulePage/GroupsList';
 
 const mapStateToProps = (state) => ({

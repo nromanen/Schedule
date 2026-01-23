@@ -247,3 +247,8 @@ export const selectFullSchedule = (semesterId) => {
         semesterId,
     };
 };
+
+export const setScheduleNotPublished = (message) => ({
+    type: actionTypes.SCHEDULE_NOT_PUBLISHED,
+    payload: message,
+});

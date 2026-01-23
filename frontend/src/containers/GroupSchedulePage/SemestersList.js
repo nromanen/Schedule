@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import { getAllPublicGroupsStart } from '../../actions/groups';
+import {connect} from 'react-redux';
+import {getAllPublicGroupsStart} from '../../actions/groups';
 import SemestersList from '../../components/GroupSchedulePage/SemestersList';
 
 const mapStateToProps = (state) => ({

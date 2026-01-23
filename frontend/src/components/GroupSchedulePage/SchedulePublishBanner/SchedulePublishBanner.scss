@@ -1,0 +1,28 @@
+@import '../../../styles/colors';
+
+.schedule-publish-banner {
+  margin-left: 16px;
+
+  &.unpublished {
+    .MuiFormControlLabel-label {
+      color: $red;
+    }
+  }
+
+  &.published {
+    .MuiFormControlLabel-label {
+      color: $green;
+    }
+  }
+
+  .MuiFormControlLabel-label {
+    font-size: 20px;
+  }
+
+}
+
+.schedule-publish-banner-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}

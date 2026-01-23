@@ -1,7 +1,7 @@
 import React from 'react';
 import MomentUtils from '@date-io/moment';
 import * as moment from 'moment';
-import { TimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import {MuiPickersUtilsProvider, TimePicker} from '@material-ui/pickers';
 
 const renderTimePicker = ({
     label,

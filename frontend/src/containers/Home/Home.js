@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
+import React, {Fragment, useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
+import {connect} from 'react-redux';
 import GroupSchedulePage from '../GroupSchedulePage/GroupSchedulePage';
-import { getPublicClassScheduleStart } from '../../actions/classes';
+import {getPublicClassScheduleStart} from '../../actions/classes';
 
-import { HOME_TITLE } from '../../constants/translationLabels/common';
+import {HOME_TITLE} from '../../constants/translationLabels/common';
 
 const HomePage = (props) => {
     const { getClassScheduleList } = props;

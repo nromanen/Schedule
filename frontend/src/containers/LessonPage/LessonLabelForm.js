@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import LessonLabelForm from '../../components/LessonsPage/LessonForm/LessonLabelForm';
 
 const mapStateToProps = (state) => ({

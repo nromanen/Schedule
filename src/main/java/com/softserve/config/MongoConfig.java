@@ -9,21 +9,26 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-
 @Configuration
-@PropertySource("classpath:mongo.properties")
 @Slf4j
 public class MongoConfig {
 
     private static final int PORT = 27017;
 
+    @Value("${spring.data.mongodb.host:127.0.0.1}")
+    private String defaultServerCluster;
+
+    @Value("${spring.data.mongodb.database:schedules}")
+    private String mongoLocalCurrentDatabase;
+
+    // Server MongoDB settings (from environment)
     private String mongoServerCluster = System.getenv("MONGO_CLUSTER");
     private String firstServerClusterForMongo = System.getenv("FIRST_CLUSTER_FOR_MONGO");
     private String secondServerClusterForMongo = System.getenv("SECOND_CLUSTER_FOR_MONGO");
@@ -33,17 +38,16 @@ public class MongoConfig {
     private String mongoServerMainDatabase = System.getenv("MONGO_MAIN_DATABASE");
     private String mongoServerCurrentDatabase = System.getenv("MONGO_CURRENT_DATABASE");
 
-    @Value("${default.server.cluster}")
-    private String defaultServerCluster;
-
-    @Value("${mongo.local.current.database}")
-    private String mongoLocalCurrentDatabase;
-
     @Bean
-    public Object getMongoClient() {
+    @Primary
+    public MongoClient mongoClient() {
         if (isServerMongoDB()) {
-            MongoCredential credential = MongoCredential.createCredential(mongoServerUsername, mongoServerMainDatabase,
-                    mongoServerPassword.toCharArray());
+            log.info("Connecting to MongoDB cluster...");
+            MongoCredential credential = MongoCredential.createCredential(
+                    mongoServerUsername,
+                    mongoServerMainDatabase,
+                    mongoServerPassword.toCharArray()
+            );
             MongoClientSettings settings = MongoClientSettings.builder()
                     .credential(credential)
                     .retryWrites(true)
@@ -61,6 +65,8 @@ public class MongoConfig {
                     .build();
             return MongoClients.create(settings);
         }
+
+        log.info("Connecting to local MongoDB: {}", defaultServerCluster);
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyToClusterSettings(builder ->
                         builder.hosts(Collections.singletonList(new ServerAddress(defaultServerCluster, PORT))))
@@ -69,15 +75,12 @@ public class MongoConfig {
     }
 
     @Bean
-    public MongoTemplate mongoTemplate() {
-        if (isServerMongoDB()) {
-            return new MongoTemplate((MongoClient) getMongoClient(), mongoServerCurrentDatabase);
-        }
-        return new MongoTemplate((MongoClient) getMongoClient(), mongoLocalCurrentDatabase);
+    public MongoTemplate mongoTemplate(MongoClient mongoClient) {
+        String database = isServerMongoDB() ? mongoServerCurrentDatabase : mongoLocalCurrentDatabase;
+        return new MongoTemplate(mongoClient, database);
     }
 
     private boolean isServerMongoDB() {
         return mongoServerUsername != null && mongoServerPassword != null;
     }
 }
-

@@ -1,9 +1,9 @@
-import { reset } from 'redux-form';
-import { call, put, select, takeEvery } from 'redux-saga/effects';
-import { omit } from 'lodash';
+import {reset} from 'redux-form';
+import {call, put, select, takeEvery} from 'redux-saga/effects';
+import {omit} from 'lodash';
 import * as actionTypes from '../actions/actionsType';
-import { setLoading, setStudentsLoading } from '../actions/loadingIndicator';
-import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackbar';
+import {setLoading, setStudentsLoading} from '../actions/loadingIndicator';
+import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
 import {
     deleteAllStudentSuccess,
     deleteStudentSuccess,
@@ -11,20 +11,11 @@ import {
     showAllStudents,
     updateStudentSuccess,
 } from '../actions/students';
-import {
-    GROUP_URL,
-    MOVE_STUDENTS_URL,
-    STUDENTS_TO_GROUP_FILE,
-    STUDENT_URL,
-    WITH_STUDENTS,
-} from '../constants/axios';
-import { DELETE, POST, PUT } from '../constants/methods';
-import { STUDENT } from '../constants/names';
-import { STUDENT_FORM } from '../constants/reduxForms';
-import {
-    FORM_STUDENTS_FILE_LABEL,
-    STUDENTS_UPPERCASE,
-} from '../constants/translationLabels/formElements';
+import {GROUP_URL, MOVE_STUDENTS_URL, STUDENT_URL, STUDENTS_TO_GROUP_FILE, WITH_STUDENTS,} from '../constants/axios';
+import {DELETE, POST, PUT} from '../constants/methods';
+import {STUDENT} from '../constants/names';
+import {STUDENT_FORM} from '../constants/reduxForms';
+import {FORM_STUDENTS_FILE_LABEL, STUDENTS_UPPERCASE,} from '../constants/translationLabels/formElements';
 import {
     BACK_END_SUCCESS_OPERATION,
     CREATED_LABEL,
@@ -34,8 +25,8 @@ import {
     MOVED_TO_GROUP_LABEL,
     UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { axiosCall } from '../services/axios';
-import { createDynamicMessage, createErrorMessage, createMessage } from '../utils/sagaUtils';
+import {axiosCall} from '../services/axios';
+import {createDynamicMessage, createErrorMessage, createMessage} from '../utils/sagaUtils';
 
 const getStudents = (state) => state.students.students;
 

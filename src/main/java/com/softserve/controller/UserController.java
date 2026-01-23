@@ -15,8 +15,8 @@ import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.MailService;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("users")
-@Api(tags = "User API")
+@Tag(name = "User API")
 public class UserController {
 
     private final UserService userService;
@@ -43,7 +43,7 @@ public class UserController {
     private final MailService mailService;
 
     @GetMapping
-    @ApiOperation(value = "Get the list of all users")
+    @Operation(summary = "Get the list of all users")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<UserDTO>> getAll() {
         log.info("Enter into getAll method");
@@ -52,7 +52,7 @@ public class UserController {
 
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get user by id")
+    @Operation(summary = "Get user by id")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<UserDTO> get(@PathVariable("id") Long id) {
         log.info("Enter into get method with id: {} ", id);
@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Create new user")
+    @Operation(summary = "Create new user")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<UserCreateDTO> save(@RequestBody UserCreateDTO createUserDTO) {
         log.info("Enter into save method with createUserDTO: {}", createUserDTO);
@@ -71,7 +71,7 @@ public class UserController {
 
 
     @PutMapping
-    @ApiOperation(value = "Update existing user by id")
+    @Operation(summary = "Update existing user by id")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<UserCreateDTO> update(@RequestBody UserCreateDTO userDTO) {
         log.info("Enter into update method with userDTO: {}", userDTO);
@@ -85,7 +85,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete user by id")
+    @Operation(summary = "Delete user by id")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
         log.info("Enter into delete method with group id: {}", id);
@@ -100,7 +100,7 @@ public class UserController {
     }
 
     @GetMapping("/with-role-user")
-    @ApiOperation(value = "Get the list of all users, that have role User")
+    @Operation(summary = "Get the list of all users, that have role User")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<UserDTO>> getAllUsersWithRoleUser() {
         log.info("Enter into getAllUsersWithRoleUser method");
@@ -108,7 +108,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    @ApiOperation(value = "Get current user data")
+    @Operation(summary = "Get current user data")
     public ResponseEntity<UserDataDTO> getCurrentUser(@CurrentUser JwtUser jwtUser) {
         log.info("Enter into getCurrentUser method with JwtUser {}", jwtUser.getUsername());
         User user = userService.getById(jwtUser.getId());
@@ -121,7 +121,7 @@ public class UserController {
 
     @PostMapping(value = "/send-email")
     @PreAuthorize("hasRole('TEACHER')")
-    @ApiOperation(value = "Send email")
+    @Operation(summary = "Send email")
     public ResponseEntity<Void> sendEmail(@CurrentUser JwtUser jwtUser,
                                           @ModelAttribute EmailMessageDTO emailMessageDTO) {
         log.info("Enter into sendEmail(jwtUser(username: {}), emailMessageDTO: {})",

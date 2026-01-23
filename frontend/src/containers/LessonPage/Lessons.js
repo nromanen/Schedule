@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import { selectLessonCardSuccess } from '../../actions';
+import {connect} from 'react-redux';
+import {selectLessonCardSuccess} from '../../actions';
 import Lessons from '../../components/LessonsPage/Lessons';
 
 const mapStateToProps = (state) => ({

@@ -1,4 +1,4 @@
-import { handleTeacherInfo } from './handleTeacherInfo';
+import {handleTeacherInfo} from './handleTeacherInfo';
 
 describe('handleTeacherInfo function', () => {
     it('should return teacher full info', () => {

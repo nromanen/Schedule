@@ -1,6 +1,6 @@
-import { isNil } from 'lodash';
-import { places } from '../constants/places';
-import { getTeacherWithShortPosition } from './renderTeacher';
+import {isNil} from 'lodash';
+import {places} from '../constants/places';
+import {getTeacherWithShortPosition} from './renderTeacher';
 import i18n from '../i18n';
 
 export const prepareLessonCardCell = (card) => {

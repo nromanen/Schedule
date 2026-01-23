@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {useTranslation} from 'react-i18next';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TemporaryScheduleForm from '../../components/TemporarySchedule/TemporaryScheduleForm/TemporaryScheduleForm';
-import ScheduleAndTemporaryScheduleList from '../../components/TemporarySchedule/ScheduleAndTemporaryScheduleList/ScheduleAndTemporaryScheduleList';
+import ScheduleAndTemporaryScheduleList
+    from '../../components/TemporarySchedule/ScheduleAndTemporaryScheduleList/ScheduleAndTemporaryScheduleList';
 import TemporaryScheduleTitle from '../../components/TemporarySchedule/TemporaryScheduleTitle/TemporaryScheduleTitle';
 import TemporaryScheduleList from '../../components/TemporarySchedule/TemporaryScheduleList/TemporaryScheduleList';
-import TemporaryScheduleVacationForm from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
+import TemporaryScheduleVacationForm
+    from '../../components/TemporarySchedule/TemporaryScheduleVacationForm/TemporaryScheduleVacationForm';
 import Card from '../../share/Card/Card';
-import { setLoadingService } from '../../services/loadingService';
+import {setLoadingService} from '../../services/loadingService';
 import {
     addTemporaryScheduleForRangeService,
     addTemporaryScheduleService,
     editTemporaryScheduleService,
 } from '../../services/temporaryScheduleService';
-import { getClassScheduleListStart } from '../../actions/classes';
-import { showAllSubjectsService } from '../../services/subjectService';
+import {getClassScheduleListStart} from '../../actions/classes';
+import {showAllSubjectsService} from '../../services/subjectService';
 import './TemporarySchedule.scss';
-import { EMPTY_LABEL } from '../../constants/translationLabels/common';
-import { getLessonTypesStart, getEnabledGroupsStart } from '../../actions';
-import { getListOfRoomsStart } from '../../actions/rooms';
-import { showAllTeachersStart } from '../../actions/teachers';
+import {EMPTY_LABEL} from '../../constants/translationLabels/common';
+import {getEnabledGroupsStart, getLessonTypesStart} from '../../actions';
+import {getListOfRoomsStart} from '../../actions/rooms';
+import {showAllTeachersStart} from '../../actions/teachers';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');

@@ -1,0 +1,3977 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 15.1
+-- Dumped by pg_dump version 15.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON SCHEMA public IS '';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: databasechangelog; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.databasechangelog (
+    id character varying(255) NOT NULL,
+    author character varying(255) NOT NULL,
+    filename character varying(255) NOT NULL,
+    dateexecuted timestamp without time zone NOT NULL,
+    orderexecuted integer NOT NULL,
+    exectype character varying(10) NOT NULL,
+    md5sum character varying(35),
+    description character varying(255),
+    comments character varying(255),
+    tag character varying(255),
+    liquibase character varying(20),
+    contexts character varying(255),
+    labels character varying(255),
+    deployment_id character varying(10)
+);
+
+
+--
+-- Name: databasechangeloglock; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.databasechangeloglock (
+    id integer NOT NULL,
+    locked boolean NOT NULL,
+    lockgranted timestamp without time zone,
+    lockedby character varying(255)
+);
+
+
+--
+-- Name: department; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.department (
+    id bigint NOT NULL,
+    disable boolean DEFAULT false,
+    name character varying(255) NOT NULL
+);
+
+
+--
+-- Name: department_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.department_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: department_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.department_id_seq OWNED BY public.department.id;
+
+
+--
+-- Name: groups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.groups (
+    id bigint NOT NULL,
+    disable boolean DEFAULT false,
+    title character varying(35) NOT NULL,
+    sort_order integer
+);
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.groups_id_seq OWNED BY public.groups.id;
+
+
+--
+-- Name: lessons; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.lessons (
+    id bigint NOT NULL,
+    hours integer NOT NULL,
+    lessontype character varying(255) NOT NULL,
+    subject_for_site character varying(255) NOT NULL,
+    group_id bigint NOT NULL,
+    subject_id bigint NOT NULL,
+    teacher_id bigint NOT NULL,
+    grouped boolean DEFAULT false,
+    semester_id bigint NOT NULL,
+    link_to_meeting character varying(255),
+    CONSTRAINT lessons_hours_check CHECK ((hours >= 1))
+);
+
+
+--
+-- Name: lessons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.lessons_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: lessons_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.lessons_id_seq OWNED BY public.lessons.id;
+
+
+--
+-- Name: periods; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.periods (
+    id bigint NOT NULL,
+    end_time time without time zone NOT NULL,
+    name character varying(35) NOT NULL,
+    start_time time without time zone NOT NULL
+);
+
+
+--
+-- Name: periods_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.periods_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: periods_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.periods_id_seq OWNED BY public.periods.id;
+
+
+--
+-- Name: room_types; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.room_types (
+    id bigint NOT NULL,
+    description character varying(40) NOT NULL
+);
+
+
+--
+-- Name: room_types_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.room_types_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: room_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.room_types_id_seq OWNED BY public.room_types.id;
+
+
+--
+-- Name: rooms; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rooms (
+    id bigint NOT NULL,
+    disable boolean DEFAULT false,
+    name character varying(35) NOT NULL,
+    room_type_id bigint,
+    sort_order integer
+);
+
+
+--
+-- Name: rooms_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.rooms_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: rooms_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.rooms_id_seq OWNED BY public.rooms.id;
+
+
+--
+-- Name: schedules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.schedules (
+    id bigint NOT NULL,
+    day_of_week character varying(35) NOT NULL,
+    evenodd character varying(255) NOT NULL,
+    lesson_id bigint NOT NULL,
+    period_id bigint NOT NULL,
+    room_id bigint NOT NULL
+);
+
+
+--
+-- Name: schedules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.schedules_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: schedules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.schedules_id_seq OWNED BY public.schedules.id;
+
+
+--
+-- Name: semester_day; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.semester_day (
+    semester_id bigint NOT NULL,
+    day character varying(255)
+);
+
+
+--
+-- Name: semester_group; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.semester_group (
+    semester_id bigint NOT NULL,
+    group_id bigint NOT NULL
+);
+
+
+--
+-- Name: semester_period; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.semester_period (
+    semester_id bigint NOT NULL,
+    period_id bigint NOT NULL
+);
+
+
+--
+-- Name: semesters; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.semesters (
+    id bigint NOT NULL,
+    current_semester boolean DEFAULT false,
+    description character varying(255),
+    disable boolean DEFAULT false,
+    end_day date NOT NULL,
+    start_day date NOT NULL,
+    year integer NOT NULL,
+    default_semester boolean DEFAULT false,
+    CONSTRAINT semesters_year_check CHECK ((year >= 1999))
+);
+
+
+--
+-- Name: semesters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.semesters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: semesters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.semesters_id_seq OWNED BY public.semesters.id;
+
+
+--
+-- Name: students; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.students (
+    id bigint NOT NULL,
+    name character varying(35) NOT NULL,
+    patronymic character varying(35) NOT NULL,
+    surname character varying(35) NOT NULL,
+    group_id bigint NOT NULL,
+    user_id bigint
+);
+
+
+--
+-- Name: students_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.students_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: students_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.students_id_seq OWNED BY public.students.id;
+
+
+--
+-- Name: subjects; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.subjects (
+    id bigint NOT NULL,
+    disable boolean DEFAULT false,
+    name character varying(80) NOT NULL
+);
+
+
+--
+-- Name: subjects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.subjects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: subjects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.subjects_id_seq OWNED BY public.subjects.id;
+
+
+--
+-- Name: teachers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.teachers (
+    id bigint NOT NULL,
+    disable boolean DEFAULT false,
+    name character varying(35) NOT NULL,
+    patronymic character varying(35) NOT NULL,
+    "position" character varying(35) NOT NULL,
+    surname character varying(35) NOT NULL,
+    user_id bigint,
+    department_id bigint
+);
+
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.teachers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.teachers_id_seq OWNED BY public.teachers.id;
+
+
+--
+-- Name: temporary_schedule; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.temporary_schedule (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    grouped boolean DEFAULT false,
+    lessontype character varying(255),
+    subject_for_site character varying(255),
+    vacation boolean DEFAULT false,
+    group_id bigint,
+    period_id bigint,
+    room_id bigint,
+    semester_id bigint,
+    subject_id bigint,
+    teacher_id bigint,
+    notification boolean DEFAULT false,
+    schedule_id bigint,
+    link_to_meeting character varying(255)
+);
+
+
+--
+-- Name: temporary_schedule_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.temporary_schedule_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: temporary_schedule_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.temporary_schedule_id_seq OWNED BY public.temporary_schedule.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id bigint NOT NULL,
+    email character varying(40) NOT NULL,
+    password character varying(255) NOT NULL,
+    role character varying(32) DEFAULT 'ROLE_USER'::character varying,
+    token character varying(255)
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
+-- Name: department id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.department ALTER COLUMN id SET DEFAULT nextval('public.department_id_seq'::regclass);
+
+
+--
+-- Name: groups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.groups ALTER COLUMN id SET DEFAULT nextval('public.groups_id_seq'::regclass);
+
+
+--
+-- Name: lessons id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons ALTER COLUMN id SET DEFAULT nextval('public.lessons_id_seq'::regclass);
+
+
+--
+-- Name: periods id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.periods ALTER COLUMN id SET DEFAULT nextval('public.periods_id_seq'::regclass);
+
+
+--
+-- Name: room_types id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_types ALTER COLUMN id SET DEFAULT nextval('public.room_types_id_seq'::regclass);
+
+
+--
+-- Name: rooms id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rooms ALTER COLUMN id SET DEFAULT nextval('public.rooms_id_seq'::regclass);
+
+
+--
+-- Name: schedules id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedules ALTER COLUMN id SET DEFAULT nextval('public.schedules_id_seq'::regclass);
+
+
+--
+-- Name: semesters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semesters ALTER COLUMN id SET DEFAULT nextval('public.semesters_id_seq'::regclass);
+
+
+--
+-- Name: students id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.students ALTER COLUMN id SET DEFAULT nextval('public.students_id_seq'::regclass);
+
+
+--
+-- Name: subjects id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subjects ALTER COLUMN id SET DEFAULT nextval('public.subjects_id_seq'::regclass);
+
+
+--
+-- Name: teachers id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.teachers ALTER COLUMN id SET DEFAULT nextval('public.teachers_id_seq'::regclass);
+
+
+--
+-- Name: temporary_schedule id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.temporary_schedule ALTER COLUMN id SET DEFAULT nextval('public.temporary_schedule_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Data for Name: databasechangelog; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.databasechangelog (id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, description, comments, tag, liquibase, contexts, labels, deployment_id) FROM stdin;
+1642775490693-1	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.308637	1	EXECUTED	8:aa5f97d9722ad33a04b1b2604046bdbf	createSequence sequenceName=department_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-2	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.316322	2	MARK_RAN	8:4896ada120320a0099ac0a904738457a	createTable tableName=department		\N	4.6.2	\N	\N	3304852089
+1642775490693-3	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.323814	3	EXECUTED	8:8ed2ff06276e50ed7df1252d5e964474	createSequence sequenceName=groups_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-4	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.327729	4	MARK_RAN	8:0a68a94209f06f338b787eee9b8c57c8	createTable tableName=groups		\N	4.6.2	\N	\N	3304852089
+1642775490693-5	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.334689	5	EXECUTED	8:a1bd6eab09d5f33081a2b68a290c47ce	createSequence sequenceName=lessons_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-6	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.341283	6	EXECUTED	8:6b79bf22a12c0dfdc6223d215fee1fe4	createSequence sequenceName=lessons_group_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-7	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.348928	7	EXECUTED	8:223d25bd1534e0266e2f3826eb2aa3ec	createSequence sequenceName=lessons_subject_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-8	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.356245	8	EXECUTED	8:6748c77819ff10f3adfef668487463c4	createSequence sequenceName=lessons_teacher_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-9	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.362916	9	EXECUTED	8:9e0b93e60a718df788ea9ee88f76c4ac	createSequence sequenceName=lessons_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-10	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.367251	10	MARK_RAN	8:e66111b48e5cae5e152ae2a669db4804	createTable tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-11	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.374242	11	EXECUTED	8:29e36d7770f7324389a1e645d2aa0c64	createSequence sequenceName=periods_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-12	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.377939	12	MARK_RAN	8:3017bf41941925296ba9ea4268c326a4	createTable tableName=periods		\N	4.6.2	\N	\N	3304852089
+1642775490693-13	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.384531	13	EXECUTED	8:83d7f1ccac23afb00541a32bb8789f89	createSequence sequenceName=room_types_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-14	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.388246	14	MARK_RAN	8:2d9b1495eb58ec31cf1257b63c5ca093	createTable tableName=room_types		\N	4.6.2	\N	\N	3304852089
+1642775490693-15	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.39597	15	EXECUTED	8:9216eda2c38e21fed8e1b4f7e0de15b7	createSequence sequenceName=rooms_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-16	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.404173	16	EXECUTED	8:9dce0005a32a5cb4d6c021be7db05afa	createSequence sequenceName=rooms_room_type_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-17	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.40865	17	MARK_RAN	8:42355d333e41bbf56e72d723d7618738	createTable tableName=rooms		\N	4.6.2	\N	\N	3304852089
+1642775490693-18	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.420351	18	EXECUTED	8:5ed500717ecbce8f13a26fe2d3049fcf	createSequence sequenceName=schedules_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-19	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.427197	19	EXECUTED	8:9be95727039ac12224e43765fa41ee62	createSequence sequenceName=schedules_lesson_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-20	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.434088	20	EXECUTED	8:0b055e793e9c3f6d4c48d6821a59bd0d	createSequence sequenceName=schedules_period_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-21	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.440305	21	EXECUTED	8:7a63c25c4030c4cb70ec39a9a69dacaf	createSequence sequenceName=schedules_room_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-22	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.443774	22	MARK_RAN	8:89146ae8ad9af9e430a8dab09338c2a9	createTable tableName=schedules		\N	4.6.2	\N	\N	3304852089
+1642775490693-23	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.45109	23	EXECUTED	8:6a63364cd9b7187764be3877dec94e6a	createSequence sequenceName=semester_day_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-24	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.455344	24	MARK_RAN	8:4dafb3ef4261b4006d46bf3bc7c36369	createTable tableName=semester_day		\N	4.6.2	\N	\N	3304852089
+1642775490693-25	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.461523	25	EXECUTED	8:4f9d33e17a227c2e8c9f2aa48a61d890	createSequence sequenceName=semester_period_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-26	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.467802	26	EXECUTED	8:b8e3e4811e1ec5e2163038d6fa3ad970	createSequence sequenceName=semester_period_period_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-27	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.471526	27	MARK_RAN	8:5ff42a04568a8902488b504a06a2c7e0	createTable tableName=semester_period		\N	4.6.2	\N	\N	3304852089
+1642775490693-28	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.477843	28	EXECUTED	8:6862c6f3a7ca7d1e8a47b2c256cc1d60	createSequence sequenceName=semesters_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-29	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.481582	29	MARK_RAN	8:f8b0d745274e244a11e71a8249c68258	createTable tableName=semesters		\N	4.6.2	\N	\N	3304852089
+1642775490693-30	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.488154	30	EXECUTED	8:41f4a310e93e676e815571ae83e33766	createSequence sequenceName=students_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-31	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.49185	31	MARK_RAN	8:aeadb27a46fb0269adac892f5d30b2ff	createTable tableName=students		\N	4.6.2	\N	\N	3304852089
+1642775490693-32	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.498534	32	EXECUTED	8:84690b8ed6999897da78d6cd7c1d3e91	createSequence sequenceName=subjects_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-33	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.502073	33	MARK_RAN	8:b19c14bdfa1f1e670d7a5026ec99b9c9	createTable tableName=subjects		\N	4.6.2	\N	\N	3304852089
+1642775490693-34	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.508496	34	EXECUTED	8:aec286ed2878ffe6b71cd3427104460a	createSequence sequenceName=teachers_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-35	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.512331	35	MARK_RAN	8:86995232d247ea06c1a839ceef591dfc	createTable tableName=teachers		\N	4.6.2	\N	\N	3304852089
+1642775490693-36	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.519105	36	EXECUTED	8:f0cdf595819a9dfc9c422e2fa261ec19	createSequence sequenceName=temporary_schedule_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-37	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.525355	37	EXECUTED	8:7508d26727002cf9c1b534bb1561aa39	createSequence sequenceName=temporary_schedule_group_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-38	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.531591	38	EXECUTED	8:240a5f936579d49f730c1328fb667ddf	createSequence sequenceName=temporary_schedule_period_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-39	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.543346	39	EXECUTED	8:99732f27b396fde52313a6c0f7d9bb9f	createSequence sequenceName=temporary_schedule_room_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-40	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.549584	40	EXECUTED	8:911d56ba64649b525d2664a0e283b475	createSequence sequenceName=temporary_schedule_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-41	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.556039	41	EXECUTED	8:de2ec953bfe5ea6e8d40edbf9b353a00	createSequence sequenceName=temporary_schedule_subject_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-42	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.562319	42	EXECUTED	8:6a8e5302703d9359f375e32e3e2d95f2	createSequence sequenceName=temporary_schedule_teacher_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-43	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.565836	43	MARK_RAN	8:5a212ec5297598066d10ce281ee18408	createTable tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-44	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.572214	44	EXECUTED	8:1fc72d3f0ba1f7821fa95765a828d81f	createSequence sequenceName=users_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-45	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.576242	45	MARK_RAN	8:4f383803e2e73d127b6a0624e22ceca4	createTable tableName=users		\N	4.6.2	\N	\N	3304852089
+1642775490693-46	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.579985	46	MARK_RAN	8:4232f84c6bcd4e03074b154e7dc19177	createTable tableName=semester_group		\N	4.6.2	\N	\N	3304852089
+1642775490693-47	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.585323	47	MARK_RAN	8:b0bf6d019ccdd5b69d56fd21104e4c23	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-48	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.59005	48	MARK_RAN	8:e1cc48a2fc60ea73e1ca3dafdc77e6f7	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-49	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.595098	49	MARK_RAN	8:dd670767f3e7f98351a8a4a5f739fac7	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-50	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.600745	50	MARK_RAN	8:616dfae1e362f59afa65af500632da1e	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-51	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.606187	51	MARK_RAN	8:d392f2e6fa728990e7dc6601cf1d87c1	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-52	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.610566	52	MARK_RAN	8:ba66cc1d4be5293a7000b68f4103b628	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-53	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.615874	53	MARK_RAN	8:f84c42c82b26547a41a134bd57b937f7	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-54	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.620632	54	MARK_RAN	8:19506382dc5b6c9f788fc9a655941a5b	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-55	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.625355	55	MARK_RAN	8:70d8fd0dcba2ce1a439c4c44c6ecc335	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-56	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.629606	56	MARK_RAN	8:2b312df599de7463eb572810947fd0a4	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-57	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.634411	57	MARK_RAN	8:45185e227ea186f350f9f496cebead43	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-58	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.639209	58	MARK_RAN	8:ca7d2a588be5114d6a638a42e8e072c8	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-59	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.644314	59	MARK_RAN	8:47c8f4b18daebb3908ce03f47288acf3	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-60	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.649008	60	MARK_RAN	8:118b1a15bcedff399acbadb2f6b92229	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-61	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.653982	61	MARK_RAN	8:c598d35e3a1a3727a4e2161cae12b59f	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-62	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.659492	62	MARK_RAN	8:2a6597848aa164d2db2ef51f0c0e4cee	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-63	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.664996	63	MARK_RAN	8:aa895b06f6db9b86f7222540496af958	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-64	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.67408	64	MARK_RAN	8:a46f19ef46e891039b9a4b6d428fbb42	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-65	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.67873	65	MARK_RAN	8:49b0ad140200aaf68d3335c3ef37af34	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-66	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.682953	66	MARK_RAN	8:e8b46acb519e8ea12df94c256d9ad22b	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-67	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.687505	67	MARK_RAN	8:da1610fa29dc67dabf249369c4c3325b	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-68	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.691772	68	MARK_RAN	8:f0d6852310ad0436794babb2a4ca6e5a	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-69	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.696197	69	MARK_RAN	8:bb13e4f59ba39e1fea31648fc9cee68a	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-70	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.701565	70	MARK_RAN	8:84ccaccf28493e7589cb7143fc7b249d	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-71	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.706943	71	MARK_RAN	8:86a0d37ed9d956c63ed58af883e87988	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-72	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.711532	72	MARK_RAN	8:faf66c2827cc5a196fd6b6facad399c5	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-73	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.716389	73	MARK_RAN	8:fe0f3c5c60ef1c63fb1a13068d42aff4	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-74	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.722126	74	MARK_RAN	8:692a67a26c178eb0710cd256a6f1c0d3	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-75	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.726881	75	MARK_RAN	8:ef04e306378056fe343e37afd3308eb8	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-76	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.734877	76	MARK_RAN	8:542fc5834480107a9a2019c53155c373	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-77	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.872516	77	MARK_RAN	8:d6605bd16f9fa778f4666b33e4c17592	addForeignKeyConstraint baseTableName=teachers, constraintName=fkl19hwymwn2ra2gwwty5trvyas, referencedTableName=department		\N	4.6.2	\N	\N	3304852089
+1642775490693-78	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:12.927049	78	MARK_RAN	8:92e410f164024b025b39f791c615ddcb	addUniqueConstraint constraintName=uk_biw7tevwc07g3iutlbmkes0cm, tableName=department		\N	4.6.2	\N	\N	3304852089
+1642775490693-79	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:13.181619	79	MARK_RAN	8:465c63a8d0aad41af7715824a6811e76	addForeignKeyConstraint baseTableName=temporary_schedule, constraintName=fka1bsm9fsuxn5t098i2cb7nncu, referencedTableName=groups		\N	4.6.2	\N	\N	3304852089
+1642775490693-80	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:13.288884	80	MARK_RAN	8:1f599d60e1a0ee82e55a2e8432a6583a	addForeignKeyConstraint baseTableName=students, constraintName=fkmsev1nou0j86spuk5jrv19mss, referencedTableName=groups		\N	4.6.2	\N	\N	3304852089
+1642775490693-81	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:13.404146	81	MARK_RAN	8:c2ce82437856bf0de8f73b1e21c68247	addForeignKeyConstraint baseTableName=semester_group, constraintName=fkpf19s66cmi8qpqc0iaeigbrhh, referencedTableName=groups		\N	4.6.2	\N	\N	3304852089
+1642775490693-82	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:13.56793	82	MARK_RAN	8:85c3d7011d3bc89475e66a218f6fe5ad	addForeignKeyConstraint baseTableName=lessons, constraintName=fktdolsaotaqlwxbxwaxt00kimk, referencedTableName=groups		\N	4.6.2	\N	\N	3304852089
+1642775490693-83	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:13.613132	83	MARK_RAN	8:1df26f8066f87c9cacf341066d12d61b	addUniqueConstraint constraintName=uk_ct3jhny5hfe6uj2osyn8a4p83, tableName=groups		\N	4.6.2	\N	\N	3304852089
+1642775490693-84	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:13.814556	84	MARK_RAN	8:1e1856a98e992362e9ab38f2848de099	addForeignKeyConstraint baseTableName=schedules, constraintName=fk7f954gltrwny6pe4see76kpw8, referencedTableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-85	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:13.96347	85	MARK_RAN	8:bc72e72b5b0365d6f49c067b3394f1ca	addForeignKeyConstraint baseTableName=lessons, constraintName=fkbr76cuebuufbbltujpfq04tto, referencedTableName=teachers		\N	4.6.2	\N	\N	3304852089
+1642775490693-86	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:14.114507	86	MARK_RAN	8:81e7637290fb17036b3661fecc1d789c	addForeignKeyConstraint baseTableName=lessons, constraintName=fke94a0k21xpi7glv89af90lwjv, referencedTableName=subjects		\N	4.6.2	\N	\N	3304852089
+1642775490693-87	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:14.279996	87	MARK_RAN	8:1bc0cf8f1426b6cd71582595f79e40d3	addForeignKeyConstraint baseTableName=lessons, constraintName=fkil1jt6gri8x6yfaa3ijf7d6d9, referencedTableName=semesters		\N	4.6.2	\N	\N	3304852089
+1642775490693-88	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:14.489622	88	MARK_RAN	8:80d91bbd4140a4695b1fcbbe2051ba30	addForeignKeyConstraint baseTableName=schedules, constraintName=fk4g2p59v3jm7hk6a9ufdufy8ie, referencedTableName=periods		\N	4.6.2	\N	\N	3304852089
+1642775490693-89	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:14.606179	89	MARK_RAN	8:2c350da08193fe556a01900172cf850a	addForeignKeyConstraint baseTableName=semester_period, constraintName=fkm237asf73ugk3vvw47aq266kl, referencedTableName=periods		\N	4.6.2	\N	\N	3304852089
+1642775490693-90	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:14.803291	90	MARK_RAN	8:ea07065afa17f3cc89e5e6e5d9e6e778	addForeignKeyConstraint baseTableName=temporary_schedule, constraintName=fkr76lbhlv0di8ix7iviixs0p4g, referencedTableName=periods		\N	4.6.2	\N	\N	3304852089
+1642775490693-91	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:14.836314	91	MARK_RAN	8:a4b42c93e1b2f18d49d612f5fb7cd3e4	addUniqueConstraint constraintName=uk_bgj9vbqf54b7iryxqu895bggh, tableName=periods		\N	4.6.2	\N	\N	3304852089
+1642775490693-92	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:14.9456	92	MARK_RAN	8:d76a837afcdadae3d25413843c321915	addForeignKeyConstraint baseTableName=rooms, constraintName=fkh9m2n1paq5hmd3u0klfl7wsfv, referencedTableName=room_types		\N	4.6.2	\N	\N	3304852089
+1642775490693-93	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:14.984319	93	MARK_RAN	8:bdaf4cec3aa0a4d5f53aa223a80ba939	addUniqueConstraint constraintName=uk_gunh6313ruq1dghti9p00529u, tableName=room_types		\N	4.6.2	\N	\N	3304852089
+1642775490693-94	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:15.189373	94	MARK_RAN	8:bfd6aacdf47b887c990faf116da73f82	addForeignKeyConstraint baseTableName=schedules, constraintName=fk34r5t4jexlcas19pleifb8ihv, referencedTableName=rooms		\N	4.6.2	\N	\N	3304852089
+1642775490693-95	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:15.37333	95	MARK_RAN	8:0f9fadd0354b14b3f54b846d04abcb72	addForeignKeyConstraint baseTableName=temporary_schedule, constraintName=fk3hid2313ah5gjqqye9d3eik2g, referencedTableName=rooms		\N	4.6.2	\N	\N	3304852089
+1642775490693-96	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:15.493153	96	MARK_RAN	8:495474e8b7a4d5af182d08b7373ed7a6	addForeignKeyConstraint baseTableName=semester_day, constraintName=fk36f17dewxqjhb23rhlmc7slk3, referencedTableName=semesters		\N	4.6.2	\N	\N	3304852089
+1642775490693-97	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:15.625168	97	MARK_RAN	8:53da83c0a726bb47762c3a651d742968	addForeignKeyConstraint baseTableName=semester_period, constraintName=fk94poii1rmjhoevjx7bsymtbtd, referencedTableName=semesters		\N	4.6.2	\N	\N	3304852089
+1642775490693-98	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:15.743076	98	MARK_RAN	8:4975056c1d0a39f3e6759a176c870661	addForeignKeyConstraint baseTableName=semester_group, constraintName=fk4j15tivie8ttfhl0s7x3o3syv, referencedTableName=semesters		\N	4.6.2	\N	\N	3304852089
+1642775490693-99	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:15.950036	99	MARK_RAN	8:af1fa9da5c42068c9da41f5aacbe0544	addForeignKeyConstraint baseTableName=temporary_schedule, constraintName=fkaqmj2bajc0ud8wproqn4843pk, referencedTableName=semesters		\N	4.6.2	\N	\N	3304852089
+1642775490693-100	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:16.012622	100	MARK_RAN	8:3334c996979993bafdab1fa3be1b3fd6	addUniqueConstraint constraintName=uk_e2rndfrsx22acpq2ty1caeuyw, tableName=students		\N	4.6.2	\N	\N	3304852089
+1642775490693-101	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:16.194456	101	MARK_RAN	8:bf49fb25ba5f2a530326d65285a2c469	addForeignKeyConstraint baseTableName=temporary_schedule, constraintName=fkqn6ufkok0nhqdkn46ctqckb76, referencedTableName=subjects		\N	4.6.2	\N	\N	3304852089
+1642775490693-102	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:16.22784	102	MARK_RAN	8:0d0dc8e776721f293d981e1bf40b480c	addUniqueConstraint constraintName=uk_aodt3utnw0lsov4k9ta88dbpr, tableName=subjects		\N	4.6.2	\N	\N	3304852089
+1642775490693-103	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:16.415814	103	MARK_RAN	8:b5f3e48312b92ce1c8d606087feea4c8	addForeignKeyConstraint baseTableName=temporary_schedule, constraintName=fko7tild8vhrqlodd3oaf8acvyw, referencedTableName=teachers		\N	4.6.2	\N	\N	3304852089
+1642775490693-104	SaneQQQQ	db/changelog/initial-schema.yaml	2023-01-10 00:54:16.453053	104	MARK_RAN	8:930ca191405d374f276f19715b20d1b7	addUniqueConstraint constraintName=uk_6dotkott2kjsp8vw4d0m25fb7, tableName=users		\N	4.6.2	\N	\N	3304852089
+1642775490693-105	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.457418	105	EXECUTED	8:10321f44b60d2c561d72a8c72b64a1d1	addColumn tableName=groups		\N	4.6.2	\N	\N	3304852089
+1642775490693-106	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.460705	106	EXECUTED	8:42d9501e3337b724e4462939571ee5f2	createSequence sequenceName=sorting_order_sequence		\N	4.6.2	\N	\N	3304852089
+1642775490693-107	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.468491	107	EXECUTED	8:f284a97909c948c5202647e82989d574	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-108	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.472719	108	EXECUTED	8:efd43fc6321ad8d944d03972d1e94a57	addColumn tableName=rooms		\N	4.6.2	\N	\N	3304852089
+1642775490693-109	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.476471	109	EXECUTED	8:7825fbb05324f80b3b1152538de9cc02	createSequence sequenceName=sort_order_sequence		\N	4.6.2	\N	\N	3304852089
+1642775490693-110	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.479951	110	EXECUTED	8:bc0f2b8b4e0cc5a70f678ecdbd231467	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-111	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.482895	111	EXECUTED	8:0ba76dec1bc756a0fb890c9bbefc8336	createSequence sequenceName=semester_group_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-112	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.487291	112	EXECUTED	8:6aefa45b11ebb5dcdbdb01e1c106446b	addDefaultValue columnName=semester_id, tableName=semester_group		\N	4.6.2	\N	\N	3304852089
+1642775490693-113	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.490724	113	EXECUTED	8:d6f83e9cabb791f2096ab63dd2373439	createSequence sequenceName=semester_group_group_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-114	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.494346	114	EXECUTED	8:a2a0ab383b40b69cb57f64f8780c5cff	addDefaultValue columnName=group_id, tableName=semester_group		\N	4.6.2	\N	\N	3304852089
+1642775490693-115	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.497605	115	EXECUTED	8:87ced3bd1c87b927544343e97ae954d2	addColumn tableName=students		\N	4.6.2	\N	\N	3304852089
+1642775490693-116	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.506919	116	EXECUTED	8:efff72f0775752b90765801a6893c763	addForeignKeyConstraint baseTableName=students, constraintName=user_id_fk, referencedTableName=users		\N	4.6.2	\N	\N	3304852089
+1642775490693-117	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.510443	117	EXECUTED	8:25e7d0e93b9bf75318818823125240ef	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-118	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.515376	118	EXECUTED	8:f37777b07c0fbd5686349263bfb84b59	dropColumn columnName=email, tableName=students		\N	4.6.2	\N	\N	3304852089
+1642775490693-119	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.521075	119	EXECUTED	8:a928ea0676d296c8daf28606a41843ef	modifyDataType columnName=user_id, tableName=teachers		\N	4.6.2	\N	\N	3304852089
+1642775490693-120	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.523943	120	EXECUTED	8:f77ada9c5aa5aa6094a3048e16f422d4	dropColumn columnName=lesson_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-121	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.52673	121	EXECUTED	8:dae9fb6baa1f293aa01722044c4cea0c	dropColumn columnName=teacher_for_site, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-122	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.531072	122	EXECUTED	8:32c00fe103876b8e56d30b44444d77bd	dropSequence sequenceName=sort_order_sequence		\N	4.6.2	\N	\N	3304852089
+1642775490693-123	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.535163	123	EXECUTED	8:35099e4db18af2a4ca175ac95ea6b0cc	dropSequence sequenceName=sorting_order_sequence		\N	4.6.2	\N	\N	3304852089
+1642775490693-124	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.538669	124	EXECUTED	8:1008a89e30f6c17fba04f5b604d376af	dropNotNullConstraint columnName=group_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-125	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.541862	125	EXECUTED	8:34e6693a8cfdefed793334a24de26fca	dropNotNullConstraint columnName=period_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-126	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.545397	126	EXECUTED	8:cbd9f5a0788008a2a5a2fd2842afc30d	dropNotNullConstraint columnName=room_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-127	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.548857	127	EXECUTED	8:8535a69b9c33f3df8b17868eaa67e090	dropNotNullConstraint columnName=room_type_id, tableName=rooms		\N	4.6.2	\N	\N	3304852089
+1642775490693-128	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.552055	128	EXECUTED	8:dd8de81e18018b429783da039b3e97b2	dropNotNullConstraint columnName=semester_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-129	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.555007	129	EXECUTED	8:f989bc4abbb973dda43cfc5602994bc3	dropNotNullConstraint columnName=subject_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-130	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.557771	130	EXECUTED	8:df3a4ef19feb0c6923839274f00d55be	dropNotNullConstraint columnName=teacher_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-131	vchornyy12	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.560865	131	EXECUTED	8:d4d6d78dca0d8b2035c6471d6447b90c	delete tableName=students		\N	4.6.2	\N	\N	3304852089
+1642775490693-132	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.564529	132	EXECUTED	8:a18e1ac1ea080d5f9e012e62577c63e4	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-133	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.567848	133	EXECUTED	8:20eebf8805602fc09404e556e078ce86	sql		\N	4.6.2	\N	\N	3304852089
+1642775490693-134	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.570883	134	EXECUTED	8:c017b83ff51b6a70048be2a7dea5d31f	dropDefaultValue columnName=group_id, tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-135	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.585024	135	EXECUTED	8:b4f3146b8b2e18e233a1f95f1da4630d	modifyDataType columnName=group_id, tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-136	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.589989	136	EXECUTED	8:f22ebbe7a3903e2b9d7fc43ed839b94f	dropSequence sequenceName=lessons_group_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-137	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.593411	137	EXECUTED	8:51baf8e5166c0cc5859956630cb42318	dropDefaultValue columnName=semester_id, tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-138	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.604456	138	EXECUTED	8:581300a10d3b525692bef085daf3c201	modifyDataType columnName=semester_id, tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-139	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.60757	139	EXECUTED	8:731785025bd4392fef9945a985776f22	dropSequence sequenceName=lessons_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-140	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.610475	140	EXECUTED	8:672a62effd789acb76132b9ed3b3af11	dropDefaultValue columnName=subject_id, tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-141	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.622277	141	EXECUTED	8:f0e8b4d913b62b92f28952fd91e441c3	modifyDataType columnName=subject_id, tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-142	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.625414	142	EXECUTED	8:feffd59078b8ac1cbfbc257fa5d48ae6	dropSequence sequenceName=lessons_subject_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-143	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.6283	143	EXECUTED	8:67b6f9273e4622976c45ab7c576dde8e	dropDefaultValue columnName=teacher_id, tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-144	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.641862	144	EXECUTED	8:26169cb4f37e64e583acf9f891b97d8f	modifyDataType columnName=teacher_id, tableName=lessons		\N	4.6.2	\N	\N	3304852089
+1642775490693-145	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.644986	145	EXECUTED	8:d2e2ad799accd360ef53ab006c7ea21f	dropSequence sequenceName=lessons_teacher_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-146	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.648026	146	EXECUTED	8:49adfdce8b9cc6b4d5efeebd4acd1f46	dropDefaultValue columnName=room_type_id, tableName=rooms		\N	4.6.2	\N	\N	3304852089
+1642775490693-147	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.653948	147	EXECUTED	8:c37cfe648bf725745088d4042b3f79e8	modifyDataType columnName=room_type_id, tableName=rooms		\N	4.6.2	\N	\N	3304852089
+1642775490693-148	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.65744	148	EXECUTED	8:449729f3816c5c7cfe947a5d42c70dcb	dropSequence sequenceName=rooms_room_type_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-149	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.66043	149	EXECUTED	8:87283be462c2c7ac0e57ee3bd0325290	dropDefaultValue columnName=lesson_id, tableName=schedules		\N	4.6.2	\N	\N	3304852089
+1642775490693-150	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.672177	150	EXECUTED	8:d6633ae95b80efc0bec4ee1b2c4fc45c	modifyDataType columnName=lesson_id, tableName=schedules		\N	4.6.2	\N	\N	3304852089
+1642775490693-151	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.675564	151	EXECUTED	8:c668f41841404c56f0fbe9d222bae8bd	dropSequence sequenceName=schedules_lesson_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-152	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.678642	152	EXECUTED	8:d4b76f0f28b7aa9a47e15f6e20c57d25	dropDefaultValue columnName=period_id, tableName=schedules		\N	4.6.2	\N	\N	3304852089
+1642775490693-153	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.692323	153	EXECUTED	8:694545abc17ac55cd47b4c8bc8d656fc	modifyDataType columnName=period_id, tableName=schedules		\N	4.6.2	\N	\N	3304852089
+1642775490693-154	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.696234	154	EXECUTED	8:8a955e2590a32d688ab42b9c1190edb0	dropSequence sequenceName=schedules_period_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-155	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.699492	155	EXECUTED	8:b7f3f05cb8fbcdcdba1068301595aefe	dropDefaultValue columnName=room_id, tableName=schedules		\N	4.6.2	\N	\N	3304852089
+1642775490693-156	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.7171	156	EXECUTED	8:22d7f4d81555776ddd049dc149f10bca	modifyDataType columnName=room_id, tableName=schedules		\N	4.6.2	\N	\N	3304852089
+1642775490693-157	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.720834	157	EXECUTED	8:5acc3c57bcd26c536ac2a59eac96bf80	dropSequence sequenceName=schedules_room_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-158	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.724436	158	EXECUTED	8:32129a6b3d276ea56ded71c807abc6a6	dropDefaultValue columnName=semester_id, tableName=semester_day		\N	4.6.2	\N	\N	3304852089
+1642775490693-159	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.729256	159	EXECUTED	8:1d6c875b213cb928798311040c8c362b	modifyDataType columnName=semester_id, tableName=semester_day		\N	4.6.2	\N	\N	3304852089
+1642775490693-160	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.732292	160	EXECUTED	8:bacff4b797297a1f903c4923a4115182	dropSequence sequenceName=semester_day_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-161	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.735005	161	EXECUTED	8:c148c9109ecbe4193f29782be66e9e7d	dropDefaultValue columnName=group_id, tableName=semester_group		\N	4.6.2	\N	\N	3304852089
+1642775490693-162	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.741019	162	EXECUTED	8:5791479959cd9c1290e0f94b8f271671	modifyDataType columnName=group_id, tableName=semester_group		\N	4.6.2	\N	\N	3304852089
+1642775490693-163	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.744323	163	EXECUTED	8:fce54fe695b703f28132b28bba37bf00	dropSequence sequenceName=semester_group_group_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-164	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.747524	164	EXECUTED	8:86a24f64e9e372564c94e38fff246288	dropDefaultValue columnName=semester_id, tableName=semester_group		\N	4.6.2	\N	\N	3304852089
+1642775490693-165	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.753977	165	EXECUTED	8:a5592c1017d9ee2b45b261d5283649bd	modifyDataType columnName=semester_id, tableName=semester_group		\N	4.6.2	\N	\N	3304852089
+1642775490693-166	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.757485	166	EXECUTED	8:7e58b91e4ef8a8da617a59dcc3bed5eb	dropSequence sequenceName=semester_group_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-167	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.760449	167	EXECUTED	8:a842b484eaaebf20934b76087393b28a	dropDefaultValue columnName=period_id, tableName=semester_period		\N	4.6.2	\N	\N	3304852089
+1642775490693-168	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.766226	168	EXECUTED	8:0990d1a552dc6674c0d8cdf966f2e110	modifyDataType columnName=period_id, tableName=semester_period		\N	4.6.2	\N	\N	3304852089
+1642775490693-169	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.769408	169	EXECUTED	8:208e59596226fad60e997ed06a251d79	dropSequence sequenceName=semester_period_period_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-170	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.772228	170	EXECUTED	8:d40183e646e8acbd3432b2f7f1386327	dropDefaultValue columnName=semester_id, tableName=semester_period		\N	4.6.2	\N	\N	3304852089
+1642775490693-171	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.777669	171	EXECUTED	8:aa4e7d10441bab87a29bf3955f01e67e	modifyDataType columnName=semester_id, tableName=semester_period		\N	4.6.2	\N	\N	3304852089
+1642775490693-172	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.780689	172	EXECUTED	8:c069e1e09acaa7aaf8a6de4f66195763	dropSequence sequenceName=semester_period_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-173	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.783799	173	EXECUTED	8:ff592de6322cb52f0dc14ba4c03dd689	dropDefaultValue columnName=group_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-174	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.790758	174	EXECUTED	8:549c16aa402e0a27029d044a73e6c331	modifyDataType columnName=group_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-175	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.793779	175	EXECUTED	8:a50734a8f82c1b02d150a3d5da89e55c	dropSequence sequenceName=temporary_schedule_group_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-176	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.796815	176	EXECUTED	8:bd503d8314dcaf7a5af4e52250b4fca5	dropDefaultValue columnName=period_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-177	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.804519	177	EXECUTED	8:5c8fd0f13dbf796b4c7230ba6a2bf6c8	modifyDataType columnName=period_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-178	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.80765	178	EXECUTED	8:ad5ce0416f6e31d999d1d7aee39d2ee2	dropSequence sequenceName=temporary_schedule_period_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-179	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.810567	179	EXECUTED	8:9d95d343e131eb7bcd5f25ba3b85cd12	dropDefaultValue columnName=room_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-180	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.816712	180	EXECUTED	8:a6905f0ddd94333a2674dbd746e044dc	modifyDataType columnName=room_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-181	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.819479	181	EXECUTED	8:9828723df3085b83283fb76bc43cbb4f	dropSequence sequenceName=temporary_schedule_room_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-182	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.822378	182	EXECUTED	8:079e403c2f1eb89222a40ccaeae67f09	dropDefaultValue columnName=semester_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-183	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.8298	183	EXECUTED	8:f5e2f0c4db249765d0d1b390b295a17f	modifyDataType columnName=semester_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-184	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.833154	184	EXECUTED	8:a47756409b37689995022aa750dfb92c	dropSequence sequenceName=temporary_schedule_semester_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-185	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.836084	185	EXECUTED	8:e1f5841ac4b048c06b6d37d09a6359cd	dropDefaultValue columnName=subject_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-186	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.842538	186	EXECUTED	8:d2b8a810281004ab1b0be2b240d2f8a3	modifyDataType columnName=subject_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-187	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.845745	187	EXECUTED	8:bf3c8abc9761f2b6e47cf50e5b0ede88	dropSequence sequenceName=temporary_schedule_subject_id_seq		\N	4.6.2	\N	\N	3304852089
+1642775490693-188	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.848717	188	EXECUTED	8:69095186b0bd9908df7f5141affcabda	dropDefaultValue columnName=teacher_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-189	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.855313	189	EXECUTED	8:4a8c0747ea06b4396b729e218cf99435	modifyDataType columnName=teacher_id, tableName=temporary_schedule		\N	4.6.2	\N	\N	3304852089
+1642775490693-190	SaneQQQQ	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.858331	190	EXECUTED	8:30027935fd55013a359f4dd372b92bcb	dropSequence sequenceName=temporary_schedule_teacher_id_seq		\N	4.6.2	\N	\N	3304852089
+1653908145376-191	RuslanSlobodian	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.86277	191	EXECUTED	8:9e4cd7cb34395a3b9e084191d1b091c3	modifyDataType columnName=sort_order, tableName=rooms		\N	4.6.2	\N	\N	3304852089
+1653908145376-192	petrokrechunyak	db/changelog/changeset/v1.0/db.changelog-v1.0.yaml	2023-01-10 00:54:16.866016	192	EXECUTED	8:b670fa15db3b634c34b8c00ac80bda7a	renameColumn newColumnName=sort_order, oldColumnName=sorting_order, tableName=groups		\N	4.6.2	\N	\N	3304852089
+\.
+
+
+--
+-- Data for Name: databasechangeloglock; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.databasechangeloglock (id, locked, lockgranted, lockedby) FROM stdin;
+1	f	\N	\N
+\.
+
+
+--
+-- Data for Name: department; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.department (id, disable, name) FROM stdin;
+1	f	Математичного моделювання
+3	f	Математичного аналізу
+4	f	Прикладної математики та інформаційних технологій
+5	f	Диференціальних рівнянь
+6	f	Алгебри та інформатики
+13	t	Алгебри 
+\.
+
+
+--
+-- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.groups (id, disable, title, sort_order) FROM stdin;
+30	f	101-А	6
+5	f	111-А	12
+85	f	111-Б	13
+84	f	211-А	28
+93	f	211-Б	29
+27	f	102-А	19
+26	f	102-Б	20
+31	f	106	24
+28	f	105	25
+51	f	201-А	26
+52	f	201-Б	27
+33	f	108	23
+86	f	107	14
+29	f	101-Б	8
+54	f	202-А	36
+87	f	202-Б	37
+53	f	207	31
+94	f	311-Б	49
+95	f	311-А	47
+55	f	208	41
+36	f	301-А	45
+37	f	301-Б	46
+57	f	205	43
+56	f	206	42
+63	t	601	124
+39	f	307	50
+65	t	607	126
+64	t	602	127
+66	t	605	128
+67	t	606	129
+106	t	608	130
+100	t	511ббб	131
+105	t	611ббб	132
+38	t	221ккк	133
+46	t	222ккк	134
+40	f	302	51
+90	t	test	169
+17	t	Ch-099.UI	168
+98	f	508	123
+58	f	501	110
+60	f	507	119
+59	f	502	120
+61	f	505	121
+104	f	411	102
+62	f	506	122
+71	f	405	109
+70	f	422	106
+72	f	408	107
+73	f	406	108
+49	f	421	103
+50	f	407	104
+68	f	402	105
+45	f	401	99
+42	f	308	96
+43	f	306	97
+44	f	305	98
+103	t	302-Б	57
+102	t	312-А	58
+41	f	312	52
+\.
+
+
+--
+-- Data for Name: lessons; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.lessons (id, hours, lessontype, subject_for_site, group_id, subject_id, teacher_id, grouped, semester_id, link_to_meeting) FROM stdin;
+6314	2	LECTURE	Алгебра і геометрія	30	14	43	t	57	\N
+6315	2	LECTURE	Алгебра і геометрія	29	14	43	t	57	\N
+6316	2	LECTURE	Алгебра і геометрія	5	14	43	t	57	\N
+6317	2	LECTURE	Алгебра і геометрія	85	14	43	t	57	\N
+6318	2	LECTURE	Алгебра і геометрія	86	14	43	t	57	\N
+6319	2	LECTURE	Алгебра і геометрія	27	14	43	t	57	\N
+6320	2	LECTURE	Алгебра і геометрія	26	14	43	t	57	\N
+6321	2	LECTURE	Алгебра і геометрія	33	14	43	t	57	\N
+6322	2	PRACTICAL	Алгебра і геометрія	30	14	50	f	57	\N
+6323	2	PRACTICAL	Алгебра і геометрія	29	14	50	f	57	\N
+6324	2	PRACTICAL	Алгебра і геометрія	5	14	50	f	57	\N
+6325	2	PRACTICAL	Алгебра і геометрія	85	14	50	f	57	\N
+6326	2	LECTURE	Архітектура обчислювальних систем	30	173	60	t	57	\N
+6327	2	LECTURE	Архітектура обчислювальних систем	29	173	60	t	57	\N
+6328	2	LECTURE	Архітектура обчислювальних систем	5	173	60	t	57	\N
+6329	2	LECTURE	Архітектура обчислювальних систем	85	173	60	t	57	\N
+6330	2	LECTURE	Архітектура обчислювальних систем	86	173	60	t	57	\N
+6331	2	LABORATORY	Архітектура обчислювальних систем	30	173	60	f	57	\N
+6332	2	LABORATORY	Архітектура обчислювальних систем	86	173	60	f	57	\N
+6345	3	PRACTICAL	Математичний аналіз	30	55	28	f	57	\N
+6346	3	PRACTICAL	Математичний аналіз	29	55	28	f	57	\N
+6347	3	PRACTICAL	Математичний аналіз	5	55	28	f	57	\N
+6348	3	PRACTICAL	Математичний аналіз	85	55	28	f	57	\N
+6349	2	PRACTICAL	Англійська мова	30	132	216	f	57	\N
+6350	2	LECTURE	Програмування	30	15	33	t	57	\N
+6351	2	LECTURE	Програмування	29	15	33	t	57	\N
+6352	2	LECTURE	Програмування	5	15	33	t	57	\N
+6353	2	LECTURE	Програмування	85	15	33	t	57	\N
+6354	2	LECTURE	Програмування	86	15	33	t	57	\N
+6355	2	PRACTICAL	Програмування	30	15	33	f	57	\N
+6356	2	PRACTICAL	Програмування	29	15	33	f	57	\N
+6357	2	PRACTICAL	Програмування	5	15	33	f	57	\N
+6358	2	PRACTICAL	Програмування	85	15	33	f	57	\N
+6359	2	LABORATORY	Програмування	30	15	33	f	57	\N
+6360	2	LABORATORY	Програмування	29	15	33	f	57	\N
+6361	1	LECTURE	Олімпіадні задачі з інформаційних технологій	30	175	33	t	57	\N
+6362	1	LECTURE	Олімпіадні задачі з інформаційних технологій	29	175	33	t	57	\N
+6363	1	LECTURE	Олімпіадні задачі з інформаційних технологій	5	175	33	t	57	\N
+6364	1	LECTURE	Олімпіадні задачі з інформаційних технологій	85	175	33	t	57	\N
+6365	1	LECTURE	Олімпіадні задачі з інформаційних технологій	86	175	33	t	57	\N
+6366	2	LABORATORY	Олімпіадні задачі з інформаційних технологій	30	175	33	f	57	\N
+6367	2	PRACTICAL	Фізичне виховання	30	13	97	t	57	\N
+6368	2	PRACTICAL	Фізичне виховання	29	13	97	t	57	\N
+6369	2	PRACTICAL	Фізичне виховання	5	13	97	t	57	\N
+6370	2	PRACTICAL	Фізичне виховання	85	13	97	t	57	\N
+6371	2	PRACTICAL	Фізичне виховання	86	13	97	t	57	\N
+6372	2	PRACTICAL	Фізичне виховання	27	13	97	t	57	\N
+6373	2	PRACTICAL	Фізичне виховання	26	13	97	t	57	\N
+6374	2	PRACTICAL	Фізичне виховання	33	13	97	t	57	\N
+6375	2	PRACTICAL	Фізичне виховання	31	13	97	t	57	\N
+6376	2	PRACTICAL	Фізичне виховання	28	13	97	t	57	\N
+6377	2	PRACTICAL	Фізичне виховання	56	13	97	t	57	\N
+6378	1	LECTURE	Пакети прикладних програм	30	174	63	t	57	\N
+6379	1	LECTURE	Пакети прикладних програм	29	174	63	t	57	\N
+6380	1	LECTURE	Пакети прикладних програм	5	174	63	t	57	\N
+6381	1	LECTURE	Пакети прикладних програм	85	174	63	t	57	\N
+6382	1	LECTURE	Пакети прикладних програм	86	174	63	t	57	\N
+6383	2	LABORATORY	Пакети прикладних програм	29	174	63	f	57	\N
+6387	2	LABORATORY	Архітектура обчислювальних систем	85	173	239	f	57	\N
+6388	2	LABORATORY	Архітектура обчислювальних систем	29	173	239	f	57	\N
+6389	2	LABORATORY	Архітектура обчислювальних систем	5	173	239	f	57	\N
+6390	2	PRACTICAL	Англійська мова	29	132	226	t	57	\N
+6391	2	PRACTICAL	Англійська мова	5	132	226	t	57	\N
+6392	2	LABORATORY	Олімпіадні задачі з інформаційних технологій	5	175	203	f	57	\N
+6393	2	LABORATORY	Олімпіадні задачі з інформаційних технологій	86	175	203	f	57	\N
+6394	2	LABORATORY	Програмування	5	15	185	f	57	\N
+6395	2	LABORATORY	Програмування	85	15	185	f	57	\N
+6396	2	PRACTICAL	Англійська мова	85	132	149	f	57	\N
+6397	2	LABORATORY	Пакети прикладних програм	85	174	31	f	57	\N
+6398	2	PRACTICAL	Алгебра і геометрія	86	14	204	t	57	\N
+6399	2	PRACTICAL	Алгебра і геометрія	33	14	204	t	57	\N
+6400	3	PRACTICAL	Математичний аналіз	86	55	105	f	57	\N
+6401	2	PRACTICAL	Англійська мова	86	132	226	f	57	\N
+6402	2	PRACTICAL	Програмування	86	15	70	f	57	\N
+6403	2	LABORATORY	Програмування	86	15	70	f	57	\N
+6404	2	PRACTICAL	Алгебра і геометрія	27	14	43	t	57	\N
+6405	2	PRACTICAL	Алгебра і геометрія	26	14	43	t	57	\N
+6406	2	PRACTICAL	Англійська мова	27	132	87	t	57	\N
+6407	2	PRACTICAL	Англійська мова	26	132	87	t	57	\N
+6408	2	LECTURE	Програмування	27	15	60	t	57	\N
+6409	2	LECTURE	Програмування	26	15	60	t	57	\N
+6410	2	PRACTICAL	Програмування	27	15	60	t	57	\N
+6411	2	PRACTICAL	Програмування	26	15	60	t	57	\N
+6412	2	LABORATORY	Програмування	27	15	199	f	57	\N
+6413	2	LABORATORY	Програмування	26	15	199	f	57	\N
+6414	2	LECTURE	Архітектура комп'ютерів	27	170	60	t	57	\N
+6415	2	LECTURE	Архітектура комп'ютерів	26	170	60	t	57	\N
+6416	2	LABORATORY	Архітектура комп'ютерів	27	170	60	f	57	\N
+6417	2	LABORATORY	Архітектура комп'ютерів	26	170	60	f	57	\N
+6420	3	PRACTICAL	Математичний аналіз	27	55	21	t	57	\N
+6421	3	PRACTICAL	Математичний аналіз	26	55	21	t	57	\N
+6422	2	LECTURE	Математична логіка та теорія алгоритмів	27	171	52	t	57	\N
+6423	2	LECTURE	Математична логіка та теорія алгоритмів	26	171	52	t	57	\N
+6424	2	PRACTICAL	Математична логіка та теорія алгоритмів	27	171	52	t	57	\N
+6425	2	PRACTICAL	Математична логіка та теорія алгоритмів	26	171	52	t	57	\N
+6426	2	PRACTICAL	Англійська мова	33	132	187	f	57	\N
+6427	2	PRACTICAL	Українська  мова (за професійним спрямуванням)	33	169	111	f	57	\N
+6428	2	LECTURE	Програмування	33	15	32	t	57	\N
+6429	2	LECTURE	Програмування	31	15	32	t	57	\N
+6430	2	LECTURE	Програмування	28	15	32	t	57	\N
+6431	1	PRACTICAL	Програмування	33	15	32	f	57	\N
+6432	2	LABORATORY	Програмування	33	15	32	f	57	\N
+6433	2	LECTURE	Архітектура комп'ютерів	33	170	60	f	57	\N
+6434	1	LABORATORY	Архітектура комп'ютерів	33	170	239	f	57	\N
+6435	3	PRACTICAL	Математичний аналіз	33	55	105	f	57	\N
+6436	1	LECTURE	3D графіка та моделювання	33	293	194	t	57	\N
+6437	1	LECTURE	3D графіка та моделювання	55	293	194	t	57	\N
+6438	2	LABORATORY	3D графіка та моделювання	33	293	194	f	57	\N
+6439	2	PRACTICAL	Англійська мова	31	132	236	t	57	\N
+6440	2	PRACTICAL	Англійська мова	28	132	236	t	57	\N
+6441	2	PRACTICAL	Українська  мова (за професійним спрямуванням)	31	169	241	t	57	\N
+6442	2	PRACTICAL	Українська  мова (за професійним спрямуванням)	28	169	241	t	57	\N
+6443	2	LECTURE	Аналітична геометрія	31	24	44	t	57	\N
+6444	2	LECTURE	Аналітична геометрія	28	24	44	t	57	\N
+6445	2	PRACTICAL	Аналітична геометрія	31	24	44	t	57	\N
+6446	2	PRACTICAL	Аналітична геометрія	28	24	44	t	57	\N
+6447	2	LECTURE	Лінійна алгебра	31	22	46	t	57	\N
+6448	2	LECTURE	Лінійна алгебра	28	22	46	t	57	\N
+6449	3	PRACTICAL	Лінійна алгебра	31	22	47	t	57	\N
+6450	3	PRACTICAL	Лінійна алгебра	28	22	47	t	57	\N
+6451	1	PRACTICAL	Програмування	31	15	203	f	57	\N
+6452	2	LABORATORY	Програмування	31	15	203	f	57	\N
+6455	3	PRACTICAL	Математичний аналіз1	31	16	28	t	57	\N
+6456	3	PRACTICAL	Математичний аналіз1	28	16	28	t	57	\N
+6457	2	LECTURE	Архітектура ПК	31	291	60	f	57	\N
+6458	1	LABORATORY	Архітектура ПК	31	291	239	f	57	\N
+6459	2	PRACTICAL	Професійно зорієнтована практика	31	297	45	f	57	\N
+6460	1	PRACTICAL	Програмування	28	15	64	f	57	\N
+6461	2	LABORATORY	Програмування	28	15	64	f	57	\N
+6462	2	LECTURE	Математичний аналіз	86	55	21	t	57	\N
+6463	2	LECTURE	Математичний аналіз	27	55	21	t	57	\N
+6464	2	LECTURE	Математичний аналіз	26	55	21	t	57	\N
+6470	2	LABORATORY	Бази даних та інформаційні системи	51	326	34	f	57	\N
+6471	2	LABORATORY	Бази даних та інформаційні системи	84	326	34	f	57	\N
+6472	2	LABORATORY	Бази даних та інформаційні системи	93	326	34	f	57	\N
+6473	1	PRACTICAL	Бази даних та інформаційні системи	51	326	34	f	57	\N
+6474	1	PRACTICAL	Бази даних та інформаційні системи	84	326	34	f	57	\N
+6475	1	PRACTICAL	Бази даних та інформаційні системи	93	326	34	f	57	\N
+6476	1	PRACTICAL	Бази даних та інформаційні системи	52	326	34	f	57	\N
+6477	2	LECTURE	Обчислювальна геометрія та комп'ютерна графіка	51	176	81	t	57	\N
+6478	2	LECTURE	Обчислювальна геометрія та комп'ютерна графіка	84	176	81	t	57	\N
+6479	2	LECTURE	Обчислювальна геометрія та комп'ютерна графіка	93	176	81	t	57	\N
+6480	2	LECTURE	Обчислювальна геометрія та комп'ютерна графіка	52	176	81	t	57	\N
+6481	2	LECTURE	Обчислювальна геометрія та комп'ютерна графіка	53	176	81	t	57	\N
+6482	2	LECTURE	Обчислювальна геометрія та комп'ютерна графіка	54	176	81	t	57	\N
+6483	2	LECTURE	Обчислювальна геометрія та комп'ютерна графіка	87	176	81	t	57	\N
+6484	2	LABORATORY	Обчислювальна геометрія та комп'ютерна графіка	51	176	81	f	57	\N
+6485	2	LABORATORY	Обчислювальна геометрія та комп'ютерна графіка	53	176	81	f	57	\N
+6486	2	LABORATORY	Обчислювальна геометрія та комп'ютерна графіка	52	176	81	f	57	\N
+6487	2	LECTURE	Обчислювальні методи	51	178	65	t	57	\N
+6488	2	LECTURE	Обчислювальні методи	53	178	65	t	57	\N
+6489	2	LECTURE	Обчислювальні методи	52	178	65	t	57	\N
+6490	2	LECTURE	Обчислювальні методи	84	178	65	t	57	\N
+6491	2	LECTURE	Обчислювальні методи	93	178	65	t	57	\N
+6492	2	LABORATORY	Обчислювальні методи	51	178	65	f	57	\N
+6500	1	PRACTICAL	Філософія	51	179	106	f	57	\N
+6501	1	PRACTICAL	Філософія	52	179	106	f	57	\N
+6502	1	PRACTICAL	Філософія	84	179	106	f	57	\N
+6503	1	PRACTICAL	Філософія	93	179	106	f	57	\N
+6504	1	PRACTICAL	Філософія	53	179	106	f	57	\N
+6505	1	PRACTICAL	Філософія	54	179	106	f	57	\N
+6506	1	PRACTICAL	Філософія	87	179	106	f	57	\N
+6507	1	PRACTICAL	Філософія	55	179	106	f	57	\N
+6508	1	PRACTICAL	Філософія	56	179	106	f	57	\N
+6509	1	PRACTICAL	Філософія	57	179	106	f	57	\N
+6510	2	PRACTICAL	Професійна іноземна мова	51	28	216	f	57	\N
+6511	2	LECTURE	Бібліотеки мови Python	51	183	36	t	57	\N
+6512	2	LECTURE	Бібліотеки мови Python	52	183	36	t	57	\N
+6513	2	LECTURE	Бібліотеки мови Python	84	183	36	t	57	\N
+6514	2	LECTURE	Бібліотеки мови Python	93	183	36	t	57	\N
+6515	2	LECTURE	Бібліотеки мови Python	53	183	36	t	57	\N
+6517	2	LABORATORY	Бібліотеки мови Python	51	183	36	t	57	\N
+6518	2	LABORATORY	Бібліотеки мови Python	52	183	36	t	57	\N
+6519	1	LECTURE	Обробка зображень та мультимедія	51	194	63	t	57	\N
+6520	1	LECTURE	Обробка зображень та мультимедія	52	194	63	t	57	\N
+6521	1	LECTURE	Обробка зображень та мультимедія	84	194	63	t	57	\N
+6522	1	LECTURE	Обробка зображень та мультимедія	93	194	63	t	57	\N
+6523	1	LECTURE	Обробка зображень та мультимедія	53	194	63	t	57	\N
+6524	1	LECTURE	Обробка зображень та мультимедія	55	194	63	t	57	\N
+6525	1	LECTURE	Обробка зображень та мультимедія	42	194	63	t	57	\N
+6526	2	LABORATORY	Обробка зображень та мультимедія	51	194	63	f	57	\N
+6527	2	LABORATORY	Обробка зображень та мультимедія	84	194	63	f	57	\N
+6528	2	LABORATORY	Обробка зображень та мультимедія	93	194	63	f	57	\N
+6529	2	LABORATORY	Обробка зображень та мультимедія	53	194	63	f	57	\N
+6530	2	LABORATORY	Обробка зображень та мультимедія	55	194	63	f	57	\N
+6541	2	LECTURE	Web-технології та web-програмування	51	361	73	t	57	\N
+6542	2	LECTURE	Web-технології та web-програмування	84	361	73	t	57	\N
+6543	2	LECTURE	Web-технології та web-програмування	93	361	73	t	57	\N
+6544	2	LECTURE	Web-технології та web-програмування	53	361	73	t	57	\N
+6545	2	LECTURE	Web-технології та web-програмування	52	361	73	t	57	\N
+6546	2	LECTURE	Web-технології та web-програмування	57	361	73	t	57	\N
+6547	2	LABORATORY	Web-технології та web-програмування	51	361	73	f	57	\N
+6548	2	LABORATORY	Web-технології та web-програмування	53	361	73	f	57	\N
+6549	2	LABORATORY	Web-технології та web-програмування	57	361	73	f	57	\N
+6550	2	LECTURE	Python для Data Science	51	323	26	t	57	\N
+6551	2	LECTURE	Python для Data Science	52	323	26	t	57	\N
+6552	2	LECTURE	Python для Data Science	84	323	26	t	57	\N
+6553	2	LECTURE	Python для Data Science	93	323	26	t	57	\N
+6554	1	LABORATORY	Python для Data Science	51	323	26	t	57	\N
+6555	1	LABORATORY	Python для Data Science	52	323	26	t	57	\N
+6556	1	LABORATORY	Python для Data Science	84	323	26	t	57	\N
+6557	1	LABORATORY	Python для Data Science	93	323	26	t	57	\N
+6558	2	LABORATORY	Web-технології та web-програмування	52	361	189	f	57	\N
+6559	2	LABORATORY	Web-технології та web-програмування	84	361	189	f	57	\N
+6560	2	LABORATORY	Web-технології та web-програмування	93	361	189	f	57	\N
+6561	2	LABORATORY	Бази даних та інформаційні системи	52	326	63	f	57	\N
+6562	2	LABORATORY	Бази даних та інформаційні системи	53	326	63	f	57	\N
+6563	2	LABORATORY	Обробка зображень та мультимедія	52	194	31	f	57	\N
+6564	2	LABORATORY	Обробка зображень та мультимедія	42	194	31	f	57	\N
+6565	2	LABORATORY	Обчислювальні методи	52	178	199	f	57	\N
+6566	2	LABORATORY	Обчислювальні методи	84	178	199	f	57	\N
+6567	2	LABORATORY	Обчислювальні методи	93	178	199	f	57	\N
+6568	2	LABORATORY	Обчислювальні методи	53	178	199	f	57	\N
+6569	2	PRACTICAL	Професійна іноземна мова	52	28	87	t	57	\N
+6570	2	PRACTICAL	Професійна іноземна мова	84	28	87	t	57	\N
+6571	2	LABORATORY	Бібліотеки мови Python	84	183	185	f	57	\N
+6572	2	LABORATORY	Бібліотеки мови Python	93	183	185	f	57	\N
+6573	2	LABORATORY	Бібліотеки мови Python	53	183	185	f	57	\N
+6574	2	LABORATORY	Обчислювальна геометрія та комп'ютерна графіка	84	176	220	f	57	\N
+6575	2	LABORATORY	Обчислювальна геометрія та комп'ютерна графіка	93	176	220	f	57	\N
+6576	2	PRACTICAL	Професійна іноземна мова	93	28	187	f	57	\N
+6577	2	LECTURE	Диференціальні рівняння	53	45	230	t	57	\N
+6578	2	LECTURE	Диференціальні рівняння	54	45	230	t	57	\N
+6579	2	LECTURE	Диференціальні рівняння	87	45	230	t	57	\N
+6580	2	LECTURE	Диференціальні рівняння	56	45	230	t	57	\N
+6581	2	LECTURE	Диференціальні рівняння	57	45	230	t	57	\N
+6582	2	PRACTICAL	Диференціальні рівняння	53	45	230	t	57	\N
+6583	2	PRACTICAL	Диференціальні рівняння	57	45	230	t	57	\N
+6585	1	PRACTICAL	Бази даних та інформаційні системи	53	326	63	f	57	\N
+6586	2	LECTURE	Фінансова математика	84	292	64	t	57	\N
+6587	2	LECTURE	Фінансова математика	51	292	64	t	57	\N
+6588	2	LECTURE	Фінансова математика	52	292	64	t	57	\N
+6589	2	LECTURE	Фінансова математика	93	292	64	t	57	\N
+6590	2	LECTURE	Фінансова математика	53	292	64	t	57	\N
+6591	2	LABORATORY	Фінансова математика	84	292	64	t	57	\N
+6592	2	LABORATORY	Фінансова математика	51	292	64	t	57	\N
+6593	2	LABORATORY	Фінансова математика	52	292	64	t	57	\N
+6594	2	LABORATORY	Фінансова математика	93	292	64	t	57	\N
+6595	2	LABORATORY	Фінансова математика	53	292	64	t	57	\N
+6596	2	LABORATORY	Обчислювальна геометрія та комп'ютерна графіка	54	176	190	f	57	\N
+6597	2	LABORATORY	Обчислювальна геометрія та комп'ютерна графіка	87	176	190	f	57	\N
+6598	2	LECTURE	Основи інтернет-технологгій	54	40	52	t	57	\N
+6599	2	LECTURE	Основи інтернет-технологгій	87	40	52	t	57	\N
+6600	2	LABORATORY	Основи інтернет-технологгій	54	40	52	f	57	\N
+6601	2	LABORATORY	Основи інтернет-технологгій	87	40	52	f	57	\N
+6602	2	PRACTICAL	Диференціальні рівняння	54	45	230	f	57	\N
+6603	2	PRACTICAL	Диференціальні рівняння	87	45	230	f	57	\N
+6604	2	LECTURE	Програмування у Visual Studio NET	54	185	71	t	57	\N
+6605	2	LECTURE	Програмування у Visual Studio NET	87	185	71	t	57	\N
+6606	2	LECTURE	Програмування у Visual Studio NET	44	185	71	t	57	\N
+6607	2	LABORATORY	Програмування у Visual Studio NET	54	185	71	t	57	\N
+6608	2	LABORATORY	Програмування у Visual Studio NET	87	185	71	t	57	\N
+6609	2	LECTURE	Розробка UI/UX дизайну	54	187	75	t	57	\N
+6610	2	LECTURE	Розробка UI/UX дизайну	87	187	75	t	57	\N
+6611	2	LECTURE	Розробка UI/UX дизайну	42	187	75	t	57	\N
+6612	2	LABORATORY	Розробка UI/UX дизайну	54	187	75	t	57	\N
+6613	2	LABORATORY	Розробка UI/UX дизайну	87	187	75	t	57	\N
+6614	2	LECTURE	Сучасні СУБД	54	35	66	t	57	\N
+6615	2	LECTURE	Сучасні СУБД	87	35	66	t	57	\N
+6616	2	LABORATORY	Сучасні СУБД	54	35	220	f	57	\N
+6617	2	LABORATORY	Сучасні СУБД	87	35	220	f	57	\N
+6618	2	LECTURE	Архітектура та проектування нереляційних баз даних	54	399	66	t	57	\N
+6619	2	LECTURE	Архітектура та проектування нереляційних баз даних	87	399	66	t	57	\N
+6620	2	LABORATORY	Архітектура та проектування нереляційних баз даних	54	399	66	f	57	\N
+6621	2	LABORATORY	Архітектура та проектування нереляційних баз даних	87	399	66	f	57	\N
+6625	2	LECTURE	Педагогіка з основами педмайстерності	55	188	191	t	57	\N
+6626	2	LECTURE	Педагогіка з основами педмайстерності	56	188	191	t	57	\N
+6627	2	LECTURE	Педагогіка з основами педмайстерності	57	188	191	t	57	\N
+6628	2	PRACTICAL	Педагогіка з основами педмайстерності	55	188	219	f	57	\N
+6629	2	PRACTICAL	Педагогіка з основами педмайстерності	56	188	219	f	57	\N
+6630	2	PRACTICAL	Педагогіка з основами педмайстерності	57	188	219	f	57	\N
+6631	2	LECTURE	Бази даних та інформаційні системи	53	326	34	t	57	\N
+6632	2	LECTURE	Бази даних та інформаційні системи	51	326	34	t	57	\N
+6633	2	LECTURE	Бази даних та інформаційні системи	52	326	34	t	57	\N
+6634	2	LECTURE	Бази даних та інформаційні системи	84	326	34	t	57	\N
+6635	2	LECTURE	Бази даних та інформаційні системи	93	326	34	t	57	\N
+6636	2	LECTURE	Бази даних та інформаційні системи	55	326	34	t	57	\N
+6637	2	LABORATORY	Бази даних та інформаційні системи	55	326	63	f	57	\N
+6638	2	LABORATORY	3D графіка та моделювання	55	293	194	f	57	\N
+6639	2	LABORATORY	Бібліотеки мови Python	55	183	36	f	57	\N
+6640	1	LECTURE	Програмування та підтримка Веб-застосунків	55	198	42	t	57	\N
+6641	1	LECTURE	Програмування та підтримка Веб-застосунків	36	198	42	t	57	\N
+6642	1	LECTURE	Програмування та підтримка Веб-застосунків	37	198	42	t	57	\N
+6643	1	LECTURE	Програмування та підтримка Веб-застосунків	95	198	42	t	57	\N
+6644	1	LECTURE	Програмування та підтримка Веб-застосунків	94	198	42	t	57	\N
+6645	1	LECTURE	Програмування та підтримка Веб-застосунків	39	198	42	t	57	\N
+6646	1	LECTURE	Програмування та підтримка Веб-застосунків	42	198	42	t	57	\N
+6647	2	LABORATORY	Програмування та підтримка Веб-застосунків	55	198	221	f	57	\N
+6648	2	PRACTICAL	Диференціальні рівняння	56	45	230	f	57	\N
+6649	2	LECTURE	Алгебра і теорія чисел	56	56	46	t	57	\N
+6650	2	LECTURE	Алгебра і теорія чисел	57	56	46	t	57	\N
+6651	2	PRACTICAL	Алгебра і теорія чисел	56	56	46	t	57	\N
+6652	2	PRACTICAL	Алгебра і теорія чисел	57	56	46	t	57	\N
+6653	1	LECTURE	Програмні засоби навчання у освітньому процесі	56	364	43	f	57	\N
+6654	2	LABORATORY	Програмні засоби навчання у освітньому процесі	56	364	43	f	57	\N
+6655	2	LECTURE	Практикум з розв'язування задач шкільного курсу математики (основна школа)	56	363	50	t	57	\N
+6656	2	LECTURE	Практикум з розв'язування задач шкільного курсу математики (основна школа)	73	363	50	t	57	\N
+6657	2	PRACTICAL	Практикум з розв'язування задач шкільного курсу математики (основна школа)	56	363	50	t	57	\N
+6658	2	PRACTICAL	Практикум з розв'язування задач шкільного курсу математики (основна школа)	73	363	50	t	57	\N
+6661	2	PRACTICAL	Штучні методи розв'язування рівнянь і нерівностей ЕМ	56	401	83	t	57	\N
+6662	2	PRACTICAL	Штучні методи розв'язування рівнянь і нерівностей ЕМ	43	401	83	t	57	\N
+6663	1	LECTURE	Нестандартні задачі математики та методи їх розв'язання	56	209	44	f	57	\N
+6664	2	PRACTICAL	Нестандартні задачі математики та методи їх розв'язання	56	209	44	f	57	\N
+6665	2	PRACTICAL	Професійно зорієнтована практика	56	297	50	f	57	\N
+6666	4	LECTURE	Математичний аналіз2	57	54	26	f	57	\N
+6667	3	PRACTICAL	Математичний аналіз2	57	54	105	f	57	\N
+6670	1	LECTURE	Філософія	53	179	106	t	57	\N
+6671	1	LECTURE	Філософія	51	179	106	t	57	\N
+6672	1	LECTURE	Філософія	52	179	106	t	57	\N
+6673	1	LECTURE	Філософія	84	179	106	t	57	\N
+6674	1	LECTURE	Філософія	93	179	106	t	57	\N
+6675	1	LECTURE	Філософія	54	179	106	t	57	\N
+6676	1	LECTURE	Філософія	87	179	106	t	57	\N
+6677	1	LECTURE	Філософія	55	179	106	f	57	\N
+6678	1	LECTURE	Філософія	56	179	106	f	57	\N
+6679	1	LECTURE	Філософія	57	179	106	f	57	\N
+6684	2	LABORATORY	Числові методи	40	39	65	f	57	\N
+6686	2	LECTURE	Системне програмування	36	199	71	t	57	\N
+6687	2	LECTURE	Системне програмування	37	199	71	t	57	\N
+6688	2	LECTURE	Системне програмування	95	199	71	t	57	\N
+6689	2	LECTURE	Системне програмування	94	199	71	t	57	\N
+6690	2	LECTURE	Системне програмування	39	199	71	t	57	\N
+6694	2	LABORATORY	Системне програмування	40	199	71	f	57	\N
+6695	2	LABORATORY	Системне програмування	36	199	71	f	57	\N
+6696	2	LABORATORY	Системне програмування	37	199	71	f	57	\N
+6659	1	LECTURE	Штучні методи розв'язування рівнянь і нерівностей ЕМ	56	401	83	f	57	\N
+6699	2	LABORATORY	Системне програмування	41	199	71	f	57	\N
+6704	2	LABORATORY	Серверна мова РНР	40	203	19	f	57	\N
+6709	2	LABORATORY	Контроль якості та тестування програмного забезпечення	40	204	62	f	57	\N
+6712	2	LABORATORY	Контроль якості та тестування програмного забезпечення	41	204	62	f	57	\N
+6717	2	LABORATORY	Платформи корпоративних інформаційних систем	40	67	66	f	57	\N
+6720	2	LABORATORY	Платформи корпоративних інформаційних систем	41	67	66	f	57	\N
+6713	2	LECTURE	Платформи корпоративних інформаційних систем	40	67	66	f	57	\N
+6700	2	LECTURE	Серверна мова РНР	40	203	19	f	57	\N
+6685	2	LECTURE	Системне програмування	40	199	71	f	57	\N
+6680	2	LECTURE	Числові методи	40	39	65	f	57	\N
+6987	1	LABORATORY	Маркетингові комунікації в інформаційному суспільстві	60	232	70	t	57	\N
+6988	1	LABORATORY	Маркетингові комунікації в інформаційному суспільстві	61	232	70	t	57	\N
+6989	2	LABORATORY	Бізнес аналіз в ІТ-проектах	58	305	66	t	57	\N
+6990	2	LABORATORY	Бізнес аналіз в ІТ-проектах	60	305	66	t	57	\N
+6991	2	LABORATORY	Бізнес аналіз в ІТ-проектах	59	305	66	t	57	\N
+6992	2	LABORATORY	Бізнес аналіз в ІТ-проектах	61	305	66	t	57	\N
+6993	1	LECTURE	Бізнес аналіз в ІТ-проектах	58	305	66	t	57	\N
+6994	1	LECTURE	Бізнес аналіз в ІТ-проектах	60	305	66	t	57	\N
+6995	1	LECTURE	Бізнес аналіз в ІТ-проектах	59	305	66	t	57	\N
+6708	2	LECTURE	Контроль якості та тестування програмного забезпечення	41	204	62	f	57	\N
+6716	2	LECTURE	Платформи корпоративних інформаційних систем	41	67	66	f	57	\N
+6703	2	LECTURE	Серверна мова РНР	41	203	19	f	57	\N
+6693	2	LECTURE	Системне програмування	41	199	71	f	57	\N
+6683	2	LECTURE	Числові методи	41	39	65	f	57	\N
+6996	1	LECTURE	Бізнес аналіз в ІТ-проектах	61	305	66	t	57	\N
+7001	1	LECTURE	Моделі і методи прикладної математики	59	405	65	t	57	\N
+7002	1	LECTURE	Моделі і методи прикладної математики	61	405	65	t	57	\N
+7003	2	LABORATORY	Моделі і методи прикладної математики	59	405	65	t	57	\N
+6669	2	PRACTICAL	Топологія	57	193	21	f	57	\N
+6999	1	LABORATORY	Сучасні клієнтські Web-технології	59	241	52	f	57	\N
+6997	2	LECTURE	Сучасні клієнтські Web-технології	59	241	52	f	57	\N
+6725	1	LABORATORY	Теорія інформації та кодування	40	202	67	f	57	\N
+6728	1	LABORATORY	Теорія інформації та кодування	41	202	67	f	57	\N
+6733	2	LABORATORY	Проектування програмних систем	40	68	220	f	57	\N
+6736	2	LABORATORY	Проектування програмних систем	41	68	19	f	57	\N
+6739	2	LABORATORY	Серверна мова РНР	41	203	239	f	57	\N
+6743	1	LECTURE	Захист інформації	95	196	61	t	57	\N
+6744	1	LECTURE	Захист інформації	37	196	61	t	57	\N
+6745	1	LECTURE	Захист інформації	94	196	61	t	57	\N
+6746	1	LECTURE	Захист інформації	36	196	61	t	57	\N
+6747	2	LABORATORY	Захист інформації	95	196	61	f	57	\N
+6748	2	LABORATORY	Захист інформації	37	196	61	f	57	\N
+6749	2	LABORATORY	Захист інформації	94	196	61	f	57	\N
+6750	2	LABORATORY	Захист інформації	36	196	61	f	57	\N
+6751	2	LECTURE	Платформи корпоративних інформаційних систем	95	67	80	t	57	\N
+6752	2	LECTURE	Платформи корпоративних інформаційних систем	37	67	80	t	57	\N
+6753	2	LECTURE	Платформи корпоративних інформаційних систем	94	67	80	t	57	\N
+6754	2	LECTURE	Платформи корпоративних інформаційних систем	36	67	80	t	57	\N
+6755	2	LECTURE	Платформи корпоративних інформаційних систем	39	67	80	t	57	\N
+6756	2	LABORATORY	Платформи корпоративних інформаційних систем	95	67	80	f	57	\N
+6757	2	LABORATORY	Платформи корпоративних інформаційних систем	37	67	80	f	57	\N
+6758	2	LABORATORY	Платформи корпоративних інформаційних систем	94	67	80	f	57	\N
+6759	2	LABORATORY	Платформи корпоративних інформаційних систем	36	67	80	f	57	\N
+6760	2	LABORATORY	Платформи корпоративних інформаційних систем	39	67	80	f	57	\N
+6761	2	PRACTICAL	Професійна іноземна мова	95	28	149	t	57	\N
+6762	2	PRACTICAL	Професійна іноземна мова	94	28	149	t	57	\N
+6763	2	PRACTICAL	Професійна іноземна мова	39	28	149	t	57	\N
+6764	2	LABORATORY	Програмування та підтримка Веб-застосунків	36	198	221	f	57	\N
+6765	2	LABORATORY	Програмування та підтримка Веб-застосунків	95	198	221	f	57	\N
+6766	2	LABORATORY	Програмування та підтримка Веб-застосунків	94	198	221	f	57	\N
+6767	2	LABORATORY	Програмування та підтримка Веб-застосунків	39	198	221	f	57	\N
+6768	1	LECTURE	Проектування програмних систем	36	68	34	t	57	\N
+6769	1	LECTURE	Проектування програмних систем	95	68	34	t	57	\N
+6770	1	LECTURE	Проектування програмних систем	94	68	34	t	57	\N
+6771	1	LECTURE	Проектування програмних систем	39	68	34	t	57	\N
+6721	2	LECTURE	Теорія інформації та кодування	40	202	67	f	57	\N
+7013	2	LECTURE	Аналіз даних	45	215	30	t	57	\N
+7014	2	LECTURE	Аналіз даних	104	215	30	t	57	\N
+7015	2	LECTURE	Аналіз даних	49	215	30	t	57	\N
+7016	2	LECTURE	Аналіз даних	50	215	30	t	57	\N
+7017	2	LABORATORY	Аналіз даних	45	215	30	f	57	\N
+6732	2	LECTURE	Проектування програмних систем	41	68	19	f	57	\N
+6724	2	LECTURE	Теорія інформації та кодування	41	202	67	f	57	\N
+6742	2	LABORATORY	Числові методи	41	39	75	f	57	\N
+7065	2	LABORATORY	Розробка комп'ютерних ігор	49	218	42	f	57	\N
+7066	2	LABORATORY	Технології високопродуктивних обчислень	104	412	80	f	57	\N
+7067	2	LABORATORY	Технології високопродуктивних обчислень	49	412	80	f	57	\N
+7070	2	PRACTICAL	Методи оптимізації та дослідження операцій	49	66	40	t	57	\N
+7071	2	PRACTICAL	Методи оптимізації та дослідження операцій	50	66	40	t	57	\N
+7069	2	PRACTICAL	Професійна іноземна мова	49	28	149	f	57	\N
+7072	2	PRACTICAL	Професійна іноземна мова	50	28	149	f	57	\N
+6772	1	LECTURE	Проектування програмних систем	37	68	34	t	57	\N
+6773	1	LECTURE	Проектування програмних систем	36	68	61	t	57	\N
+6774	1	LECTURE	Проектування програмних систем	95	68	61	t	57	\N
+6775	1	LECTURE	Проектування програмних систем	94	68	61	t	57	\N
+6776	1	LECTURE	Проектування програмних систем	39	68	61	t	57	\N
+6777	1	LECTURE	Проектування програмних систем	37	68	61	t	57	\N
+6778	2	LECTURE	Контроль якості та тестування програмного забезпечення	36	204	32	t	57	\N
+6779	2	LECTURE	Контроль якості та тестування програмного забезпечення	95	204	32	t	57	\N
+6780	2	LECTURE	Контроль якості та тестування програмного забезпечення	94	204	32	t	57	\N
+6781	2	LECTURE	Контроль якості та тестування програмного забезпечення	39	204	32	t	57	\N
+6782	2	LECTURE	Контроль якості та тестування програмного забезпечення	37	204	32	t	57	\N
+6783	2	LABORATORY	Контроль якості та тестування програмного забезпечення	36	204	32	f	57	\N
+6784	2	LABORATORY	Контроль якості та тестування програмного забезпечення	95	204	32	f	57	\N
+6785	2	LABORATORY	Контроль якості та тестування програмного забезпечення	94	204	32	f	57	\N
+6786	2	LABORATORY	Контроль якості та тестування програмного забезпечення	39	204	32	f	57	\N
+6787	2	LABORATORY	Контроль якості та тестування програмного забезпечення	37	204	32	f	57	\N
+6788	2	LECTURE	Системи штучного інтелекту	36	110	36	t	57	\N
+6789	2	LECTURE	Системи штучного інтелекту	95	110	36	t	57	\N
+6790	2	LECTURE	Системи штучного інтелекту	94	110	36	t	57	\N
+6791	2	LECTURE	Системи штучного інтелекту	39	110	36	t	57	\N
+6792	2	LECTURE	Системи штучного інтелекту	37	110	36	t	57	\N
+6793	2	LABORATORY	Системи штучного інтелекту	36	110	36	t	57	\N
+6794	2	LABORATORY	Системи штучного інтелекту	95	110	36	t	57	\N
+6795	2	LABORATORY	Системи штучного інтелекту	94	110	36	t	57	\N
+6796	2	LABORATORY	Системи штучного інтелекту	39	110	36	t	57	\N
+6797	2	LABORATORY	Системи штучного інтелекту	37	110	36	t	57	\N
+6798	2	LABORATORY	Проектування програмних систем	36	68	34	f	57	\N
+6799	2	LABORATORY	Проектування програмних систем	37	68	34	f	57	\N
+6800	2	PRACTICAL	Професійна іноземна мова	36	28	91	t	57	\N
+6801	2	PRACTICAL	Професійна іноземна мова	37	28	91	t	57	\N
+6802	2	LABORATORY	Програмування та підтримка Веб-застосунків	37	198	42	f	57	\N
+6803	2	LABORATORY	Проектування програмних систем	95	68	61	f	57	\N
+6804	2	LABORATORY	Проектування програмних систем	94	68	61	f	57	\N
+6805	2	LABORATORY	Проектування програмних систем	39	68	61	f	57	\N
+6806	2	LABORATORY	Системне програмування	95	199	75	f	57	\N
+6807	2	LABORATORY	Системне програмування	94	199	75	f	57	\N
+6808	2	LABORATORY	Системне програмування	39	199	75	f	57	\N
+6809	1	LECTURE	Математичне та комп'ютерне моделювання	39	366	63	f	57	\N
+6810	2	LABORATORY	Математичне та комп'ютерне моделювання	39	366	63	f	57	\N
+6811	1	LECTURE	Основи інформаційної безпеки	39	201	61	f	57	\N
+6812	2	LABORATORY	Основи інформаційної безпеки	39	201	61	f	57	\N
+6813	1	LECTURE	ІТ та онлайн сервіси в професійній діяльності вчителя*	42	294	45	t	57	\N
+6814	1	LECTURE	ІТ та онлайн сервіси в професійній діяльності вчителя*	43	294	45	t	57	\N
+6815	1	LECTURE	ІТ та онлайн сервіси в професійній діяльності вчителя*	44	294	45	t	57	\N
+6816	2	LABORATORY	ІТ та онлайн сервіси в професійній діяльності вчителя*	42	294	47	f	57	\N
+6817	2	LECTURE	Методика соціально-виховної роботи в сучасних умовах	42	206	191	t	57	\N
+6818	2	LECTURE	Методика соціально-виховної роботи в сучасних умовах	43	206	191	t	57	\N
+6819	2	LECTURE	Методика соціально-виховної роботи в сучасних умовах	44	206	191	t	57	\N
+6820	1	PRACTICAL	Методика соціально-виховної роботи в сучасних умовах	42	206	191	f	57	\N
+6821	1	PRACTICAL	Методика соціально-виховної роботи в сучасних умовах	43	206	191	f	57	\N
+6825	2	LABORATORY	Методика викладання інформатики	43	64	45	f	57	\N
+6826	2	LABORATORY	Програмування та підтримка Веб-застосунків	42	198	42	f	57	\N
+6827	2	LABORATORY	Розробка UI/UX дизайну	42	187	75	f	57	\N
+6828	2	LECTURE	Шкільний курс інформатики	42	402	205	f	57	\N
+6829	2	LABORATORY	Шкільний курс інформатики	42	402	205	f	57	\N
+6830	2	LECTURE	Методика викладання математики	43	63	46	f	57	\N
+6831	2	PRACTICAL	Методика викладання математики	43	63	46	f	57	\N
+6832	2	LECTURE	Теорія ймовірностей та математична статистика	43	30	40	f	57	\N
+6833	2	PRACTICAL	Теорія ймовірностей та математична статистика	43	30	40	f	57	\N
+6660	1	LECTURE	Штучні методи розв'язування рівнянь і нерівностей ЕМ	43	401	83	f	57	\N
+6834	2	LABORATORY	ІТ та онлайн сервіси в професійній діяльності вчителя*	43	294	45	f	57	\N
+6835	4	LECTURE	Функціональний аналіз	44	208	21	f	57	\N
+6836	2	PRACTICAL	Функціональний аналіз	44	208	105	f	57	\N
+6837	2	LECTURE	Теорія ймовірностей	44	213	26	f	57	\N
+6838	2	PRACTICAL	Теорія ймовірностей	44	213	26	f	57	\N
+6839	2	LECTURE	Елементарна математика і методика викладання математики	44	61	46	f	57	\N
+6840	2	PRACTICAL	Елементарна математика і методика викладання математики	44	61	46	f	57	\N
+6841	2	LABORATORY	Системи штучного інтелекту	44	110	36	f	57	\N
+6842	2	LECTURE	Системи штучного інтелекту	44	110	36	f	57	\N
+6843	2	LECTURE	Загальна теорія функцій	44	211	242	f	57	\N
+6844	2	PRACTICAL	Загальна теорія функцій	44	211	242	f	57	\N
+6848	2	LECTURE	Контроль якості та тестування програмного забезпечення	44	204	32	f	57	\N
+6849	2	LABORATORY	Контроль якості та тестування програмного забезпечення	44	204	32	f	57	\N
+6878	2	LECTURE	Педагогіка і психологія вищої школи	58	105	243	t	57	\N
+6879	2	LECTURE	Педагогіка і психологія вищої школи	60	105	243	t	57	\N
+6886	1	LECTURE	Системи машинного навчання	58	237	64	t	57	\N
+6887	1	LECTURE	Системи машинного навчання	60	237	64	t	57	\N
+6888	1	LABORATORY	Системи машинного навчання	58	237	64	t	57	\N
+6889	1	LABORATORY	Системи машинного навчання	60	237	64	t	57	\N
+6890	1	LECTURE	Сіткове планування	58	112	35	t	57	\N
+6891	1	LECTURE	Сіткове планування	60	112	35	t	57	\N
+6892	2	LABORATORY	Сіткове планування	58	112	35	t	57	\N
+6893	2	LABORATORY	Сіткове планування	60	112	35	t	57	\N
+6824	2	LABORATORY	Методика викладання інформатики	42	64	205	f	57	\N
+6823	2	LECTURE	Методика викладання інформатики	43	64	45	f	57	\N
+6881	2	LABORATORY	Багатопроцесорні машини та техн.паралельного прогр.	58	231	244	f	57	\N
+6847	2	PRACTICAL	Прикладні алгоритми теорії чисел	44	296	21	f	57	\N
+6845	2	LECTURE	Прикладні алгоритми теорії чисел	44	296	21	t	57	\N
+6846	2	LECTURE	Прикладні алгоритми теорії чисел	71	296	21	t	57	\N
+6894	2	LECTURE	Методика викладання комп.наук у вищій школі	58	233	73	t	57	\N
+6895	2	LECTURE	Методика викладання комп.наук у вищій школі	60	233	73	t	57	\N
+6896	2	PRACTICAL	Методика викладання комп.наук у вищій школі	58	233	73	t	57	\N
+6897	2	PRACTICAL	Методика викладання комп.наук у вищій школі	60	233	73	t	57	\N
+6898	2	LECTURE	Моделювання соціального-економічних та еколог.процесів	58	234	73	t	57	\N
+6899	2	LECTURE	Моделювання соціального-економічних та еколог.процесів	60	234	73	t	57	\N
+6900	2	LABORATORY	Моделювання соціального-економічних та еколог.процесів	58	234	73	t	57	\N
+6901	2	LABORATORY	Моделювання соціального-економічних та еколог.процесів	60	234	73	t	57	\N
+6902	1	LECTURE	Сучасні клієнтські Web-технології	58	241	189	t	57	\N
+6903	1	LECTURE	Сучасні клієнтські Web-технології	60	241	189	t	57	\N
+6904	1	LABORATORY	Сучасні клієнтські Web-технології	58	241	189	t	57	\N
+6905	1	LABORATORY	Сучасні клієнтські Web-технології	60	241	189	t	57	\N
+6919	2	LABORATORY	Паралельне програмування	59	245	190	f	57	\N
+6922	2	PRACTICAL	Магістерський семінар 1	59	246	81	f	57	\N
+6906	1	LECTURE	Доповнена реальність та генеративний штучний інтелект	58	403	189	t	57	\N
+6907	1	LECTURE	Доповнена реальність та генеративний штучний інтелект	60	403	189	t	57	\N
+6908	1	LABORATORY	Доповнена реальність та генеративний штучний інтелект	58	403	189	t	57	\N
+6909	1	LABORATORY	Доповнена реальність та генеративний штучний інтелект	60	403	189	t	57	\N
+6912	1	LECTURE	Програмні засоби захисту інформації	59	404	239	f	57	\N
+6913	2	LABORATORY	Програмні засоби захисту інформації	59	404	239	f	57	\N
+6935	1	LECTURE	Методичні особливості викладання інформатики в НУШ	62	406	245	f	57	\N
+6936	1	LABORATORY	Методичні особливості викладання інформатики в НУШ	62	406	245	f	57	\N
+6937	1	LECTURE	Класифікація методів розв'язування олімпіадних задач	62	251	105	t	57	\N
+6939	1	PRACTICAL	Класифікація методів розв'язування олімпіадних задач	62	251	105	t	57	\N
+6940	1	PRACTICAL	Класифікація методів розв'язування олімпіадних задач	61	251	105	f	57	\N
+6910	2	LECTURE	Технології паралельного програмування	60	239	190	f	57	\N
+6918	2	LECTURE	Паралельне програмування	59	245	190	f	57	\N
+6911	2	LABORATORY	Технології паралельного програмування	60	239	244	f	57	\N
+6941	1	LECTURE	Партнерство і професійна комунікація вчителя	62	277	210	f	57	\N
+6942	1	LECTURE	Партнерство і професійна комунікація вчителя	61	277	210	f	57	\N
+6945	1	LECTURE	Методика навчання математики в закладах освіти	62	315	83	t	57	\N
+6946	1	LECTURE	Методика навчання математики в закладах освіти	61	315	83	t	57	\N
+6947	2	PRACTICAL	Методика навчання математики в закладах освіти	62	315	83	t	57	\N
+6948	2	PRACTICAL	Методика навчання математики в закладах освіти	61	315	83	t	57	\N
+6949	1	LECTURE	Принципи та методи навчання інформатики в закладах освіти	62	314	45	f	57	\N
+6950	1	LABORATORY	Принципи та методи навчання інформатики в закладах освіти	62	314	45	f	57	\N
+6951	1	PRACTICAL	Принципи та методи навчання інформатики в закладах освіти	62	314	45	f	57	\N
+6952	1	LECTURE	Методологія та організація наукових досліджень	62	230	49	f	57	\N
+6953	1	PRACTICAL	Методологія та організація наукових досліджень	62	230	49	f	57	\N
+6956	1	LECTURE	Вибрані питання теорії операторів в просторах аналітичних функцій	61	407	242	f	57	\N
+6957	1	PRACTICAL	Вибрані питання теорії операторів в просторах аналітичних функцій	61	407	242	f	57	\N
+6958	1	LECTURE	Геометрія мас	61	368	21	f	57	\N
+6959	1	PRACTICAL	Геометрія мас	61	368	21	f	57	\N
+6966	1	LECTURE	Технології освітнього менеджменту та моніторинг якості освіти	98	408	205	f	57	\N
+6967	1	PRACTICAL	Технології освітнього менеджменту та моніторинг якості освіти	98	408	205	f	57	\N
+6968	1	LECTURE	STEM-освіта на уроках інформатики	98	409	194	f	57	\N
+6969	2	LABORATORY	STEM-освіта на уроках інформатики	98	409	194	f	57	\N
+6970	1	LECTURE	Основи шкільного курсу інформатики	98	410	205	f	57	\N
+6971	1	LABORATORY	Основи шкільного курсу інформатики	98	410	205	f	57	\N
+6972	1	LECTURE	Особливості розв'язування олімп.задач з інформатики та ІТ	98	310	78	f	57	\N
+6973	1	LABORATORY	Особливості розв'язування олімп.задач з інформатики та ІТ	98	310	78	f	57	\N
+6974	1	LECTURE	Охорона праці в галузі та цивільний захист	98	101	78	f	57	\N
+6975	1	PRACTICAL	Охорона праці в галузі та цивільний захист	98	101	78	f	57	\N
+6976	1	LECTURE	Мережеві інформаційні та освітні системи	98	371	194	f	57	\N
+6977	1	LABORATORY	Мережеві інформаційні та освітні системи	98	371	194	f	57	\N
+6978	1	LECTURE	Середовище блочного програмування	98	388	79	f	57	\N
+6979	1	LABORATORY	Середовище блочного програмування	98	388	79	f	57	\N
+6980	2	PRACTICAL	Професійно зорієнтована практика	55	297	194	f	57	\N
+6981	2	LABORATORY	Професійно зорієнтована практика	33	297	194	f	57	\N
+6705	2	LECTURE	Контроль якості та тестування програмного забезпечення	40	204	62	f	57	\N
+6729	2	LECTURE	Проектування програмних систем	40	68	19	f	57	\N
+6822	2	LECTURE	Методика викладання інформатики	42	64	205	f	57	\N
+6982	1	PRACTICAL	Методика соціально-виховної роботи в сучасних умовах	44	206	191	f	57	\N
+6938	1	LECTURE	Класифікація методів розв'язування олімпіадних задач	61	251	105	f	57	\N
+6983	1	LECTURE	Маркетингові комунікації в інформаційному суспільстві	58	232	70	t	57	\N
+6984	1	LECTURE	Маркетингові комунікації в інформаційному суспільстві	60	232	70	t	57	\N
+6880	2	LECTURE	Багатопроцесорні машини та техн.паралельного прогр.	58	231	190	f	57	\N
+6985	1	LECTURE	Маркетингові комунікації в інформаційному суспільстві	61	232	70	t	57	\N
+6986	1	LABORATORY	Маркетингові комунікації в інформаційному суспільстві	58	232	70	t	57	\N
+7062	2	LABORATORY	Аналіз даних	49	215	31	f	57	\N
+7063	2	LABORATORY	Аналіз даних	50	215	31	f	57	\N
+7064	2	LABORATORY	Розробка комп'ютерних ігор	104	218	42	f	57	\N
+7004	2	LABORATORY	Моделі і методи прикладної математики	61	405	65	t	57	\N
+7005	1	LECTURE	Задачі прикладного характеру	62	268	44	t	57	\N
+7006	1	LECTURE	Задачі прикладного характеру	61	268	44	t	57	\N
+7007	1	PRACTICAL	Задачі прикладного характеру	62	268	44	t	57	\N
+7008	1	PRACTICAL	Задачі прикладного характеру	61	268	44	t	57	\N
+7018	1	LECTURE	Комунікації та теорії конфліктів	45	96	70	t	57	\N
+7019	1	LECTURE	Комунікації та теорії конфліктів	50	96	70	t	57	\N
+7020	1	LECTURE	Комунікації та теорії конфліктів	104	96	70	t	57	\N
+7021	1	LECTURE	Комунікації та теорії конфліктів	49	96	70	t	57	\N
+7022	1	PRACTICAL	Комунікації та теорії конфліктів	45	96	70	t	57	\N
+7023	1	PRACTICAL	Комунікації та теорії конфліктів	50	96	70	t	57	\N
+7024	1	PRACTICAL	Комунікації та теорії конфліктів	104	96	70	t	57	\N
+7025	1	PRACTICAL	Комунікації та теорії конфліктів	49	96	70	t	57	\N
+7026	1	LECTURE	Розробка комп'ютерних ігор	45	218	42	t	57	\N
+7027	1	LECTURE	Розробка комп'ютерних ігор	50	218	42	t	57	\N
+7028	1	LECTURE	Розробка комп'ютерних ігор	104	218	42	t	57	\N
+7029	1	LECTURE	Розробка комп'ютерних ігор	49	218	42	t	57	\N
+7030	2	LABORATORY	Розробка комп'ютерних ігор	45	218	42	t	57	\N
+7031	2	LABORATORY	Розробка комп'ютерних ігор	50	218	42	t	57	\N
+7032	2	LECTURE	Методи оптимізації та дослідження операцій	45	66	40	t	57	\N
+7033	2	LECTURE	Методи оптимізації та дослідження операцій	50	66	40	t	57	\N
+7034	2	LECTURE	Методи оптимізації та дослідження операцій	104	66	40	t	57	\N
+7035	2	LECTURE	Методи оптимізації та дослідження операцій	49	66	40	t	57	\N
+7036	2	PRACTICAL	Методи оптимізації та дослідження операцій	45	66	35	f	57	\N
+7037	2	PRACTICAL	Методи оптимізації та дослідження операцій	104	66	35	f	57	\N
+7038	2	LECTURE	Технології машинного навчання	45	411	64	t	57	\N
+7039	2	LECTURE	Технології машинного навчання	104	411	64	t	57	\N
+7040	2	LECTURE	Технології машинного навчання	50	411	64	t	57	\N
+7041	2	LECTURE	Технології машинного навчання	49	411	64	t	57	\N
+7042	2	LABORATORY	Технології машинного навчання	45	411	64	t	57	\N
+7043	2	LABORATORY	Технології машинного навчання	104	411	64	t	57	\N
+7044	2	LABORATORY	Технології машинного навчання	50	411	64	t	57	\N
+7045	2	LABORATORY	Технології машинного навчання	49	411	64	t	57	\N
+7046	2	LECTURE	Технології високопродуктивних обчислень	45	412	80	t	57	\N
+7047	2	LECTURE	Технології високопродуктивних обчислень	104	412	80	t	57	\N
+7048	2	LECTURE	Технології високопродуктивних обчислень	50	412	80	t	57	\N
+7049	2	LECTURE	Технології високопродуктивних обчислень	49	412	80	t	57	\N
+7050	2	PRACTICAL	Технології високопродуктивних обчислень	45	412	80	t	57	\N
+7051	2	PRACTICAL	Технології високопродуктивних обчислень	50	412	80	t	57	\N
+7052	1	LECTURE	Чинники успішного працевлаштування	45	322	30	t	57	\N
+7053	1	LECTURE	Чинники успішного працевлаштування	50	322	30	t	57	\N
+7054	1	LECTURE	Чинники успішного працевлаштування	49	322	30	t	57	\N
+7055	1	LECTURE	Чинники успішного працевлаштування	104	322	30	t	57	\N
+7056	1	PRACTICAL	Чинники успішного працевлаштування	45	322	30	t	57	\N
+7057	1	PRACTICAL	Чинники успішного працевлаштування	50	322	30	t	57	\N
+7058	1	PRACTICAL	Чинники успішного працевлаштування	49	322	30	t	57	\N
+7059	1	PRACTICAL	Чинники успішного працевлаштування	104	322	30	t	57	\N
+7060	2	PRACTICAL	Професійна іноземна мова	45	28	87	f	57	\N
+7061	2	LABORATORY	Аналіз даних	104	215	31	f	57	\N
+7073	2	LECTURE	Актуарна математика	50	219	64	f	57	\N
+7074	2	PRACTICAL	Актуарна математика	50	219	64	f	57	\N
+6584	2	PRACTICAL	Професійна іноземна мова	53	28	87	f	57	\N
+7136	2	LECTURE	Системи оцінювання здобувачів освіти в сучасній школі	72	381	245	f	57	\N
+7137	2	LABORATORY	Системи оцінювання здобувачів освіти в сучасній школі	72	381	245	f	57	\N
+6944	1	PRACTICAL	Партнерство і професійна комунікація вчителя	61	277	210	f	57	\N
+7138	1	PRACTICAL	Диференціальні рівняння.	56	261	230	f	57	\N
+7139	1	PRACTICAL	Диференціальні рівняння.	54	261	230	t	57	\N
+6943	1	PRACTICAL	Партнерство і професійна комунікація вчителя	62	277	210	f	57	\N
+7112	2	LECTURE	Теорія інформації та кодування	68	202	239	t	57	\N
+7113	2	LECTURE	Теорія інформації та кодування	70	202	239	t	57	\N
+7114	2	LABORATORY	Теорія інформації та кодування	68	202	239	t	57	\N
+7115	2	LABORATORY	Теорія інформації та кодування	70	202	239	t	57	\N
+7120	2	LECTURE	Системи штучного інтелекту	68	110	66	t	57	\N
+7121	2	LECTURE	Системи штучного інтелекту	70	110	66	t	57	\N
+7122	2	LABORATORY	Системи штучного інтелекту	68	110	244	t	57	\N
+7123	2	LABORATORY	Системи штучного інтелекту	70	110	244	t	57	\N
+7124	2	LECTURE	Математичне моделювання природничих процесів	68	221	65	t	57	\N
+7125	2	LECTURE	Математичне моделювання природничих процесів	70	221	65	t	57	\N
+7126	3	LABORATORY	Математичне моделювання природничих процесів	68	221	65	t	57	\N
+7127	3	LABORATORY	Математичне моделювання природничих процесів	70	221	65	t	57	\N
+7132	2	LECTURE	Web-розробка на Ruby on Rails	68	380	62	f	57	\N
+7130	2	LABORATORY	Web-розробка на Ruby on Rails	68	380	62	f	57	\N
+7133	2	LECTURE	Web-розробка на Ruby on Rails	70	380	62	f	57	\N
+7131	2	LABORATORY	Web-розробка на Ruby on Rails	70	380	62	f	57	\N
+7140	1	PRACTICAL	Диференціальні рівняння.	87	261	230	t	57	\N
+7128	2	PRACTICAL	Професійна іноземна мова	68	28	149	f	57	\N
+7129	2	PRACTICAL	Професійна іноземна мова	70	28	149	f	57	\N
+7108	1	LECTURE	STEM-практики в освіті	62	313	45	f	57	\N
+7118	2	LABORATORY	Бізнес аналіз в ІТ-проектах	68	305	66	f	57	\N
+7116	2	LECTURE	Бізнес аналіз в ІТ-проектах	68	305	66	f	57	\N
+7119	2	LABORATORY	Бізнес аналіз в ІТ-проектах	70	305	66	f	57	\N
+7117	2	LECTURE	Бізнес аналіз в ІТ-проектах	70	305	66	f	57	\N
+7134	2	LECTURE	Методика викладання інформатики в початковій школі	72	79	82	f	57	\N
+7135	2	LABORATORY	Методика викладання інформатики в початковій школі	72	79	82	f	57	\N
+7109	2	LABORATORY	STEM-практики в освіті	61	313	45	f	57	\N
+7106	1	LECTURE	STEM-практики в освіті	61	313	45	f	57	\N
+7111	2	LABORATORY	STEM-практики в освіті	62	313	45	f	57	\N
+7110	2	LABORATORY	STEM-практики в освіті	71	313	45	f	57	\N
+7107	1	LECTURE	STEM-практики в освіті	71	313	45	f	57	\N
+6516	2	LECTURE	Бібліотеки мови Python	55	183	36	f	57	\N
+7141	2	PRACTICAL	Фізичне виховання	55	13	97	f	57	\N
+7142	2	LECTURE	Практикум з розв'язування задач шкільного курсу математики (основна школа)	55	363	50	f	57	\N
+7143	2	PRACTICAL	Практикум з розв'язування задач шкільного курсу математики (основна школа)	55	363	50	f	57	\N
+7144	1	LECTURE	Застосування поліграфа (детектора брехні) у діял.правника: укр.та зарубіжний	44	413	246	f	57	\N
+7145	2	PRACTICAL	Застосування поліграфа (детектора брехні) у діял.правника: укр.та зарубіжний	44	413	246	f	57	\N
+7146	2	LECTURE	Чинники успішного працевлаштування	72	322	46	t	57	\N
+7147	2	LECTURE	Чинники успішного працевлаштування	73	322	46	t	57	\N
+7148	1	PRACTICAL	Чинники успішного працевлаштування	72	322	46	t	57	\N
+7149	1	PRACTICAL	Чинники успішного працевлаштування	73	322	46	t	57	\N
+7150	3	PRACTICAL	Професійна іноземна мова	72	28	226	f	57	\N
+7151	2	LECTURE	Інформаційні технології у підготовці дидактичних матеріалів	72	321	82	f	57	\N
+7152	2	LABORATORY	Інформаційні технології у підготовці дидактичних матеріалів	72	321	82	f	57	\N
+7153	1	LECTURE	Креативне програмування	72	414	77	f	57	\N
+7154	1	LABORATORY	Креативне програмування	72	414	77	f	57	\N
+7155	2	LECTURE	Основи геометрії	73	228	44	t	57	\N
+7156	2	LECTURE	Основи геометрії	71	228	44	t	57	\N
+7157	2	LECTURE	Методика розв'язування олімпіадних задач з математики	73	225	105	f	57	\N
+7158	2	PRACTICAL	Методика розв'язування олімпіадних задач з математики	73	225	105	f	57	\N
+7159	2	LECTURE	Практикум розв'язування задач шкільного курсу математики (алгебра СШ)	73	415	49	t	57	\N
+7160	2	LECTURE	Практикум розв'язування задач шкільного курсу математики (алгебра СШ)	71	415	49	t	57	\N
+7161	1	PRACTICAL	Практикум розв'язування задач шкільного курсу математики (алгебра СШ)	73	415	49	t	57	\N
+7162	1	PRACTICAL	Практикум розв'язування задач шкільного курсу математики (алгебра СШ)	71	415	49	t	57	\N
+7163	2	LECTURE	Геометричні перетворення	73	85	49	f	57	\N
+7164	2	PRACTICAL	Геометричні перетворення	73	85	49	f	57	\N
+7165	2	PRACTICAL	Іноземна мова (за професійним спрямуванням)	71	43	226	f	57	\N
+7168	2	LECTURE	Олімпіадні задачі з алгебри та геометрії	71	416	105	f	57	\N
+7169	2	PRACTICAL	Олімпіадні задачі з алгебри та геометрії	71	416	105	f	57	\N
+7171	1	LECTURE	3D графіка та моделювання	71	293	194	f	57	\N
+7172	2	LABORATORY	3D графіка та моделювання	71	293	194	f	57	\N
+7173	2	LECTURE	Методи оптимізації та дослідження операцій	71	66	40	f	57	\N
+7174	2	PRACTICAL	Методи оптимізації та дослідження операцій	71	66	35	f	57	\N
+7068	2	PRACTICAL	Професійна іноземна мова	104	28	87	f	57	\N
+7175	1	LECTURE	Математичний аналіз (консультація)	30	417	28	t	57	\N
+7176	1	LECTURE	Математичний аналіз (консультація)	29	417	28	t	57	\N
+7177	1	LECTURE	Математичний аналіз (консультація)	5	417	28	t	57	\N
+7178	1	LECTURE	Математичний аналіз (консультація)	85	417	28	t	57	\N
+7179	1	LECTURE	Математичний аналіз (консультація)	33	417	28	t	57	\N
+7180	1	LECTURE	Математичний аналіз (консультація)	30	417	21	t	57	\N
+7181	1	LECTURE	Математичний аналіз (консультація)	29	417	21	t	57	\N
+7182	1	LECTURE	Математичний аналіз (консультація)	5	417	21	t	57	\N
+7183	1	LECTURE	Математичний аналіз (консультація)	85	417	21	t	57	\N
+7184	1	LECTURE	Математичний аналіз (консультація)	33	417	21	t	57	\N
+6453	4	LECTURE	Математичний аналіз1	31	16	21	t	57	\N
+6454	4	LECTURE	Математичний аналіз1	28	16	21	t	57	\N
+6668	2	LECTURE	Топологія	57	193	21	f	57	\N
+7170	2	PRACTICAL	Прикладні алгоритми теорії чисел	71	296	21	f	57	\N
+\.
+
+
+--
+-- Data for Name: periods; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.periods (id, end_time, name, start_time) FROM stdin;
+8	17:30:00	6	16:10:00
+1	09:40:00	1	08:20:00
+2	11:10:00	2	09:50:00
+3	12:50:00	3	11:30:00
+4	14:20:00	4	13:00:00
+7	16:00:00	5	14:40:00
+\.
+
+
+--
+-- Data for Name: room_types; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.room_types (id, description) FROM stdin;
+25	Лекційна
+26	практична
+27	лабораторія
+6	кафедра ПМіІТ
+7	кафедра диф.рівнянь
+8	кафедра мат.моделювання
+9	кафедра алгебри та інформатики
+\.
+
+
+--
+-- Data for Name: rooms; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.rooms (id, disable, name, room_type_id, sort_order) FROM stdin;
+52	f	1 к. 15 ауд.	27	14
+55	f	1 к. 19 ауд.	27	15
+56	f	1 к. 21 ауд.	27	16
+60	f	1 к. 27 ауд.	27	17
+63	f	1 к. 31 ауд.	27	18
+118	f	1 к. 13 ауд.	9	19
+111	f	1 к. 17 ауд.	8	20
+110	f	1 к. 26 ауд.	6	21
+108	f	1 К. 36 АУД.	7	23
+114	t	14 корпус 60 ауд.	25	48
+113	t	14 корпус 54 ауд.	25	49
+112	t	14 корпус 1-А	25	50
+74	f	1 к. 40 ауд.	25	25
+107	f	1 К. 44 АУД.	27	26
+50	f	1 к. 7 ауд.	25	27
+109	t	6 к. 22 ауд.	25	29
+115	t	6 к. 26 ауд.	25	30
+119	f	Проводиться онлайн	25	47
+72	f	Факультет ФКтаЗЛ	26	46
+68	f	1 к. 39 ауд.	25	1
+65	f	1 к. 33 ауд.	25	2
+53	f	1 к. 18 ауд.	25	3
+59	f	1 к. 22 ауд.	25	4
+61	f	1 к. 28 ауд.	25	5
+54	f	1 к. 3 ауд.	25	6
+51	f	1 к. 11 ауд.	26	7
+57	f	1 к. 23 ауд.	25	8
+58	f	1 к. 24 ауд.	25	9
+66	f	1 к. 37 ауд.	25	10
+67	f	1 к. 38 ауд.	25	11
+62	f	1 к. 29 ауд.	26	12
+64	f	1 к. 32 ауд.	27	13
+120	f	1к. 43 ауд.	26	48
+121	f	Ботанічний сад	27	49
+122	f	1 к. 45 ауд.	27	50
+123	f	1 к. 46 ауд.	27	51
+125	f	6 корпус 40 ауд.	26	52
+\.
+
+
+--
+-- Data for Name: schedules; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.schedules (id, day_of_week, evenodd, lesson_id, period_id, room_id) FROM stdin;
+13735	MONDAY	ODD	6322	2	61
+13736	MONDAY	EVEN	6322	2	61
+13738	TUESDAY	ODD	6349	1	58
+13739	TUESDAY	EVEN	6349	1	58
+13760	WEDNESDAY	ODD	6355	2	58
+13761	WEDNESDAY	EVEN	6355	2	58
+13762	WEDNESDAY	ODD	6314	3	68
+13763	WEDNESDAY	ODD	6315	3	68
+13764	WEDNESDAY	ODD	6316	3	68
+13765	WEDNESDAY	ODD	6317	3	68
+13766	WEDNESDAY	ODD	6318	3	68
+13767	WEDNESDAY	ODD	6319	3	68
+13768	WEDNESDAY	ODD	6320	3	68
+13769	WEDNESDAY	ODD	6321	3	68
+13770	WEDNESDAY	EVEN	6314	3	68
+13771	WEDNESDAY	EVEN	6315	3	68
+13772	WEDNESDAY	EVEN	6316	3	68
+13773	WEDNESDAY	EVEN	6317	3	68
+13774	WEDNESDAY	EVEN	6318	3	68
+13775	WEDNESDAY	EVEN	6319	3	68
+13776	WEDNESDAY	EVEN	6320	3	68
+13777	WEDNESDAY	EVEN	6321	3	68
+13778	THURSDAY	ODD	6366	2	55
+13779	THURSDAY	EVEN	6366	2	55
+13780	THURSDAY	ODD	6361	3	53
+13781	THURSDAY	ODD	6362	3	53
+13782	THURSDAY	ODD	6363	3	53
+13783	THURSDAY	ODD	6364	3	53
+13784	THURSDAY	ODD	6365	3	53
+13785	THURSDAY	EVEN	6378	3	53
+13786	THURSDAY	EVEN	6379	3	53
+13787	THURSDAY	EVEN	6380	3	53
+13788	THURSDAY	EVEN	6381	3	53
+13789	THURSDAY	EVEN	6382	3	53
+13790	THURSDAY	ODD	6359	4	56
+13791	THURSDAY	EVEN	6359	4	56
+13792	THURSDAY	ODD	6367	7	72
+13793	THURSDAY	ODD	6368	7	72
+13794	THURSDAY	ODD	6369	7	72
+13795	THURSDAY	ODD	6370	7	72
+13796	THURSDAY	ODD	6371	7	72
+13797	THURSDAY	ODD	6372	7	72
+13798	THURSDAY	ODD	6373	7	72
+13799	THURSDAY	ODD	6374	7	72
+13800	THURSDAY	ODD	6375	7	72
+13801	THURSDAY	ODD	6376	7	72
+13802	THURSDAY	ODD	6377	7	72
+13803	THURSDAY	EVEN	6367	7	72
+13804	THURSDAY	EVEN	6368	7	72
+13805	THURSDAY	EVEN	6369	7	72
+13806	THURSDAY	EVEN	6370	7	72
+13807	THURSDAY	EVEN	6371	7	72
+13808	THURSDAY	EVEN	6372	7	72
+13809	THURSDAY	EVEN	6373	7	72
+13810	THURSDAY	EVEN	6374	7	72
+13811	THURSDAY	EVEN	6375	7	72
+13812	THURSDAY	EVEN	6376	7	72
+13813	THURSDAY	EVEN	6377	7	72
+13814	FRIDAY	ODD	6331	1	60
+13815	FRIDAY	EVEN	6331	1	60
+13828	MONDAY	ODD	6323	2	61
+13829	MONDAY	EVEN	6323	2	61
+13831	TUESDAY	ODD	6390	1	57
+13826	FRIDAY	ODD	6345	3	74
+13827	FRIDAY	EVEN	6345	3	74
+13737	MONDAY	EVEN	6345	3	74
+13830	MONDAY	EVEN	6346	3	74
+13832	TUESDAY	ODD	6391	1	57
+13833	TUESDAY	EVEN	6390	1	57
+13834	TUESDAY	EVEN	6391	1	57
+13835	WEDNESDAY	ODD	6388	1	120
+13837	WEDNESDAY	ODD	6356	2	58
+13841	THURSDAY	ODD	6383	2	60
+13845	MONDAY	ODD	6324	3	61
+13849	WEDNESDAY	ODD	6389	4	60
+13861	MONDAY	EVEN	6325	3	61
+13872	FRIDAY	EVEN	6395	3	52
+13836	WEDNESDAY	EVEN	6388	1	120
+13838	WEDNESDAY	EVEN	6356	2	58
+13842	THURSDAY	EVEN	6383	2	60
+13846	MONDAY	EVEN	6324	3	61
+13850	WEDNESDAY	EVEN	6389	4	60
+13854	THURSDAY	ODD	6392	2	56
+13855	THURSDAY	EVEN	6392	2	56
+13860	MONDAY	ODD	6325	3	61
+13862	TUESDAY	ODD	6396	1	51
+13863	TUESDAY	EVEN	6396	1	51
+13864	WEDNESDAY	ODD	6387	2	120
+13865	WEDNESDAY	EVEN	6387	2	120
+13867	THURSDAY	ODD	6397	2	52
+13868	THURSDAY	EVEN	6397	2	52
+13871	FRIDAY	ODD	6395	3	52
+13894	MONDAY	ODD	6402	1	57
+13895	MONDAY	EVEN	6402	1	57
+13896	MONDAY	ODD	6403	2	52
+13897	MONDAY	EVEN	6403	2	52
+13898	TUESDAY	ODD	6332	1	60
+13899	TUESDAY	EVEN	6332	1	60
+13900	TUESDAY	ODD	6401	3	51
+13901	TUESDAY	EVEN	6401	3	51
+13902	WEDNESDAY	ODD	6398	1	61
+13903	WEDNESDAY	ODD	6399	1	61
+13904	WEDNESDAY	EVEN	6398	1	61
+13905	WEDNESDAY	EVEN	6399	1	61
+13906	WEDNESDAY	ODD	6400	2	51
+13907	WEDNESDAY	EVEN	6400	2	51
+13908	THURSDAY	ODD	6400	1	51
+13909	THURSDAY	ODD	6393	4	60
+13910	THURSDAY	EVEN	6393	4	60
+13917	MONDAY	ODD	6416	1	60
+13918	MONDAY	EVEN	6416	1	60
+13919	MONDAY	ODD	6412	2	120
+13920	MONDAY	EVEN	6412	2	120
+13921	MONDAY	ODD	6422	3	53
+13922	MONDAY	ODD	6423	3	53
+13923	MONDAY	EVEN	6422	3	53
+13924	MONDAY	EVEN	6423	3	53
+13925	TUESDAY	ODD	6406	1	59
+13926	TUESDAY	ODD	6407	1	59
+13927	TUESDAY	EVEN	6406	1	59
+13928	TUESDAY	EVEN	6407	1	59
+13933	WEDNESDAY	ODD	6420	1	59
+13934	WEDNESDAY	ODD	6421	1	59
+13939	THURSDAY	ODD	6420	1	59
+13940	THURSDAY	ODD	6421	1	59
+13941	THURSDAY	EVEN	6420	1	59
+13942	THURSDAY	EVEN	6421	1	59
+13943	THURSDAY	ODD	6410	2	59
+13944	THURSDAY	ODD	6411	2	59
+13945	THURSDAY	EVEN	6410	2	59
+13946	THURSDAY	EVEN	6411	2	59
+13947	THURSDAY	ODD	6424	3	59
+13948	THURSDAY	ODD	6425	3	59
+13949	THURSDAY	EVEN	6424	3	59
+13950	THURSDAY	EVEN	6425	3	59
+13955	MONDAY	ODD	6417	2	60
+13956	MONDAY	EVEN	6417	2	60
+13957	FRIDAY	ODD	6413	3	120
+13958	FRIDAY	EVEN	6413	3	120
+13959	MONDAY	ODD	6435	2	66
+13960	MONDAY	EVEN	6434	2	64
+13961	TUESDAY	ODD	6426	1	61
+13962	TUESDAY	EVEN	6426	1	61
+13963	TUESDAY	ODD	6428	2	65
+13964	TUESDAY	ODD	6429	2	65
+13965	TUESDAY	ODD	6430	2	65
+13966	TUESDAY	EVEN	6428	2	65
+13967	TUESDAY	EVEN	6429	2	65
+13968	TUESDAY	EVEN	6430	2	65
+13969	WEDNESDAY	ODD	6427	2	61
+13851	WEDNESDAY	ODD	6394	7	120
+13852	WEDNESDAY	EVEN	6394	7	120
+13843	FRIDAY	ODD	6346	3	74
+13844	FRIDAY	EVEN	6346	3	74
+13856	FRIDAY	ODD	6347	1	74
+13857	FRIDAY	EVEN	6347	1	74
+13869	FRIDAY	ODD	6348	1	74
+13870	FRIDAY	EVEN	6348	1	74
+13848	MONDAY	ODD	6357	2	53
+13847	MONDAY	EVEN	6347	2	53
+13858	MONDAY	ODD	6358	2	53
+13859	MONDAY	EVEN	6348	2	53
+13970	WEDNESDAY	EVEN	6427	2	61
+13971	THURSDAY	ODD	6433	1	53
+13972	THURSDAY	EVEN	6433	1	53
+13973	THURSDAY	ODD	6435	2	67
+13974	THURSDAY	EVEN	6435	2	67
+13935	WEDNESDAY	ODD	6404	2	57
+13937	WEDNESDAY	EVEN	6404	2	57
+13936	WEDNESDAY	ODD	6405	2	57
+13938	WEDNESDAY	EVEN	6405	2	57
+13975	THURSDAY	EVEN	6436	3	65
+13976	THURSDAY	EVEN	6437	3	65
+13977	FRIDAY	ODD	6432	1	64
+13978	FRIDAY	EVEN	6432	1	64
+13982	FRIDAY	ODD	6431	3	59
+13985	MONDAY	EVEN	6449	1	59
+13986	MONDAY	EVEN	6450	1	59
+13989	MONDAY	EVEN	6453	2	59
+13990	MONDAY	EVEN	6454	2	59
+14000	WEDNESDAY	ODD	6443	1	65
+14001	WEDNESDAY	ODD	6444	1	65
+14008	WEDNESDAY	ODD	6449	3	58
+14009	WEDNESDAY	ODD	6450	3	58
+14010	WEDNESDAY	EVEN	6451	3	58
+14011	WEDNESDAY	ODD	6452	4	52
+14012	WEDNESDAY	EVEN	6452	4	52
+14021	THURSDAY	EVEN	6441	3	61
+14022	THURSDAY	EVEN	6442	3	61
+13979	FRIDAY	ODD	6438	2	64
+14002	WEDNESDAY	EVEN	6443	1	65
+14003	WEDNESDAY	EVEN	6444	1	65
+14013	THURSDAY	ODD	6457	1	53
+14019	THURSDAY	ODD	6441	3	61
+14020	THURSDAY	ODD	6442	3	61
+13981	FRIDAY	EVEN	6438	2	64
+13983	MONDAY	ODD	6449	1	59
+13984	MONDAY	ODD	6450	1	59
+13987	MONDAY	ODD	6453	2	59
+13988	MONDAY	ODD	6454	2	59
+13991	MONDAY	EVEN	6458	3	123
+13994	TUESDAY	ODD	6439	1	67
+13995	TUESDAY	ODD	6440	1	67
+13996	TUESDAY	EVEN	6439	1	67
+13997	TUESDAY	EVEN	6440	1	67
+14004	WEDNESDAY	ODD	6445	2	65
+14005	WEDNESDAY	ODD	6446	2	65
+14006	WEDNESDAY	EVEN	6445	2	65
+14007	WEDNESDAY	EVEN	6446	2	65
+14014	THURSDAY	EVEN	6457	1	53
+14027	FRIDAY	ODD	6455	2	59
+14028	FRIDAY	ODD	6456	2	59
+14029	FRIDAY	EVEN	6455	2	59
+14030	FRIDAY	EVEN	6456	2	59
+14031	FRIDAY	ODD	6462	1	65
+14032	FRIDAY	ODD	6463	1	65
+14033	FRIDAY	ODD	6464	1	65
+14034	FRIDAY	EVEN	6462	1	65
+14035	FRIDAY	EVEN	6463	1	65
+14036	FRIDAY	EVEN	6464	1	65
+14037	MONDAY	ODD	6461	3	60
+14038	MONDAY	EVEN	6461	3	60
+14039	WEDNESDAY	EVEN	6460	3	57
+14040	MONDAY	ODD	6631	2	68
+14041	MONDAY	ODD	6632	2	68
+14042	MONDAY	ODD	6633	2	68
+14043	MONDAY	ODD	6634	2	68
+14044	MONDAY	ODD	6635	2	68
+14045	MONDAY	ODD	6636	2	68
+14046	MONDAY	EVEN	6631	2	68
+14047	MONDAY	EVEN	6632	2	68
+14048	MONDAY	EVEN	6633	2	68
+14049	MONDAY	EVEN	6634	2	68
+14050	MONDAY	EVEN	6635	2	68
+14051	MONDAY	EVEN	6636	2	68
+14052	MONDAY	ODD	6511	3	68
+14053	MONDAY	ODD	6512	3	68
+14054	MONDAY	ODD	6513	3	68
+14055	MONDAY	ODD	6514	3	68
+14056	MONDAY	ODD	6515	3	68
+14058	MONDAY	EVEN	6511	3	68
+14059	MONDAY	EVEN	6512	3	68
+14060	MONDAY	EVEN	6513	3	68
+14061	MONDAY	EVEN	6514	3	68
+14062	MONDAY	EVEN	6515	3	68
+14064	MONDAY	ODD	6517	4	55
+14065	MONDAY	ODD	6518	4	55
+14066	MONDAY	EVEN	6517	4	55
+14067	MONDAY	EVEN	6518	4	55
+14068	TUESDAY	ODD	6492	1	55
+14069	TUESDAY	EVEN	6492	1	55
+14070	TUESDAY	ODD	6510	2	57
+14071	TUESDAY	EVEN	6510	2	57
+14072	TUESDAY	ODD	6487	3	68
+14073	TUESDAY	ODD	6488	3	68
+14015	THURSDAY	ODD	6447	2	54
+14017	THURSDAY	EVEN	6447	2	54
+14016	THURSDAY	ODD	6448	2	54
+14018	THURSDAY	EVEN	6448	2	54
+13992	MONDAY	EVEN	6455	4	53
+13993	MONDAY	EVEN	6456	4	53
+14074	TUESDAY	ODD	6489	3	68
+14075	TUESDAY	ODD	6490	3	68
+14076	TUESDAY	ODD	6491	3	68
+14077	TUESDAY	EVEN	6487	3	68
+14078	TUESDAY	EVEN	6488	3	68
+14079	TUESDAY	EVEN	6489	3	68
+14080	TUESDAY	EVEN	6490	3	68
+14081	TUESDAY	EVEN	6491	3	68
+14082	WEDNESDAY	ODD	6477	2	68
+14083	WEDNESDAY	ODD	6478	2	68
+14084	WEDNESDAY	ODD	6479	2	68
+14085	WEDNESDAY	ODD	6480	2	68
+14086	WEDNESDAY	ODD	6481	2	68
+14087	WEDNESDAY	ODD	6482	2	68
+14088	WEDNESDAY	ODD	6483	2	68
+14089	WEDNESDAY	EVEN	6477	2	68
+14090	WEDNESDAY	EVEN	6478	2	68
+14091	WEDNESDAY	EVEN	6479	2	68
+14092	WEDNESDAY	EVEN	6480	2	68
+14093	WEDNESDAY	EVEN	6481	2	68
+14094	WEDNESDAY	EVEN	6482	2	68
+14095	WEDNESDAY	EVEN	6483	2	68
+14096	WEDNESDAY	ODD	6484	3	56
+14097	WEDNESDAY	EVEN	6484	3	56
+14103	WEDNESDAY	EVEN	6586	4	53
+14104	WEDNESDAY	EVEN	6587	4	53
+14105	WEDNESDAY	EVEN	6588	4	53
+14106	WEDNESDAY	EVEN	6589	4	53
+14107	WEDNESDAY	EVEN	6590	4	53
+14118	THURSDAY	ODD	6470	1	52
+14119	THURSDAY	EVEN	6470	1	52
+14120	THURSDAY	ODD	6473	2	57
+14121	THURSDAY	EVEN	6500	2	58
+14122	THURSDAY	ODD	6519	3	68
+14123	THURSDAY	ODD	6520	3	68
+14124	THURSDAY	ODD	6521	3	68
+14125	THURSDAY	ODD	6522	3	68
+14126	THURSDAY	ODD	6523	3	68
+14127	THURSDAY	ODD	6524	3	68
+14128	THURSDAY	ODD	6525	3	68
+14129	THURSDAY	EVEN	6670	3	68
+14130	THURSDAY	EVEN	6671	3	68
+14131	THURSDAY	EVEN	6672	3	68
+14132	THURSDAY	EVEN	6673	3	68
+14133	THURSDAY	EVEN	6674	3	68
+14134	THURSDAY	EVEN	6675	3	68
+14135	THURSDAY	EVEN	6676	3	68
+14136	THURSDAY	ODD	6526	4	52
+14137	THURSDAY	EVEN	6526	4	52
+14138	THURSDAY	ODD	6550	7	119
+14139	THURSDAY	ODD	6551	7	119
+14140	THURSDAY	ODD	6552	7	119
+14141	THURSDAY	ODD	6553	7	119
+14142	THURSDAY	EVEN	6550	7	119
+14143	THURSDAY	EVEN	6551	7	119
+14144	THURSDAY	EVEN	6552	7	119
+14145	THURSDAY	EVEN	6553	7	119
+14146	THURSDAY	ODD	6554	8	119
+14147	THURSDAY	ODD	6555	8	119
+14148	THURSDAY	ODD	6556	8	119
+14149	THURSDAY	ODD	6557	8	119
+14150	FRIDAY	ODD	6541	3	68
+14151	FRIDAY	ODD	6542	3	68
+14152	FRIDAY	ODD	6543	3	68
+14153	FRIDAY	ODD	6544	3	68
+14154	FRIDAY	ODD	6545	3	68
+14155	FRIDAY	ODD	6546	3	68
+14156	FRIDAY	EVEN	6541	3	68
+14157	FRIDAY	EVEN	6542	3	68
+14158	FRIDAY	EVEN	6543	3	68
+14159	FRIDAY	EVEN	6544	3	68
+14160	FRIDAY	EVEN	6545	3	68
+14161	FRIDAY	EVEN	6546	3	68
+14162	FRIDAY	ODD	6547	4	52
+14163	FRIDAY	EVEN	6547	4	52
+14166	TUESDAY	ODD	6569	2	58
+14167	TUESDAY	ODD	6570	2	58
+14168	TUESDAY	EVEN	6569	2	58
+14169	TUESDAY	EVEN	6570	2	58
+14174	THURSDAY	ODD	6476	2	57
+14175	THURSDAY	EVEN	6501	2	58
+14176	FRIDAY	ODD	6565	2	120
+14177	FRIDAY	EVEN	6565	2	120
+14178	FRIDAY	ODD	6561	4	56
+14179	FRIDAY	EVEN	6561	4	56
+14180	MONDAY	ODD	6471	4	56
+14181	MONDAY	EVEN	6471	4	56
+14182	MONDAY	ODD	6571	7	52
+14183	MONDAY	EVEN	6571	7	52
+14184	WEDNESDAY	ODD	6559	1	64
+14185	WEDNESDAY	EVEN	6559	1	64
+14186	WEDNESDAY	ODD	6574	3	120
+14187	WEDNESDAY	EVEN	6574	3	120
+14188	THURSDAY	ODD	6502	2	58
+14189	THURSDAY	EVEN	6474	2	57
+14190	THURSDAY	ODD	6566	4	120
+14191	THURSDAY	EVEN	6566	4	120
+14192	FRIDAY	ODD	6527	2	56
+14193	FRIDAY	EVEN	6527	2	56
+14194	MONDAY	ODD	6567	4	120
+14195	MONDAY	EVEN	6567	4	120
+14196	TUESDAY	ODD	6472	1	52
+14197	TUESDAY	EVEN	6472	1	52
+14202	THURSDAY	ODD	6560	1	64
+14203	THURSDAY	EVEN	6560	1	64
+14204	THURSDAY	ODD	6503	2	58
+14205	THURSDAY	EVEN	6475	2	57
+14206	FRIDAY	ODD	6572	1	52
+14207	FRIDAY	EVEN	6572	1	52
+14208	FRIDAY	ODD	6528	2	56
+14209	FRIDAY	EVEN	6528	2	56
+14210	MONDAY	EVEN	6585	4	58
+14211	MONDAY	ODD	6573	7	52
+14212	MONDAY	EVEN	6573	7	52
+14219	WEDNESDAY	ODD	6504	3	57
+14220	THURSDAY	ODD	6577	1	68
+14221	THURSDAY	ODD	6578	1	68
+14222	THURSDAY	ODD	6579	1	68
+14223	THURSDAY	ODD	6580	1	68
+14224	THURSDAY	ODD	6581	1	68
+14234	THURSDAY	ODD	6529	4	52
+14235	THURSDAY	EVEN	6529	4	52
+14239	FRIDAY	EVEN	6568	4	120
+14225	THURSDAY	EVEN	6577	1	68
+14226	THURSDAY	EVEN	6578	1	68
+14227	THURSDAY	EVEN	6579	1	68
+14228	THURSDAY	EVEN	6580	1	68
+14229	THURSDAY	EVEN	6581	1	68
+14230	THURSDAY	ODD	6582	2	66
+14231	THURSDAY	ODD	6583	2	66
+14232	THURSDAY	EVEN	6582	2	66
+14233	THURSDAY	EVEN	6583	2	66
+14236	FRIDAY	ODD	6548	2	52
+14237	FRIDAY	EVEN	6548	2	52
+14240	MONDAY	ODD	6620	1	55
+14238	FRIDAY	ODD	6568	4	120
+14241	MONDAY	ODD	6600	2	56
+14242	MONDAY	EVEN	6600	2	56
+14253	TUESDAY	ODD	6618	2	54
+14254	TUESDAY	ODD	6619	2	54
+14255	TUESDAY	EVEN	6618	2	54
+14256	TUESDAY	EVEN	6619	2	54
+14274	MONDAY	EVEN	6620	1	55
+14275	TUESDAY	ODD	6609	3	53
+14276	TUESDAY	ODD	6610	3	53
+14277	TUESDAY	ODD	6611	3	53
+14278	TUESDAY	EVEN	6609	3	53
+14279	TUESDAY	EVEN	6610	3	53
+14280	TUESDAY	EVEN	6611	3	53
+14281	WEDNESDAY	ODD	6614	1	53
+14282	WEDNESDAY	ODD	6615	1	53
+14283	WEDNESDAY	EVEN	6614	1	53
+14284	WEDNESDAY	EVEN	6615	1	53
+14307	WEDNESDAY	ODD	6607	3	55
+14308	WEDNESDAY	ODD	6608	3	55
+14309	WEDNESDAY	EVEN	6607	3	55
+14310	WEDNESDAY	EVEN	6608	3	55
+14316	THURSDAY	ODD	6598	2	53
+14317	THURSDAY	ODD	6599	2	53
+14318	THURSDAY	EVEN	6598	2	53
+14319	THURSDAY	EVEN	6599	2	53
+14320	THURSDAY	ODD	6505	3	58
+14325	MONDAY	ODD	6621	2	55
+14326	MONDAY	EVEN	6621	2	55
+14327	MONDAY	ODD	6601	4	60
+14328	MONDAY	EVEN	6601	4	60
+14199	TUESDAY	EVEN	6576	2	51
+14200	WEDNESDAY	ODD	6575	1	60
+14201	WEDNESDAY	EVEN	6575	1	60
+14213	TUESDAY	ODD	6584	2	58
+14214	TUESDAY	EVEN	6584	2	58
+14321	FRIDAY	ODD	6596	2	60
+14322	FRIDAY	EVEN	6596	2	60
+14324	FRIDAY	ODD	6616	3	55
+14323	FRIDAY	EVEN	6616	3	55
+15192	MONDAY	ODD	7131	3	119
+15193	MONDAY	EVEN	7133	2	119
+15196	MONDAY	ODD	7132	2	119
+15197	MONDAY	EVEN	7132	2	119
+14215	TUESDAY	ODD	6562	4	60
+14216	TUESDAY	EVEN	6562	4	60
+15383	MONDAY	EVEN	7038	2	122
+15384	MONDAY	EVEN	7039	2	122
+15385	MONDAY	EVEN	7040	2	122
+15386	MONDAY	EVEN	7041	2	122
+14331	THURSDAY	ODD	6506	3	58
+14336	TUESDAY	ODD	6625	1	74
+14337	TUESDAY	ODD	6626	1	74
+14338	TUESDAY	ODD	6627	1	74
+14339	TUESDAY	EVEN	6625	1	74
+14340	TUESDAY	EVEN	6626	1	74
+14341	TUESDAY	EVEN	6627	1	74
+14342	TUESDAY	ODD	6637	2	56
+14343	TUESDAY	EVEN	6637	2	56
+14344	TUESDAY	ODD	6647	3	56
+14345	TUESDAY	EVEN	6647	3	56
+14356	WEDNESDAY	EVEN	6507	4	57
+14357	THURSDAY	ODD	6638	4	64
+14358	THURSDAY	EVEN	6638	4	64
+14359	FRIDAY	ODD	6628	2	57
+14360	FRIDAY	EVEN	6628	2	57
+14362	FRIDAY	EVEN	6530	3	56
+14392	FRIDAY	ODD	6530	3	56
+14393	MONDAY	ODD	6664	3	51
+14404	TUESDAY	ODD	6653	3	54
+14407	WEDNESDAY	ODD	6651	2	59
+14408	WEDNESDAY	ODD	6652	2	59
+14409	WEDNESDAY	EVEN	6651	2	59
+14410	WEDNESDAY	EVEN	6652	2	59
+14414	THURSDAY	ODD	6661	2	61
+14415	THURSDAY	ODD	6662	2	61
+14416	THURSDAY	EVEN	6661	2	61
+14417	THURSDAY	EVEN	6662	2	61
+14418	THURSDAY	ODD	6649	3	54
+14419	THURSDAY	ODD	6650	3	54
+14420	THURSDAY	EVEN	6649	3	54
+14421	THURSDAY	EVEN	6650	3	54
+14422	THURSDAY	ODD	6508	4	57
+14424	FRIDAY	ODD	6663	2	51
+14425	FRIDAY	EVEN	6664	2	51
+14426	FRIDAY	ODD	6629	3	57
+14427	FRIDAY	EVEN	6629	3	57
+14428	MONDAY	ODD	6668	3	66
+14429	MONDAY	EVEN	6668	3	66
+14434	TUESDAY	ODD	6549	4	52
+14435	TUESDAY	EVEN	6549	4	52
+14440	WEDNESDAY	ODD	6509	4	57
+14443	FRIDAY	ODD	6630	2	57
+14444	FRIDAY	EVEN	6630	2	57
+14457	MONDAY	EVEN	6721	2	65
+14460	MONDAY	EVEN	6724	2	65
+14473	TUESDAY	EVEN	6729	1	65
+14476	TUESDAY	EVEN	6732	1	65
+14479	TUESDAY	ODD	6694	3	55
+14480	TUESDAY	EVEN	6694	3	55
+14486	WEDNESDAY	EVEN	6680	2	53
+14489	WEDNESDAY	EVEN	6683	2	53
+14492	WEDNESDAY	ODD	6733	4	120
+14497	THURSDAY	ODD	6688	2	68
+14498	THURSDAY	ODD	6689	2	68
+14499	THURSDAY	ODD	6690	2	68
+14503	THURSDAY	EVEN	6685	2	68
+14504	THURSDAY	EVEN	6686	2	68
+14505	THURSDAY	EVEN	6687	2	68
+14506	THURSDAY	EVEN	6688	2	68
+14507	THURSDAY	EVEN	6689	2	68
+14508	THURSDAY	EVEN	6690	2	68
+14430	MONDAY	ODD	6669	4	66
+14431	MONDAY	EVEN	6669	4	66
+14436	WEDNESDAY	ODD	6666	1	67
+14437	WEDNESDAY	EVEN	6666	1	67
+14441	FRIDAY	ODD	6666	1	67
+14442	FRIDAY	EVEN	6666	1	67
+14449	MONDAY	EVEN	6700	1	65
+14405	WEDNESDAY	ODD	6654	1	52
+14406	WEDNESDAY	EVEN	6654	1	52
+14332	FRIDAY	ODD	6617	2	55
+14333	FRIDAY	EVEN	6617	2	55
+14334	FRIDAY	ODD	6597	3	60
+14335	FRIDAY	EVEN	6597	3	60
+14355	WEDNESDAY	EVEN	6677	3	65
+14413	WEDNESDAY	EVEN	6678	3	65
+14394	MONDAY	ODD	6657	4	59
+14398	MONDAY	EVEN	6657	4	59
+14395	MONDAY	ODD	6658	4	59
+14399	MONDAY	EVEN	6658	4	59
+14452	MONDAY	EVEN	6703	1	65
+14493	WEDNESDAY	EVEN	6733	4	120
+14511	THURSDAY	EVEN	6693	2	68
+14432	TUESDAY	ODD	6667	2	67
+14433	TUESDAY	EVEN	6667	2	67
+14438	WEDNESDAY	ODD	6667	3	66
+14445	MONDAY	ODD	6700	1	65
+14448	MONDAY	ODD	6703	1	65
+14453	MONDAY	ODD	6721	2	65
+14456	MONDAY	ODD	6724	2	65
+14469	TUESDAY	ODD	6729	1	65
+14472	TUESDAY	ODD	6732	1	65
+14477	TUESDAY	ODD	6704	2	64
+14478	TUESDAY	EVEN	6704	2	64
+14482	WEDNESDAY	ODD	6680	2	53
+14485	WEDNESDAY	ODD	6683	2	53
+14490	WEDNESDAY	ODD	6684	3	60
+14491	WEDNESDAY	EVEN	6684	3	60
+14494	THURSDAY	ODD	6685	2	68
+14495	THURSDAY	ODD	6686	2	68
+14496	THURSDAY	ODD	6687	2	68
+14502	THURSDAY	ODD	6693	2	68
+14542	WEDNESDAY	ODD	6742	3	64
+14544	WEDNESDAY	EVEN	6742	3	64
+14552	TUESDAY	ODD	6699	2	55
+14553	TUESDAY	EVEN	6699	2	55
+14559	FRIDAY	ODD	6712	4	119
+14560	FRIDAY	EVEN	6712	4	119
+14567	WEDNESDAY	ODD	6665	3	51
+14568	WEDNESDAY	EVEN	6665	4	51
+14571	MONDAY	ODD	6759	1	56
+14572	MONDAY	EVEN	6759	1	56
+14573	MONDAY	ODD	6751	2	74
+14574	MONDAY	ODD	6752	2	74
+14575	MONDAY	ODD	6753	2	74
+14576	MONDAY	ODD	6754	2	74
+14577	MONDAY	ODD	6755	2	74
+14578	MONDAY	EVEN	6751	2	74
+14579	MONDAY	EVEN	6752	2	74
+14580	MONDAY	EVEN	6753	2	74
+14581	MONDAY	EVEN	6754	2	74
+14582	MONDAY	EVEN	6755	2	74
+14512	THURSDAY	ODD	6717	3	52
+14513	THURSDAY	EVEN	6717	3	52
+14555	THURSDAY	ODD	6739	3	120
+14556	THURSDAY	EVEN	6739	3	120
+14439	WEDNESDAY	EVEN	6679	3	65
+14563	MONDAY	ODD	6655	7	59
+14565	MONDAY	EVEN	6655	7	59
+14564	MONDAY	ODD	6656	7	59
+14566	MONDAY	EVEN	6656	7	59
+14583	TUESDAY	ODD	6798	2	52
+14584	TUESDAY	EVEN	6798	2	52
+14585	TUESDAY	ODD	6800	3	57
+14586	TUESDAY	ODD	6801	3	57
+14561	THURSDAY	EVEN	6659	4	61
+14587	TUESDAY	EVEN	6800	3	57
+14588	TUESDAY	EVEN	6801	3	57
+14630	FRIDAY	EVEN	6750	1	120
+14609	THURSDAY	ODD	6788	4	68
+14610	THURSDAY	ODD	6789	4	68
+14611	THURSDAY	ODD	6790	4	68
+14612	THURSDAY	ODD	6791	4	68
+14613	THURSDAY	ODD	6792	4	68
+14614	THURSDAY	EVEN	6788	4	68
+14615	THURSDAY	EVEN	6789	4	68
+14616	THURSDAY	EVEN	6790	4	68
+14617	THURSDAY	EVEN	6791	4	68
+14618	THURSDAY	EVEN	6792	4	68
+14629	FRIDAY	ODD	6750	1	120
+14641	MONDAY	ODD	6799	3	56
+14642	MONDAY	EVEN	6799	3	56
+14645	TUESDAY	ODD	6802	2	60
+14650	THURSDAY	EVEN	6696	3	55
+14673	TUESDAY	ODD	6758	3	60
+14674	TUESDAY	EVEN	6758	3	60
+14680	FRIDAY	EVEN	6766	1	56
+14681	FRIDAY	ODD	6749	3	64
+14683	MONDAY	ODD	6805	1	120
+14684	MONDAY	EVEN	6805	1	120
+14595	WEDNESDAY	ODD	6695	2	55
+14596	WEDNESDAY	EVEN	6695	2	55
+14631	FRIDAY	ODD	6778	2	74
+14632	FRIDAY	ODD	6779	2	74
+14633	FRIDAY	ODD	6780	2	74
+14634	FRIDAY	ODD	6781	2	74
+14635	FRIDAY	ODD	6782	2	74
+14636	FRIDAY	EVEN	6778	2	74
+14637	FRIDAY	EVEN	6779	2	74
+14638	FRIDAY	EVEN	6780	2	74
+14639	FRIDAY	EVEN	6781	2	74
+14640	FRIDAY	EVEN	6782	2	74
+14646	TUESDAY	EVEN	6802	2	60
+14649	THURSDAY	ODD	6696	3	55
+14651	FRIDAY	ODD	6757	1	55
+14652	FRIDAY	EVEN	6757	1	55
+14653	MONDAY	ODD	6803	3	64
+14654	MONDAY	EVEN	6803	3	64
+14655	TUESDAY	ODD	6747	1	64
+14656	TUESDAY	EVEN	6747	1	64
+14663	WEDNESDAY	ODD	6756	2	56
+14664	WEDNESDAY	EVEN	6756	2	56
+14669	FRIDAY	ODD	6765	1	56
+14670	FRIDAY	EVEN	6765	1	56
+14671	MONDAY	ODD	6804	1	120
+14672	MONDAY	EVEN	6804	1	120
+14675	WEDNESDAY	ODD	6807	2	60
+14676	WEDNESDAY	EVEN	6807	2	60
+14679	FRIDAY	ODD	6766	1	56
+14682	FRIDAY	EVEN	6749	3	64
+14685	MONDAY	ODD	6810	3	55
+14686	MONDAY	EVEN	6810	3	55
+14687	MONDAY	ODD	6809	4	53
+14647	WEDNESDAY	ODD	6748	2	52
+14648	WEDNESDAY	EVEN	6748	2	52
+14690	TUESDAY	ODD	6760	3	60
+14691	TUESDAY	EVEN	6760	3	60
+14693	WEDNESDAY	ODD	6808	2	60
+14694	WEDNESDAY	EVEN	6808	2	60
+14697	FRIDAY	ODD	6812	3	64
+14698	FRIDAY	EVEN	6812	3	64
+14699	MONDAY	ODD	6816	4	64
+14700	MONDAY	EVEN	6816	4	64
+14701	MONDAY	ODD	6564	7	56
+14702	MONDAY	EVEN	6564	7	56
+14703	TUESDAY	ODD	6817	2	59
+14704	TUESDAY	ODD	6818	2	59
+14705	TUESDAY	ODD	6819	2	59
+14706	TUESDAY	EVEN	6817	2	59
+14707	TUESDAY	EVEN	6818	2	59
+14708	TUESDAY	EVEN	6819	2	59
+14709	TUESDAY	ODD	6827	4	64
+14710	TUESDAY	EVEN	6827	4	64
+14712	WEDNESDAY	ODD	6823	2	54
+14714	WEDNESDAY	EVEN	6823	2	54
+14721	THURSDAY	ODD	6826	2	64
+14722	THURSDAY	EVEN	6826	2	64
+14723	THURSDAY	EVEN	6820	4	51
+14724	THURSDAY	ODD	6813	4	53
+14725	THURSDAY	ODD	6814	4	53
+14726	THURSDAY	ODD	6815	4	53
+14729	MONDAY	ODD	6830	2	54
+14730	MONDAY	EVEN	6830	2	54
+14733	TUESDAY	ODD	6833	1	54
+14734	TUESDAY	EVEN	6833	1	54
+14735	TUESDAY	ODD	6825	3	64
+14736	TUESDAY	EVEN	6825	3	64
+14739	WEDNESDAY	ODD	6831	3	54
+14740	WEDNESDAY	EVEN	6831	3	54
+14741	THURSDAY	EVEN	6821	3	51
+14562	THURSDAY	EVEN	6660	4	61
+14742	MONDAY	ODD	6837	1	66
+14743	MONDAY	EVEN	6837	1	66
+14745	MONDAY	EVEN	6839	2	54
+14746	TUESDAY	ODD	6838	1	53
+14751	TUESDAY	EVEN	6849	4	55
+14754	WEDNESDAY	EVEN	6845	1	66
+14755	WEDNESDAY	EVEN	6846	1	66
+14757	WEDNESDAY	EVEN	6847	2	66
+14759	WEDNESDAY	EVEN	6840	3	54
+14762	THURSDAY	ODD	6836	3	57
+14767	FRIDAY	ODD	6848	2	74
+14768	FRIDAY	EVEN	6848	2	74
+14769	FRIDAY	ODD	6843	3	119
+14771	FRIDAY	ODD	6844	4	119
+14744	MONDAY	ODD	6839	2	54
+14747	TUESDAY	EVEN	6838	1	53
+14750	TUESDAY	ODD	6849	4	55
+14770	FRIDAY	EVEN	6843	3	119
+14748	TUESDAY	ODD	6835	3	66
+14749	TUESDAY	EVEN	6835	3	66
+14756	WEDNESDAY	ODD	6847	2	66
+14758	WEDNESDAY	ODD	6840	3	54
+14763	THURSDAY	EVEN	6836	3	57
+14772	FRIDAY	EVEN	6844	4	119
+14773	MONDAY	ODD	6880	1	119
+14774	MONDAY	EVEN	6880	1	119
+14775	MONDAY	ODD	6881	2	119
+14776	MONDAY	EVEN	6881	2	119
+14777	MONDAY	ODD	6894	3	119
+14778	MONDAY	ODD	6895	3	119
+14779	MONDAY	EVEN	6894	3	119
+14780	MONDAY	EVEN	6895	3	119
+14781	MONDAY	ODD	6896	4	119
+14782	MONDAY	ODD	6897	4	119
+14783	MONDAY	EVEN	6896	4	119
+14784	MONDAY	EVEN	6897	4	119
+14785	TUESDAY	ODD	6906	1	119
+14786	TUESDAY	ODD	6907	1	119
+14787	TUESDAY	EVEN	6908	1	119
+14788	TUESDAY	EVEN	6909	1	119
+14789	TUESDAY	ODD	6904	2	119
+14790	TUESDAY	ODD	6905	2	119
+14791	TUESDAY	EVEN	6902	2	119
+14792	TUESDAY	EVEN	6903	2	119
+14793	WEDNESDAY	ODD	6892	1	119
+14794	WEDNESDAY	ODD	6893	1	119
+14795	WEDNESDAY	EVEN	6892	1	119
+14796	WEDNESDAY	EVEN	6893	1	119
+14760	THURSDAY	ODD	6835	2	65
+14761	THURSDAY	EVEN	6835	2	65
+14716	WEDNESDAY	EVEN	6829	3	122
+14765	THURSDAY	ODD	6841	7	56
+14766	THURSDAY	EVEN	6841	7	56
+14737	TUESDAY	ODD	6834	4	120
+14738	TUESDAY	EVEN	6834	4	120
+14797	WEDNESDAY	EVEN	6890	2	119
+14798	WEDNESDAY	EVEN	6891	2	119
+14805	THURSDAY	ODD	6900	3	119
+14806	THURSDAY	ODD	6901	3	119
+14807	THURSDAY	EVEN	6878	2	119
+14808	THURSDAY	EVEN	6879	2	119
+14799	WEDNESDAY	ODD	6886	2	119
+14800	WEDNESDAY	ODD	6887	2	119
+14811	THURSDAY	ODD	6898	4	119
+14812	THURSDAY	ODD	6899	4	119
+14801	WEDNESDAY	ODD	6888	3	119
+14802	WEDNESDAY	ODD	6889	3	119
+14803	THURSDAY	ODD	6878	2	119
+14804	THURSDAY	ODD	6879	2	119
+14809	THURSDAY	EVEN	6900	3	119
+14810	THURSDAY	EVEN	6901	3	119
+14813	THURSDAY	EVEN	6898	4	119
+14814	THURSDAY	EVEN	6899	4	119
+14822	MONDAY	ODD	6910	1	119
+14823	MONDAY	EVEN	6910	1	119
+14824	MONDAY	ODD	6911	2	119
+14825	MONDAY	EVEN	6911	2	119
+14829	MONDAY	ODD	6918	1	119
+14830	MONDAY	EVEN	6918	1	119
+14831	MONDAY	ODD	6919	2	119
+14832	MONDAY	EVEN	6919	2	119
+14836	TUESDAY	ODD	6913	1	119
+14837	TUESDAY	EVEN	6913	1	119
+14839	TUESDAY	EVEN	6922	2	119
+14840	TUESDAY	ODD	6922	2	119
+14844	THURSDAY	EVEN	6912	2	119
+14850	MONDAY	EVEN	6939	2	119
+14851	MONDAY	EVEN	6940	2	119
+14198	TUESDAY	ODD	6576	2	51
+14854	TUESDAY	ODD	6761	2	61
+14855	TUESDAY	ODD	6762	2	61
+14856	TUESDAY	ODD	6763	2	61
+14857	TUESDAY	EVEN	6761	2	61
+14858	TUESDAY	EVEN	6762	2	61
+14859	TUESDAY	EVEN	6763	2	61
+14860	TUESDAY	ODD	6952	1	119
+14861	TUESDAY	EVEN	6953	1	119
+14862	MONDAY	EVEN	6937	1	119
+14863	MONDAY	EVEN	6938	1	119
+14864	MONDAY	ODD	6935	3	119
+14865	MONDAY	EVEN	6936	3	119
+14866	MONDAY	ODD	6459	3	57
+14873	FRIDAY	ODD	6949	1	119
+14874	FRIDAY	EVEN	6950	1	119
+14875	FRIDAY	ODD	6951	2	119
+14877	FRIDAY	ODD	6945	3	119
+14878	FRIDAY	ODD	6946	3	119
+14879	FRIDAY	EVEN	6947	3	119
+14880	FRIDAY	EVEN	6948	3	119
+14881	FRIDAY	EVEN	6947	4	119
+14882	FRIDAY	EVEN	6948	4	119
+14883	TUESDAY	ODD	6959	1	119
+14884	TUESDAY	EVEN	6958	1	119
+14885	TUESDAY	ODD	6973	2	119
+14886	TUESDAY	EVEN	6972	2	119
+14887	TUESDAY	ODD	6975	3	119
+14888	TUESDAY	EVEN	6974	3	119
+14891	WEDNESDAY	ODD	6978	1	119
+14892	WEDNESDAY	EVEN	6979	1	119
+14893	THURSDAY	ODD	6970	2	119
+14894	THURSDAY	EVEN	6971	2	119
+14895	THURSDAY	ODD	6967	3	119
+14896	THURSDAY	EVEN	6966	3	119
+14897	WEDNESDAY	ODD	6976	3	119
+14898	WEDNESDAY	EVEN	6977	3	119
+14899	TUESDAY	EVEN	6968	1	119
+14928	MONDAY	EVEN	6981	3	122
+14929	THURSDAY	ODD	6981	3	64
+14867	THURSDAY	EVEN	6459	4	123
+14930	MONDAY	ODD	6563	1	64
+14931	MONDAY	EVEN	6563	1	64
+14932	WEDNESDAY	ODD	6558	3	52
+14933	WEDNESDAY	EVEN	6558	3	52
+14934	WEDNESDAY	ODD	6586	4	53
+14935	WEDNESDAY	ODD	6587	4	53
+14936	WEDNESDAY	ODD	6588	4	53
+14937	WEDNESDAY	ODD	6589	4	53
+14938	WEDNESDAY	ODD	6590	4	53
+14939	WEDNESDAY	ODD	6591	7	53
+14940	WEDNESDAY	ODD	6592	7	53
+14941	WEDNESDAY	ODD	6593	7	53
+14942	WEDNESDAY	ODD	6594	7	53
+14943	WEDNESDAY	ODD	6595	7	53
+14944	WEDNESDAY	EVEN	6591	7	53
+14945	WEDNESDAY	EVEN	6592	7	53
+14946	WEDNESDAY	EVEN	6593	7	53
+14947	WEDNESDAY	EVEN	6594	7	53
+14948	WEDNESDAY	EVEN	6595	7	53
+14949	THURSDAY	ODD	6725	4	55
+14950	FRIDAY	ODD	6705	3	119
+14951	FRIDAY	EVEN	6705	3	119
+14952	FRIDAY	ODD	6709	2	119
+14953	FRIDAY	EVEN	6709	2	119
+14954	FRIDAY	ODD	6708	3	119
+14955	FRIDAY	EVEN	6708	3	119
+14956	THURSDAY	EVEN	6728	4	55
+14957	TUESDAY	ODD	6720	3	52
+14958	TUESDAY	EVEN	6720	3	52
+14959	WEDNESDAY	ODD	6736	4	55
+14960	WEDNESDAY	EVEN	6736	4	55
+14961	MONDAY	ODD	6829	2	64
+14962	MONDAY	EVEN	6828	2	67
+14963	MONDAY	ODD	6822	3	67
+14964	MONDAY	EVEN	6822	3	67
+14967	THURSDAY	EVEN	6982	4	51
+14968	MONDAY	ODD	6832	1	54
+14969	MONDAY	EVEN	6832	1	54
+14970	THURSDAY	ODD	6983	1	119
+14971	THURSDAY	ODD	6984	1	119
+14972	THURSDAY	ODD	6985	1	119
+14973	THURSDAY	EVEN	6987	1	119
+14974	THURSDAY	EVEN	6988	1	119
+14975	THURSDAY	EVEN	6986	1	119
+14976	FRIDAY	ODD	6989	1	119
+14977	FRIDAY	ODD	6990	1	119
+14978	FRIDAY	ODD	6991	1	119
+14979	FRIDAY	ODD	6992	1	119
+14980	FRIDAY	EVEN	6989	1	119
+14981	FRIDAY	EVEN	6990	1	119
+14982	FRIDAY	EVEN	6991	1	119
+14983	FRIDAY	EVEN	6992	1	119
+14984	FRIDAY	ODD	6993	2	119
+14985	FRIDAY	ODD	6994	2	119
+14986	FRIDAY	ODD	6995	2	119
+14987	FRIDAY	ODD	6996	2	119
+14988	MONDAY	ODD	7003	3	119
+14989	MONDAY	ODD	7004	3	119
+14990	MONDAY	EVEN	7003	3	119
+14991	MONDAY	EVEN	7004	3	119
+14992	MONDAY	ODD	7001	4	119
+14993	MONDAY	ODD	7002	4	119
+14994	WEDNESDAY	ODD	6997	2	119
+14996	WEDNESDAY	EVEN	6997	2	119
+14998	WEDNESDAY	ODD	6999	3	119
+15000	TUESDAY	ODD	7005	2	119
+15001	TUESDAY	ODD	7006	2	119
+15004	TUESDAY	EVEN	7007	2	119
+15005	TUESDAY	EVEN	7008	2	119
+15006	FRIDAY	ODD	6956	7	119
+15007	FRIDAY	EVEN	6957	7	119
+15049	MONDAY	ODD	7017	3	52
+14965	WEDNESDAY	ODD	6824	2	122
+14966	WEDNESDAY	EVEN	6824	2	122
+15050	MONDAY	EVEN	7017	3	52
+15065	WEDNESDAY	ODD	7013	2	74
+15066	WEDNESDAY	ODD	7014	2	74
+15067	WEDNESDAY	ODD	7015	2	74
+15068	WEDNESDAY	ODD	7016	2	74
+15073	WEDNESDAY	ODD	7052	3	53
+15074	WEDNESDAY	ODD	7053	3	53
+15075	WEDNESDAY	ODD	7054	3	53
+15076	WEDNESDAY	ODD	7055	3	53
+15099	FRIDAY	EVEN	7022	2	53
+15100	FRIDAY	EVEN	7023	2	53
+15101	FRIDAY	EVEN	7024	2	53
+15102	FRIDAY	EVEN	7025	2	53
+15111	MONDAY	ODD	7037	3	58
+15112	MONDAY	EVEN	7037	3	58
+15055	TUESDAY	ODD	7046	2	74
+15056	TUESDAY	ODD	7047	2	74
+15057	TUESDAY	ODD	7048	2	74
+15058	TUESDAY	ODD	7049	2	74
+15059	TUESDAY	EVEN	7046	2	74
+15060	TUESDAY	EVEN	7047	2	74
+15061	TUESDAY	EVEN	7048	2	74
+15062	TUESDAY	EVEN	7049	2	74
+15063	TUESDAY	ODD	7060	3	59
+15064	TUESDAY	EVEN	7060	3	59
+15069	WEDNESDAY	EVEN	7013	2	74
+15070	WEDNESDAY	EVEN	7014	2	74
+15071	WEDNESDAY	EVEN	7015	2	74
+15072	WEDNESDAY	EVEN	7016	2	74
+15077	WEDNESDAY	EVEN	7056	3	53
+15078	WEDNESDAY	EVEN	7057	3	53
+15079	WEDNESDAY	EVEN	7058	3	53
+15080	WEDNESDAY	EVEN	7059	3	53
+15081	THURSDAY	ODD	7032	2	74
+15082	THURSDAY	ODD	7033	2	74
+15083	THURSDAY	ODD	7034	2	74
+15084	THURSDAY	ODD	7035	2	74
+15085	THURSDAY	EVEN	7032	2	74
+15086	THURSDAY	EVEN	7033	2	74
+15087	THURSDAY	EVEN	7034	2	74
+15088	THURSDAY	EVEN	7035	2	74
+15089	THURSDAY	ODD	7036	3	66
+15090	THURSDAY	EVEN	7036	3	66
+15095	FRIDAY	ODD	7018	2	53
+15096	FRIDAY	ODD	7019	2	53
+15097	FRIDAY	ODD	7020	2	53
+15098	FRIDAY	ODD	7021	2	53
+15103	FRIDAY	ODD	7042	3	53
+15104	FRIDAY	ODD	7043	3	53
+15105	FRIDAY	ODD	7044	3	53
+15106	FRIDAY	ODD	7045	3	53
+15107	FRIDAY	EVEN	7042	3	53
+15108	FRIDAY	EVEN	7043	3	53
+15109	FRIDAY	EVEN	7044	3	53
+15110	FRIDAY	EVEN	7045	3	53
+15113	MONDAY	ODD	7061	4	52
+15114	MONDAY	EVEN	7061	4	52
+15119	THURSDAY	ODD	7064	1	120
+15120	THURSDAY	EVEN	7064	1	120
+15121	MONDAY	ODD	7062	3	120
+15122	MONDAY	EVEN	7062	3	120
+15123	TUESDAY	ODD	7069	3	61
+15124	TUESDAY	EVEN	7069	3	61
+15127	THURSDAY	ODD	7065	1	120
+15128	THURSDAY	EVEN	7065	1	120
+15129	THURSDAY	ODD	7070	3	74
+15130	THURSDAY	ODD	7071	3	74
+15131	THURSDAY	EVEN	7070	3	74
+15132	THURSDAY	EVEN	7071	3	74
+15135	MONDAY	ODD	7063	3	120
+15136	MONDAY	EVEN	7063	3	120
+15137	MONDAY	ODD	7073	4	68
+15138	MONDAY	EVEN	7073	4	68
+15139	FRIDAY	ODD	7074	4	53
+15140	FRIDAY	EVEN	7074	4	53
+15141	TUESDAY	ODD	6485	7	55
+15142	TUESDAY	EVEN	6485	7	55
+15143	WEDNESDAY	ODD	6486	1	55
+15144	WEDNESDAY	EVEN	6486	1	55
+15147	TUESDAY	ODD	6787	4	55
+15148	TUESDAY	EVEN	6787	4	55
+15155	TUESDAY	ODD	7030	1	120
+15156	TUESDAY	ODD	7031	1	120
+15157	TUESDAY	EVEN	7030	1	120
+15158	TUESDAY	EVEN	7031	1	120
+15159	WEDNESDAY	ODD	7050	1	56
+15160	WEDNESDAY	ODD	7051	1	56
+15161	WEDNESDAY	EVEN	7050	1	56
+15162	WEDNESDAY	EVEN	7051	1	56
+15163	TUESDAY	ODD	7066	1	56
+15164	TUESDAY	EVEN	7066	1	56
+15165	TUESDAY	ODD	7067	1	56
+15166	TUESDAY	EVEN	7067	1	56
+15167	FRIDAY	EVEN	7026	1	68
+15168	FRIDAY	EVEN	7027	1	68
+15169	FRIDAY	EVEN	7028	1	68
+15170	FRIDAY	EVEN	7029	1	68
+15174	WEDNESDAY	EVEN	7106	3	119
+15176	WEDNESDAY	EVEN	7108	3	119
+15177	THURSDAY	ODD	7109	3	119
+15179	THURSDAY	ODD	7111	3	119
+15115	TUESDAY	ODD	7068	3	59
+15178	THURSDAY	ODD	7110	3	51
+15187	THURSDAY	ODD	6942	7	119
+15188	THURSDAY	EVEN	6944	7	119
+15194	MONDAY	EVEN	7131	3	119
+15195	MONDAY	ODD	7133	2	119
+15116	TUESDAY	EVEN	7068	3	59
+15198	MONDAY	ODD	7130	3	119
+15199	MONDAY	EVEN	7130	3	119
+15202	TUESDAY	EVEN	7114	2	120
+15203	TUESDAY	EVEN	7115	2	120
+15204	TUESDAY	ODD	7112	3	67
+15205	TUESDAY	ODD	7113	3	67
+15206	TUESDAY	EVEN	7112	3	67
+15207	TUESDAY	EVEN	7113	3	67
+15220	WEDNESDAY	EVEN	7124	1	58
+15221	WEDNESDAY	EVEN	7125	1	58
+15224	WEDNESDAY	EVEN	7116	3	61
+15225	WEDNESDAY	EVEN	7117	3	61
+15218	WEDNESDAY	ODD	7124	1	58
+15219	WEDNESDAY	ODD	7125	1	58
+15200	TUESDAY	ODD	7114	2	120
+15201	TUESDAY	ODD	7115	2	120
+15222	WEDNESDAY	ODD	7116	3	61
+15223	WEDNESDAY	ODD	7117	3	61
+15232	THURSDAY	ODD	7120	2	120
+15233	THURSDAY	ODD	7121	2	120
+15234	THURSDAY	EVEN	7120	2	120
+15235	THURSDAY	EVEN	7121	2	120
+15236	FRIDAY	EVEN	7126	1	61
+15237	FRIDAY	EVEN	7127	1	61
+15240	FRIDAY	EVEN	7122	3	61
+15241	FRIDAY	EVEN	7123	3	61
+15244	FRIDAY	ODD	6414	2	68
+15245	FRIDAY	ODD	6415	2	68
+15246	FRIDAY	EVEN	6414	2	68
+15247	FRIDAY	EVEN	6415	2	68
+15248	TUESDAY	ODD	6408	2	53
+15249	TUESDAY	ODD	6409	2	53
+15250	TUESDAY	EVEN	6408	2	53
+15251	TUESDAY	EVEN	6409	2	53
+15252	TUESDAY	ODD	6350	2	68
+15253	TUESDAY	ODD	6351	2	68
+15254	TUESDAY	ODD	6352	2	68
+15255	TUESDAY	ODD	6353	2	68
+15256	TUESDAY	ODD	6354	2	68
+15257	TUESDAY	EVEN	6350	2	68
+15258	TUESDAY	EVEN	6351	2	68
+15259	TUESDAY	EVEN	6352	2	68
+15260	TUESDAY	EVEN	6353	2	68
+15261	TUESDAY	EVEN	6354	2	68
+15267	FRIDAY	EVEN	6326	2	68
+15268	FRIDAY	EVEN	6327	2	68
+15269	FRIDAY	EVEN	6328	2	68
+15270	FRIDAY	EVEN	6329	2	68
+15271	FRIDAY	EVEN	6330	2	68
+15272	TUESDAY	ODD	6602	1	66
+15273	TUESDAY	EVEN	6602	1	66
+15295	TUESDAY	ODD	6603	1	66
+15296	TUESDAY	EVEN	6603	1	66
+15300	TUESDAY	ODD	6648	2	66
+15302	FRIDAY	ODD	6612	4	60
+15303	FRIDAY	ODD	6613	4	60
+15304	FRIDAY	EVEN	6612	4	60
+15305	FRIDAY	EVEN	6613	4	60
+15335	WEDNESDAY	ODD	6806	4	64
+15336	WEDNESDAY	EVEN	6806	4	64
+15337	FRIDAY	ODD	6326	2	68
+15338	FRIDAY	ODD	6327	2	68
+15339	FRIDAY	ODD	6328	2	68
+15340	FRIDAY	ODD	6329	2	68
+15341	FRIDAY	ODD	6330	2	68
+15344	THURSDAY	ODD	6784	3	60
+15345	THURSDAY	EVEN	6784	3	60
+15346	THURSDAY	ODD	6785	3	60
+15347	THURSDAY	EVEN	6785	3	60
+15348	THURSDAY	ODD	6786	1	56
+15349	THURSDAY	EVEN	6786	1	56
+15350	THURSDAY	ODD	6767	3	56
+15351	THURSDAY	EVEN	6767	3	56
+15352	THURSDAY	ODD	6783	1	56
+15353	THURSDAY	EVEN	6783	1	56
+15354	THURSDAY	ODD	6764	3	56
+15355	THURSDAY	EVEN	6764	3	56
+15356	TUESDAY	ODD	7129	4	61
+15357	TUESDAY	EVEN	7129	4	61
+15358	TUESDAY	ODD	7128	4	61
+15359	TUESDAY	EVEN	7128	4	61
+15362	THURSDAY	ODD	7141	7	72
+15363	THURSDAY	EVEN	7141	7	72
+15364	MONDAY	ODD	7143	4	59
+15365	MONDAY	EVEN	7143	4	59
+15366	MONDAY	ODD	7142	7	59
+15367	MONDAY	EVEN	7142	7	59
+15227	WEDNESDAY	EVEN	7118	2	67
+15228	THURSDAY	ODD	7126	1	55
+15230	THURSDAY	EVEN	7126	1	55
+15238	FRIDAY	EVEN	7122	2	107
+15368	WEDNESDAY	ODD	6969	4	119
+15369	WEDNESDAY	EVEN	6969	4	119
+15360	WEDNESDAY	ODD	6980	2	64
+15361	WEDNESDAY	EVEN	6980	2	64
+15226	WEDNESDAY	ODD	7118	2	67
+15242	WEDNESDAY	ODD	7119	2	67
+15243	WEDNESDAY	EVEN	7119	2	67
+15229	THURSDAY	ODD	7127	1	55
+15231	THURSDAY	EVEN	7127	1	55
+15239	FRIDAY	EVEN	7123	2	107
+15370	FRIDAY	ODD	6713	7	119
+15371	FRIDAY	EVEN	6713	7	119
+15372	FRIDAY	ODD	6716	7	119
+15373	FRIDAY	EVEN	6716	7	119
+15374	MONDAY	EVEN	7144	7	119
+15375	FRIDAY	ODD	7145	7	119
+15376	FRIDAY	EVEN	7145	7	119
+15377	TUESDAY	ODD	7072	3	61
+15378	TUESDAY	EVEN	7072	3	61
+15379	MONDAY	ODD	7038	2	122
+15380	MONDAY	ODD	7039	2	122
+15381	MONDAY	ODD	7040	2	122
+15382	MONDAY	ODD	7041	2	122
+15387	MONDAY	ODD	7135	1	52
+15388	MONDAY	EVEN	7135	1	52
+15394	FRIDAY	EVEN	7136	1	53
+15395	MONDAY	ODD	7146	3	54
+15396	MONDAY	ODD	7147	3	54
+15404	TUESDAY	EVEN	7151	4	58
+15405	THURSDAY	ODD	7153	1	54
+15436	FRIDAY	ODD	7163	4	58
+15439	MONDAY	EVEN	7174	3	58
+15440	TUESDAY	ODD	7165	2	62
+15441	TUESDAY	EVEN	7165	2	62
+15444	WEDNESDAY	ODD	7170	2	66
+15445	WEDNESDAY	EVEN	7170	2	66
+15175	WEDNESDAY	EVEN	7107	3	59
+15446	THURSDAY	ODD	7173	2	74
+15447	THURSDAY	EVEN	7173	2	74
+15389	MONDAY	ODD	7134	2	58
+15393	FRIDAY	ODD	7136	1	53
+15409	THURSDAY	EVEN	7150	2	125
+15410	MONDAY	ODD	7155	2	51
+15411	MONDAY	ODD	7156	2	51
+15415	TUESDAY	EVEN	7157	3	65
+15420	THURSDAY	EVEN	7164	2	51
+15421	FRIDAY	ODD	7158	1	66
+15435	FRIDAY	EVEN	7164	3	58
+15443	TUESDAY	EVEN	7168	3	65
+15390	MONDAY	EVEN	7134	2	58
+15391	WEDNESDAY	ODD	7137	1	54
+15392	WEDNESDAY	EVEN	7137	1	54
+15397	MONDAY	EVEN	7146	3	54
+15398	MONDAY	EVEN	7147	3	54
+15399	TUESDAY	ODD	7150	2	62
+15400	TUESDAY	EVEN	7150	2	62
+15401	TUESDAY	ODD	7152	3	120
+15402	TUESDAY	EVEN	7152	3	120
+15403	TUESDAY	ODD	7151	4	58
+15406	THURSDAY	EVEN	7148	1	54
+15407	THURSDAY	EVEN	7149	1	54
+15408	THURSDAY	ODD	7154	2	51
+15412	MONDAY	EVEN	7155	2	51
+15413	MONDAY	EVEN	7156	2	51
+15414	TUESDAY	ODD	7157	3	65
+15416	TUESDAY	ODD	7159	4	59
+15417	TUESDAY	ODD	7160	4	59
+15418	TUESDAY	EVEN	7159	4	59
+15419	TUESDAY	EVEN	7160	4	59
+15422	FRIDAY	ODD	7158	2	66
+15423	THURSDAY	ODD	6793	7	56
+15424	THURSDAY	ODD	6794	7	56
+15425	THURSDAY	ODD	6795	7	56
+15426	THURSDAY	ODD	6796	7	56
+15427	THURSDAY	ODD	6797	7	56
+15428	THURSDAY	EVEN	6793	7	56
+15429	THURSDAY	EVEN	6794	7	56
+15430	THURSDAY	EVEN	6795	7	56
+15431	THURSDAY	EVEN	6796	7	56
+15432	THURSDAY	EVEN	6797	7	56
+15433	FRIDAY	ODD	7161	3	58
+15434	FRIDAY	ODD	7162	3	58
+15437	FRIDAY	EVEN	7163	4	58
+15438	MONDAY	ODD	7174	3	58
+15442	TUESDAY	ODD	7168	3	65
+15448	THURSDAY	EVEN	7171	3	65
+15449	THURSDAY	ODD	7172	4	64
+15450	THURSDAY	EVEN	7172	4	64
+15451	WEDNESDAY	ODD	7110	3	59
+15452	WEDNESDAY	ODD	7109	3	119
+15453	WEDNESDAY	ODD	7111	3	119
+15454	FRIDAY	ODD	7169	1	66
+15455	FRIDAY	ODD	7169	2	66
+15456	TUESDAY	EVEN	6648	2	66
+15457	WEDNESDAY	EVEN	6828	4	67
+15458	WEDNESDAY	ODD	6640	3	74
+15459	WEDNESDAY	ODD	6641	3	74
+15460	WEDNESDAY	ODD	6642	3	74
+15461	WEDNESDAY	ODD	6643	3	74
+15462	WEDNESDAY	ODD	6644	3	74
+15463	WEDNESDAY	ODD	6645	3	74
+15464	WEDNESDAY	ODD	6646	3	74
+15465	WEDNESDAY	ODD	6773	1	68
+15466	WEDNESDAY	ODD	6774	1	68
+15467	WEDNESDAY	ODD	6775	1	68
+15468	WEDNESDAY	ODD	6776	1	68
+15469	WEDNESDAY	ODD	6777	1	68
+15470	WEDNESDAY	EVEN	6768	1	68
+15471	WEDNESDAY	EVEN	6769	1	68
+15472	WEDNESDAY	EVEN	6770	1	68
+15473	WEDNESDAY	EVEN	6771	1	68
+15474	WEDNESDAY	EVEN	6772	1	68
+15475	WEDNESDAY	EVEN	6811	3	74
+15476	WEDNESDAY	EVEN	6743	3	74
+15477	WEDNESDAY	EVEN	6744	3	74
+15478	WEDNESDAY	EVEN	6745	3	74
+15479	WEDNESDAY	EVEN	6746	3	74
+15480	MONDAY	ODD	6604	8	119
+15481	MONDAY	ODD	6605	8	119
+15482	MONDAY	ODD	6606	8	119
+15483	MONDAY	EVEN	6604	8	119
+15484	MONDAY	EVEN	6605	8	119
+15485	MONDAY	EVEN	6606	8	119
+15486	THURSDAY	ODD	6360	1	60
+15487	THURSDAY	EVEN	6360	1	60
+15488	TUESDAY	EVEN	6357	3	74
+15489	TUESDAY	EVEN	6358	3	74
+15490	FRIDAY	ODD	6453	3	65
+15491	FRIDAY	ODD	6454	3	65
+15492	FRIDAY	EVEN	6453	3	65
+15493	FRIDAY	EVEN	6454	3	65
+15494	MONDAY	ODD	7180	1	68
+15495	MONDAY	ODD	7181	1	68
+15496	MONDAY	ODD	7182	1	68
+15497	MONDAY	ODD	7183	1	68
+15498	MONDAY	ODD	7184	1	68
+15499	MONDAY	EVEN	7175	1	68
+15500	MONDAY	EVEN	7176	1	68
+15501	MONDAY	EVEN	7177	1	68
+15502	MONDAY	EVEN	7178	1	68
+15503	MONDAY	EVEN	7179	1	68
+15504	WEDNESDAY	ODD	6845	8	119
+15505	WEDNESDAY	ODD	6846	8	119
+\.
+
+
+--
+-- Data for Name: semester_day; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.semester_day (semester_id, day) FROM stdin;
+57	WEDNESDAY
+57	MONDAY
+57	THURSDAY
+57	FRIDAY
+57	TUESDAY
+58	MONDAY
+\.
+
+
+--
+-- Data for Name: semester_group; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.semester_group (semester_id, group_id) FROM stdin;
+57	56
+57	84
+57	37
+57	43
+57	33
+57	28
+57	66
+57	71
+57	95
+57	52
+57	40
+57	94
+57	30
+57	49
+57	41
+57	59
+57	98
+57	27
+57	62
+57	87
+57	58
+57	50
+57	42
+57	55
+57	106
+57	29
+57	105
+57	5
+57	65
+57	61
+57	45
+57	26
+57	38
+57	53
+57	31
+57	103
+57	104
+57	64
+57	39
+57	102
+57	36
+57	85
+57	57
+57	67
+57	46
+57	70
+57	51
+57	72
+57	93
+57	44
+57	86
+57	73
+57	63
+57	54
+57	100
+57	60
+57	68
+58	56
+\.
+
+
+--
+-- Data for Name: semester_period; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.semester_period (semester_id, period_id) FROM stdin;
+57	1
+57	2
+57	3
+57	4
+57	7
+57	8
+58	1
+\.
+
+
+--
+-- Data for Name: semesters; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.semesters (id, current_semester, description, disable, end_day, start_day, year, default_semester) FROM stdin;
+57	t	2 семестр 24/25	f	2025-05-23	2025-02-17	2025	t
+58	f	desc	f	2025-01-30	2025-01-20	2025	f
+\.
+
+
+--
+-- Data for Name: students; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.students (id, name, patronymic, surname, group_id, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: subjects; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.subjects (id, disable, name) FROM stdin;
+7	t	Pain
+10	t	IOS
+1	t	Computer Science
+4	t	Node.js
+3	t	Бекенд
+2	t	Фронтенд
+169	f	Українська  мова (за професійним спрямуванням)
+15	f	Програмування
+14	f	Алгебра і геометрія
+13	f	Фізичне виховання
+18	f	Іноземна мова
+65	f	Вибрані розділи математичної фізики
+170	f	Архітектура комп'ютерів
+17	f	Дискретна математика
+57	f	Диференціальна геометрія
+114	f	Суч.ймовірн.задачі оптим.керув.та їх реалізація на ПК
+32	f	Технології програмування на Java
+58	f	Комплексний аналіз
+86	f	Математична логіка
+89	f	Мат.статистика з елементами теорії випадкових процесів
+79	f	Методика викладання інформатики в початковій школі
+33	f	Моделювання жорстких систем
+93	f	Основи криптології
+62	f	Основи медичний знань
+67	f	Платформи корпоративних інформаційних систем
+48	f	Програмування мовою Python
+52	f	Психологія (загальна, вікова, педагогічна)
+35	f	Сучасні СУБД
+257	f	Актуальні питання історії та культури України
+22	f	Лінійна алгебра
+24	f	Аналітична геометрія
+25	f	Вступ до спеціальності
+27	f	Операційні системи
+28	f	Професійна іноземна мова
+30	f	Теорія ймовірностей та математична статистика
+31	f	Теорія програмування
+36	f	Теорія алгоритмів
+37	f	Основи теорії систем
+39	f	Числові методи
+40	f	Основи інтернет-технологгій
+41	f	Математична теорія ризиків
+42	f	Комп'ютерна математика
+43	f	Іноземна мова (за професійним спрямуванням)
+44	f	Алгоритми і структури даних
+45	f	Диференціальні рівняння
+46	f	Об'єктно-орієнтоване програмування
+77	f	Технології програмування мовою Python
+50	f	Комп'ютерні мережі
+51	f	Прикладний функціональний аналіз
+54	f	Математичний аналіз2
+16	f	Математичний аналіз1
+55	f	Математичний аналіз
+56	f	Алгебра і теорія чисел
+60	f	Рівняння математичної фізики
+61	f	Елементарна математика і методика викладання математики
+63	f	Методика викладання математики
+64	f	Методика викладання інформатики
+66	f	Методи оптимізації та дослідження операцій
+68	f	Проектування програмних систем
+69	f	Системи та методи прийняття рішень
+72	f	Теорія керування
+73	f	Системний аналіз та теорія прийняття рішень
+74	f	Випадкові процеси
+75	f	Методи оптимізації
+76	f	Основи математичного моделювання та системного аналізу
+80	f	Інформаційно-комунікаційні технології в освіті
+59	f	Теорія міри та інтеграла
+83	f	Методи обчислень
+84	f	Методика впровадження дослідних робіт з інформатики
+92	f	Топологічні векторні простори
+178	f	Обчислювальні методи
+179	f	Філософія
+82	f	Методика розв'язування олімп. задач з ІТ
+94	f	Науковий семінар
+99	f	Маг.семінар "Сучасні інформаційні технології"
+102	f	Основи наукових досліджень
+103	f	Математичний аналіз*
+106	f	Інф.системи і техн.створення та управління проектами
+107	f	Математичне моделювання динамічних систем і процесів
+108	f	Мережеві інформаційні технології
+109	f	Обробка структурованих та нестрктурованих даних BigData
+110	f	Системи штучного інтелекту
+111	f	Програмні засоби управління проектами
+116	f	Розробка професійного програмного забезпечення
+119	f	Системи і методи захисту інформації
+122	f	Технології викладання математики у закладах освіти
+123	f	Теорія функцій багатьох змінних
+171	f	Математична логіка та теорія алгоритмів
+128	f	Диференц.моделі соціальних та природничих процесів
+129	f	Зображення геометричних фігур у просторі
+78	f	Frontend-розробка Web-додатків
+132	f	Англійська мова
+133	f	Німецька мова
+134	f	Французька мова
+100	f	Філософія освіти і науки
+173	f	Архітектура обчислювальних систем
+174	f	Пакети прикладних програм
+175	f	Олімпіадні задачі з інформаційних технологій
+124	f	Інноваційні технології навчання в сучасній школі
+81	f	Хмарні технології в освіті
+130	f	Конфліктно-керовані процеси та нелінійні моделі
+97	f	Інтелектуальна власність в ІТ-галузі
+96	f	Комунікації та теорії конфліктів
+117	t	Методи Data Science
+105	f	Педагогіка і психологія вищої школи
+95	f	Охорона праці в ІТ-галузі
+113	f	Інтелектуальні системи прийняття рішень
+118	f	Розробка крос-платформених додатків
+258	f	Використання MS Excel y BigData
+101	f	Охорона праці в галузі та цивільний захист
+131	f	Системи та методи захисту інформації
+115	f	Технології розробки розподілених баз даних
+181	f	Поглиблена 3D графіка
+182	f	Інформаційні технології менеджменту
+183	f	Бібліотеки мови Python
+184	f	Бази даних та знань
+49	f	Громадське здоров'я та медицина порятунку
+185	f	Програмування у Visual Studio NET
+186	f	Математичне моделювання еволюційних процесів
+188	f	Педагогіка з основами педмайстерності
+189	f	Комп'ютерні мережі та Інтернет
+190	f	Програмно-педагогічні засоби навчання
+191	f	Векторна та растрова графіка
+192	f	Обчислювальна геометрія
+193	f	Топологія
+196	f	Захист інформації
+197	f	Платформи корпоративних інформ.систем
+198	f	Програмування та підтримка Веб-застосунків
+199	f	Системне програмування
+201	f	Основи інформаційної безпеки
+202	f	Теорія інформації та кодування
+203	f	Серверна мова РНР
+204	f	Контроль якості та тестування програмного забезпечення
+205	f	Web-дизайн
+207	f	Інтерпретована динамічна візуальна мова програмування
+208	f	Функціональний аналіз
+209	f	Нестандартні задачі математики та методи їх розв'язання
+71	f	Комунікаційні технології в управлінні проектами
+211	f	Загальна теорія функцій
+212	f	Сучасні інформаційні технології
+213	f	Теорія ймовірностей
+194	f	Обробка зображень та мультимедія
+214	f	Інтелектуальні інформаційні системи
+215	f	Аналіз даних
+218	f	Розробка комп'ютерних ігор
+219	f	Актуарна математика
+220	f	Теорія компіляції
+221	f	Математичне моделювання природничих процесів
+222	f	Варіаційне числення і методи оптимізації
+223	f	Управління навчальними процесами
+224	f	Базові алгоритми олімпіадних задач з інформатики
+225	f	Методика розв'язування олімпіадних задач з математики
+226	f	Інформаційні технології у підготовці дидакт.матеріалів
+228	f	Основи геометрії
+230	f	Методологія та організація наукових досліджень
+231	f	Багатопроцесорні машини та техн.паралельного прогр.
+232	f	Маркетингові комунікації в інформаційному суспільстві
+233	f	Методика викладання комп.наук у вищій школі
+235	f	Комунікаційні технології аналітичних систем
+236	f	Інтелект.системи прийняття рішень
+237	f	Системи машинного навчання
+238	f	Програмні засоби в системному аналізі
+187	f	Розробка UI/UX дизайну
+239	f	Технології паралельного програмування
+240	f	Моделювання соціальних та кризових явищ
+243	f	Розробка мобільних додатків для ОС Android
+244	f	Java-технології в клієнт-серверних системах
+245	f	Паралельне програмування
+246	f	Магістерський семінар 1
+248	f	Задачі з параметрами
+249	f	Сучасні технології в дистанційній освіті
+251	f	Класифікація методів розв'язування олімпіадних задач
+253	f	Методика викладання математики у закладах вищої освіти
+254	f	Теорія наближень
+255	f	Комунікаційні техн.в управлінні проектами
+241	f	Сучасні клієнтські Web-технології
+19	t	Актуальні питання історії та кул.України
+259	f	Алгебра і геометрія*
+260	f	Лінійна алгебра*
+261	f	Диференціальні рівняння.
+262	f	Ств.веб-додатків з вик.фреймворку Django мови Python
+264	f	Основи інклюзивної освіти
+217	f	Розробка програмних додатків для мобільних пристроїв
+112	f	Сіткове планування
+267	f	Історія математики
+268	f	Задачі прикладного характеру
+85	f	Геометричні перетворення
+269	f	Стереометрія в задачах
+271	f	Олімпіадні задачі з алгебри і теорії чисел
+272	f	Прогнозування в системному аналізі
+274	f	Методи DataScience
+277	f	Партнерство і професійна комунікація вчителя
+278	f	Технології викладання інформатики у закладах освіти
+200	f	Математичні моделі макро- і мікроекономіки
+242	f	Комп'ютерне моделювання еколого-економ.систем
+176	f	Обчислювальна геометрія та комп'ютерна графіка
+276	f	Інклюзивна педагогіка
+234	f	Моделювання соціального-економічних та еколог.процесів
+265	f	Вибрані питання Ріманової геометрії
+206	f	Методика соціально-виховної роботи в сучасних умовах
+279	f	Розподілені інформаційно-аналітичні системи
+281	f	Практика особистої та ділової комунікації іноземною мовою
+288	f	Ознайомлювальна практика
+290	f	Математична логіка та теорія алгоритмів*
+291	f	Архітектура ПК
+293	f	3D графіка та моделювання
+294	f	ІТ та онлайн сервіси в професійній діяльності вчителя*
+295	f	Векторні гратки
+296	f	Прикладні алгоритми теорії чисел
+297	f	Професійно зорієнтована практика
+298	f	Предметний практикум
+299	f	Навчально-педагогічна практика
+300	f	Професійно зорієнтована практика з елементами програмування
+301	f	Інтелектуальний аналіз даних та моделювання кризових явищ
+302	f	Інформаційні системи і  технології створення та управління проектами
+303	f	Інформаційні системи та технології в системному аналізі
+304	f	Технології Blockechain та прогнозування фінансових ризиків
+305	f	Бізнес аналіз в ІТ-проектах
+306	f	Математична майстерня
+307	f	Web-розробка з використанням фреймворків
+308	f	Адміністрування навчальних систем
+309	f	Мережні інформаційні та освітні системи
+310	f	Особливості розв'язування олімп.задач з інформатики та ІТ
+311	f	Лідерство та основи партнерської взаємодії в освітньому процесі
+312	f	Математичні студії (особливості викладання інформатики у початк.та середній НУШ
+313	f	STEM-практики в освіті
+314	f	Принципи та методи навчання інформатики в закладах освіти
+315	f	Методика навчання математики в закладах освіти
+316	f	Геометричні та комбінаторні олімпіадні задачі
+317	f	Польська мова для професійного спілкування
+318	f	Методика організації позаурочної роботи з математики
+319	f	Методика розв'язування олімпіадних задач з інформатики
+320	f	Комп'ютерні технології у тестуванні
+321	f	Інформаційні технології у підготовці дидактичних матеріалів
+322	f	Чинники успішного працевлаштування
+323	f	Python для Data Science
+324	f	Бази даних у навчальному процесі
+325	f	Створення веб-додатків з використанням фреймворку Django мови Python
+326	f	Бази даних та інформаційні системи
+70	f	Інформаційні системи обліку та логістика
+328	f	Комп'ютерне моделювання жорстких процесів та систем
+329	f	Основи штучного інтелекту
+330	f	Фреймворки JavaScript
+327	f	Здоров'язбережувальні технології та медицина порятунку
+332	f	Здоров'язбережувальні технології та домедична допомога
+333	f	Хмарні технології
+334	f	Елементи теорії чисел у ЗЗСО
+335	f	Вибрані питання геометрії (основна школа)
+336	f	Комунікативні технології в управлінні проектами
+337	f	Прикладний статистичний аналіз з використанням Python
+338	f	Елементи теорії випадкових процесів
+339	f	Основи DevOps
+340	f	Тренінг професійного розвитку вчителя
+341	f	Практикум з тригонометрії
+342	f	Математична статистика з елементами теорії випадкових процесів
+343	f	Штучний інтелект та аналітика BigData
+344	f	Технології навчання математики та інформатики в закладах освіти
+345	f	Інформаційно-комунікаційні, хмарні технології в освіті
+346	f	Професійна іншомовна комунікація
+348	f	Класифікація та методи розв'язування задач з параметрами
+349	f	Вибрані питання алгебри та початків аналізу
+350	f	Технології розробки програмно забезпечення
+351	f	Вибрані питання інформатики
+352	f	Інформатична STEM освіта
+353	f	Медіаграмотність
+354	f	Професійна комунікація та управління конфліктами
+355	f	Теоретичні основи прикладних досліджень
+356	f	Технології розробки та проектування ІС екологічного моніторингу
+359	f	Організація наукової роботи учнів з математики та інформатики в НУШ
+360	f	Сучасні проблеми інформатики
+361	f	Web-технології та web-програмування
+362	f	Нереляційні бази даних
+363	f	Практикум з розв'язування задач шкільного курсу математики (основна школа)
+364	f	Програмні засоби навчання у освітньому процесі
+365	f	Вибрані питання шкільного курсу математики
+366	f	Математичне та комп'ютерне моделювання
+367	f	Інтегровані уроки, особливості викладання
+368	f	Геометрія мас
+369	f	Математичні методи в системах штучного інтелекту та нейронних мереж
+371	f	Мережеві інформаційні та освітні системи
+372	f	Релігієзнавство
+373	f	Латинська мова та основи наукової термінології
+374	f	Власний бізнес : реєстрація, облік, оподаткування
+375	f	Інтернет-літературна творчість: види і жанри
+379	f	Нечітка логіка в інтелектуальних системах
+380	f	Web-розробка на Ruby on Rails
+292	f	Фінансова математика
+377	f	Багатопроцесорні машини та техн.парал.прогр.
+381	f	Системи оцінювання здобувачів освіти в сучасній школі
+53	f	Основи інформаційних систем та технологій
+382	f	Методика позакласної роботи з інформатики
+331	f	Управління ІТ проектами
+383	f	C# та NET: Розробка програмного забезпечення
+385	f	Система комп'ютерної математики Maxima
+386	f	Системи та методи прийняття рішень в соціальних та економічних системах
+387	f	Методи і засоби викладання фахових дисциплін та наукових досліджень
+388	f	Середовище блочного програмування
+389	f	Управління навчальними проектами
+390	f	Фінансова грамотність
+384	f	Топологічні векторні простори і теорія двоїстості
+391	f	Професійне та особистісне становлення вчителя
+392	f	Психолого-педагогічний супровід учнів інклюзивного класу
+393	f	Зображення геометричний фігур у просторі та  методика побудови плоских перерізів
+394	f	Цифрові освітні технології та ресурси
+395	f	Сучасні технології програмування та методика їх вивчення у ЗЗСО
+396	f	Технології та методика викладання шкільної інформатики
+397	f	Методологія та організація науково-педагогічних досліджень
+398	f	Програмування*
+399	f	Архітектура та проектування нереляційних баз даних
+400	f	Практикум розв'язування задач шкільного курсу математики (ОШ)
+401	f	Штучні методи розв'язування рівнянь і нерівностей ЕМ
+402	f	Шкільний курс інформатики
+403	f	Доповнена реальність та генеративний штучний інтелект
+404	f	Програмні засоби захисту інформації
+405	f	Моделі і методи прикладної математики
+406	f	Методичні особливості викладання інформатики в НУШ
+407	f	Вибрані питання теорії операторів в просторах аналітичних функцій
+408	f	Технології освітнього менеджменту та моніторинг якості освіти
+409	f	STEM-освіта на уроках інформатики
+410	f	Основи шкільного курсу інформатики
+411	f	Технології машинного навчання
+412	f	Технології високопродуктивних обчислень
+413	f	Застосування поліграфа (детектора брехні) у діял.правника: укр.та зарубіжний
+414	f	Креативне програмування
+415	f	Практикум розв'язування задач шкільного курсу математики (алгебра СШ)
+416	f	Олімпіадні задачі з алгебри та геометрії
+417	f	Математичний аналіз (консультація)
+\.
+
+
+--
+-- Data for Name: teachers; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.teachers (id, disable, name, patronymic, "position", surname, user_id, department_id) FROM stdin;
+102	f	Наталія	Михайлівна	доцент	Попович	\N	\N
+19	f	Ігор	Дмитрович	асистент	Скутар	\N	\N
+21	f	Володимир	Васильович	професор	Михайлюк	\N	\N
+23	f	Тарас	Іванович	доцент	Звоздецький	\N	\N
+26	f	Василь	Володимирович	доцент	Нестеренко	\N	\N
+7	t	Олександр	Петровичd	Професор	Рурський	44	\N
+28	f	Олена	Георгіївна	асистент	Фотій	\N	\N
+30	f	Ігор	Михайлович	професор	Черевко	\N	\N
+31	f	Наталія	Іллівна	асистент	Фонарюк	\N	\N
+32	f	Тоня	Михайлівна	доцент	Фратавчан	\N	\N
+34	f	Лариса	Андріївна	доцент	Піддубна	\N	\N
+36	f	Ігор	Валерійович	доцент	Юрченко	\N	\N
+5	t	Дмитро	Святославович	Юніті	Савостьянов	13	\N
+40	f	Василь	Йосипович	доцент	Кушнірчук	\N	\N
+41	f	Тетяна	Петрівна	доцент	Караванова	\N	\N
+42	f	Андрій	Богданович	асистент	Дорош	\N	\N
+43	f	Руслана	Степанівна	доцент	Колісник	\N	\N
+44	f	Вадим	Ілліч	доцент	Мироник	\N	\N
+45	f	Вікторія	Сергіївна	асистент	Лучко	\N	\N
+46	f	Віра	Степанівна	доцент	Сікора	\N	\N
+47	f	Наталія	Михайлівна	асистент	Шевчук	\N	\N
+48	f	Ольга	Василівна	професор	Мартинюк	\N	\N
+49	f	Світлана	Богданівна	доцент	Боднарук	\N	\N
+50	f	Жана	Ілінічна	асистент	Довгей	\N	\N
+52	f	Микола	Петрович	доцент	Філіпчук	\N	\N
+3	t	Денисs	Павлович	Помічник	Чікар	8	\N
+108	f	Владислав	Антонович	професор	Літовченко	\N	\N
+66	f	Галина	Василівна	доцент	Мельник	\N	\N
+67	f	Богдан	Дмитрович	доцент	Шепетюк	\N	\N
+70	f	Олександр	Васильович	доцент	Матвій	\N	\N
+71	f	Тетяна	Миколаївна	доцент	Сопронюк	\N	\N
+37	f	Іван	Іванович	професор	Клевчук	\N	\N
+96	f	Аліна	Андріївна	асистент	Плегуца	\N	\N
+4	t	Anton	Petrovych	Cool	Shevchuk	38	\N
+11	t	Tetiana	Tanasiivna	teacher	Vykliuk	48	\N
+10	t	Макійaaaaaa	Іванович	Сейморв	Джудуж	\N	\N
+1	t	Бамбіно	Брусте	Професор	Діно	14	\N
+6	t	Дмитро	Васильович	Помічник	Колодюк	21	\N
+145	f	Інна	Владиславівна	доцент	Ковальчук	\N	\N
+106	f	Тетяна	Іванівна	доцент	Радзиняк	\N	\N
+101	t	Валентина	Візіторівна	професор	Балахтар	\N	\N
+60	f	Іван	Михайлович	асистент	Данилюк	\N	\N
+63	f	Світлана	Анатоліївна	асистент	Іліка	\N	\N
+72	f	Лідія	Миколаївна	асистент	Сергєєва	\N	\N
+73	f	Тетяна	Іванівна	доцент	Готинчан	\N	\N
+77	f	Володимир	Миколайович	доцент	Лучко	\N	\N
+78	f	Олег	Михайлович	доцент	Ленюк	\N	\N
+75	f	Анастасія	Олександрівна	асистент	Юрійчук	\N	\N
+79	f	Лілія	Михайлівна	доцент	Мельничук	\N	\N
+80	f	Микола	Юрійович	асистент	Горбатенко	\N	\N
+61	f	Андрій	Сергійович	доцент	Перцов	\N	\N
+81	f	Василь	Григорович	доцент	Маценко	\N	\N
+33	f	Галина	Петрівна	доцент	Івасюк	\N	1
+35	f	Галина	Савеліївна	доцент	Пасічник	\N	\N
+65	f	Ярослав	Йосипович	професор	Бігун	\N	\N
+64	f	Ірина	Вікторівна	доцент	Дорошенко	\N	\N
+22	f	Олена	Олексіївна	професор	Карлова	\N	\N
+82	f	Галина	Михайлівна	доцент	Перун	\N	\N
+83	f	Іван	Васильович	професор	Житарюк	\N	\N
+111	f	Оксана	Любомирівна	доцент	Даскалюк	\N	\N
+97	f	Викладач	Викладач	асистент	Викладач	\N	\N
+85	f	Олена	Миколаївна	асистент	Гусак	\N	\N
+90	f	Ірина	Олександрівна	асистент	Захарчук	\N	\N
+99	t	Василь	Сергійович	асистент	Мельник	\N	\N
+98	t	Ольга	Сергіївна	доцент	Шестобуз	\N	\N
+105	f	Денис	Павлович	асистент	Онипа	\N	\N
+107	f	Дмитро	Валерійович	асистент	Шкільнюк	\N	\N
+91	f	Тетяна	Василівна	доцент	Тоненчук	\N	\N
+94	f	Оксана	Євгенівна	доцент	Гордійчук	\N	\N
+76	f	Світлана	Сільвестрівна	доцент	Доскач	\N	\N
+162	f	Оксана	Мирославівна	асистент	Яцько	\N	6
+54	t	Олександр	Олександрович	асистент	Блажевський	\N	\N
+166	f	Ігор	Володимирович	доцент	Малик	\N	\N
+88	f	Мирослава 	Миколаївна	асистент	Шенько	\N	\N
+168	f	Михайло	Михайлович	професор	Попович	\N	\N
+87	f	Ліліана	Василівна	асистент	Маковійчук	\N	\N
+62	f	Наталія	Вікторівна	асистент	Романенко	\N	4
+183	t	Викладач	Викладач	асистент	Викладач	\N	\N
+184	f	Ганна	Павлівна	доцент	Бигар	\N	\N
+185	f	Юрій	Віталійович	асистент	Луцюк	\N	\N
+189	f	Василь	Сергійович	асистент	Мельник	\N	\N
+190	f	Іннеса	Володимирівна	доцент	Краснокутська	\N	\N
+191	f	Наталія	Іванівна	доцент	Кучумова 	\N	\N
+194	f	Богдан	Олегович	асистент	Яшан	\N	\N
+195	f	Ганна	Петрівна	асистент	Вережак	\N	\N
+198	f	Сергій	Васильович	доцент	Мартинюк 	\N	\N
+199	f	Галина 	Михайлівна	асистент	Унгурян	\N	\N
+200	f	Лариса	Василівна	доцент	Мафтин	\N	\N
+204	f	Наталя	Сергіївна	асистент	Правіцка 	\N	\N
+203	f	Василь	Михайлович	асистент	Косован	\N	\N
+205	f	Маріан	Філаретович	професор	Бирка	\N	\N
+161	f	Наталія	Василівна	асистент	Цинтар	\N	\N
+210	f	Тетяна	Анатоліївна	асистент	Равлюк	\N	\N
+216	f	Володимир	Сергійович	доцент	Кшевецький	\N	\N
+218	f	Галина	Степанівна	асистент	Артеменко 	\N	\N
+219	f	Ольга	Іванівна	асистент	Луган	\N	\N
+221	f	Роман	Вікторович	асистент	Івасюк	\N	\N
+53	f	Олена	Василівна	доцент	Мудра	\N	\N
+226	f	Світлана	Борисівна	асистент	Бортник 	\N	\N
+220	f	Мар'яна	Петрівна	асистент	Ривак	\N	\N
+207	t	Іван	Дмитрович	професор	Пукальський 	\N	\N
+230	f	Роман	Іванович	професор	Петришин	\N	\N
+231	f	Людмила	Вікторівна	доцент	Романів	\N	\N
+232	f	Іван	Дмитрович	професор	Пукальський 	\N	\N
+233	f	Василь	Михайлович	асистент	Косован*	\N	\N
+187	f	Анна	Миколаївна	асистент	Кричун	\N	\N
+234	f	Володимир	Володимирович	доцент	Білоус	\N	\N
+235	f	Галина	Миколаївна	доцент	Яценюк	\N	\N
+236	f	Роксолана	Іванівна	асистент	Мельничук	\N	\N
+237	f	Михайло	Михайлович	професор	Попов	\N	\N
+238	f	Лілія	Миколаївна	доцент	Дробіна	\N	\N
+239	f	Володимир	Володимирович	асистент	Ковдриш	\N	\N
+241	f	Надія	Любомирівна	асистент	Вітрук	\N	\N
+242	f	Олександр	Володимирович	професор	Маслюченко	\N	\N
+243	f	Ольга	Сергіївна	доцент	Шестобуз	\N	\N
+244	f	Тетяна	Василівна	асистент	Кнігніцька	\N	\N
+245	f	Інна	Дмитрівна	асистент	Терлецька	\N	\N
+246	f	Іван	Желувич	доцент	Торончук	\N	\N
+149	f	Наталія	Олександрівна	доцент	Мельничук	\N	\N
+\.
+
+
+--
+-- Data for Name: temporary_schedule; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.temporary_schedule (id, date, grouped, lessontype, subject_for_site, vacation, group_id, period_id, room_id, semester_id, subject_id, teacher_id, notification, schedule_id, link_to_meeting) FROM stdin;
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users (id, email, password, role, token) FROM stdin;
+97	new_manager@gmail.com	$2a$10$Ox5B2aATuWbZ7oEFsSQh4.ksjSI6uksq6sYJaG5MY/Zj2m2B5XgiC	ROLE_MANAGER	\N
+\.
+
+
+--
+-- Name: department_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.department_id_seq', 16, true);
+
+
+--
+-- Name: groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.groups_id_seq', 107, true);
+
+
+--
+-- Name: lessons_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.lessons_id_seq', 7184, true);
+
+
+--
+-- Name: periods_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.periods_id_seq', 9, true);
+
+
+--
+-- Name: room_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.room_types_id_seq', 9, true);
+
+
+--
+-- Name: rooms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.rooms_id_seq', 125, true);
+
+
+--
+-- Name: schedules_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.schedules_id_seq', 15505, true);
+
+
+--
+-- Name: semesters_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.semesters_id_seq', 58, true);
+
+
+--
+-- Name: students_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.students_id_seq', 12, true);
+
+
+--
+-- Name: subjects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.subjects_id_seq', 417, true);
+
+
+--
+-- Name: teachers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.teachers_id_seq', 246, true);
+
+
+--
+-- Name: temporary_schedule_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.temporary_schedule_id_seq', 1, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 95, true);
+
+
+--
+-- Name: databasechangeloglock databasechangeloglock_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.databasechangeloglock
+    ADD CONSTRAINT databasechangeloglock_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: department department_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.department
+    ADD CONSTRAINT department_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lessons lessons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons
+    ADD CONSTRAINT lessons_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: periods periods_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.periods
+    ADD CONSTRAINT periods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: room_types room_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_types
+    ADD CONSTRAINT room_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: rooms rooms_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rooms
+    ADD CONSTRAINT rooms_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedules schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedules
+    ADD CONSTRAINT schedules_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: semester_group semester_group_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semester_group
+    ADD CONSTRAINT semester_group_pkey PRIMARY KEY (semester_id, group_id);
+
+
+--
+-- Name: semester_period semester_period_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semester_period
+    ADD CONSTRAINT semester_period_pkey PRIMARY KEY (semester_id, period_id);
+
+
+--
+-- Name: semesters semesters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semesters
+    ADD CONSTRAINT semesters_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: students students_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.students
+    ADD CONSTRAINT students_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: subjects subjects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subjects
+    ADD CONSTRAINT subjects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: teachers teachers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.teachers
+    ADD CONSTRAINT teachers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: temporary_schedule temporary_schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.temporary_schedule
+    ADD CONSTRAINT temporary_schedule_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users uk_6dotkott2kjsp8vw4d0m25fb7; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT uk_6dotkott2kjsp8vw4d0m25fb7 UNIQUE (email);
+
+
+--
+-- Name: subjects uk_aodt3utnw0lsov4k9ta88dbpr; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.subjects
+    ADD CONSTRAINT uk_aodt3utnw0lsov4k9ta88dbpr UNIQUE (name);
+
+
+--
+-- Name: periods uk_bgj9vbqf54b7iryxqu895bggh; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.periods
+    ADD CONSTRAINT uk_bgj9vbqf54b7iryxqu895bggh UNIQUE (name);
+
+
+--
+-- Name: department uk_biw7tevwc07g3iutlbmkes0cm; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.department
+    ADD CONSTRAINT uk_biw7tevwc07g3iutlbmkes0cm UNIQUE (name);
+
+
+--
+-- Name: groups uk_ct3jhny5hfe6uj2osyn8a4p83; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT uk_ct3jhny5hfe6uj2osyn8a4p83 UNIQUE (title);
+
+
+--
+-- Name: room_types uk_gunh6313ruq1dghti9p00529u; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.room_types
+    ADD CONSTRAINT uk_gunh6313ruq1dghti9p00529u UNIQUE (description);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedules fk34r5t4jexlcas19pleifb8ihv; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedules
+    ADD CONSTRAINT fk34r5t4jexlcas19pleifb8ihv FOREIGN KEY (room_id) REFERENCES public.rooms(id);
+
+
+--
+-- Name: semester_day fk36f17dewxqjhb23rhlmc7slk3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semester_day
+    ADD CONSTRAINT fk36f17dewxqjhb23rhlmc7slk3 FOREIGN KEY (semester_id) REFERENCES public.semesters(id);
+
+
+--
+-- Name: temporary_schedule fk3hid2313ah5gjqqye9d3eik2g; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.temporary_schedule
+    ADD CONSTRAINT fk3hid2313ah5gjqqye9d3eik2g FOREIGN KEY (room_id) REFERENCES public.rooms(id);
+
+
+--
+-- Name: schedules fk4g2p59v3jm7hk6a9ufdufy8ie; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedules
+    ADD CONSTRAINT fk4g2p59v3jm7hk6a9ufdufy8ie FOREIGN KEY (period_id) REFERENCES public.periods(id);
+
+
+--
+-- Name: semester_group fk4j15tivie8ttfhl0s7x3o3syv; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semester_group
+    ADD CONSTRAINT fk4j15tivie8ttfhl0s7x3o3syv FOREIGN KEY (semester_id) REFERENCES public.semesters(id);
+
+
+--
+-- Name: schedules fk7f954gltrwny6pe4see76kpw8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.schedules
+    ADD CONSTRAINT fk7f954gltrwny6pe4see76kpw8 FOREIGN KEY (lesson_id) REFERENCES public.lessons(id);
+
+
+--
+-- Name: semester_period fk94poii1rmjhoevjx7bsymtbtd; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semester_period
+    ADD CONSTRAINT fk94poii1rmjhoevjx7bsymtbtd FOREIGN KEY (semester_id) REFERENCES public.semesters(id);
+
+
+--
+-- Name: temporary_schedule fka1bsm9fsuxn5t098i2cb7nncu; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.temporary_schedule
+    ADD CONSTRAINT fka1bsm9fsuxn5t098i2cb7nncu FOREIGN KEY (group_id) REFERENCES public.groups(id);
+
+
+--
+-- Name: temporary_schedule fkaqmj2bajc0ud8wproqn4843pk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.temporary_schedule
+    ADD CONSTRAINT fkaqmj2bajc0ud8wproqn4843pk FOREIGN KEY (semester_id) REFERENCES public.semesters(id);
+
+
+--
+-- Name: lessons fkbr76cuebuufbbltujpfq04tto; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons
+    ADD CONSTRAINT fkbr76cuebuufbbltujpfq04tto FOREIGN KEY (teacher_id) REFERENCES public.teachers(id);
+
+
+--
+-- Name: lessons fke94a0k21xpi7glv89af90lwjv; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons
+    ADD CONSTRAINT fke94a0k21xpi7glv89af90lwjv FOREIGN KEY (subject_id) REFERENCES public.subjects(id);
+
+
+--
+-- Name: rooms fkh9m2n1paq5hmd3u0klfl7wsfv; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rooms
+    ADD CONSTRAINT fkh9m2n1paq5hmd3u0klfl7wsfv FOREIGN KEY (room_type_id) REFERENCES public.room_types(id);
+
+
+--
+-- Name: lessons fkil1jt6gri8x6yfaa3ijf7d6d9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons
+    ADD CONSTRAINT fkil1jt6gri8x6yfaa3ijf7d6d9 FOREIGN KEY (semester_id) REFERENCES public.semesters(id);
+
+
+--
+-- Name: teachers fkl19hwymwn2ra2gwwty5trvyas; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.teachers
+    ADD CONSTRAINT fkl19hwymwn2ra2gwwty5trvyas FOREIGN KEY (department_id) REFERENCES public.department(id);
+
+
+--
+-- Name: semester_period fkm237asf73ugk3vvw47aq266kl; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semester_period
+    ADD CONSTRAINT fkm237asf73ugk3vvw47aq266kl FOREIGN KEY (period_id) REFERENCES public.periods(id);
+
+
+--
+-- Name: students fkmsev1nou0j86spuk5jrv19mss; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.students
+    ADD CONSTRAINT fkmsev1nou0j86spuk5jrv19mss FOREIGN KEY (group_id) REFERENCES public.groups(id);
+
+
+--
+-- Name: temporary_schedule fko7tild8vhrqlodd3oaf8acvyw; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.temporary_schedule
+    ADD CONSTRAINT fko7tild8vhrqlodd3oaf8acvyw FOREIGN KEY (teacher_id) REFERENCES public.teachers(id);
+
+
+--
+-- Name: semester_group fkpf19s66cmi8qpqc0iaeigbrhh; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semester_group
+    ADD CONSTRAINT fkpf19s66cmi8qpqc0iaeigbrhh FOREIGN KEY (group_id) REFERENCES public.groups(id);
+
+
+--
+-- Name: temporary_schedule fkqn6ufkok0nhqdkn46ctqckb76; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.temporary_schedule
+    ADD CONSTRAINT fkqn6ufkok0nhqdkn46ctqckb76 FOREIGN KEY (subject_id) REFERENCES public.subjects(id);
+
+
+--
+-- Name: temporary_schedule fkr76lbhlv0di8ix7iviixs0p4g; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.temporary_schedule
+    ADD CONSTRAINT fkr76lbhlv0di8ix7iviixs0p4g FOREIGN KEY (period_id) REFERENCES public.periods(id);
+
+
+--
+-- Name: lessons fktdolsaotaqlwxbxwaxt00kimk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessons
+    ADD CONSTRAINT fktdolsaotaqlwxbxwaxt00kimk FOREIGN KEY (group_id) REFERENCES public.groups(id);
+
+
+--
+-- Name: students user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.students
+    ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+

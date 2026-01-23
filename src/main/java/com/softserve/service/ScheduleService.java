@@ -1,23 +1,25 @@
 package com.softserve.service;
 
-import com.softserve.dto.CreateScheduleInfoDTO;
-import com.softserve.dto.ScheduleForGroupDTO;
-import com.softserve.dto.ScheduleForTeacherDTO;
-import com.softserve.dto.ScheduleFullDTO;
-import com.softserve.entity.Period;
+import com.softserve.dto.*;
 import com.softserve.entity.Room;
 import com.softserve.entity.Schedule;
-import com.softserve.entity.TemporarySchedule;
 import com.softserve.entity.enums.EvenOdd;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public interface ScheduleService extends BasicService<Schedule, Long> {
+
+    /**
+     * Returns all groups with their lessons for adding a group lesson to schedule.
+     *
+     * @param lessonId the lesson id
+     * @return the list of GroupWithLessonIdDTO
+     */
+    List<GroupWithLessonIdDTO> getGroupsWithLessonsForGroupedClass(Long lessonId);
 
     /**
      * Creates a list of schedules in accordance to grouped lessons.
@@ -108,20 +110,9 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      * Returns all schedules with given semester id.
      *
      * @param semesterId the id of the semester
-     * @return the list of the schedules with given semester id
+     * @return the list of the schedule DTOs with given semester id
      */
-    List<Schedule> getSchedulesBySemester(Long semesterId);
-
-    /**
-     * Returns all schedules and temporary schedules with given teacher id from the repository in the given date range.
-     *
-     * @param fromDate  the start of the date range
-     * @param toDate    the end of the date range
-     * @param teacherId the id of the teacher
-     * @return the list of schedules and temporary schedules
-     */
-    Map<LocalDate, Map<Period, Map<Schedule, TemporarySchedule>>> temporaryScheduleByDateRangeForTeacher(LocalDate fromDate,
-                                                                                                         LocalDate toDate, Long teacherId);
+    List<ScheduleWithoutSemesterDTO> getSchedulesBySemester(Long semesterId);
 
     /**
      * Deletes all schedules from the repository in with given semester id.
@@ -192,5 +183,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      * @return the lists of schedules grouped by rooms
      */
     Map<Room, List<Schedule>> getAllOrdered(Long semesterId);
+
+    List<ScheduleSaveDTO> saveSchedule(ScheduleSaveDTO scheduleSaveDTO);
 }
 

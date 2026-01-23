@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import SemesterList from '../../containers/SemesterPage/SemesterList';
-import { getGroupsOptionsForSelect } from '../../utils/selectUtils';
+import {getGroupsOptionsForSelect} from '../../utils/selectUtils';
 import SemesterSidebar from './SemesterSidebar';
 
 const SemesterPage = (props) => {

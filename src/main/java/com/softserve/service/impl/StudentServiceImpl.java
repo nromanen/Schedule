@@ -1,5 +1,6 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.GroupDTO;
 import com.softserve.dto.StudentDTO;
 import com.softserve.dto.StudentImportDTO;
 import com.softserve.dto.enums.ImportSaveStatus;
@@ -27,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -158,23 +159,6 @@ public class StudentServiceImpl implements StudentService {
 
     /**
      * {@inheritDoc}
-     * <p>
-     * This asynchronous method used for importing students from csv file.
-     * Each line of the file should consist of four fields, separated by commas.
-     * Each field may or may not be enclosed in double-quotes.
-     * First line of the file is a header.
-     * All subsequent lines contain data about students.
-     * <p>
-     * "surname","name","patronymic",EMAIL
-     * "Romanian","Hanna","Stepanov","romaniuk@gmail.com"
-     * "Bochum","Oleksandr","Ivanov","boichuk@ukr.net"
-     * etc.
-     * <p>
-     * The method is not transactional in order to prevent interruptions while saving a student.
-     * <p>
-     * If the student in the returned list have a non-null value of the group title then he already existed.
-     * If the student in the returned list have a null value of the group title then he saved as a new student.
-     * If the student in the returned list have a null value of the group then he didn't pass a validation.
      */
     @Override
     @Transactional
@@ -205,13 +189,13 @@ public class StudentServiceImpl implements StudentService {
             Student newStudent = studentMapper.studentImportDTOToStudent(student);
             Optional<Student> studentFromBase = studentRepository.getExistingStudent(newStudent);
 
-            Group group = groupService.getById(groupId);
+            GroupDTO groupDTO = groupService.getById(groupId);
 
             if (userOptional.isEmpty() && studentFromBase.isEmpty()) {
-                return registerAndSaveNewStudent(student, newStudent, group);
+                return registerAndSaveNewStudent(student, newStudent, groupDTO);
             }
             if (studentFromBase.isEmpty()) {
-                return assignUserToNewStudent(student, userOptional, newStudent, group);
+                return assignUserToNewStudent(student, userOptional, newStudent, groupDTO);
             }
             return checkForEmptyFieldsOfExistingStudent(student, userOptional, studentFromBase);
         } catch (ConstraintViolationException e) {
@@ -230,14 +214,14 @@ public class StudentServiceImpl implements StudentService {
      *
      * @param student    the student imported from file
      * @param newStudent our student which we will save to database
-     * @param group      group which provided from server
+     * @param groupDTO   group DTO which provided from server
      * @return the saved student
      */
-    private StudentImportDTO registerAndSaveNewStudent(StudentImportDTO student, Student newStudent, Group group) {
+    private StudentImportDTO registerAndSaveNewStudent(StudentImportDTO student, Student newStudent, GroupDTO groupDTO) {
         log.debug("Enter to method if email and student DONT EXIST");
 
         Student registeredStudent = registerStudent(newStudent, student.getEmail());
-        return saveStudentAndSetEmailGroupStatus(student, group, registeredStudent);
+        return saveStudentAndSetEmailGroupStatus(student, groupDTO, registeredStudent);
     }
 
     /**
@@ -246,11 +230,12 @@ public class StudentServiceImpl implements StudentService {
      * @param student      the student from file
      * @param userOptional the Optional describing the user provided from database
      * @param newStudent   the student which we will save to database
-     * @param group        the group which provided from server
+     * @param groupDTO     the group DTO which provided from server
      * @return the saved student
      * @throws ImportRoleConflictException if user with current email has another role in the system
      */
-    private StudentImportDTO assignUserToNewStudent(StudentImportDTO student, Optional<User> userOptional, Student newStudent, Group group) {
+    private StudentImportDTO assignUserToNewStudent(StudentImportDTO student, Optional<User> userOptional,
+                                                    Student newStudent, GroupDTO groupDTO) {
         log.debug("Enter to method if email EXIST and student DONT EXIST");
         if (userOptional.isPresent() && userOptional.get().getRole() == Role.ROLE_STUDENT) {
             if (isEmailInUse(student.getEmail())) {
@@ -260,7 +245,7 @@ public class StudentServiceImpl implements StudentService {
                 return student;
             }
             newStudent.setUser(userOptional.get());
-            return saveStudentAndSetEmailGroupStatus(student, group, newStudent);
+            return saveStudentAndSetEmailGroupStatus(student, groupDTO, newStudent);
         } else {
             throw new ImportRoleConflictException("User with current Email has another ROLE");
         }
@@ -332,17 +317,18 @@ public class StudentServiceImpl implements StudentService {
      * Saves new student with registered/found user and set fields to studentDTO.
      *
      * @param student           the provided studentImportDTO from file
-     * @param group             the provided group from server
+     * @param groupDTO          the provided group DTO from server
      * @param registeredStudent the student that to be saved
      * @return the saved student
      */
     private StudentImportDTO saveStudentAndSetEmailGroupStatus(StudentImportDTO student,
-                                                               Group group, Student registeredStudent) {
+                                                               GroupDTO groupDTO, Student registeredStudent) {
+        Group group = groupMapper.groupDTOToGroup(groupDTO);
         registeredStudent.setGroup(group);
         studentRepository.save(registeredStudent);
         StudentImportDTO savedStudent = studentMapper.studentToStudentImportDTO(registeredStudent);
         savedStudent.setEmail(student.getEmail());
-        savedStudent.setGroupDTO(groupMapper.groupToGroupDTO(registeredStudent.getGroup()));
+        savedStudent.setGroupDTO(groupDTO);
         savedStudent.setImportSaveStatus(ImportSaveStatus.SAVED);
         return savedStudent;
     }

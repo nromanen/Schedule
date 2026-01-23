@@ -1,42 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Field, reduxForm } from 'redux-form';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Field, reduxForm} from 'redux-form';
 
 import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
-import { TEMPORARY_SCHEDULE_FORM } from '../../../constants/reduxForms';
+import {TEMPORARY_SCHEDULE_FORM} from '../../../constants/reduxForms';
 
 import Card from '../../../share/Card/Card';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';
 import SelectField from '../../../share/renderedFields/select';
 import renderTextField from '../../../share/renderedFields/input';
 
-import { handleTeacherInfo } from '../../../helper/renderTeacher';
-import {
-    setValueToSubjectForSiteHandler,
-    setValueToTeacherForSiteHandler,
-} from '../../../helper/reduxFormHelper';
+import {handleTeacherInfo} from '../../../helper/renderTeacher';
+import {setValueToSubjectForSiteHandler, setValueToTeacherForSiteHandler,} from '../../../helper/reduxFormHelper';
 
-import { maxLengthValue, required } from '../../../validation/validateFields';
+import {maxLengthValue, required} from '../../../validation/validateFields';
 
-import { selectTemporaryScheduleService } from '../../../services/temporaryScheduleService';
+import {selectTemporaryScheduleService} from '../../../services/temporaryScheduleService';
 import {
-    SAVE_BUTTON_LABEL,
+    CLASS_LABEL,
+    CLEAR_BUTTON_LABEL,
+    CREATE_TEMPORARY_SCHEDULE_FORM,
+    EDIT_TEMPORARY_SCHEDULE_FORM,
+    FOR_SITE_LABEL,
     GROUP_LABEL,
     ROOM_LABEL,
+    SAVE_BUTTON_LABEL,
     SUBJECT_LABEL,
-    CLEAR_BUTTON_LABEL,
-    CLASS_LABEL,
-    FOR_SITE_LABEL,
     TEACHER_LABEL,
-    EDIT_TEMPORARY_SCHEDULE_FORM,
-    CREATE_TEMPORARY_SCHEDULE_FORM,
 } from '../../../constants/translationLabels/formElements';
-import {
-    COMMON_NOTIFY_LABEL,
-    COMMON_HOLIDAY_LABEL,
-    TYPE_LABEL,
-} from '../../../constants/translationLabels/common';
+import {COMMON_HOLIDAY_LABEL, COMMON_NOTIFY_LABEL, TYPE_LABEL,} from '../../../constants/translationLabels/common';
 
 const TemporaryScheduleForm = (props) => {
     const { t } = useTranslation('formElements');

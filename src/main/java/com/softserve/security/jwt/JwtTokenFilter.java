@@ -1,28 +1,33 @@
 package com.softserve.security.jwt;
 
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-
+@Slf4j
 public class JwtTokenFilter extends GenericFilterBean {
 
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
+    private static final List<String> PUBLIC_URLS = List.of(
+            "/auth/",
+            "/public/",
+            "/oauth_login",
+            "/swagger-ui",
+            "/v3/api-docs"
+    );
+
     public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -30,32 +35,39 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication auth = jwtTokenProvider.getAuthentication(token);
 
-            if (auth != null) {
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
-        } else {
-            Map<String, String> map = new HashMap<>();
-            Enumeration<String> headerNames = ((HttpServletRequest) req).getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                String key = headerNames.nextElement();
-                String value = ((HttpServletRequest) req).getHeader(key);
-                map.put(key, value);
-                if (map.containsKey("authorization")) {
-                    response.setContentType("application/json;charset=UTF-8");
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.getWriter().write(new JSONObject()
-                            .put("message", "The access token provided is invalid")
-                            .toString() + "\n");
-                    response.getWriter().flush();
-                    break;
+        String requestURI = request.getRequestURI();
+
+        if (isPublicUrl(requestURI)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = jwtTokenProvider.resolveToken(request);
+
+        if (token != null) {
+            if (jwtTokenProvider.validateToken(token)) {
+                Authentication auth = jwtTokenProvider.getAuthentication(token);
+                if (auth != null) {
+                    SecurityContextHolder.getContext().setAuthentication(auth);
                 }
+            } else {
+                log.warn("Invalid/expired token for request: {}", requestURI);
+                response.setContentType("application/json;charset=UTF-8");
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write(new JSONObject()
+                        .put("message", "The access token provided is invalid")
+                        .toString());
+                return;
             }
         }
-        filterChain.doFilter(req, response);
+
+        filterChain.doFilter(request, response);
+    }
+
+    private boolean isPublicUrl(String uri) {
+        return PUBLIC_URLS.stream().anyMatch(uri::startsWith);
     }
 }

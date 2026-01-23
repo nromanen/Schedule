@@ -1,4 +1,4 @@
-import { cardObjectHandler } from './cardObjectHandler';
+import {cardObjectHandler} from './cardObjectHandler';
 
 describe('cardObjectHandler function', () => {
     const card = {

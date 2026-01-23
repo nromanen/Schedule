@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
-import { isNil } from 'lodash';
+import {isNil} from 'lodash';
 
 import TextField from '@material-ui/core/TextField';
-import { Autocomplete } from '@material-ui/lab';
+import {Autocomplete} from '@material-ui/lab';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import { dialogTypes } from '../../constants/dialogs';
-import { cardType } from '../../constants/cardType';
-import { COMMON_LESSON_SERVICE_IS_NOT_UNIQUE } from '../../constants/translationLabels/common';
-import { search } from '../../helper/search';
-import { checkUniqLesson } from '../../validation/storeValidation';
-import { cardObjectHandler } from '../../helper/cardObjectHandler';
+import {dialogTypes} from '../../constants/dialogs';
+import {cardType} from '../../constants/cardType';
+import {COMMON_LESSON_SERVICE_IS_NOT_UNIQUE} from '../../constants/translationLabels/common';
+import {search} from '../../helper/search';
+import {checkUniqLesson} from '../../validation/storeValidation';
+import {cardObjectHandler} from '../../helper/cardObjectHandler';
 
 import Lessons from '../../containers/LessonPage/Lessons';
 import Search from '../../containers/LessonPage/Search';
@@ -21,11 +21,11 @@ import CopyLessonDialog from './CopyLessonDialog/CopyLessonDialog';
 
 import './LessonPage.scss';
 import './LessonForm/LessonForm.scss';
-import { showAllSubjectsService } from '../../services/subjectService';
+import {showAllSubjectsService} from '../../services/subjectService';
 
-import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
-import { trasformLink } from '../../utils/trasformLink';
-import { GROUPED } from '../../constants/common';
+import {FORM_GROUP_LABEL} from '../../constants/translationLabels/formElements';
+import {trasformLink} from '../../utils/trasformLink';
+import {GROUPED} from '../../constants/common';
 
 const LessonPage = (props) => {
     const {

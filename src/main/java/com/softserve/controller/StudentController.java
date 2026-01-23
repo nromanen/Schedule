@@ -4,9 +4,9 @@ import com.softserve.dto.StudentDTO;
 import com.softserve.dto.StudentImportDTO;
 import com.softserve.mapper.StudentMapper;
 import com.softserve.service.StudentService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@Api(tags = "Student API")
+@Tag(name = "Student API")
 @RequestMapping("/students")
 public class StudentController {
 
@@ -34,14 +34,14 @@ public class StudentController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get list of all students")
+    @Operation(summary = "Get list of all students")
     public ResponseEntity<List<StudentDTO>> getAll() {
         log.info("Enter into getAll of StudentController");
         return ResponseEntity.status(HttpStatus.OK).body(studentMapper.convertToDTOList(studentService.getAll()));
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get student by id")
+    @Operation(summary = "Get student by id")
     public ResponseEntity<StudentDTO> getById(@PathVariable("id") long id) {
         log.info("Enter into getById of StudentController with id {} ", id);
         return ResponseEntity.status(HttpStatus.OK).body(studentMapper.studentToStudentDTO(studentService.getById(id)));
@@ -49,7 +49,7 @@ public class StudentController {
 
     @PostMapping
     @PreAuthorize("hasRole('MANAGER')")
-    @ApiOperation(value = "Create new student")
+    @Operation(summary = "Create new student")
     public ResponseEntity<StudentDTO> save(@RequestBody StudentDTO studentDTO) {
         log.info("Enter into save of StudentController with studentDTO = [{}] ", studentDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -58,7 +58,7 @@ public class StudentController {
 
     @PutMapping
     @PreAuthorize("hasRole('MANAGER')")
-    @ApiOperation(value = "Update existing student")
+    @Operation(summary = "Update existing student")
     public ResponseEntity<StudentDTO> update(@RequestBody StudentDTO studentDTO) {
         log.info("Enter into update of StudentController with studentDTO = [{}] ", studentDTO);
         return ResponseEntity.status(HttpStatus.OK)
@@ -67,7 +67,7 @@ public class StudentController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('MANAGER')")
-    @ApiOperation(value = "Delete student by id")
+    @Operation(summary = "Delete student by id")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("Enter into delete of StudentController with id {} ", id);
         studentService.delete(studentService.getById(id));
@@ -75,8 +75,8 @@ public class StudentController {
     }
 
     @PostMapping("/import")
-    @ApiOperation(value = "import students from file to database")
-    public ResponseEntity<List<StudentImportDTO>> importFromCsv(@ApiParam(value = "csv format is required")
+    @Operation(summary = "import students from file to database")
+    public ResponseEntity<List<StudentImportDTO>> importFromCsv(@Parameter(description = "csv format is required")
                                                                 @RequestParam("file") MultipartFile file, @RequestParam Long groupId) {
         return ResponseEntity.ok(studentService.saveFromFile(file, groupId)
                 .getNow(new ArrayList<>()));

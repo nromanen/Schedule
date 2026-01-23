@@ -1,11 +1,8 @@
-import { isNil } from 'lodash';
-import { places } from '../constants/places';
-import {
-    COMMON_REGULAR_LESSON_LABEL,
-    COMMON_VACATION_LABEL,
-} from '../constants/translationLabels/common';
+import {isNil} from 'lodash';
+import {places} from '../constants/places';
+import {COMMON_REGULAR_LESSON_LABEL, COMMON_VACATION_LABEL,} from '../constants/translationLabels/common';
 import i18n from '../i18n';
-import { getTeacherFullName } from './renderTeacher';
+import {getTeacherFullName} from './renderTeacher';
 
 export const prepareTeacherCardCell = (card) => {
     let inner = '';

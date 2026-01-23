@@ -1,7 +1,7 @@
 import Button from '@material-ui/core/Button';
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Field } from 'redux-form';
+import React, {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
+import {Field} from 'redux-form';
 import {
     CREATE_TITLE,
     EDIT_TITLE,
@@ -10,10 +10,10 @@ import {
     GROUP_Y_LABEL,
     SAVE_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
-import { renderAutocompleteField } from '../../helper/renderAutocompleteField';
+import {getClearOrCancelTitle, setDisableButton} from '../../helper/disableComponent';
+import {renderAutocompleteField} from '../../helper/renderAutocompleteField';
 import renderTextField from '../../share/renderedFields/input';
-import { minLengthValue, required, uniqueGroup } from '../../validation/validateFields';
+import {minLengthValue, required, uniqueGroup} from '../../validation/validateFields';
 import './AddGroupForms.scss';
 
 export const AddGroup = (props) => {
@@ -45,7 +45,7 @@ export const AddGroup = (props) => {
         } else {
             initialize();
         }
-    }, [group.id]);
+    }, [group.id, group.title, groups, initialize]);
 
     const submitGroup = (data) => {
         const afterId = data.afterId ? data.afterId.id : null;

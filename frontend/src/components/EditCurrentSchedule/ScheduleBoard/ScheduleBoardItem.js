@@ -1,23 +1,17 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { MdGroup } from 'react-icons/md';
-
-import { IoMdMore } from 'react-icons/all';
+import {MdGroup} from 'react-icons/md';
+import {IoMdMore} from 'react-icons/all';
 
 import Card from '@material-ui/core/Card';
-import {
-    FORM_GROUPED_LABEL,
-    FORM_HOURS_LABEL,
-} from '../../../constants/translationLabels/formElements';
-import {
-    COMMON_EDIT,
-    COMMON_DELETE_HOVER_TITLE,
-} from '../../../constants/translationLabels/common';
-import { actionType } from '../../../constants/actionTypes';
-import { getTeacherName } from '../../../helper/renderTeacher';
+import {FORM_GROUPED_LABEL} from '../../../constants/translationLabels/formElements';
+import {COMMON_DELETE_HOVER_TITLE, COMMON_EDIT} from '../../../constants/translationLabels/common';
+import {actionType} from '../../../constants/actionTypes';
+import {getTeacherName} from '../../../helper/renderTeacher';
+import LessonTypeBadge from '../../../components/LessonTypeBadge/LessonTypeBadge';
 
 const ScheduleItem = (props) => {
     const {
@@ -40,14 +34,14 @@ const ScheduleItem = (props) => {
     };
 
     const handelEdit = () => {
-        const { group, semester } = lesson;
+        const { group } = lesson;
         const { id, period, dayOfWeek, evenOdd } = itemData;
         const editObj = {
             id,
             dayOfWeek,
             periodId: period.id,
             evenOdd,
-            semesterId: semester.id,
+            semesterId: lesson.semesterId,
         };
         checkRoomAvailability(editObj);
         selectByGroupId(group.id);
@@ -86,10 +80,8 @@ const ScheduleItem = (props) => {
                     {t(COMMON_DELETE_HOVER_TITLE)}
                 </MenuItem>
             </Menu>
-            <h5 className="lesson-title">
-                {lesson.subjectForSite} (
-                {t(`formElements:lesson_type_${lesson.lessonType.toLowerCase()}_label`)})
-            </h5>
+            <h5 className="lesson-title">{lesson.subjectForSite}</h5>
+            <LessonTypeBadge lessonType={lesson.lessonType} showIcon={false} size="small" />
             <p className="teacher-name">{getTeacherName(lesson.teacher)}</p>
             {lesson.grouped && (
                 <MdGroup
@@ -97,8 +89,8 @@ const ScheduleItem = (props) => {
                     className="svg-btn copy-btn grouped-icon align-left info-btn"
                 />
             )}
-            <p className="lesson-duration">
-                <b>1</b> {t(FORM_HOURS_LABEL)}
+            <p className="lesson-duration" style={{ color: '#757575' }}>
+                {itemData.room?.name || '—'}
             </p>
         </Card>
     );

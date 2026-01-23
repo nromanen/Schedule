@@ -1,16 +1,16 @@
-import { navigationNames } from './navigation';
+import {navigationNames} from './navigation';
 import {
+    BUSY_ROOMS_TITLE,
     CLASS_SCHEDULE_TITLE,
+    COMMON_SCHEDULE_TITLE,
     DEPARTMENTS_TITLE,
     GROUP_LIST_TITLE,
-    ROOM_LIST_TITLE,
-    SUBJECT_PAGE_TITLE,
-    SEMESTER_PAGE_TITLE,
-    TEACHER_LIST_TITLE,
     LESSON_PAGE_TITLE,
-    MERGE_ROLE_PAGE_TITLE,
-    CHANGES_TITLE,
-    BUSY_ROOMS_TITLE,
+    ROOM_LIST_TITLE,
+    SEMESTER_PAGE_TITLE,
+    SUBJECT_PAGE_TITLE,
+    TEACHER_LESSONS_TITLE,
+    TEACHER_LIST_TITLE,
 } from './translationLabels/common';
 
 export const general = [
@@ -24,7 +24,9 @@ export const general = [
 ];
 export const tabsComponents = [
     { name: navigationNames.LESSON_PAGE, title: LESSON_PAGE_TITLE },
-    { name: navigationNames.MERGE_ROLE_PAGE, title: MERGE_ROLE_PAGE_TITLE },
-    { name: navigationNames.CHANGES, title: CHANGES_TITLE },
+    { name: navigationNames.SCHEDULE_PAGE, title: COMMON_SCHEDULE_TITLE },
+    // { name: navigationNames.MERGE_ROLE_PAGE, title: MERGE_ROLE_PAGE_TITLE },
+    { name: navigationNames.TEACHER_LESSONS, title: TEACHER_LESSONS_TITLE },
+    // { name: navigationNames.CHANGES, title: CHANGES_TITLE },
     { name: navigationNames.BUSY_ROOMS, title: BUSY_ROOMS_TITLE },
 ];

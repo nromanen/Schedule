@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import AccessRoute from './AccessRoute';
 
 function UserRoute({ component: Component, userRole, ...rest }) {

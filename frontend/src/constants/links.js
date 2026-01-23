@@ -30,3 +30,6 @@ export const SCHEDULE_FOR_LINK = '/schedule';
 export const REGISTRATION_LINK = '/registration';
 export const RESET_PASSWORD_LINK = '/reset-password';
 export const DEPARTMENTS_LINK = '/admin/departments';
+
+export const TEACHER_LESSONS_LINK = '/admin/teacher-lessons';
+

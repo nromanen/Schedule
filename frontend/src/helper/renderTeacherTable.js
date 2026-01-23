@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,17 +14,17 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { useTranslation } from 'react-i18next';
-import { FaEnvelope } from 'react-icons/fa';
+import {useTranslation} from 'react-i18next';
+import {FaEnvelope} from 'react-icons/fa';
 import TableHead from '@material-ui/core/TableHead';
-import { withStyles } from '@material-ui/core';
-import { getTeacherFullName } from './renderTeacher';
+import {withStyles} from '@material-ui/core';
+import {getTeacherFullName} from './renderTeacher';
 import {
-    TEACHER_POSITION,
-    TEACHER_LABEL,
-    SEND_LETTER_LABEL,
     ALL_PAGE,
     ROWS_PER_PAGE,
+    SEND_LETTER_LABEL,
+    TEACHER_LABEL,
+    TEACHER_POSITION,
 } from '../constants/translationLabels/formElements';
 
 const useStyles1 = makeStyles((theme) => ({

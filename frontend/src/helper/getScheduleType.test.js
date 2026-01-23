@@ -1,5 +1,5 @@
-import { getScheduleType } from './getScheduleType';
-import { FULL, GROUP, TEACHER } from '../constants/scheduleTypes';
+import {getScheduleType} from './getScheduleType';
+import {FULL, GROUP, TEACHER} from '../constants/scheduleTypes';
 
 describe('getScheduleType function', () => {
     it('should return type full if values is empty', () => {

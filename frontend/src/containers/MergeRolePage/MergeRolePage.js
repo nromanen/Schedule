@@ -1,25 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {useTranslation} from 'react-i18next';
 
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
-import { CircularProgress } from '@material-ui/core';
-import { setLoadingService } from '../../services/loadingService';
-import { getUsersService, mergeUserAndTeacherService } from '../../services/userService';
+import {CircularProgress} from '@material-ui/core';
+import {setLoadingService} from '../../services/loadingService';
+import {getUsersService, mergeUserAndTeacherService} from '../../services/userService';
 
 import Card from '../../share/Card/Card';
 
 import './MergeRolePage.scss';
-import {
-    FORM_USER_LABEL,
-    FORM_TEACHER_LABEL,
-    FORM_MERGE_BUTTON,
-} from '../../constants/translationLabels/formElements';
-import { MERGE_HEADER } from '../../constants/translationLabels/common';
-import { getTeacherWithoutAccountStart } from '../../actions/teachers';
+import {FORM_MERGE_BUTTON, FORM_TEACHER_LABEL, FORM_USER_LABEL,} from '../../constants/translationLabels/formElements';
+import {MERGE_HEADER} from '../../constants/translationLabels/common';
+import {getTeacherWithoutAccountStart} from '../../actions/teachers';
 
 const useStyles = makeStyles(() => ({
     autoCompleteField: {

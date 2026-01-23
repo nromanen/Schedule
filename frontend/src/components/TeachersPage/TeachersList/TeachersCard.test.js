@@ -1,8 +1,8 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import {shallow} from 'enzyme';
 import TeachersCard from './TeachersCard';
-import { dialogTypes } from '../../../constants/dialogs';
-import { TEACHER_DEPARTMENT } from '../../../constants/translationLabels/common';
+import {dialogTypes} from '../../../constants/dialogs';
+import {TEACHER_DEPARTMENT} from '../../../constants/translationLabels/common';
 
 const showConfirmDialog = jest.fn();
 const selectedTeacherCard = jest.fn();

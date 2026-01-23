@@ -1,19 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom';
-import { reset } from 'redux-form';
-import { STUDENT_FORM } from '../../../constants/reduxForms';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom/cjs/react-router-dom';
+import {reset} from 'redux-form';
+import {STUDENT_FORM} from '../../../constants/reduxForms';
 import AddStudentForm from '../../../containers/Students/AddStudentForm';
-import { goToGroupPage } from '../../../helper/pageRedirection';
+import {goToGroupPage} from '../../../helper/pageRedirection';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { dialogCloseButton } from '../../../constants/dialogs';
+import {dialogCloseButton} from '../../../constants/dialogs';
 import '../dialog.scss';
-import {
-    EDIT_TITLE,
-    CREATE_TITLE,
-    STUDENT_A_LABEL,
-} from '../../../constants/translationLabels/formElements';
+import {CREATE_TITLE, EDIT_TITLE, STUDENT_A_LABEL,} from '../../../constants/translationLabels/formElements';
 
 const AddStudentDialog = (props) => {
     const { setOpen, open, student, groupId } = props;

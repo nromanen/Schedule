@@ -4,8 +4,8 @@ import com.softserve.entity.enums.EvenOdd;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 
@@ -21,7 +21,6 @@ public class Schedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Enumerated(EnumType.STRING)
     @Column(name = "day_of_week", length = 35, nullable = false)

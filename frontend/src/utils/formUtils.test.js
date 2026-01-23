@@ -1,8 +1,4 @@
-import {
-    initialCheckboxesStateForClasses,
-    createClasslabel,
-    checkSemesterYears,
-} from './formUtils';
+import {checkSemesterYears, createClasslabel, initialCheckboxesStateForClasses,} from './formUtils';
 
 const lessons = [
     {

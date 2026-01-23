@@ -1,10 +1,218 @@
-.link-to-meeting{
-  color: #3f51b5;
-  font-weight: bold;
-  text-decoration: none;
-  padding:5px;
-  font-size:18px;
-  :hover{
-    color: #3f51b5;
+@import "../styles/colors.scss";
+@import "../styles/variables.scss";
+
+a.pdf_link {
+  display: block;
+  font-size: 0.7em;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: right;
+  svg {
+    margin: 0px 10px;
   }
+}
+
+.top {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+// Week headers
+h2 {
+  text-align: center;
+  margin: 30px 0 15px 0;
+
+  span.currentDay {
+    background-color: $blue2;
+    padding: 8px 16px;
+    border-radius: 4px;
+  }
+}
+
+// Separator between weeks
+.MuiTableContainer-root + h2 {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid $gray1;
+}
+
+.MuiTableContainer-root {
+  max-height: 40em;
+  max-width: 100%;
+  overflow: scroll;
+  position: relative;
+  margin-bottom: 20px;
+
+  .MuiTable-root {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0 auto;
+    width: auto;
+    border: none;
+
+    thead.MuiTableHead-root tr.MuiTableRow-root.MuiTableRow-head th.MuiTableCell-root.MuiTableCell-head {
+      background-color: $blue1;
+      border: none;
+      border-right: 1px solid $gray1;
+      border-bottom: 1px solid $gray1;
+      position: sticky;
+      text-align: center;
+      top: 0;
+      width: auto;
+      z-index: 5;
+      font-weight: 600;
+      color: $black;
+
+      &:first-child {
+        left: 0;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+
+    td.MuiTableCell-root.MuiTableCell-body {
+      height: 60px;
+      padding: 10px;
+      width: auto;
+      z-index: 0;
+      border: none;
+      border-right: 1px solid $gray1;
+      border-bottom: 1px solid $gray2;
+      color: $black;
+
+      &[rowSpan~="2"] {
+        height: 120px;
+      }
+
+      &:last-child {
+        border-right: none;
+      }
+
+      &.lesson {
+        border: none;
+        border-right: 1px solid $gray1;
+        border-bottom: 1px solid $gray2;
+        font-weight: 400;
+        font-size: 0.85em;
+        min-width: 150px;
+        text-align: center;
+        white-space: pre-wrap;
+        width: 200px;
+
+        &:last-child {
+          border-right: none;
+        }
+
+        p {
+          margin: 0px;
+          color: $black;
+        }
+
+        // Teacher - normal
+        p.lesson-teacher {
+          font-weight: 400;
+          font-size: 0.95em;
+          color: $black;
+          margin-bottom: 4px;
+        }
+
+        // Subject name - bold, larger
+        p.lesson-subject {
+          font-weight: bold;
+          font-size: 1.1em;
+          color: $black;
+          margin-bottom: 4px;
+        }
+
+        // Lesson type and room - italic, smaller
+        p.lesson-details {
+          font-size: 0.85em;
+          color: $black;
+          font-style: italic;
+        }
+
+        &.intersection-on-schedule {
+          background-color: $danger-background-color;
+        }
+
+        p.temporary-class {
+          background-color: $green1;
+          padding: 5px 0;
+          cursor: pointer;
+          border-radius: 4px;
+        }
+      }
+
+      // Grouped classes - lighter green
+      &.grouped {
+        background-color: $green1;
+      }
+
+      &.currentDay {
+        background-color: $blue2;
+      }
+
+      &.classNameCell,
+      &.dayNameCell {
+        background-color: $white;
+        border: none;
+        border-right: 1px solid $gray1;
+        border-bottom: 1px solid $gray2;
+        font-size: 1em;
+        position: relative;
+        position: sticky;
+        text-align: center;
+        z-index: 1;
+        color: $black;
+      }
+
+      &.classNameCell {
+        left: 50px;
+        width: 10px;
+        &.currentDay {
+          background-color: $blue2;
+        }
+        &.subClassName {
+          left: 112px;
+          width: 10px;
+        }
+      }
+
+      &.dayNameCell {
+        left: 0;
+        margin: 0px;
+        min-width: 50px;
+        overflow: visible;
+        width: 20px !important;
+
+        &.minHeightDouble {
+          height: 240px;
+        }
+
+        &.currentDay {
+          background-color: $blue2;
+        }
+
+        .dayName {
+          writing-mode: vertical-rl;
+          -webkit-text-orientation: upright;
+          text-orientation: upright;
+          font-weight: 600;
+          color: $black;
+        }
+      }
+    }
+
+    // Remove bottom border from last row
+    tbody tr:last-child td {
+      border-bottom: none !important;
+    }
+  }
+}
+
+.currentDay {
+  background-color: $blue2;
 }

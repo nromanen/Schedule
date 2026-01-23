@@ -1,6 +1,6 @@
 import React from 'react';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import { connect } from 'react-redux';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 import Header from '../components/Header/Header';
 
@@ -11,24 +11,24 @@ import ActivationPage from '../containers/ActivationPage/ActivationPage';
 import ProfilePage from '../containers/ProfilePage/ProfilePage';
 import EditCurrentSchedulePage from '../containers/EditCurrentSchedule/EditCurrentSchedulePage';
 import {
-    HOME_PAGE_LINK,
-    SCHEDULE_FOR_LINK,
     ACTIVATION_PAGE_LINK,
+    ADMIN_PAGE_LINK,
+    HOME_PAGE_LINK,
     LOGIN_LINK,
     LOGOUT_LINK,
-    RESET_PASSWORD_LINK,
-    REGISTRATION_LINK,
-    SCHEDULE_PAGE_LINK,
     MY_PROFILE_LINK,
+    REGISTRATION_LINK,
+    RESET_PASSWORD_LINK,
+    SCHEDULE_FOR_LINK,
+    SCHEDULE_PAGE_LINK,
     TEACHER_SCHEDULE_LINK,
-    ADMIN_PAGE_LINK,
 } from '../constants/links';
-import { userRoles } from '../constants/userRoles';
+import {userRoles} from '../constants/userRoles';
 import GroupSchedulePage from '../containers/GroupSchedulePage/GroupSchedulePage';
-import { Register } from '../components/Register/Register';
-import { ResetPassword } from '../components/ResetPassword/ResetPassword';
-import { Login } from '../components/Login/Login';
-import { AdminRoute, UserRoute } from './routes';
+import {Register} from '../components/Register/Register';
+import {ResetPassword} from '../components/ResetPassword/ResetPassword';
+import {Login} from '../components/Login/Login';
+import {AdminRoute, UserRoute} from './routes';
 import AdminRouter from './AdminRouter';
 
 const Routers = (props) => {

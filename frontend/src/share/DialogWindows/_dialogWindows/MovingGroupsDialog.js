@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { isEmpty } from 'lodash';
+import {isEmpty} from 'lodash';
 import i18n from '../../../i18n';
 
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { COMMON_MOVE_TO_GROUP_TITLE } from '../../../constants/translationLabels/common';
-import { dialogCloseButton, dialogMoveToGroupButton } from '../../../constants/dialogs';
-import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
+import {COMMON_MOVE_TO_GROUP_TITLE} from '../../../constants/translationLabels/common';
+import {dialogCloseButton, dialogMoveToGroupButton} from '../../../constants/dialogs';
+import {getGroupsOptionsForSelect} from '../../../utils/selectUtils';
 
 const MovingGroupsDialog = (props) => {
     const { open, group, groups, onClose, moveStudentsToGroupStart } = props;

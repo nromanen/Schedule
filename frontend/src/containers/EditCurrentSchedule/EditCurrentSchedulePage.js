@@ -1,11 +1,11 @@
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { getLessonsByGroupStart, setScheduleLoading, showAllGroupsSuccess } from '../../actions';
-import { getClassScheduleListStart } from '../../actions/classes';
-import { clearScheduleStart, getAllScheduleItemsStart } from '../../actions/schedule';
-import { getEnabledGroupsStart } from '../../actions/groups';
+import {getLessonsByGroupStart, setScheduleLoading, showAllGroupsSuccess} from '../../actions';
+import {getClassScheduleListStart} from '../../actions/classes';
+import {clearScheduleStart, getAllScheduleItemsStart} from '../../actions/schedule';
+import {getEnabledGroupsStart} from '../../actions/groups';
 import EditCurrentSchedulePage from '../../components/EditCurrentSchedule/EditCurrentSchedulePage';
-import { getListOfRoomsStart } from '../../actions/rooms';
+import {getListOfRoomsStart} from '../../actions/rooms';
 
 const mapStateToProps = (state) => ({
     groups: state.groups.groups,

@@ -1,4 +1,4 @@
-import { getGroupScheduleTitle, getSemesterTitle, getTeacherScheduleTitle } from './titlesUtil';
+import {getGroupScheduleTitle, getSemesterTitle, getTeacherScheduleTitle} from './titlesUtil';
 
 const semester = {
     id: 1,

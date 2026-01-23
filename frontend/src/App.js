@@ -1,10 +1,10 @@
-import React, { Suspense, useEffect } from 'react';
+import React, {Suspense, useEffect} from 'react';
 import './i18n';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import Routers from './router/Routers';
-import { authCheckState } from './actions/index';
-import { handleSnackbarCloseService } from './services/snackbarService';
+import {authCheckState} from './actions/index';
+import {handleSnackbarCloseService} from './services/snackbarService';
 import SnackbarComponent from './share/Snackbar/SnackbarComponent';
 import SuccessSnackbar from './components/SuccessSnackbar/SuccessSnackbar';
 import './App.scss';

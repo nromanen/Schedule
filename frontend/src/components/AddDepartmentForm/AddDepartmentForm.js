@@ -1,20 +1,20 @@
-import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
+import {connect} from 'react-redux';
+import React, {useEffect} from 'react';
+import {Field, reduxForm} from 'redux-form';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
 import Card from '../../share/Card/Card';
-import { DEPARTMENT_FORM } from '../../constants/reduxForms';
+import {DEPARTMENT_FORM} from '../../constants/reduxForms';
 import renderTextField from '../../share/renderedFields/input';
-import { required, maxLengthValue, uniqueDepartment } from '../../validation/validateFields';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import {maxLengthValue, required, uniqueDepartment} from '../../validation/validateFields';
+import {getClearOrCancelTitle, setDisableButton} from '../../helper/disableComponent';
 import {
-    EDIT_TITLE,
     CREATE_TITLE,
-    SAVE_BUTTON_LABEL,
     DEPARTMENT_LABEL,
+    EDIT_TITLE,
     NAME_LABEL,
+    SAVE_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
 
 const AddDepartment = (props) => {
@@ -32,7 +32,7 @@ const AddDepartment = (props) => {
                 initialize();
             }
         }
-    }, [department]);
+    }, [department, editDepartment, initialize]);
 
     return (
         <Card additionClassName="form-card subject-form">

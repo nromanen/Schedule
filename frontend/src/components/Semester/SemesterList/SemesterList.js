@@ -1,25 +1,18 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { isEqual, isEmpty } from 'lodash';
-import { CircularProgress } from '@material-ui/core';
+import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {isEmpty, isEqual} from 'lodash';
+import {CircularProgress} from '@material-ui/core';
 import NotFound from '../../../share/NotFound/NotFound';
-import { dialogTypes, dialogCloseButton } from '../../../constants/dialogs';
-import {
-    COPY_LABEL,
-    SEMESTER_COPY_LABEL,
-    SEMESTERY_LABEL,
-} from '../../../constants/translationLabels/formElements';
-import {
-    EXIST_LABEL,
-    GROUP_EXIST_IN_THIS_SEMESTER,
-} from '../../../constants/translationLabels/serviceMessages';
-import { COMMON_GROUP_TITLE } from '../../../constants/translationLabels/common';
-import { search } from '../../../helper/search';
-import { getGroupsOptionsForSelect } from '../../../utils/selectUtils';
+import {dialogCloseButton, dialogTypes} from '../../../constants/dialogs';
+import {COPY_LABEL, SEMESTER_COPY_LABEL, SEMESTERY_LABEL,} from '../../../constants/translationLabels/formElements';
+import {EXIST_LABEL, GROUP_EXIST_IN_THIS_SEMESTER,} from '../../../constants/translationLabels/serviceMessages';
+import {COMMON_GROUP_TITLE} from '../../../constants/translationLabels/common';
+import {search} from '../../../helper/search';
+import {getGroupsOptionsForSelect} from '../../../utils/selectUtils';
 import SemesterCopyForm from '../../../containers/SemesterPage/SemesterCopyForm';
 import SemesterCard from './SemesterCard';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
-import { createMessage } from '../../../utils/sagaUtils';
+import {createMessage} from '../../../utils/sagaUtils';
 import MultiselectForGroups from '../../../share/Multiselects/MultiSelectForGroups';
 
 const SemesterList = (props) => {

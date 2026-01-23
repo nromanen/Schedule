@@ -1,5 +1,5 @@
-import { connect } from 'react-redux';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import {connect} from 'react-redux';
+import {setIsOpenConfirmDialog} from '../../actions/dialog';
 import ScheduleDialog from '../../components/EditCurrentSchedule/ScheduleDialog/ScheduleDialog';
 
 const mapStateToProps = (state) => ({

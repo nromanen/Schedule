@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import i18n from 'i18next';
-import { isEmpty } from 'lodash';
+import {isEmpty} from 'lodash';
 
-import { dialogTypes } from '../../constants/dialogs';
-import { cardType } from '../../constants/cardType';
-import { SEND_SCHEDULE_FOR_TEACHER } from '../../constants/translationLabels/common';
-import { search } from '../../helper/search';
+import {dialogTypes} from '../../constants/dialogs';
+import {cardType} from '../../constants/cardType';
+import {SEND_SCHEDULE_FOR_TEACHER} from '../../constants/translationLabels/common';
+import {search} from '../../helper/search';
 import MultiSelect from '../../share/Multiselects/MultiSelect';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
-import { clearDepartment, getAllDepartmentsService } from '../../services/departmentService';
+import {clearDepartment, getAllDepartmentsService} from '../../services/departmentService';
 import AddTeacherForm from './AddTeacherForm/AddTeacherForm';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import TeachersList from './TeachersList/TeachersList';
 import './TeachersList/TeachersList.scss';
-import { setDepartmentOptions, setOptions, setSemesterOptions } from '../../utils/selectUtils';
+import {setDepartmentOptions, setOptions, setSemesterOptions} from '../../utils/selectUtils';
 
 const TeachersPage = (props) => {
     const { t } = useTranslation('common');

@@ -1,14 +1,14 @@
-import { reset } from 'redux-form';
-import { isEmpty } from 'lodash';
-import { call, put, takeLatest, select } from 'redux-saga/effects';
-import { axiosCall } from '../services/axios';
+import {reset} from 'redux-form';
+import {isEmpty} from 'lodash';
+import {call, put, select, takeLatest} from 'redux-saga/effects';
+import {axiosCall} from '../services/axios';
 
 import {
+    DEPARTMENT_URL,
     DISABLED_TEACHERS_URL,
-    TEACHERS_WITHOUT_ACCOUNT_URL,
     PUBLIC_TEACHER_URL,
     TEACHER_URL,
-    DEPARTMENT_URL,
+    TEACHERS_WITHOUT_ACCOUNT_URL,
 } from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -16,26 +16,21 @@ import {
     DELETED_LABEL,
     UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { TEACHER_FORM } from '../constants/reduxForms';
-import { DELETE, GET, POST, PUT } from '../constants/methods';
-import { FORM_TEACHER_A_LABEL } from '../constants/translationLabels/formElements';
-import { createErrorMessage, createMessage } from '../utils/sagaUtils';
-import {
-    setLoading,
-    deleteTeacherSuccess,
-    showAllTeachersSuccess,
-    setDisabledTeachersSuccess,
-} from '../actions';
-import { setOpenErrorSnackbar, setOpenSuccessSnackbar } from '../actions/snackbar';
+import {TEACHER_FORM} from '../constants/reduxForms';
+import {DELETE, GET, POST, PUT} from '../constants/methods';
+import {FORM_TEACHER_A_LABEL} from '../constants/translationLabels/formElements';
+import {createErrorMessage, createMessage} from '../utils/sagaUtils';
+import {deleteTeacherSuccess, setDisabledTeachersSuccess, setLoading, showAllTeachersSuccess,} from '../actions';
+import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
 import * as actionTypes from '../actions/actionsType';
 import {
-    selectTeacherCard,
     addTeacherSuccess,
-    updateTeacherCardSuccess,
-    getTeacherWithoutAccountSuccess,
     getAllTeachersByDepartmentId,
+    getTeacherWithoutAccountSuccess,
+    selectTeacherCard,
+    updateTeacherCardSuccess,
 } from '../actions/teachers';
-import { handleFormSubmit } from '../helper/handleFormSubmit';
+import {handleFormSubmit} from '../helper/handleFormSubmit';
 
 export function* getEnabledTeachers() {
     try {

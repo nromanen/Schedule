@@ -1,16 +1,12 @@
 import i18n from '../i18n';
-import { createMessage, createErrorMessage, createDynamicMessage } from './sagaUtils';
-import {
-    FORM_GROUP_LABEL,
-    FORM_SEMESTER_LABEL,
-    FORM_STUDENT_LABEL,
-} from '../constants/translationLabels/formElements';
-import { GROUP } from '../constants/scheduleTypes';
+import {createDynamicMessage, createErrorMessage, createMessage} from './sagaUtils';
+import {FORM_GROUP_LABEL, FORM_SEMESTER_LABEL, FORM_STUDENT_LABEL,} from '../constants/translationLabels/formElements';
+import {GROUP} from '../constants/scheduleTypes';
 import {
     BACK_END_SUCCESS_OPERATION,
-    UPDATED_LABEL,
     CREATED_LABEL,
     DELETED_LABEL,
+    UPDATED_LABEL,
 } from '../constants/translationLabels/serviceMessages';
 
 describe('createErrorMessage function', () => {

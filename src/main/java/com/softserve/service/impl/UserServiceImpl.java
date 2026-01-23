@@ -14,7 +14,9 @@ import com.softserve.util.PasswordGeneratingUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,6 @@ import static org.apache.commons.lang3.StringUtils.*;
 @Slf4j
 @Transactional
 @Service
-@PropertySource({"classpath:cors.properties"})
 public class UserServiceImpl implements UserService {
 
     public static final String PASSWORD_FOR_SOCIAL_USER = "A&vbSdvSeук4му%ца349ІВмк432ем0!Qfdruevvb";
@@ -56,7 +57,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
-    @Value("${backend.url}")
+
+    @Value("${app.backend.url}")
     private String url;
 
     @Autowired
@@ -107,6 +109,7 @@ public class UserServiceImpl implements UserService {
      * @throws FieldAlreadyExistsException if some of provided fields already exist in the repository
      */
     @Override
+    @CachePut(value = "userByEmail", key = "#object.email")
     public User update(User object) {
         log.info("Enter into update method with entity:{}", object);
         getById(object.getId());
@@ -122,6 +125,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
+    @CacheEvict(value = "userByEmail", key = "#object.email")
     public User delete(User object) {
         log.info("Enter into delete method with entity:{}", object);
         return userRepository.delete(object);
@@ -131,6 +135,7 @@ public class UserServiceImpl implements UserService {
      * {@inheritDoc}
      */
     @Override
+    @Cacheable(value = "userByEmail", key = "#email")
     public User findByEmail(String email) {
         log.info("Enter into findByEmail method with email:{}", email);
         return userRepository.findByEmail(email).orElseThrow(

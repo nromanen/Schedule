@@ -1,11 +1,11 @@
 import {
     getFirstLetter,
-    getTeacherName,
-    getTeacherFullName,
     getTeacherForSite,
-    handleTeacherInfo,
+    getTeacherFullName,
+    getTeacherName,
     getTeacherWithPosition,
     getTeacherWithShortPosition,
+    handleTeacherInfo,
     parseShortPosition,
 } from './renderTeacher';
 

@@ -1,11 +1,8 @@
 import Moment from 'moment';
-import { extendMoment } from 'moment-range';
-import { store } from '../store';
+import {extendMoment} from 'moment-range';
+import {store} from '../store';
 import i18n from '../i18n';
-import {
-    UNIQUE_ERROR_MESSAGE,
-    INTERSECT_TIME_ERROR_MESSAGE,
-} from '../constants/translationLabels/validationMessages';
+import {INTERSECT_TIME_ERROR_MESSAGE, UNIQUE_ERROR_MESSAGE,} from '../constants/translationLabels/validationMessages';
 
 export const checkUniqClassName = (className) => {
     const classId = store.getState().classActions.classSchedule.id;

@@ -5,8 +5,8 @@ import com.softserve.dto.SubjectNameWithTypesDTO;
 import com.softserve.entity.Subject;
 import com.softserve.mapper.SubjectMapper;
 import com.softserve.service.SubjectService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Api(tags = "Subject API")
+@Tag(name = "Subject API")
 @RequestMapping("/subjects")
 @Slf4j
 public class SubjectController {
@@ -31,7 +31,7 @@ public class SubjectController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Get the list of all subjects")
+    @Operation(summary = "Get the list of all subjects")
     public ResponseEntity<List<SubjectDTO>> list() {
         log.info("In list ()");
         List<Subject> subjects = subjectService.getAll();
@@ -39,7 +39,7 @@ public class SubjectController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get subject info by id")
+    @Operation(summary = "Get subject info by id")
     public ResponseEntity<SubjectDTO> get(@PathVariable("id") long id) {
         log.info("In get(id = [{}])", id);
         Subject subject = subjectService.getById(id);
@@ -47,7 +47,7 @@ public class SubjectController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Create new subject")
+    @Operation(summary = "Create new subject")
     public ResponseEntity<SubjectDTO> save(@RequestBody SubjectDTO subjectDTO) {
         log.info("In save (subjectDTO = [{}])", subjectDTO);
         Subject subject = subjectService.save(subjectMapper.subjectDTOToSubject(subjectDTO));
@@ -55,7 +55,7 @@ public class SubjectController {
     }
 
     @PutMapping
-    @ApiOperation(value = "Update existing subject by id")
+    @Operation(summary = "Update existing subject by id")
     public ResponseEntity<SubjectDTO> update(@RequestBody SubjectDTO subjectDTO) {
         log.info("In update (subjectDTO = [{}])", subjectDTO);
         Subject subject = subjectService.update(subjectMapper.subjectDTOToSubject(subjectDTO));
@@ -63,7 +63,7 @@ public class SubjectController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete subject by id")
+    @Operation(summary = "Delete subject by id")
     public ResponseEntity<Void> delete(@PathVariable("id") long id) {
         log.info("In delete (id =[{}]", id);
         Subject subject = subjectService.getById(id);
@@ -72,7 +72,7 @@ public class SubjectController {
     }
 
     @GetMapping("/disabled")
-    @ApiOperation(value = "Get the list of disabled subjects")
+    @Operation(summary = "Get the list of disabled subjects")
     public ResponseEntity<List<SubjectDTO>> getDisabled() {
         log.info("In list getDisabled");
         List<Subject> subjects = subjectService.getDisabled();
@@ -80,7 +80,7 @@ public class SubjectController {
     }
 
     @GetMapping("/semester/{semesterId}/teacher/{teacherId}")
-    @ApiOperation(value = "Get the list of subjects by teacher id and semester id")
+    @Operation(summary = "Get the list of subjects by teacher id and semester id")
     public ResponseEntity<List<SubjectNameWithTypesDTO>> getSubjectsWithTypes(@PathVariable("semesterId") Long semesterId,
                                                                               @PathVariable("teacherId") Long teacherId) {
         log.info("Enter into getSubjects method with semester id: {} and teacher id: {}", semesterId, teacherId);

@@ -28,11 +28,31 @@ const GroupSchedulePage = (props) => {
         getGroupSchedule,
         getTeacherSchedule,
         getFullSchedule,
+        groupSchedule,
+        teacherSchedule,
+        fullSchedule,
     } = props;
 
     useEffect(() => {
         getDefaultSemester();
-    }, []);
+    }, [getDefaultSemester]);
+
+    useEffect(() => {
+        if (!loading && scheduleType) {
+            const timer = setTimeout(() => {
+                const currentDayElement = document.querySelector('.currentDay');
+                if (currentDayElement) {
+                    currentDayElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest',
+                    });
+                }
+            }, 100);
+
+            return () => clearTimeout(timer);
+        }
+    }, [loading, scheduleType, groupSchedule, teacherSchedule, fullSchedule]);
 
     const scheduleActions = {
         group: (values) => {
@@ -72,6 +92,7 @@ const GroupSchedulePage = (props) => {
         if (defaultSemester.id) {
             getSchedule();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [defaultSemester]);
 
     const getTop = () =>
@@ -92,4 +113,5 @@ const GroupSchedulePage = (props) => {
         </>
     );
 };
+
 export default GroupSchedulePage;

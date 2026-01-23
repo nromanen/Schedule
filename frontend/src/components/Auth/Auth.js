@@ -1,28 +1,28 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
-import { HOME_PAGE_LINK, LOGIN_LINK, ADMIN_PAGE_LINK } from '../../constants/links';
-import { authTypes, successAuthMessages } from '../../constants/auth';
-import { GOOGLE_LOGIN_URL } from '../../constants/axios';
-import { userRoles } from '../../constants/userRoles';
-import { snackbarTypes } from '../../constants/snackbarTypes';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {useHistory} from 'react-router-dom';
+import {ADMIN_PAGE_LINK, HOME_PAGE_LINK, LOGIN_LINK} from '../../constants/links';
+import {authTypes, successAuthMessages} from '../../constants/auth';
+import {GOOGLE_LOGIN_URL} from '../../constants/axios';
+import {userRoles} from '../../constants/userRoles';
+import {snackbarTypes} from '../../constants/snackbarTypes';
 import LoginForm from '../LoginForm/LoginForm';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
 import ResetPasswordForm from '../ResetPasswordForm/ResetPasswordForm';
 
-import { resetFormHandler } from '../../helper/formHelper';
-import { handleSnackbarOpenService } from '../../services/snackbarService';
-import { LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM } from '../../constants/reduxForms';
-import { GOOGLE } from '../../constants/common';
+import {resetFormHandler} from '../../helper/formHelper';
+import {handleSnackbarOpenService} from '../../services/snackbarService';
+import {LOGIN_FORM, REGISTRATION_FORM, RESET_PASSWORD_FORM} from '../../constants/reduxForms';
+import {GOOGLE} from '../../constants/common';
 
 import './Auth.scss';
 import {
+    ADMIN_TITLE,
+    BROKEN_TOKEN,
+    HOME_TITLE,
     LOGIN_TITLE,
     REGISTRATION_PAGE_TITLE,
-    HOME_TITLE,
-    ADMIN_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
-    BROKEN_TOKEN,
 } from '../../constants/translationLabels/common';
 
 const Auth = (props) => {

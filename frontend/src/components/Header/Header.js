@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { isNil } from 'lodash';
-import { Link } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {connect} from 'react-redux';
+import {isNil} from 'lodash';
+import {Link} from 'react-router-dom';
 import {
     FaCaretDown,
     FaClipboardList,
-    FaClock,
+    FaClock, FaEye,
+    FaEyeSlash,
     FaHome,
     FaRunning,
     FaSignOutAlt,
@@ -13,40 +14,42 @@ import {
 } from 'react-icons/fa';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import MenuItem from '@material-ui/core/MenuItem';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import './Header.scss';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
-    TEACHER_SCHEDULE_LINK,
+    ADMIN_PAGE_LINK,
     HOME_PAGE_LINK,
     LOGIN_LINK,
-    ADMIN_PAGE_LINK,
-    SCHEDULE_PAGE_LINK,
-    MY_PROFILE_LINK,
-    TEACHER_LIST_LINK,
     LOGOUT_LINK,
+    MY_PROFILE_LINK,
+    SCHEDULE_PAGE_LINK,
+    TEACHER_LIST_LINK,
+    TEACHER_SCHEDULE_LINK,
 } from '../../constants/links';
 
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
 
 import FreeRooms from '../../containers/Dialogs/FreeRoomsDialog';
-import { setSemesterLoadingService } from '../../services/loadingService';
+import {setSemesterLoadingService} from '../../services/loadingService';
 import {
-    LOGIN_TITLE,
     ADMIN_TITLE,
-    SCHEDULE_TITLE,
-    MY_PROFILE,
-    LOGOUT_TITLE,
-    SEMESTER_LABEL,
     HOME_TITLE,
+    LOGIN_TITLE,
+    LOGOUT_TITLE,
     MENU_BUTTON,
+    MY_PROFILE,
+    SCHEDULE_TITLE,
+    SEMESTER_LABEL,
 } from '../../constants/translationLabels/common';
-import { getCurrentSemesterRequsted } from '../../actions/schedule';
+import {getCurrentSemesterRequsted} from '../../actions/schedule';
+import {axiosCall} from "../../services/axios";
+import {DELETE, POST} from "../../constants/methods";
 
 const StyledMenu = withStyles({
     paper: {
@@ -87,14 +90,32 @@ const Header = (props) => {
     const handleClickUserMenu = (event) => setAnchorElUser(event.currentTarget);
     const handleCloseUserMenu = () => setAnchorElUser(null);
 
+    const [schedulePublished, setSchedulePublished] = useState(true);
+
     const { t } = useTranslation('common');
 
     useEffect(() => {
         if (userRole === roles.MANAGER) {
             setSemesterLoadingService(true);
             getCurrentSemester();
+            axiosCall('schedules/public/status')
+                .then(({ data }) => setSchedulePublished(data.published))
+                .catch(console.error);
         }
-    }, [userRole]);
+    }, [userRole, roles.MANAGER, getCurrentSemester]);
+
+    const handleTogglePublish = () => {
+        if (schedulePublished) {
+            axiosCall('schedules/publish', DELETE)
+                .then(() => setSchedulePublished(false))
+                .catch(console.error);
+        } else {
+            axiosCall('schedules/publish', POST)
+                .then(() => setSchedulePublished(true))
+                .catch(console.error);
+        }
+        handleCloseUserMenu();
+    };
 
     const getUserMenu = (role) => {
         let userMenu = null;
@@ -165,6 +186,12 @@ const Header = (props) => {
                                     <FreeRooms classScheduler={props.classScheduler} />
                                 </StyledMenuItem>
                             </span>
+                            <StyledMenuItem onClick={handleTogglePublish}>
+                                <ListItemIcon>
+                                    {schedulePublished ? <FaEyeSlash fontSize="normal" /> : <FaEye fontSize="normal" />}
+                                </ListItemIcon>
+                                {schedulePublished ? t('unpublish_schedule') : t('publish_schedule')}
+                            </StyledMenuItem>
                             <Link
                                 to={MY_PROFILE_LINK}
                                 className="navLinks"

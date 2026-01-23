@@ -1,11 +1,5 @@
-import { connect } from 'react-redux';
-import {
-    authUser,
-    registerUser,
-    resetUserPassword,
-    setAuthError,
-    setAuthLoading,
-} from '../../actions';
+import {connect} from 'react-redux';
+import {authUser, registerUser, resetUserPassword, setAuthError, setAuthLoading,} from '../../actions';
 import Auth from '../../components/Auth/Auth';
 
 const mapStateToProps = (state) => ({

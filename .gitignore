@@ -3,5 +3,5 @@
 /.idea
 /gradle
 /backup
-/src/test/resources/hibernatetest.properties
+/src/main/resources/application-local.yaml
 /schedule_logs

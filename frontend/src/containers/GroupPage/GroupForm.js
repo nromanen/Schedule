@@ -1,8 +1,8 @@
-import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
-import { GROUP_FORM } from '../../constants/reduxForms';
-import { AddGroup } from '../../components/AddGroupForm/AddGroupForm';
-import { submitGroupStart, clearGroupStart } from '../../actions/groups';
+import {connect} from 'react-redux';
+import {reduxForm} from 'redux-form';
+import {GROUP_FORM} from '../../constants/reduxForms';
+import {AddGroup} from '../../components/AddGroupForm/AddGroupForm';
+import {clearGroupStart, submitGroupStart} from '../../actions/groups';
 
 const mapStateToProps = (state) => ({
     groups: state.groups.groups,

@@ -1,6 +1,6 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { BrowserRouter } from 'react-router-dom';
+import {mount} from 'enzyme';
+import {BrowserRouter} from 'react-router-dom';
 import GroupCard from './GroupCard';
 
 const showAddStudentDialog = jest.fn();
