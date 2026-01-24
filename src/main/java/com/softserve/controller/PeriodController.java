@@ -3,13 +3,11 @@ package com.softserve.controller;
 import com.softserve.dto.AddPeriodDTO;
 import com.softserve.dto.MessageDTO;
 import com.softserve.dto.PeriodDTO;
-import com.softserve.entity.Period;
-import com.softserve.mapper.PeriodMapper;
 import com.softserve.service.PeriodService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,63 +17,54 @@ import java.util.List;
 @RestController
 @Tag(name = "Class API")
 @Slf4j
+@RequiredArgsConstructor
 public class PeriodController {
 
     private final PeriodService periodService;
 
-    private final PeriodMapper periodMapper;
-
-    @Autowired
-    public PeriodController(PeriodService periodService, PeriodMapper periodMapper) {
-        this.periodService = periodService;
-        this.periodMapper = periodMapper;
-    }
-
     @GetMapping(path = {"/classes", "/public/classes"})
     @Operation(summary = "Get the list of all classes")
-    public ResponseEntity<List<PeriodDTO>> list() {
-        log.info("Enter into list of PeriodController");
-        return ResponseEntity.ok().body(periodMapper.convertToDtoList(periodService.getAll()));
+    public ResponseEntity<List<PeriodDTO>> getAll() {
+        log.info("Getting all periods");
+        return ResponseEntity.ok(periodService.getAll());
     }
 
     @GetMapping("/classes/{id}")
     @Operation(summary = "Get class info by id")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PeriodDTO> get(@PathVariable("id") long id) {
-        log.info("Enter into get of PeriodController with id {} ", id);
-        Period period = periodService.getById(id);
-        return ResponseEntity.ok().body(periodMapper.convertToDto(period));
+    public ResponseEntity<PeriodDTO> getById(@PathVariable Long id) {
+        log.info("Getting period by id: {}", id);
+        return ResponseEntity.ok(periodService.getById(id));
     }
 
     @PostMapping("/classes")
     @Operation(summary = "Create new class")
-    public ResponseEntity<PeriodDTO> save(@RequestBody AddPeriodDTO addPeriodDTO) {
-        log.info("Enter into save of PeriodController with addPeriodDTO: {}", addPeriodDTO);
-        Period newPeriod = periodService.save(periodMapper.convertToEntity(addPeriodDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(periodMapper.convertToDto(newPeriod));
+    public ResponseEntity<PeriodDTO> create(@RequestBody AddPeriodDTO addPeriodDTO) {
+        log.info("Creating period: {}", addPeriodDTO);
+        PeriodDTO created = periodService.save(addPeriodDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PostMapping("/classes/all")
     @Operation(summary = "Create a list of classes")
-    public ResponseEntity<MessageDTO> save(@RequestBody List<AddPeriodDTO> periods) {
-        log.info("Enter into save of PeriodController with List of addPeriodDTO: {}", periods);
-        periodService.save(periodMapper.convertToEntityList(periods));
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO("New periods have been saved"));
+    public ResponseEntity<List<PeriodDTO>> createAll(@RequestBody List<AddPeriodDTO> periods) {
+        log.info("Creating periods: {}", periods);
+        List<PeriodDTO> created = periodService.saveAll(periods);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/classes")
     @Operation(summary = "Update existing class")
     public ResponseEntity<PeriodDTO> update(@RequestBody PeriodDTO periodDTO) {
-        log.info("Enter into update of PeriodController with periodDTO: {}", periodDTO);
-        Period newPeriod = periodService.update(periodMapper.convertToEntity(periodDTO));
-        return ResponseEntity.ok().body(periodMapper.convertToDto(newPeriod));
+        log.info("Updating period: {}", periodDTO);
+        PeriodDTO updated = periodService.update(periodDTO);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/classes/{id}")
     @Operation(summary = "Delete class by id")
-    public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id) {
-        log.info("Enter into delete of PeriodController with id: {}", id);
-        periodService.delete(periodService.getById(id));
-        return ResponseEntity.ok().body(new MessageDTO("Period has been deleted successfully."));
+    public ResponseEntity<MessageDTO> delete(@PathVariable Long id) {
+        log.info("Deleting period by id: {}", id);
+        periodService.deleteById(id);
+        return ResponseEntity.ok(new MessageDTO("Period has been deleted successfully."));
     }
 }

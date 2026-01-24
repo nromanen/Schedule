@@ -7,7 +7,49 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService extends BasicService<User, Long> {
+public interface UserService {
+
+    /**
+     * Retrieves a user by ID from the repository.
+     *
+     * @param id the ID of the user
+     * @return the found user
+     * @throws com.softserve.exception.EntityNotFoundException if user not found
+     */
+    User getById(Long id);
+
+    /**
+     * Returns all users from the repository.
+     *
+     * @return the list of all users
+     */
+    List<User> getAll();
+
+    /**
+     * Saves a given user in the repository.
+     *
+     * @param user the user to be saved
+     * @return the saved user
+     * @throws com.softserve.exception.FieldAlreadyExistsException if email already exists
+     */
+    User save(User user);
+
+    /**
+     * Updates a given user in the repository.
+     *
+     * @param user the user to be updated
+     * @return the updated user
+     * @throws com.softserve.exception.FieldAlreadyExistsException if email already exists for another user
+     */
+    User update(User user);
+
+    /**
+     * Deletes a given user from the repository.
+     *
+     * @param user the user to be deleted
+     * @return the deleted user
+     */
+    User delete(User user);
 
     /**
      * Retrieves a user by email from the repository.
@@ -22,7 +64,7 @@ public interface UserService extends BasicService<User, Long> {
      * Retrieves a user by token from the repository.
      *
      * @param token the string represents the user's token
-     * @return the founded user
+     * @return the found user
      * @throws com.softserve.exception.EntityNotFoundException if user with given token is not found
      */
     User findByToken(String token);
@@ -31,7 +73,7 @@ public interface UserService extends BasicService<User, Long> {
      * Registers the given user in the system.
      *
      * @param user the user used for registration in the system
-     * @return User entity
+     * @return the registered user
      * @throws com.softserve.exception.IncorrectPasswordException when password is incorrect or not strong enough
      */
     User registration(User user);
@@ -44,10 +86,10 @@ public interface UserService extends BasicService<User, Long> {
     void resetPassword(String email);
 
     /**
-     * Creates user after sign in with Oauth2 Social.
+     * Creates user after sign in with OAuth2 Social.
      *
      * @param oAuth2User the user credentials to save
-     * @return created user
+     * @return the created user
      */
     User createSocialUser(OAuth2User oAuth2User);
 
@@ -60,7 +102,7 @@ public interface UserService extends BasicService<User, Long> {
     Optional<User> findSocialUser(String email);
 
     /**
-     * Returns all users from the repository, that have role USER.
+     * Returns all users from the repository that have role USER.
      *
      * @return the list of users that have role USER
      */
@@ -86,6 +128,4 @@ public interface UserService extends BasicService<User, Long> {
      * @throws com.softserve.exception.IncorrectPasswordException if password was incorrect or not strong enough
      */
     User automaticRegistration(String email, Role role);
-
 }
-

@@ -206,6 +206,8 @@ public interface ScheduleRepository extends BasicRepository<Schedule, Long> {
      */
     List<Schedule> getAllOrdered(Long semesterId);
 
+    Optional<Schedule> findByIdWithDetails(Long id);
+
     /**
      * Get all schedules for semester with all related entities loaded in one query.
      * @param semesterId the id of the semester

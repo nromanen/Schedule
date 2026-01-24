@@ -19,6 +19,16 @@ public class RoomTypeRepositoryImpl extends BasicRepositoryImpl<RoomType, Long> 
     }
 
     @Override
+    public Long countRoomTypesWithDescriptionAndIgnoreId(Long id, String description) {
+        log.info("In countRoomTypesWithDescriptionAndIgnoreId(id = [{}], description = [{}])", id, description);
+        return sessionFactory.getCurrentSession()
+                .createQuery("SELECT count(r.id) FROM RoomType r WHERE r.description = :description AND r.id != :id", Long.class)
+                .setParameter("description", description)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
     public Long countByRoomTypeId(Long id) {
         log.info("In countByRoomTypeId(id = [{}])", id);
         return sessionFactory.getCurrentSession()

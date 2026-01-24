@@ -46,7 +46,6 @@ const ScheduleItem = (props) => {
         checkRoomAvailability(editObj);
         selectByGroupId(group.id);
         openDialogWithData({ type: actionType.UPDATED, item: editObj, groupId: group.id });
-        getLessonsByGroupId(group.id);
         handleClose();
     };
     const handelDelete = () => {

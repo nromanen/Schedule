@@ -1,184 +1,170 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.RoomDTO;
 import com.softserve.dto.RoomForScheduleInfoDTO;
 import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.RoomForScheduleInfoMapper;
+import com.softserve.mapper.RoomMapper;
 import com.softserve.repository.RoomRepository;
 import com.softserve.repository.SortOrderRepository;
 import com.softserve.service.RoomService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.util.List;
 
-@Transactional
 @Service
+@Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
+    private final RoomMapper roomMapper;
     private final RoomForScheduleInfoMapper roomForScheduleInfoMapper;
     private final SortOrderRepository<Room> sortOrderRepository;
 
-    @Autowired
-    public RoomServiceImpl(RoomRepository roomRepository, RoomForScheduleInfoMapper roomForScheduleInfoMapper,
-                           SortOrderRepository<Room> sortOrderRepository) {
-        this.roomRepository = roomRepository;
-        this.roomForScheduleInfoMapper = roomForScheduleInfoMapper;
-        this.sortOrderRepository = sortOrderRepository;
-        this.sortOrderRepository.settClass(Room.class);
+    @jakarta.annotation.PostConstruct
+    public void init() {
+        sortOrderRepository.settClass(Room.class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Room getById(Long id) {
-        log.info("Enter into getById of RoomServiceImpl with id {}", id);
-        return roomRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Room.class, "id", id.toString())
-        );
+    @Transactional(readOnly = true)
+    public RoomDTO getById(Long id) {
+        log.info("Getting room by id: {}", id);
+        Room room = findRoomById(id);
+        return roomMapper.convertToDto(room);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Room> getAll() {
-        log.info("Enter into getAll of RoomServiceImpl");
-        return roomRepository.getAll();
+    @Transactional(readOnly = true)
+    public List<RoomDTO> getAll() {
+        log.info("Getting all rooms");
+        return roomMapper.convertToDtoList(roomRepository.getAll());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Room> getDisabled() {
-        log.info("Enter into getAll of getDisabled");
-        return roomRepository.getDisabled();
+    @Transactional(readOnly = true)
+    public List<RoomDTO> getDisabled() {
+        log.info("Getting disabled rooms");
+        return roomMapper.convertToDtoList(roomRepository.getDisabled());
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws EntityAlreadyExistsException if given room already exists
-     */
     @Override
-    public Room save(Room object) {
-        log.info("Enter into save of RoomServiceImpl with entity:{}", object);
-        if (isRoomExists(object)) {
-            throw new EntityAlreadyExistsException("Room with this parameters already exists");
-        } else {
-            object.setSortOrder(roomRepository.getLastSortOrder().orElse(0) + 1);
-            return roomRepository.save(object);
-        }
+    public RoomDTO save(RoomDTO roomDTO) {
+        log.info("Saving room: {}", roomDTO);
+
+        Room room = roomMapper.convertToEntity(roomDTO);
+        validateRoomUniqueness(room);
+
+        room.setSortOrder(roomRepository.getLastSortOrder().orElse(0) + 1);
+        Room saved = roomRepository.save(room);
+        return roomMapper.convertToDto(saved);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws EntityAlreadyExistsException if there is already another room with parameters as in the given room
-     */
     @Override
-    public Room update(Room object) {
-        log.info("Enter into update of RoomServiceImpl with entity:{}", object);
-        if (isRoomExists(object)) {
-            throw new EntityAlreadyExistsException("Room with this parameters already exists");
-        } else {
-            object.setSortOrder(sortOrderRepository.getSortOrderById(object.getId()).orElse(null));
-            return roomRepository.update(object);
-        }
+    public RoomDTO update(RoomDTO roomDTO) {
+        log.info("Updating room: {}", roomDTO);
+
+        Room room = roomMapper.convertToEntity(roomDTO);
+        validateRoomUniqueness(room);
+
+        room.setSortOrder(sortOrderRepository.getSortOrderById(room.getId()).orElse(null));
+        Room updated = roomRepository.update(room);
+        return roomMapper.convertToDto(updated);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Room delete(Room object) {
-        log.info("Enter into delete of RoomServiceImpl with entity:{}", object);
-        Room deleted = roomRepository.delete(object);
+    public RoomDTO deleteById(Long id) {
+        log.info("Deleting room by id: {}", id);
+
+        Room room = findRoomById(id);
+        Room deleted = roomRepository.delete(room);
         roomRepository.shiftSortOrderRange(deleted.getSortOrder() + 1, null, RoomRepository.Direction.UP);
-        return deleted;
+        return roomMapper.convertToDto(deleted);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Room> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd) {
-        log.info("Enter into freeRoomBySpecificPeriod of RoomServiceImpl with id {}, dayOfWeek {} and evenOdd {} ",
-                idOfPeriod, dayOfWeek, evenOdd);
-        return roomRepository.freeRoomBySpecificPeriod(idOfPeriod, dayOfWeek, evenOdd);
+    @Transactional(readOnly = true)
+    public List<RoomDTO> freeRoomBySpecificPeriod(Long idOfPeriod, DayOfWeek dayOfWeek, EvenOdd evenOdd) {
+        log.info("Getting free rooms by period: {}, day: {}, evenOdd: {}", idOfPeriod, dayOfWeek, evenOdd);
+        List<Room> rooms = roomRepository.freeRoomBySpecificPeriod(idOfPeriod, dayOfWeek, evenOdd);
+        return roomMapper.convertToDtoList(rooms);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Room> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        return roomRepository.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
+    @Transactional(readOnly = true)
+    public List<RoomDTO> getNotAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        log.info("Getting not available rooms for schedule");
+        List<Room> rooms = roomRepository.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
+        return roomMapper.convertToDtoList(rooms);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        return roomRepository.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
+    @Transactional(readOnly = true)
+    public List<RoomDTO> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        log.info("Getting available rooms for schedule");
+        List<Room> rooms = roomRepository.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
+        return roomMapper.convertToDtoList(rooms);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
+    @Transactional(readOnly = true)
     public List<RoomForScheduleInfoDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
-        List<RoomForScheduleInfoDTO> rooms = roomForScheduleInfoMapper.toRoomForScheduleDTOList(
-                getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
-        rooms.forEach(roomForScheduleDTO -> roomForScheduleDTO.setAvailable(true));
-        rooms.addAll(roomForScheduleInfoMapper.toRoomForScheduleDTOList(getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId)));
-        return rooms;
+        log.info("Getting all rooms for creating schedule");
+
+        List<Room> availableRooms = roomRepository.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
+        List<Room> notAvailableRooms = roomRepository.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
+
+        List<RoomForScheduleInfoDTO> result = roomForScheduleInfoMapper.toRoomForScheduleDTOList(availableRooms);
+        result.forEach(room -> room.setAvailable(true));
+        result.addAll(roomForScheduleInfoMapper.toRoomForScheduleDTOList(notAvailableRooms));
+
+        return result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean isRoomExists(Room room) {
-        return roomRepository.countRoomDuplicates(room) != 0;
+    @Transactional(readOnly = true)
+    public List<RoomDTO> getAllOrdered() {
+        log.info("Getting all rooms ordered");
+        return roomMapper.convertToDtoList(roomRepository.getAllOrdered());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public List<Room> getAllOrdered() {
-        log.info("Entered getAllOrdered()");
-        return roomRepository.getAllOrdered();
+    public RoomDTO createAfterOrder(RoomDTO roomDTO, Long afterId) {
+        log.info("Creating room after id: {}", afterId);
+
+        Room room = roomMapper.convertToEntity(roomDTO);
+        Room saved = sortOrderRepository.createAfterOrder(room, afterId);
+        return roomMapper.convertToDto(saved);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
     @Override
-    public Room createAfterOrder(Room room, Long afterId) {
-        log.debug("Entered createAfterOrder");
-        return sortOrderRepository.createAfterOrder(room, afterId);
+    public RoomDTO updateAfterOrder(RoomDTO roomDTO, Long afterId) {
+        log.info("Updating room order after id: {}", afterId);
+
+        Room room = roomMapper.convertToEntity(roomDTO);
+        Room updated = sortOrderRepository.updateAfterOrder(room, afterId);
+        return roomMapper.convertToDto(updated);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Transactional
-    @Override
-    public Room updateAfterOrder(Room room, Long afterId) {
-        log.debug("Entered updateAfterOrder");
-        return sortOrderRepository.updateAfterOrder(room, afterId);
+    // ==================== Private Helper Methods ====================
+
+    private Room findRoomById(Long id) {
+        return roomRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Room.class, "id", id.toString()));
+    }
+
+    private void validateRoomUniqueness(Room room) {
+        if (roomRepository.countRoomDuplicates(room) != 0) {
+            throw new EntityAlreadyExistsException("Room with these parameters already exists");
+        }
     }
 }

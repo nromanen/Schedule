@@ -3,11 +3,13 @@ import { FixedSizeList as List } from 'react-window';
 import ScheduleBoard from '../../../containers/EditCurrentSchedule/ScheduleBoard';
 import ScheduleDialog from '../../../containers/Dialogs/ScheduleDialog';
 import ScheduleDaySidebar from '../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar';
+import { CircularProgress } from '@material-ui/core';
 import './Schedule.scss';
 
 import { COMMON_GROUP_TITLE, NO_CURRENT_SEMESTER } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { addClassDayBoard, removeClassDayBoard } from '../../../helper/schedule';
+import {setScheduleOperationLoading} from "../../../actions/loadingIndicator";
 
 // Width of a single group column in pixels
 const COLUMN_WIDTH = 150;
@@ -23,6 +25,8 @@ const Schedule = (props) => {
         getLessonsByGroupId,
         addItemsToSchedule,
         editRoomItemToSchedule,
+        scheduleOperationLoading,
+        setScheduleOperationLoading,
         t,
     } = props;
 
@@ -72,6 +76,7 @@ const Schedule = (props) => {
     const handleChangeSchedule = (roomId, actionData) => {
         const { item, type } = actionData;
         setIsOpenScheduleDialog(false);
+        setScheduleOperationLoading(true);
         if (type === actionType.UPDATED) {
             editRoomItemToSchedule({ itemId: item.id, roomId });
         } else {
@@ -89,17 +94,23 @@ const Schedule = (props) => {
     const GroupColumn = useCallback(({ index, style }) => {
         const group = groups[index];
         const isSelectedGroup = group.id === groupId;
+        const isLoading = isSelectedGroup && scheduleOperationLoading;
 
         return (
             <div
                 style={style}
                 key={`group-${group.id}`}
-                className={`group-section ${isSelectedGroup ? 'selected-group' : ''}`}
+                className={`group-section ${isSelectedGroup ? 'selected-group' : ''} ${isLoading ? 'loading' : ''}`}
                 id={`group-${group.id}`}
             >
+                {isLoading && (
+                    <div className="column-loading-overlay">
+                        <CircularProgress size={40} />
+                    </div>
+                )}
                 <span className="group-title schedule-card sticky-container">
-                    {group.title}
-                </span>
+                {group.title}
+            </span>
                 {allLessons.map((lesson) => (
                     <div
                         key={`${group.id}-${lesson.id}-${lesson.week}`}
@@ -121,7 +132,7 @@ const Schedule = (props) => {
                 ))}
             </div>
         );
-    }, [groups, groupId, allLessons, currentSemester, dragItemData, t]);
+    }, [groups, groupId, allLessons, currentSemester, dragItemData, t, scheduleOperationLoading]);
 
     // Calculate list height based on lessons count
     const listHeight = allLessons.length * 80 + 50;

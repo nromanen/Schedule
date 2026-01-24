@@ -1,12 +1,8 @@
 package com.softserve.service.impl;
 
-import com.softserve.dto.LessonDTO;
-import com.softserve.dto.LessonInfoDTO;
-import com.softserve.dto.LessonWithLinkDTO;
-import com.softserve.dto.SemesterWithGroupsDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.Lesson;
 import com.softserve.entity.Semester;
-import com.softserve.entity.Subject;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
@@ -114,10 +110,21 @@ public class LessonServiceImpl implements LessonService {
     @Cacheable(value = "lessons", key = "'group-' + #groupId")
     public List<LessonInfoDTO> getAllForGroup(Long groupId) {
         log.info("In getAllForGroup(groupId = [{}])", groupId);
-        List<Lesson> lessons = lessonRepository.getAllForGroup(
-                groupId, semesterService.getCurrentSemester().getId());
+
+        SemesterWithGroupsDTO semester = semesterService.getCurrentSemester();
+        log.info("Current semester id: {}", semester != null ? semester.getId() : "NULL");
+
+        List<Lesson> lessons = lessonRepository.getAllForGroup(groupId, semester.getId());
+        log.info("Found lessons: {}", lessons.size());
+
         return lessonInfoMapper.lessonsToLessonInfoDTOs(lessons);
     }
+//    public List<LessonInfoDTO> getAllForGroup(Long groupId) {
+//        log.info("In getAllForGroup(groupId = [{}])", groupId);
+//        List<Lesson> lessons = lessonRepository.getAllForGroup(
+//                groupId, semesterService.getCurrentSemester().getId());
+//        return lessonInfoMapper.lessonsToLessonInfoDTOs(lessons);
+//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -218,7 +225,7 @@ public class LessonServiceImpl implements LessonService {
         }
 
         if (lesson.getSubjectForSite() == null || lesson.getSubjectForSite().isEmpty()) {
-            Subject subject = subjectService.getById(lesson.getSubject().getId());
+            SubjectDTO subject = subjectService.getById(lesson.getSubject().getId());
             lesson.setSubjectForSite(subject.getName());
         }
 

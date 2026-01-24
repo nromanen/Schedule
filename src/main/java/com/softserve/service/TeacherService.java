@@ -3,59 +3,73 @@ package com.softserve.service;
 import com.softserve.dto.TeacherDTO;
 import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherImportDTO;
-import com.softserve.entity.Teacher;
+import com.softserve.dto.UserDataDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface TeacherService extends BasicService<Teacher, Long> {
+public interface TeacherService {
 
     /**
-     * Saves given teacher in the repository and register user if email exists.
+     * Retrieves a teacher by its ID.
      *
-     * @param teacherDTO the teacher to be saved
-     * @return the saved teacher
+     * @param id the ID of the teacher
+     * @return the teacher DTO
+     * @throws com.softserve.exception.EntityNotFoundException if teacher not found
      */
-    Teacher save(TeacherDTO teacherDTO);
+    TeacherDTO getById(Long id);
 
     /**
-     * Updates an existing teacher in the repository and register user if email was added.
+     * Returns all teachers.
+     *
+     * @return the list of teacher DTOs
+     */
+    List<TeacherDTO> getAll();
+
+    /**
+     * Saves a new teacher and registers user if email exists.
+     *
+     * @param teacherDTO the teacher DTO to save
+     * @return the saved teacher DTO
+     */
+    TeacherDTO save(TeacherDTO teacherDTO);
+
+    /**
+     * Updates an existing teacher and registers user if email was added.
      *
      * @param teacherForUpdateDTO the teacher with info to be updated
-     * @return the updated teacher
+     * @return the updated teacher DTO
      */
-    Teacher update(TeacherForUpdateDTO teacherForUpdateDTO);
+    TeacherForUpdateDTO update(TeacherForUpdateDTO teacherForUpdateDTO);
+
+    /**
+     * Deletes a teacher by its ID.
+     *
+     * @param id the ID of the teacher to delete
+     * @throws com.softserve.exception.EntityNotFoundException if teacher not found
+     */
+    void deleteById(Long id);
 
     /**
      * Returns all disabled teachers.
      *
-     * @return the list of disabled teachers
+     * @return the list of disabled teacher DTOs
      */
-    List<Teacher> getDisabled();
+    List<TeacherDTO> getDisabled();
 
     /**
-     * Returns teacher by user id.
+     * Returns all teachers that don't have registered user.
      *
-     * @param userId the id of the user
-     * @return the founded teacher
-     * @throws com.softserve.exception.EntityNotFoundException if teacher doesn't exist
-     * @throws com.softserve.exception.FieldNullException      if user id is null
+     * @return the list of teacher DTOs without registered user
      */
-    Teacher findByUserId(Long userId);
-
-    /**
-     * Returns all teachers from repository, that don't registered in system.
-     *
-     * @return the list of teachers without registered user
-     */
-    List<Teacher> getAllTeacherWithoutUser();
+    List<TeacherDTO> getAllTeacherWithoutUser();
 
     /**
      * Imports teachers from file and saves in the repository.
      *
      * @param file         the file with teachers data
      * @param departmentId the id of the department
-     * @return tje list of created teachers
+     * @return the list of imported teachers with status
      */
     List<TeacherImportDTO> saveFromFile(MultipartFile file, Long departmentId);
 
@@ -63,9 +77,24 @@ public interface TeacherService extends BasicService<Teacher, Long> {
      * Saves given teacher with given department id.
      *
      * @param departmentId the id of the department
-     * @param teacher      the teacher entity which
-     * @return the saved teacher
+     * @param teacher      the teacher import DTO
+     * @return the saved teacher import DTO
      */
     TeacherImportDTO saveTeacher(Long departmentId, TeacherImportDTO teacher);
-}
 
+    /**
+     * Removes user association from teacher by user id.
+     *
+     * @param userId the id of the user
+     * @throws com.softserve.exception.EntityNotFoundException if teacher not found
+     */
+    void removeUserFromTeacher(Long userId);
+
+    /**
+     * Returns user data for teacher by user id.
+     *
+     * @param userId the id of the user
+     * @return the user data DTO or null if teacher not found
+     */
+    UserDataDTO getUserDataByUserId(Long userId);
+}

@@ -1,8 +1,8 @@
 import {call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 import {isEmpty} from 'lodash';
-import {setLoading, setScheduleLoading, setSemesterLoading} from '../actions';
+import {addItemToSchedule, setLoading, setScheduleLoading, setSemesterLoading} from '../actions';
 import * as actionTypes from '../actions/actionsType';
-import {setMainScheduleLoading} from '../actions/loadingIndicator';
+import {setMainScheduleLoading, setScheduleOperationLoading} from '../actions/loadingIndicator';
 import { setScheduleNotPublished } from '../actions/schedule';
 import {
     CLEAR_SCHEDULE_URL,
@@ -52,9 +52,6 @@ import {DELETE, POST, PUT} from '../constants/methods';
 import {FULL, GROUP, TEACHER} from '../constants/scheduleTypes';
 import {getAllPublicGroups} from './group';
 import {getAllPublicTeachers} from './teachers';
-
-const getScheduleItemsFromState = (state) => state.schedule.scheduleItems;
-const getCurrentSemesterFromState = (state) => state.schedule.currentSemester;
 
 export function* getScheduleItemsBySemester({ semesterId }) {
     const requestUrl = `${SCHEDULE_SEMESTER_ITEMS_URL}?semesterId=${semesterId}`;
@@ -115,11 +112,15 @@ export function* getScheduleItems() {
 
 export function* addItemsToSchedule({ item }) {
     try {
-        yield call(axiosCall, SCHEDULE_ITEMS_URL, POST, item);
-        yield call(getScheduleItems);
-        // yield call(forceRefreshScheduleItems);
+        yield put(setScheduleOperationLoading(true));
+        const { data } = yield call(axiosCall, SCHEDULE_ITEMS_URL, POST, item);
+        for (const schedule of data) {
+            yield put(addItemToSchedule(schedule));
+        }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setScheduleOperationLoading(false));
     }
 }
 
@@ -175,14 +176,16 @@ export function* clearSchedule({ semesterId }) {
 
 export function* deleteScheduleItem({ itemId }) {
     try {
+        yield put(setScheduleOperationLoading(true));
         const requestUrl = `${SCHEDULE_ITEMS_URL}/${itemId}`;
-        yield call(axiosCall, requestUrl, DELETE);
-        yield put(deleteScheduleItemSuccess(itemId));
-        yield call(getScheduleItems);
-        // yield call(forceRefreshScheduleItems);
+        const { data } = yield call(axiosCall, requestUrl, DELETE);
+        for (const deletedId of data) {
+            yield put(deleteScheduleItemSuccess(deletedId));
+        }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
-        yield put(setLoading(false));
+    } finally {
+        yield put(setScheduleOperationLoading(false));
     }
 }
 

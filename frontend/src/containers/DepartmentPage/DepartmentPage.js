@@ -95,17 +95,22 @@ const DepartmentPage = (props) => {
         };
         return changeDisabledStatus[confirmDialogType];
     };
+
     const acceptConfirmDialog = (currentId) => {
         setOpenConfirmDialog(false);
         if (confirmDialogType !== dialogTypes.DELETE_CONFIRM) {
             changeDepartmentDisabledStatus(currentId);
-        } else deleteDepartmentsService(currentId);
+        } else {
+            deleteDepartmentsService(currentId);
+        }
     };
-    const changeDisable = () => {
-        setIsDisabled((prev) => !prev);
-    };
+
     const closeTeacherDialog = () => {
         setIsOpenTeacherDialog(false);
+    };
+
+    const changeDisable = () => {
+        setIsDisabled((prev) => !prev);
     };
 
     return (
@@ -113,7 +118,7 @@ const DepartmentPage = (props) => {
             <CustomDialog
                 type={confirmDialogType}
                 whatDelete="department"
-                handelConfirm={() => acceptConfirmDialog(departmentId.id)}
+                handelConfirm={() => acceptConfirmDialog(departmentId)}
                 open={isOpenConfirmDialog}
             />
             {isOpenTeacherDialog && (

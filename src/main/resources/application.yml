@@ -31,10 +31,10 @@ spring:
             client-id: ${FACEBOOK_CLIENT_ID}
             client-secret: ${FACEBOOK_CLIENT_SECRET}
 
-  data:
-    mongodb:
-      uri: ${MONGO_URI}
-      database: ${MONGO_DB}
+#  data:
+#    mongodb:
+#      uri: ${MONGO_URI}
+#      database: ${MONGO_DB}
 
   mail:
     host: ${MAIL_HOST:smtp.gmail.com}
@@ -51,7 +51,6 @@ spring:
 
 # Hibernate
 hibernate:
-  dialect: org.hibernate.dialect.PostgreSQLDialect
   show_sql: ${HIBERNATE_SHOW_SQL:false}
   hbm2ddl:
     auto: validate
@@ -78,13 +77,14 @@ server:
   port: ${PORT:8080}
 
 # Logging
-logging:
-  level:
-    com.softserve: WARN
-    org.hibernate.SQL: ${SQL_LOG_LEVEL:WARN}
-    org.springframework.security: WARN
-
 #logging:
 #  level:
-#    org.hibernate.SQL: DEBUG
-#    org.hibernate.type.descriptor.sql: TRACE
+#    com.softserve: WARN
+#    org.hibernate.SQL: ${SQL_LOG_LEVEL:WARN}
+#    org.springframework.security: WARN
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    com.softserve: DEBUG

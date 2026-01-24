@@ -38,14 +38,14 @@ class PeriodControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Test
-    public void getAllPeriods() throws Exception {
+    void getAllPeriods() throws Exception {
         mockMvc.perform(get("/classes").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));
     }
 
     @Test
-    public void getPeriodById() throws Exception {
+    void getPeriodById() throws Exception {
         mockMvc.perform(get("/classes/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -54,13 +54,13 @@ class PeriodControllerTest {
 
     @Test
     @WithMockUser(username = "first@mail.com", password = "$2a$04$SpUhTZ/SjkDQop/Zvx1.seftJdqvOploGce/wau247zQhpEvKtz9.", roles = "USER")
-    public void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
+    void returnForbiddenIfAuthenticatedUserRoleIsNotManager() throws Exception {
         mockMvc.perform(get("/classes/{id}", 4).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    public void savePeriodIfSavedPeriodDoesNotExist() throws Exception {
+    void savePeriodIfSavedPeriodDoesNotExist() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName("save period");
         periodDtoForSave.setStartTime(LocalTime.parse("09:00:00"));
@@ -72,7 +72,7 @@ class PeriodControllerTest {
     }
 
     @Test
-    public void saveListOfPeriodsIfAllOfThemDoNotExist() throws Exception {
+    void saveListOfPeriodsIfAllOfThemDoNotExist() throws Exception {
         AddPeriodDTO periodDtoForList = new AddPeriodDTO();
         periodDtoForList.setName("save list of periods");
         periodDtoForList.setStartTime(LocalTime.parse("11:00:00"));
@@ -86,7 +86,7 @@ class PeriodControllerTest {
     }
 
     @Test
-    public void updatePeriodIfUpdatedPeriodDoesNotExist() throws Exception {
+    void updatePeriodIfUpdatedPeriodDoesNotExist() throws Exception {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(4L);
         periodDtoForUpdate.setName("1 para updated");
@@ -103,19 +103,19 @@ class PeriodControllerTest {
     }
 
     @Test
-    public void deleteExistPeriod() throws Exception {
+    void deleteExistPeriod() throws Exception {
         mockMvc.perform(delete("/classes/{id}", 5)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void returnNotFoundIfPeriodNotFoundedById() throws Exception {
+    void returnNotFoundIfPeriodNotFoundedById() throws Exception {
         mockMvc.perform(get("/classes/100")).andExpect(status().isNotFound());
     }
 
     @Test
-    public void returnBadRequestIfSavedPeriodAlreadyExist() throws Exception {
+    void returnBadRequestIfSavedPeriodAlreadyExist() throws Exception {
         AddPeriodDTO addPeriodDTO = new AddPeriodDTO();
         addPeriodDTO.setName("1 para");
         addPeriodDTO.setStartTime(LocalTime.parse("01:00:00"));
@@ -127,20 +127,21 @@ class PeriodControllerTest {
     }
 
     @Test
-    public void returnInternalServerErrorIfSavedNameIsNull() throws Exception {
+    void returnBadRequestIfSavedNameIsNull() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName(null);
         periodDtoForSave.setStartTime(LocalTime.parse("03:00:00"));
         periodDtoForSave.setEndTime(LocalTime.parse("04:00:00"));
 
-        mockMvc.perform(post("/classes").content(objectMapper.writeValueAsString(periodDtoForSave))
+        mockMvc.perform(post("/classes")
+                        .content(objectMapper.writeValueAsString(periodDtoForSave))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void returnBadRequestIfUpdatedPeriodAlreadyExist() throws Exception {
+    void returnBadRequestIfUpdatedPeriodAlreadyExist() throws Exception {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(6L);
         periodDtoForUpdate.setName("1 para");
@@ -154,7 +155,7 @@ class PeriodControllerTest {
     }
 
     @Test
-    public void returnBadRequestIfUpdatedNameIsNull() throws Exception {
+    void returnBadRequestIfUpdatedNameIsNull() throws Exception {
         PeriodDTO periodDtoForUpdate = new PeriodDTO();
         periodDtoForUpdate.setId(5L);
         periodDtoForUpdate.setName(null);
@@ -168,7 +169,7 @@ class PeriodControllerTest {
     }
 
     @Test
-    public void returnBadRequestIfSavedPeriodIntersectsWithOtherPeriod() throws Exception {
+    void returnBadRequestIfSavedPeriodIntersectsWithOtherPeriod() throws Exception {
         AddPeriodDTO periodDtoForSave = new AddPeriodDTO();
         periodDtoForSave.setName("intersect period");
         periodDtoForSave.setStartTime(LocalTime.parse("03:30:00"));
@@ -181,7 +182,7 @@ class PeriodControllerTest {
     }
 
     @Test
-    public void getAllPublicClasses() throws Exception {
+    void getAllPublicClasses() throws Exception {
         mockMvc.perform(get("/public/classes").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"));

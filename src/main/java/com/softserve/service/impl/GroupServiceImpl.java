@@ -13,7 +13,6 @@ import com.softserve.repository.GroupRepository;
 import com.softserve.repository.SortOrderRepository;
 import com.softserve.service.GroupService;
 import com.softserve.service.SemesterService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

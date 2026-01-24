@@ -1,51 +1,68 @@
 package com.softserve.service;
 
-import com.softserve.dto.SubjectWithTypeDTO;
-import com.softserve.entity.Subject;
+import com.softserve.dto.SubjectDTO;
+import com.softserve.dto.SubjectNameWithTypesDTO;
 
 import java.util.List;
 
-public interface SubjectService extends BasicService<Subject, Long> {
+public interface SubjectService {
 
     /**
-     * Checks if subject with given name already exists.
+     * Retrieves a subject by its ID.
      *
-     * @param name the string represents the subject name
-     * @return {@code true} if Subject with such name already exists, otherwise {@code false}
+     * @param id the ID of the subject
+     * @return the subject DTO
+     * @throws com.softserve.exception.EntityNotFoundException if subject not found
      */
-    boolean isSubjectExistsWithName(String name);
+    SubjectDTO getById(Long id);
 
     /**
-     * Checks if subject with given name already exists in the repository ignoring the given group id.
+     * Returns all subjects.
      *
-     * @param id   the id of the subject
-     * @param name the string represents the subject name
-     * @return {@code true} if subject with given name already exists, otherwise {@code false}
+     * @return the list of subject DTOs
      */
-    boolean isSubjectExistsWithNameAndIgnoreWithId(Long id, String name);
+    List<SubjectDTO> getAll();
 
     /**
-     * Checks if subject with given id exists in the repository.
+     * Saves a new subject.
      *
-     * @param id the id of the subject
-     * @return {@code true} if subject with given id exists, otherwise {@code false}
+     * @param subjectDTO the subject DTO to save
+     * @return the saved subject DTO
+     * @throws com.softserve.exception.FieldAlreadyExistsException if subject with given name already exists
      */
-    boolean isExistsWithId(Long id);
+    SubjectDTO save(SubjectDTO subjectDTO);
+
+    /**
+     * Updates an existing subject.
+     *
+     * @param subjectDTO the subject DTO to update
+     * @return the updated subject DTO
+     * @throws com.softserve.exception.EntityNotFoundException     if subject not found
+     * @throws com.softserve.exception.FieldAlreadyExistsException if subject with given name already exists
+     */
+    SubjectDTO update(SubjectDTO subjectDTO);
+
+    /**
+     * Deletes a subject by its ID.
+     *
+     * @param id the ID of the subject to delete
+     * @throws com.softserve.exception.EntityNotFoundException if subject not found
+     */
+    void deleteById(Long id);
 
     /**
      * Returns all disabled subjects.
      *
-     * @return the list of disabled subjects
+     * @return the list of disabled subject DTOs
      */
-    List<Subject> getDisabled();
+    List<SubjectDTO> getDisabled();
 
     /**
-     * Returns all subjects with their types from repository with the given semester id and teacher id.
+     * Returns all subjects with their types for the given semester and teacher.
      *
-     * @param semesterId the id of the semester from which subjects will be taken
-     * @param teacherId  the id of the teacher who teaches subjects
+     * @param semesterId the id of the semester
+     * @param teacherId  the id of the teacher
      * @return the list of subjects with their types
      */
-    List<SubjectWithTypeDTO> getSubjectsWithTypes(Long semesterId, Long teacherId);
-
+    List<SubjectNameWithTypesDTO> getSubjectsWithTypes(Long semesterId, Long teacherId);
 }

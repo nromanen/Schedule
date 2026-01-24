@@ -6,6 +6,7 @@ import ScheduleLessonsList from '../../components/EditCurrentSchedule/ScheduleLe
 const mapStateToProps = (state) => ({
     groups: state.groups.groups,
     lessons: state.lesson.lessons,
+    items: state.schedule.items,
 });
 
 const mapDispatchToProps = (dispatch) => ({

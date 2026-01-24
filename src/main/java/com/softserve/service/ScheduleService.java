@@ -6,6 +6,8 @@ import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 
 import jakarta.mail.MessagingException;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Locale;
@@ -184,6 +186,19 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      */
     Map<Room, List<Schedule>> getAllOrdered(Long semesterId);
 
-    List<ScheduleSaveDTO> saveSchedule(ScheduleSaveDTO scheduleSaveDTO);
+    List<ScheduleWithoutSemesterDTO> saveSchedule(ScheduleSaveDTO scheduleSaveDTO);
+
+    /**
+     * Changes the room for a schedule.
+     *
+     * @param scheduleId the ID of the schedule
+     * @param roomId     the ID of the new room
+     * @return the updated schedule DTO
+     * @throws com.softserve.exception.EntityNotFoundException if schedule or room not found
+     */
+    ScheduleDTO changeRoom(Long scheduleId, Long roomId);
+
+    @Transactional
+    List<Long> deleteScheduleById(Long id);
 }
 

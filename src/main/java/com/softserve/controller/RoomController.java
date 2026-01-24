@@ -3,15 +3,12 @@ package com.softserve.controller;
 import com.softserve.dto.MessageDTO;
 import com.softserve.dto.RoomDTO;
 import com.softserve.dto.RoomForScheduleInfoDTO;
-import com.softserve.entity.Room;
 import com.softserve.entity.enums.EvenOdd;
-import com.softserve.mapper.RoomForScheduleInfoMapper;
-import com.softserve.mapper.RoomMapper;
 import com.softserve.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,120 +20,99 @@ import java.util.List;
 @Tag(name = "Room API")
 @RequestMapping("/rooms")
 @Slf4j
+@RequiredArgsConstructor
 public class RoomController {
 
     private final RoomService roomService;
-    private final RoomMapper roomMapper;
-    private final RoomForScheduleInfoMapper roomForScheduleInfoMapper;
-
-    @Autowired
-    public RoomController(RoomService roomService, RoomMapper roomMapper, RoomForScheduleInfoMapper roomForScheduleInfoMapper) {
-        this.roomService = roomService;
-        this.roomMapper = roomMapper;
-        this.roomForScheduleInfoMapper = roomForScheduleInfoMapper;
-    }
 
     @GetMapping
     @Operation(summary = "Get the list of all rooms")
-    public ResponseEntity<List<RoomDTO>> list() {
-        log.info("Enter into list of RoomController");
-        return ResponseEntity.ok().body(roomMapper.convertToDtoList(roomService.getAll()));
+    public ResponseEntity<List<RoomDTO>> getAll() {
+        log.info("Getting all rooms");
+        return ResponseEntity.ok(roomService.getAll());
     }
 
     @GetMapping("/free")
-    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get the list of all free rooms by specific day and period")
-    public ResponseEntity<List<RoomDTO>> freeRoomList(@RequestParam(value = "semesterId") Long semesterId,
-                                                      @RequestParam(value = "classId") Long classId,
-                                                      @RequestParam(value = "dayOfWeek") DayOfWeek dayOfWeek,
-                                                      @RequestParam(value = "evenOdd") EvenOdd evenOdd
-    ) {
-        log.info("In freeRoomList (semesterId = [{}], classId = [{}], dayOfWeek = [{}], evenOdd = [{}])", semesterId, classId, dayOfWeek, evenOdd);
-        List<Room> rooms = roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
-        return ResponseEntity.ok().body(roomMapper.convertToDtoList(rooms));
+    public ResponseEntity<List<RoomDTO>> getFreeRooms(
+            @RequestParam Long semesterId,
+            @RequestParam Long classId,
+            @RequestParam DayOfWeek dayOfWeek,
+            @RequestParam EvenOdd evenOdd) {
+        log.info("Getting free rooms: semesterId={}, classId={}, dayOfWeek={}, evenOdd={}",
+                semesterId, classId, dayOfWeek, evenOdd);
+        return ResponseEntity.ok(roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get room info by id")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<RoomDTO> get(@PathVariable("id") long id) {
-        log.info("Enter into get of RoomController with id {} ", id);
-        Room room = roomService.getById(id);
-        return ResponseEntity.ok().body(roomMapper.convertToDto(room));
+    public ResponseEntity<RoomDTO> getById(@PathVariable Long id) {
+        log.info("Getting room by id: {}", id);
+        return ResponseEntity.ok(roomService.getById(id));
     }
 
     @PostMapping
     @Operation(summary = "Create new room")
-    public ResponseEntity<RoomDTO> save(@RequestBody RoomDTO roomDTO) {
-        log.info("Enter into save of RoomController with roomDTO: {}", roomDTO);
-        Room newRoom = roomService.save(roomMapper.convertToEntity(roomDTO));
-        return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(newRoom));
+    public ResponseEntity<RoomDTO> create(@RequestBody RoomDTO roomDTO) {
+        log.info("Creating room: {}", roomDTO);
+        RoomDTO created = roomService.save(roomDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping
     @Operation(summary = "Update existing room")
     public ResponseEntity<RoomDTO> update(@RequestBody RoomDTO roomDTO) {
-        log.info("Enter into update of RoomController with roomDTO: {}", roomDTO);
-        Room newRoom = roomService.update(roomMapper.convertToEntity(roomDTO));
-        return ResponseEntity.ok().body(roomMapper.convertToDto(newRoom));
+        log.info("Updating room: {}", roomDTO);
+        RoomDTO updated = roomService.update(roomDTO);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete room by id")
-    public ResponseEntity<MessageDTO> delete(@PathVariable("id") long id) {
-        log.info("Enter into delete of RoomController with id: {}", id);
-        roomService.delete(roomService.getById(id));
-        return ResponseEntity.ok().body(new MessageDTO("Room has been deleted successfully."));
+    public ResponseEntity<MessageDTO> delete(@PathVariable Long id) {
+        log.info("Deleting room by id: {}", id);
+        roomService.deleteById(id);
+        return ResponseEntity.ok(new MessageDTO("Room has been deleted successfully."));
     }
 
     @GetMapping("/disabled")
     @Operation(summary = "Get the list of disabled rooms")
     public ResponseEntity<List<RoomDTO>> getDisabled() {
-        log.info("Enter into list of RoomController");
-        return ResponseEntity.ok().body(roomMapper.convertToDtoList(roomService.getDisabled()));
+        log.info("Getting disabled rooms");
+        return ResponseEntity.ok(roomService.getDisabled());
     }
 
     @GetMapping("/available")
     @Operation(summary = "Get the list of all rooms (available/not available) with status")
-    public ResponseEntity<List<RoomForScheduleInfoDTO>> getAvailableAndNotAvailableRoomsForSchedule(
-            @RequestParam(value = "semesterId") Long semesterId,
-            @RequestParam(value = "classId") Long classId,
-            @RequestParam(value = "dayOfWeek") DayOfWeek dayOfWeek,
-            @RequestParam(value = "evenOdd") EvenOdd evenOdd
-    ) {
-        List<Room> availableRooms = roomService.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
-        List<Room> notAvailableRooms = roomService.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
-
-        List<RoomForScheduleInfoDTO> availableRoomsDTO = roomForScheduleInfoMapper.toRoomForScheduleDTOList(availableRooms);
-        List<RoomForScheduleInfoDTO> notAvailableRoomsDTO = roomForScheduleInfoMapper.toRoomForScheduleDTOList(notAvailableRooms);
-
-        availableRoomsDTO.forEach(s -> s.setAvailable(true));
-        availableRoomsDTO.addAll(notAvailableRoomsDTO);
-        return ResponseEntity.ok().body(availableRoomsDTO);
+    public ResponseEntity<List<RoomForScheduleInfoDTO>> getAllRoomsWithAvailability(
+            @RequestParam Long semesterId,
+            @RequestParam Long classId,
+            @RequestParam DayOfWeek dayOfWeek,
+            @RequestParam EvenOdd evenOdd) {
+        log.info("Getting all rooms with availability status");
+        return ResponseEntity.ok(roomService.getAllRoomsForCreatingSchedule(semesterId, dayOfWeek, evenOdd, classId));
     }
 
     @GetMapping("/ordered")
     @Operation(summary = "Get the list of all rooms sorted by order")
     public ResponseEntity<List<RoomDTO>> getAllOrdered() {
-        log.info("Entered getAllOrdered");
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(roomMapper.convertToDtoList(roomService.getAllOrdered()));
+        log.info("Getting all rooms ordered");
+        return ResponseEntity.ok(roomService.getAllOrdered());
     }
 
     @PostMapping("/after/{id}")
     @Operation(summary = "Create room after id")
-    public ResponseEntity<RoomDTO> saveRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
-        log.trace("Entered saveRoomAfterId({}{})", roomAfterId, roomDTO);
-        Room room = roomService.createAfterOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(roomMapper.convertToDto(room));
+    public ResponseEntity<RoomDTO> createAfterOrder(@PathVariable Long id, @RequestBody RoomDTO roomDTO) {
+        log.info("Creating room after id: {}", id);
+        RoomDTO created = roomService.createAfterOrder(roomDTO, id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/after/{id}")
     @Operation(summary = "Update room order")
-    public ResponseEntity<RoomDTO> upgradeRoomAfterId(@PathVariable("id") Long roomAfterId, @RequestBody RoomDTO roomDTO) {
-        log.trace("Entered upgradeRoomAfterId({}{})", roomAfterId, roomDTO);
-        Room room = roomService.updateAfterOrder(roomMapper.convertToEntity(roomDTO), roomAfterId);
-        return ResponseEntity.status(HttpStatus.OK).body(roomMapper.convertToDto(room));
+    public ResponseEntity<RoomDTO> updateAfterOrder(@PathVariable Long id, @RequestBody RoomDTO roomDTO) {
+        log.info("Updating room order after id: {}", id);
+        RoomDTO updated = roomService.updateAfterOrder(roomDTO, id);
+        return ResponseEntity.ok(updated);
     }
 }

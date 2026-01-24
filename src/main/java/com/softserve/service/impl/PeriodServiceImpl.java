@@ -1,190 +1,179 @@
 package com.softserve.service.impl;
 
+import com.softserve.dto.AddPeriodDTO;
+import com.softserve.dto.PeriodDTO;
 import com.softserve.entity.Period;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.IncorrectTimeException;
 import com.softserve.exception.PeriodConflictException;
+import com.softserve.mapper.PeriodMapper;
 import com.softserve.repository.PeriodRepository;
 import com.softserve.service.PeriodService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-@Transactional
 @Service
+@Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class PeriodServiceImpl implements PeriodService {
 
     private final PeriodRepository periodRepository;
+    private final PeriodMapper periodMapper;
 
-    @Autowired
-    public PeriodServiceImpl(PeriodRepository periodRepository) {
-        this.periodRepository = periodRepository;
+    @Override
+    @Transactional(readOnly = true)
+    public PeriodDTO getById(Long id) {
+        log.info("Getting period by id: {}", id);
+        Period period = findPeriodById(id);
+        return periodMapper.convertToDto(period);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public Period getById(Long id) {
-        log.info("Enter into getById of PeriodServiceImpl with id {}", id);
-        return periodRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(Period.class, "id", id.toString())
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
+    @Transactional(readOnly = true)
     @Cacheable("allPeriods")
-    public List<Period> getAll() {
-        log.info("Enter into getAll of PeriodServiceImpl");
-        return periodRepository.getAll();
+    public List<PeriodDTO> getAll() {
+        log.info("Getting all periods");
+        List<Period> periods = periodRepository.getAll();
+        return periodMapper.convertToDtoList(periods);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IncorrectTimeException      if the start time of the period was after its end or the start time was equal to the end time
-     * @throws PeriodConflictException     if given period intersect with other periods
-     * @throws FieldAlreadyExistsException if period's name already exists
-     */
     @Override
-    public Period save(Period object) {
-        log.info("Enter into save of PeriodServiceImpl with entity: {}", object);
-        if (isTimeInvalid(object)) {
-            throw new IncorrectTimeException("Incorrect time in period");
+    @CacheEvict(value = "allPeriods", allEntries = true)
+    public PeriodDTO save(AddPeriodDTO addPeriodDTO) {
+        log.info("Saving period: {}", addPeriodDTO);
+
+        validateTime(addPeriodDTO.getStartTime(), addPeriodDTO.getEndTime());
+        validateNameUniqueness(addPeriodDTO.getName(), null);
+
+        Period newPeriod = periodMapper.convertToEntity(addPeriodDTO);
+        List<Period> existingPeriods = periodRepository.getAll();
+
+        validateNoConflicts(existingPeriods, newPeriod);
+
+        Period saved = periodRepository.save(newPeriod);
+        return periodMapper.convertToDto(saved);
+    }
+
+    @Override
+    @CacheEvict(value = "allPeriods", allEntries = true)
+    public List<PeriodDTO> saveAll(List<AddPeriodDTO> addPeriodDTOs) {
+        log.info("Saving periods: {}", addPeriodDTOs);
+
+        addPeriodDTOs.forEach(dto -> validateTime(dto.getStartTime(), dto.getEndTime()));
+
+        List<Period> existingPeriods = periodRepository.getAll();
+        List<Period> newPeriods = periodMapper.convertToEntityList(addPeriodDTOs);
+
+        validateNoConflictsInBatch(existingPeriods, newPeriods);
+
+        List<Period> savedPeriods = newPeriods.stream()
+                .map(periodRepository::save)
+                .toList();
+
+        return periodMapper.convertToDtoList(savedPeriods);
+    }
+
+    @Override
+    @CacheEvict(value = "allPeriods", allEntries = true)
+    public PeriodDTO update(PeriodDTO periodDTO) {
+        log.info("Updating period: {}", periodDTO);
+
+        validateTime(periodDTO.getStartTime(), periodDTO.getEndTime());
+        findPeriodById(periodDTO.getId());
+        validateNameUniqueness(periodDTO.getName(), periodDTO.getId());
+
+        Period periodToUpdate = periodMapper.convertToEntity(periodDTO);
+        List<Period> existingPeriods = periodRepository.getAll();
+
+        validateNoConflicts(existingPeriods, periodToUpdate);
+
+        Period updated = periodRepository.update(periodToUpdate);
+        return periodMapper.convertToDto(updated);
+    }
+
+    @Override
+    @CacheEvict(value = "allPeriods", allEntries = true)
+    public PeriodDTO deleteById(Long id) {
+        log.info("Deleting period by id: {}", id);
+        Period period = findPeriodById(id);
+        Period deleted = periodRepository.delete(period);
+        return periodMapper.convertToDto(deleted);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PeriodDTO> getFirstFourPeriods() {
+        log.info("Getting first four periods");
+        List<Period> periods = periodRepository.getFistFourPeriods();
+        return periodMapper.convertToDtoList(periods);
+    }
+
+    // ==================== Private Helper Methods ====================
+
+    private Period findPeriodById(Long id) {
+        return periodRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Period.class, "id", id.toString()));
+    }
+
+    private void validateTime(LocalTime startTime, LocalTime endTime) {
+        if (startTime.isAfter(endTime) || startTime.equals(endTime)) {
+            throw new IncorrectTimeException("Start time must be before end time");
         }
-        if (isPeriodFree(getAll(), object)) {
-            if (nameExists(object.getName())) {
-                throw new FieldAlreadyExistsException(Period.class, "name", object.getName());
+    }
+
+    private void validateNameUniqueness(String name, Long excludeId) {
+        periodRepository.findByName(name).ifPresent(existing -> {
+            if (!Objects.equals(existing.getId(), excludeId)) {
+                throw new FieldAlreadyExistsException(Period.class, "name", name);
             }
-            return periodRepository.save(object);
-        } else {
-            throw new PeriodConflictException("Your period has conflict with already existed periods");
+        });
+    }
+
+    private void validateNoConflicts(List<Period> existingPeriods, Period newPeriod) {
+        boolean hasConflict = existingPeriods.stream()
+                .filter(existing -> !Objects.equals(existing.getId(), newPeriod.getId()))
+                .anyMatch(existing -> hasTimeConflict(newPeriod, existing));
+
+        if (hasConflict) {
+            throw new PeriodConflictException("Period conflicts with existing periods");
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Period> save(List<Period> periods) {
-        log.info("Enter into save of PeriodServiceImpl with entities:{}", periods);
-        if (periods.stream().anyMatch(this::isTimeInvalid)) {
-            throw new IncorrectTimeException("Incorrect time in period");
-        }
-        if (isListOfPeriodsFree(getAll(), periods)) {
-            return periods.stream().map(periodRepository::save).collect(Collectors.toList());
-        } else {
-            throw new PeriodConflictException("Some periods have conflict with already existed periods");
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws FieldAlreadyExistsException if periods name already exists
-     * @throws PeriodConflictException     if given period intersect with other periods
-     */
-    @Override
-    public Period update(Period object) {
-        log.info("Enter into update of PeriodServiceImpl with entity:{}", object);
-        if (isTimeInvalid(object)) {
-            throw new IncorrectTimeException("incorrect time in period");
-        }
-        if (isPeriodFree(getAll(), object)) {
-            getById(object.getId());
-            periodRepository.findByName(object.getName()).ifPresent(period -> {
-                if (!Objects.equals(period.getId(), object.getId())) {
-                    throw new FieldAlreadyExistsException(Period.class, "name", object.getName());
-                }
-            });
-            return periodRepository.update(object);
-        } else {
-            throw new PeriodConflictException("your period has conflict with already existed periods");
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Period delete(Period object) {
-        log.info("Enter into delete of PeriodServiceImpl with entity:{}", object);
-        return periodRepository.delete(object);
-    }
-
-    private boolean isListOfPeriodsFree(List<Period> oldPeriods, List<Period> newPeriods) {
-        log.info("Enter into isListOfPeriodsFree of PeriodServiceImpl with entities " +
-                        "oldPeriods: {}, newPeriods: {}",
-                oldPeriods, newPeriods);
+    private void validateNoConflictsInBatch(List<Period> existingPeriods, List<Period> newPeriods) {
         for (Period newPeriod : newPeriods) {
-            if (!isPeriodFree(newPeriods, newPeriod) || !isPeriodFree(oldPeriods, newPeriod)) {
-                return false;
+            validateNoConflicts(existingPeriods, newPeriod);
+
+            boolean hasInternalConflict = newPeriods.stream()
+                    .filter(other -> other != newPeriod)
+                    .anyMatch(other -> hasTimeConflict(newPeriod, other));
+
+            if (hasInternalConflict) {
+                throw new PeriodConflictException("Periods in the batch conflict with each other");
             }
         }
-        return true;
     }
 
-    private boolean isPeriodFree(List<Period> oldPeriods, Period newPeriod) {
-        log.info("Enter into isPeriodFree of PeriodServiceImpl with entities oldPeriods: {} and newPeriod: {}",
-                oldPeriods, newPeriod);
-        return oldPeriods.stream().noneMatch(oldPeriod ->
-                (isPeriodsGlued(newPeriod, oldPeriod) || isPeriodsIntersect(newPeriod, oldPeriod)) &&
-                        !Objects.equals(newPeriod.getId(), oldPeriod.getId())
-        );
+    private boolean hasTimeConflict(Period period1, Period period2) {
+        return isOverlapping(period1, period2) || isAdjacent(period1, period2);
     }
 
-    private boolean isPeriodsIntersect(Period newPeriod, Period oldPeriod) {
-        log.info("Enter into isPeriodsIntersect of PeriodServiceImpl with entities oldPeriod: {}, newPeriod: {}",
-                oldPeriod, newPeriod);
-        return newPeriod.getStartTime().
-                isBefore(oldPeriod.getEndTime())
-                && newPeriod.getEndTime().
-                isAfter(oldPeriod.getStartTime())
-                && !newPeriod.equals(oldPeriod);
+    private boolean isOverlapping(Period period1, Period period2) {
+        return period1.getStartTime().isBefore(period2.getEndTime())
+                && period1.getEndTime().isAfter(period2.getStartTime());
     }
 
-    private boolean isPeriodsGlued(Period newPeriod, Period oldPeriod) {
-        log.info("Enter into isPeriodsGlued of PeriodServiceImpl with entities oldPeriods: {}, newPeriods: {}",
-                oldPeriod, newPeriod);
-        return newPeriod.getStartTime().equals(oldPeriod.getEndTime())
-                || newPeriod.getEndTime().equals(oldPeriod.getStartTime());
-    }
-
-    private boolean isTimeInvalid(Period object) {
-        log.info("Enter into isTimeInvalid of PeriodServiceImpl with entity: {}", object);
-        return object.getStartTime().isAfter(object.getEndTime()) ||
-                object.getStartTime().equals(object.getEndTime());
-    }
-
-    /**
-     * Checks if the period with given name exists in the repository.
-     *
-     * @param name the string represents tha namen of the period
-     * @return {@code true} if the period with given name exists, otherwise {@code false}
-     */
-    private boolean nameExists(String name) {
-        log.info("Enter into nameExists method with name:{}", name);
-        return periodRepository.findByName(name).isPresent();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Period> getFirstFourPeriods() {
-        return periodRepository.getFistFourPeriods();
+    private boolean isAdjacent(Period period1, Period period2) {
+        return period1.getStartTime().equals(period2.getEndTime())
+                || period1.getEndTime().equals(period2.getStartTime());
     }
 }
-
-

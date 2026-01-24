@@ -21,6 +21,17 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     private static final String NOT_DISABLED_SQL = " AND s.room.disable = false AND s.lesson.semester.disable = false " +
             "AND s.lesson.group.disable = false AND s.lesson.teacher.disable = false AND s.lesson.subject.disable = false ";
 
+    private static final String SCHEDULE_WITH_DETAILS_JOINS =
+            "SELECT DISTINCT s FROM Schedule s " +
+                    "JOIN FETCH s.lesson l " +
+                    "JOIN FETCH s.room r " +
+                    "JOIN FETCH s.period p " +
+                    "JOIN FETCH l.group g " +
+                    "JOIN FETCH l.teacher t " +
+                    "JOIN FETCH l.subject subj " +
+                    "JOIN FETCH l.semester sem " +
+                    "LEFT JOIN FETCH r.type " +
+                    "LEFT JOIN FETCH t.department ";
     private static final String SELECT_COUNT = "SELECT COUNT(s.id) FROM Schedule s " +
             "WHERE s.lesson.semester.id = :semesterId " +
             "AND s.dayOfWeek = :dayOfWeek " +
@@ -459,20 +470,22 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
     }
 
     @Override
+    public Optional<Schedule> findByIdWithDetails(Long id) {
+        log.info("In findByIdWithDetails(id = [{}])", id);
+        return sessionFactory.getCurrentSession()
+                .createQuery(
+                        SCHEDULE_WITH_DETAILS_JOINS + "WHERE s.id = :id",
+                        Schedule.class)
+                .setParameter("id", id)
+                .uniqueResultOptional();
+    }
+
+    @Override
     public List<Schedule> findAllBySemesterWithDetails(Long semesterId) {
         log.info("In findAllBySemesterWithDetails(semesterId = [{}])", semesterId);
         return sessionFactory.getCurrentSession()
                 .createQuery(
-                        "SELECT DISTINCT s FROM Schedule s " +
-                                "JOIN FETCH s.lesson l " +
-                                "JOIN FETCH s.room r " +
-                                "JOIN FETCH s.period p " +
-                                "JOIN FETCH l.group g " +
-                                "JOIN FETCH l.teacher t " +
-                                "JOIN FETCH l.subject subj " +
-                                "JOIN FETCH l.semester sem " +
-                                "LEFT JOIN FETCH r.type " +
-                                "LEFT JOIN FETCH t.department " +
+                        SCHEDULE_WITH_DETAILS_JOINS +
                                 "WHERE l.semester.id = :semesterId " +
                                 "AND r.disable = false " +
                                 "AND sem.disable = false " +

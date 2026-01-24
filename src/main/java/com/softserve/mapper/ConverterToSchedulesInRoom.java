@@ -34,7 +34,7 @@ public class ConverterToSchedulesInRoom {
         return lessonsListInRoomScheduleDTOS;
     }
 
-    public List<ScheduleForRoomDTO> getBySemester(List<Room> rooms, SemesterDTO semester,
+    public List<ScheduleForRoomDTO> getBySemester(List<RoomDTO> rooms, SemesterDTO semester,
                                                   Map<Room, List<Schedule>> roomSchedules) {
         List<ScheduleForRoomDTO> schedulesInRoomDTOS = new ArrayList<>();
 

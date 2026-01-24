@@ -95,3 +95,22 @@
         }
     }
 }
+
+.group-section.loading {
+    pointer-events: none;
+    opacity: 0.6;
+    position: relative;
+}
+
+.column-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 10;
+}

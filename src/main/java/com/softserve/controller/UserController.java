@@ -5,11 +5,8 @@ import com.softserve.dto.UserCreateDTO;
 import com.softserve.dto.UserDTO;
 import com.softserve.dto.UserDataDTO;
 import com.softserve.entity.CurrentUser;
-import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
-import com.softserve.mapper.DepartmentMapper;
-import com.softserve.mapper.TeacherMapper;
 import com.softserve.mapper.UserMapper;
 import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.MailService;
@@ -36,8 +33,6 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
-    private final DepartmentMapper departmentMapper;
-    private final TeacherMapper teacherMapper;
     private final TeacherService teacherService;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
@@ -46,86 +41,87 @@ public class UserController {
     @Operation(summary = "Get the list of all users")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<UserDTO>> getAll() {
-        log.info("Enter into getAll method");
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAll()));
+        log.info("Getting all users");
+        return ResponseEntity.ok(userMapper.toUserDTOs(userService.getAll()));
     }
-
 
     @GetMapping("/{id}")
     @Operation(summary = "Get user by id")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<UserDTO> get(@PathVariable("id") Long id) {
-        log.info("Enter into get method with id: {} ", id);
+    public ResponseEntity<UserDTO> getById(@PathVariable Long id) {
+        log.info("Getting user by id: {}", id);
         User user = userService.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTO(user));
+        return ResponseEntity.ok(userMapper.toUserDTO(user));
     }
 
     @PostMapping
     @Operation(summary = "Create new user")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<UserCreateDTO> save(@RequestBody UserCreateDTO createUserDTO) {
-        log.info("Enter into save method with createUserDTO: {}", createUserDTO);
+    public ResponseEntity<UserCreateDTO> create(@RequestBody UserCreateDTO createUserDTO) {
+        log.info("Creating user: {}", createUserDTO);
         User user = userService.save(userMapper.toUser(createUserDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toUserCreateDTO(user));
     }
-
 
     @PutMapping
     @Operation(summary = "Update existing user by id")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<UserCreateDTO> update(@RequestBody UserCreateDTO userDTO) {
-        log.info("Enter into update method with userDTO: {}", userDTO);
+        log.info("Updating user: {}", userDTO);
         User updatedUser = userMapper.toUser(userDTO);
-        User user = userService.getById(updatedUser.getId());
+        User existingUser = userService.getById(updatedUser.getId());
+
         updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-        updatedUser.setRole(user.getRole());
-        updatedUser.setToken(user.getToken());
+        updatedUser.setRole(existingUser.getRole());
+        updatedUser.setToken(existingUser.getToken());
+
         userService.update(updatedUser);
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserCreateDTO(updatedUser));
+        return ResponseEntity.ok(userMapper.toUserCreateDTO(updatedUser));
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete user by id")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
-        log.info("Enter into delete method with group id: {}", id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.info("Deleting user by id: {}", id);
         User user = userService.getById(id);
+
         if (user.getRole() == Role.ROLE_TEACHER) {
-            Teacher teacher = teacherService.findByUserId(user.getId());
-            teacher.setUserId(null);
-            teacherService.update(teacher);
+            teacherService.removeUserFromTeacher(user.getId());
         }
+
         userService.delete(user);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/with-role-user")
-    @Operation(summary = "Get the list of all users, that have role User")
+    @Operation(summary = "Get the list of all users that have role User")
     @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<List<UserDTO>> getAllUsersWithRoleUser() {
-        log.info("Enter into getAllUsersWithRoleUser method");
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.toUserDTOs(userService.getAllUsersWithRoleUser()));
+        log.info("Getting all users with role USER");
+        return ResponseEntity.ok(userMapper.toUserDTOs(userService.getAllUsersWithRoleUser()));
     }
 
     @GetMapping("/profile")
     @Operation(summary = "Get current user data")
-    public ResponseEntity<UserDataDTO> getCurrentUser(@CurrentUser JwtUser jwtUser) {
-        log.info("Enter into getCurrentUser method with JwtUser {}", jwtUser.getUsername());
+    public ResponseEntity<UserDataDTO> getCurrentUserProfile(@CurrentUser JwtUser jwtUser) {
+        log.info("Getting profile for user: {}", jwtUser.getUsername());
         User user = userService.getById(jwtUser.getId());
+
         if (user.getRole() == Role.ROLE_TEACHER) {
-            Teacher teacher = teacherService.findByUserId(user.getId());
-            return ResponseEntity.ok().body(teacherMapper.teacherToUserDataDTO(teacher));
+            UserDataDTO userData = teacherService.getUserDataByUserId(user.getId());
+            return ResponseEntity.ok(userData);
         }
+
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/send-email")
-    @PreAuthorize("hasRole('TEACHER')")
+    @PostMapping("/send-email")
     @Operation(summary = "Send email")
+    @PreAuthorize("hasRole('TEACHER')")
     public ResponseEntity<Void> sendEmail(@CurrentUser JwtUser jwtUser,
                                           @ModelAttribute EmailMessageDTO emailMessageDTO) {
-        log.info("Enter into sendEmail(jwtUser(username: {}), emailMessageDTO: {})",
-                jwtUser.getUsername(), emailMessageDTO);
+        log.info("Sending email from user: {}", jwtUser.getUsername());
         mailService.send(jwtUser.getUsername(), emailMessageDTO);
         return ResponseEntity.ok().build();
     }

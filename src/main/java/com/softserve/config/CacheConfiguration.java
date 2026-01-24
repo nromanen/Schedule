@@ -18,7 +18,6 @@ import java.util.Map;
 @Configuration
 @EnableCaching
 @Profile("!test")
-//@Profile("redis")
 public class CacheConfiguration {
 
     @Value("${redis.address:redis://127.0.0.1:6379}")

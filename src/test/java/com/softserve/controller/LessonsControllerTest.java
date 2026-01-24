@@ -6,8 +6,7 @@ import com.softserve.dto.*;
 import com.softserve.entity.Lesson;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.LessonInfoMapperImpl;
-import com.softserve.mapper.SubjectMapperImpl;
-import com.softserve.mapper.TeacherNameMapperImpl;
+import com.softserve.mapper.TeacherNameMapper;
 import com.softserve.service.GroupService;
 import com.softserve.service.LessonService;
 import com.softserve.service.SubjectService;
@@ -62,7 +61,11 @@ class LessonsControllerTest {
     @Autowired
     private GroupService groupService;
 
+    @Autowired
+    private TeacherNameMapper teacherNameMapper;
+
     private CustomMockMvcAssertions assertions;
+
 
     @BeforeEach
     void setup() {
@@ -130,8 +133,8 @@ class LessonsControllerTest {
         lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
         lessonDtoForUpdate.setSubjectForSite("History updated");
         lessonDtoForUpdate.setLessonType(LECTURE);
-        lessonDtoForUpdate.setTeacher(new TeacherNameMapperImpl().teacherDTOToTeacher(teacherService.getById(6L)));
-        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L)));
+        lessonDtoForUpdate.setTeacher(teacherNameMapper.teacherDTOToTeacherNameDTO(teacherService.getById(6L)));
+        lessonDtoForUpdate.setSubject(subjectService.getById(6L));
         lessonDtoForUpdate.setGroup(groupService.getById(4L));
 
         Lesson lessonForCompare = new LessonInfoMapperImpl().lessonInfoDTOToLesson(lessonDtoForUpdate);
@@ -314,7 +317,7 @@ class LessonsControllerTest {
 
     @Test
     void returnInternalServerErrorIfSavedTeacherIsNull() throws Exception {
-        SubjectDTO subjectDTO = new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(6L));
+        SubjectDTO subjectDTO = subjectService.getById(6L);
         GroupDTO groupDTO = groupService.getById(6L);
         LessonForGroupsDTO lessonDtoForSave = new LessonForGroupsDTO();
         lessonDtoForSave.setHours(2);
@@ -340,7 +343,7 @@ class LessonsControllerTest {
         lessonDtoForUpdate.setSubjectForSite("History of World");
         lessonDtoForUpdate.setLessonType(LECTURE);
         lessonDtoForUpdate.setTeacher(null);
-        lessonDtoForUpdate.setSubject(new SubjectMapperImpl().subjectToSubjectDTO(subjectService.getById(5L)));
+        lessonDtoForUpdate.setSubject(subjectService.getById(6L));
         lessonDtoForUpdate.setGroup(groupService.getById(4L));
 
         mockMvc.perform(put("/lessons", 4).content(objectMapper.writeValueAsString(lessonDtoForUpdate))

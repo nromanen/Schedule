@@ -1,8 +1,6 @@
 package com.softserve.controller;
 
 import com.softserve.dto.*;
-import com.softserve.entity.Room;
-import com.softserve.entity.Schedule;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.mapper.*;
 import com.softserve.service.*;
@@ -179,7 +177,7 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleForRoomDTO>> getFullScheduleForRoom(@RequestParam Long semesterId) {
         log.info("In getFullScheduleForRoom(semesterId = [{}])", semesterId);
         SemesterWithGroupsDTO semester = semesterService.getById(semesterId);
-        List<Room> rooms = roomService.getAllOrdered();
+        List<RoomDTO> rooms = roomService.getAllOrdered();
         List<ScheduleForRoomDTO> scheduleForRoomDTOS =
                 converterToSchedulesInRoom.getBySemester(rooms, semester,
                         scheduleService.getAllOrdered(semesterId));
@@ -187,7 +185,7 @@ public class ScheduleController {
     }
 
 
-//    @PostMapping
+    //    @PostMapping
 //    @Operation(summary = "Create new schedules")
 //    @PreAuthorize("hasRole('MANAGER')")
 //    public ResponseEntity<List<ScheduleSaveDTO>> save(@RequestBody ScheduleSaveDTO scheduleSaveDTO) {
@@ -207,25 +205,18 @@ public class ScheduleController {
     @PostMapping
     @Operation(summary = "Create new schedules")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<List<ScheduleSaveDTO>> save(@RequestBody ScheduleSaveDTO scheduleSaveDTO) {
+    public ResponseEntity<List<ScheduleWithoutSemesterDTO>> save(@RequestBody ScheduleSaveDTO scheduleSaveDTO) {
         log.info("In save(scheduleSaveDTO = [{}])", scheduleSaveDTO);
-        List<ScheduleSaveDTO> savedSchedules = scheduleService.saveSchedule(scheduleSaveDTO);
+        List<ScheduleWithoutSemesterDTO> savedSchedules = scheduleService.saveSchedule(scheduleSaveDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSchedules);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete schedule by id")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<Void> delete(@PathVariable("id") long id) {
-        log.info("In delete(id =[{}]", id);
-        Schedule schedule = scheduleService.getById(id);
-        if (schedule.getLesson().isGrouped()) {
-            List<Schedule> schedules = scheduleService.getSchedulesForGroupedLessons(schedule);
-            schedules.forEach(scheduleService::delete);
-        } else {
-            scheduleService.delete(schedule);
-        }
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<List<Long>> delete(@PathVariable("id") long id) {
+        log.info("In delete(id = [{}])", id);
+        return ResponseEntity.ok(scheduleService.deleteScheduleById(id));
     }
 
 //    @GetMapping("/teacher")
@@ -279,14 +270,8 @@ public class ScheduleController {
     public ResponseEntity<ScheduleDTO> changeScheduleByRoom(@RequestParam Long scheduleId,
                                                             @RequestParam Long roomId) {
         log.info("In changeScheduleByRoom with scheduleId = {} and roomId = {}", scheduleId, roomId);
-        Schedule schedule = scheduleService.getById(scheduleId);
-        Room room = roomService.getById(roomId);
-        if (schedule.getRoom().getId().equals(room.getId())) {
-            return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(schedule));
-        }
-        schedule.setRoom(room);
-        Schedule updateSchedule = scheduleService.updateWithoutChecks(schedule);
-        return ResponseEntity.ok().body(scheduleMapper.scheduleToScheduleDTO(updateSchedule));
+        ScheduleDTO updated = scheduleService.changeRoom(scheduleId, roomId);
+        return ResponseEntity.ok(updated);
     }
 
 //    private List<ScheduleForTemporaryDateRangeDTO> fullDTOForTemporaryScheduleByTeacherDateRange(Map<LocalDate, Map<Period,

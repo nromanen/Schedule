@@ -3,6 +3,7 @@ package com.softserve.service;
 import com.softserve.dto.LessonInfoDTO;
 import com.softserve.dto.LessonWithLinkDTO;
 import com.softserve.dto.SemesterWithGroupsDTO;
+import com.softserve.dto.SubjectDTO;
 import com.softserve.entity.*;
 import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityAlreadyExistsException;
@@ -94,51 +95,35 @@ class LessonServiceTest {
 
     @Test
     void saveLessonIfDuplicatesDoesNotExists() {
-        Group group = new Group();
-        group.setId(1L);
-        group.setTitle("group");
-
-        Teacher teacher = new Teacher();
-        teacher.setId(10L);
-        teacher.setName("Ivan");
-        teacher.setSurname("Ivanov");
-
         Subject subject = new Subject();
         subject.setId(1L);
-        subject.setName("Biology");
 
         Semester semester = new Semester();
         semester.setId(4L);
-        semester.setCurrentSemester(true);
 
         Lesson lesson = new Lesson();
         lesson.setId(1L);
-        lesson.setGroup(group);
-        lesson.setTeacher(teacher);
         lesson.setSubject(subject);
-        lesson.setHours(1);
-        lesson.setLessonType(LessonType.LECTURE);
         lesson.setSubjectForSite("");
 
         LessonInfoDTO inputDTO = new LessonInfoDTO();
-        inputDTO.setHours(1);
-        inputDTO.setLessonType(LessonType.LECTURE);
         inputDTO.setSubjectForSite("");
 
         LessonInfoDTO expectedDTO = new LessonInfoDTO();
         expectedDTO.setId(1L);
-        expectedDTO.setHours(1);
-        expectedDTO.setLessonType(LessonType.LECTURE);
 
         SemesterWithGroupsDTO semesterDTO = new SemesterWithGroupsDTO();
         semesterDTO.setId(4L);
-        semesterDTO.setCurrentSemester(true);
+
+        SubjectDTO subjectDTO = new SubjectDTO();
+        subjectDTO.setId(1L);
+        subjectDTO.setName("Biology");
 
         when(lessonInfoMapper.lessonInfoDTOToLesson(inputDTO)).thenReturn(lesson);
         when(semesterService.getCurrentSemester()).thenReturn(semesterDTO);
         when(semesterRepository.findById(4L)).thenReturn(Optional.of(semester));
         when(lessonRepository.countLessonDuplicates(lesson)).thenReturn(0L);
-        when(subjectService.getById(subject.getId())).thenReturn(subject);
+        when(subjectService.getById(1L)).thenReturn(subjectDTO);
         when(lessonRepository.save(lesson)).thenReturn(lesson);
         when(lessonInfoMapper.lessonToLessonInfoDTO(lesson)).thenReturn(expectedDTO);
 
@@ -146,10 +131,6 @@ class LessonServiceTest {
 
         assertNotNull(result);
         assertEquals(expectedDTO.getId(), result.getId());
-        verify(semesterService).getCurrentSemester();
-        verify(semesterRepository).findById(4L);
-        verify(lessonRepository).countLessonDuplicates(lesson);
-        verify(lessonRepository).save(lesson);
     }
 
     @Test

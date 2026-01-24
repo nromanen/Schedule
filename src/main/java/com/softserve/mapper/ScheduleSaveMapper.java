@@ -29,5 +29,4 @@ public interface ScheduleSaveMapper {
 
     List<ScheduleSaveDTO> schedulesListToScheduleSaveDTOsList(List<Schedule> schedules);
 
-
 }

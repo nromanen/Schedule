@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Field, reduxForm} from 'redux-form';
+import {Field, reduxForm, reset} from 'redux-form';
 
 import {connect} from 'react-redux';
 import * as moment from 'moment';
@@ -35,8 +35,8 @@ import {
 import {hourFormat, timeFormat} from '../../constants/formats';
 
 const ClassFormFunc = (props) => {
-    const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting, classSchedule, initialize, change } =
+    const {t} = useTranslation('formElements');
+    const {handleSubmit, pristine, onReset, submitting, classSchedule, initialize, change, dispatch} =
         props;
     useEffect(() => {
         let initialValues = {};
@@ -44,13 +44,18 @@ const ClassFormFunc = (props) => {
             initialValues = classSchedule;
         }
         initialize(initialValues);
-    }, [classSchedule]);
+    }, [classSchedule, initialize]);
 
     const setEndTime = (startTime) =>
         change(
             'endTime',
             moment(startTime, timeFormat).add(CLASS_DURATION, hourFormat).format(timeFormat),
         );
+
+    const handleReset = () => {
+        onReset();
+        dispatch(reset(CLASS_FORM));
+    };
 
     return (
         <Card additionClassName="form-card">
@@ -106,7 +111,7 @@ const ClassFormFunc = (props) => {
                         type="button"
                         variant="contained"
                         disabled={setDisableButton(pristine, submitting, classSchedule.id)}
-                        onClick={onReset}
+                        onClick={handleReset}
                     >
                         {getClearOrCancelTitle(classSchedule.id, t)}
                     </Button>

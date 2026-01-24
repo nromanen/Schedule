@@ -2,7 +2,6 @@ package com.softserve.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.dto.*;
-import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.EvenOdd;
 import com.softserve.service.GroupService;
 import com.softserve.service.LessonService;
@@ -86,12 +85,12 @@ class ScheduleControllerTest {
     @Test
     void getInfoForNoExistScheduleBySemesterIdByDayOfWeekByEvenOddByClassIdByLessonId() throws Exception {
         // Create and save teacher
-        Teacher teacher = new Teacher();
-        teacher.setPatronymic("Ivanovych");
-        teacher.setSurname("Tymysh");
-        teacher.setName("Oleg");
-        teacher.setPosition("docent");
-        Teacher savedTeacher = teacherService.save(teacher);
+        TeacherDTO teacherDTO = new TeacherDTO();
+        teacherDTO.setPatronymic("Ivanovych");
+        teacherDTO.setSurname("Tymysh");
+        teacherDTO.setName("Oleg");
+        teacherDTO.setPosition("docent");
+        TeacherDTO savedTeacher = teacherService.save(teacherDTO);
 
         // Create TeacherNameDTO
         TeacherNameDTO teacherNameDTO = new TeacherNameDTO();
@@ -246,13 +245,6 @@ class ScheduleControllerTest {
         scheduleSaveDTO.setPeriodId(5L);
         scheduleSaveDTO.setRoomId(4L);
 
-        ScheduleSaveDTO scheduleGrouped = new ScheduleSaveDTO();
-        scheduleGrouped.setDayOfWeek(DayOfWeek.TUESDAY);
-        scheduleGrouped.setEvenOdd(EvenOdd.ODD);
-        scheduleGrouped.setLessonId(9L);
-        scheduleGrouped.setPeriodId(5L);
-        scheduleGrouped.setRoomId(4L);
-
         MvcResult mvcResult = mockMvc.perform(post("/schedules")
                         .content(objectMapper.writeValueAsString(scheduleSaveDTO))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -260,17 +252,23 @@ class ScheduleControllerTest {
                 .andReturn();
 
         String contentAsString = mvcResult.getResponse().getContentAsString();
-        List<ScheduleSaveDTO> savedSchedules = Arrays.asList(objectMapper.readValue(contentAsString, ScheduleSaveDTO[].class));
+        List<ScheduleWithoutSemesterDTO> savedSchedules = Arrays.asList(
+                objectMapper.readValue(contentAsString, ScheduleWithoutSemesterDTO[].class));
 
         SoftAssertions softAssertions = new SoftAssertions();
-        softAssertions.assertThat(savedSchedules.get(0))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("dayOfWeek", "evenOdd", "lessonId", "periodId", "roomId")
-                .isEqualTo(scheduleSaveDTO);
-        softAssertions.assertThat(savedSchedules.get(1))
-                .usingRecursiveComparison()
-                .comparingOnlyFields("dayOfWeek", "evenOdd", "lessonId", "periodId", "roomId")
-                .isEqualTo(scheduleGrouped);
+
+        softAssertions.assertThat(savedSchedules.get(0).getDayOfWeek()).isEqualTo(DayOfWeek.TUESDAY);
+        softAssertions.assertThat(savedSchedules.get(0).getEvenOdd()).isEqualTo(EvenOdd.ODD);
+        softAssertions.assertThat(savedSchedules.get(0).getLesson().getId()).isEqualTo(8L);
+        softAssertions.assertThat(savedSchedules.get(0).getPeriod().getId()).isEqualTo(5L);
+        softAssertions.assertThat(savedSchedules.get(0).getRoom().getId()).isEqualTo(4L);
+
+        softAssertions.assertThat(savedSchedules.get(1).getDayOfWeek()).isEqualTo(DayOfWeek.TUESDAY);
+        softAssertions.assertThat(savedSchedules.get(1).getEvenOdd()).isEqualTo(EvenOdd.ODD);
+        softAssertions.assertThat(savedSchedules.get(1).getLesson().getId()).isEqualTo(9L);
+        softAssertions.assertThat(savedSchedules.get(1).getPeriod().getId()).isEqualTo(5L);
+        softAssertions.assertThat(savedSchedules.get(1).getRoom().getId()).isEqualTo(4L);
+
         softAssertions.assertAll();
     }
 

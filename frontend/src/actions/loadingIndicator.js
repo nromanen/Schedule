@@ -33,3 +33,8 @@ export const setAuthLoading = (payload) => ({
     type: actionTypes.SET_AUTH_LOADING_INDICATOR,
     payload,
 });
+
+export const setScheduleOperationLoading = (payload) => ({
+    type: actionTypes.SET_SCHEDULE_OPERATION_LOADING,
+    payload,
+});

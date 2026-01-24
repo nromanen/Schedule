@@ -5,10 +5,7 @@ import com.softserve.dto.SemesterWithGroupsDTO;
 import com.softserve.entity.*;
 import com.softserve.exception.*;
 import com.softserve.mapper.SemesterMapper;
-import com.softserve.repository.GroupRepository;
-import com.softserve.repository.LessonRepository;
-import com.softserve.repository.ScheduleRepository;
-import com.softserve.repository.SemesterRepository;
+import com.softserve.repository.*;
 import com.softserve.service.PeriodService;
 import com.softserve.service.SemesterService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +33,7 @@ public class SemesterServiceImpl implements SemesterService {
     private final GroupRepository groupRepository;
     private final PeriodService periodService;
     private final SemesterMapper semesterMapper;
+    private final PeriodRepository periodRepository;
 
     private static final List<DayOfWeek> WORK_DAYS = Arrays.asList(
             DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
@@ -230,7 +228,7 @@ public class SemesterServiceImpl implements SemesterService {
             semester.setDaysOfWeek(new HashSet<>(WORK_DAYS));
         }
         if (CollectionUtils.isEmpty(semester.getPeriods())) {
-            semester.setPeriods(new HashSet<>(periodService.getFirstFourPeriods()));
+            semester.setPeriods(new HashSet<>(periodRepository.getFistFourPeriods()));
         }
     }
 

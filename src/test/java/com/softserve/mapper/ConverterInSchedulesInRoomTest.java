@@ -30,6 +30,8 @@ class ConverterToSchedulesInRoomTest {
     private ConverterToSchedulesInRoom converter;
 
     private Room room;
+    private RoomDTO roomDTO;
+    private RoomTypeDTO roomTypeDTO;
     private Period period;
     private PeriodDTO periodDTO;
     private SemesterDTO semesterDTO;
@@ -45,10 +47,19 @@ class ConverterToSchedulesInRoomTest {
         roomType.setId(1L);
         roomType.setDescription("Lecture Hall");
 
+        roomTypeDTO = new RoomTypeDTO();
+        roomTypeDTO.setId(1L);
+        roomTypeDTO.setDescription("Lecture Hall");
+
         room = new Room();
         room.setId(1L);
         room.setName("Room 101");
         room.setType(roomType);
+
+        roomDTO = new RoomDTO();
+        roomDTO.setId(1L);
+        roomDTO.setName("Room 101");
+        roomDTO.setType(roomTypeDTO);
 
         period = new Period();
         period.setId(1L);
@@ -90,7 +101,7 @@ class ConverterToSchedulesInRoomTest {
     @Test
     void getBySemester_shouldReturnLessons_whenPeriodDTOMatchesPeriodEntityById() {
         // Given
-        List<Room> rooms = List.of(room);
+        List<RoomDTO> rooms = List.of(roomDTO);
         Map<Room, List<Schedule>> roomSchedules = new HashMap<>();
         roomSchedules.put(room, List.of(schedule));
 
@@ -107,12 +118,12 @@ class ConverterToSchedulesInRoomTest {
         // Then
         assertThat(result).hasSize(1);
 
-        ScheduleForRoomDTO roomDTO = result.get(0);
-        assertThat(roomDTO.getRoomId()).isEqualTo(1L);
-        assertThat(roomDTO.getRoomName()).isEqualTo("Room 101");
-        assertThat(roomDTO.getSchedules()).hasSize(1);
+        ScheduleForRoomDTO roomResult = result.get(0);
+        assertThat(roomResult.getRoomId()).isEqualTo(1L);
+        assertThat(roomResult.getRoomName()).isEqualTo("Room 101");
+        assertThat(roomResult.getSchedules()).hasSize(1);
 
-        DaysOfWeekWithClassesForRoomDTO daySchedule = roomDTO.getSchedules().get(0);
+        DaysOfWeekWithClassesForRoomDTO daySchedule = roomResult.getSchedules().get(0);
         assertThat(daySchedule.getDay()).isEqualTo(DayOfWeek.MONDAY);
         assertThat(daySchedule.getClasses()).hasSize(1);
 
@@ -138,7 +149,7 @@ class ConverterToSchedulesInRoomTest {
     @Test
     void getBySemester_shouldReturnEmptyLessons_whenNoSchedulesForRoom() {
         // Given
-        List<Room> rooms = List.of(room);
+        List<RoomDTO> rooms = List.of(roomDTO);
         Map<Room, List<Schedule>> roomSchedules = new HashMap<>(); // Порожня мапа
 
         // When
@@ -147,10 +158,10 @@ class ConverterToSchedulesInRoomTest {
         // Then
         assertThat(result).hasSize(1);
 
-        ScheduleForRoomDTO roomDTO = result.get(0);
-        assertThat(roomDTO.getRoomId()).isEqualTo(1L);
+        ScheduleForRoomDTO roomResult = result.get(0);
+        assertThat(roomResult.getRoomId()).isEqualTo(1L);
 
-        LessonsInRoomScheduleDTO lessonInSchedule = roomDTO.getSchedules().get(0).getClasses().get(0).getEven().get(0);
+        LessonsInRoomScheduleDTO lessonInSchedule = roomResult.getSchedules().get(0).getClasses().get(0).getEven().get(0);
         assertThat(lessonInSchedule.getLessons()).isEmpty();
     }
 
@@ -169,7 +180,7 @@ class ConverterToSchedulesInRoomTest {
         scheduleWithDifferentPeriodInstance.setDayOfWeek(DayOfWeek.MONDAY);
         scheduleWithDifferentPeriodInstance.setEvenOdd(EvenOdd.EVEN);
 
-        List<Room> rooms = List.of(room);
+        List<RoomDTO> rooms = List.of(roomDTO);
         Map<Room, List<Schedule>> roomSchedules = new HashMap<>();
         roomSchedules.put(room, List.of(scheduleWithDifferentPeriodInstance));
 
@@ -215,7 +226,7 @@ class ConverterToSchedulesInRoomTest {
         schedule2.setDayOfWeek(DayOfWeek.MONDAY);
         schedule2.setEvenOdd(EvenOdd.EVEN);
 
-        List<Room> rooms = List.of(room);
+        List<RoomDTO> rooms = List.of(roomDTO);
         Map<Room, List<Schedule>> roomSchedules = new HashMap<>();
         roomSchedules.put(room, List.of(schedule, schedule2));
 
@@ -251,7 +262,7 @@ class ConverterToSchedulesInRoomTest {
         oddSchedule.setDayOfWeek(DayOfWeek.MONDAY);
         oddSchedule.setEvenOdd(EvenOdd.ODD);
 
-        List<Room> rooms = List.of(room);
+        List<RoomDTO> rooms = List.of(roomDTO);
         Map<Room, List<Schedule>> roomSchedules = new HashMap<>();
         roomSchedules.put(room, List.of(schedule, oddSchedule));
 
