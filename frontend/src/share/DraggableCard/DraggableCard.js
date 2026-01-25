@@ -1,36 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './DraggableCard.scss';
 
 export const DraggableCard = (props) => {
-    const { children, item, dragAndDropItem, setGroupStart } = props;
+    const { children, item, dragAndDropItem, setGroupStart, cardClassName = 'group-card' } = props;
+    const [isDragging, setIsDragging] = useState(false);
 
-    const styleCard = (e) => {
-        if (e.target.className === 'group-card drag-border-card') {
-            e.target.className = 'group-card';
-        }
+    const findCard = (e) => {
+        return e.target.closest(`.${cardClassName}`);
     };
+
     const dragStartHandler = (card) => {
+        setIsDragging(true);
         setGroupStart(card);
     };
-    const dragLeaveHandler = (e) => {
-        styleCard(e);
+
+    const dragEndHandler = () => {
+        setIsDragging(false);
     };
-    const dragOverHandler = (e) => {
-        e.preventDefault();
-        if (e.target.className === 'group-card') {
-            e.target.className = 'group-card drag-border-card';
+
+    const dragLeaveHandler = (e) => {
+        const card = findCard(e);
+        if (card) {
+            card.classList.remove('drag-border-card');
         }
     };
-    const dropHandler = (e, card) => {
+
+    const dragOverHandler = (e) => {
         e.preventDefault();
-        styleCard(e);
-        dragAndDropItem(card.id);
+        const card = findCard(e);
+        if (card) {
+            card.classList.add('drag-border-card');
+        }
+    };
+
+    const dropHandler = (e, cardItem) => {
+        e.preventDefault();
+        const card = findCard(e);
+        if (card) {
+            card.classList.remove('drag-border-card');
+        }
+        dragAndDropItem(cardItem.id);
     };
 
     return (
         <div
-            className="drag-and-drop-card"
+            className={`drag-and-drop-card ${isDragging ? 'dragging' : ''}`}
             onDragStart={() => dragStartHandler(item)}
+            onDragEnd={dragEndHandler}
             onDragLeave={(e) => dragLeaveHandler(e)}
             onDragOver={(e) => dragOverHandler(e)}
             onDrop={(e) => dropHandler(e, item)}

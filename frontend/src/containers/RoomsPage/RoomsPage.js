@@ -1,4 +1,4 @@
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
     clearRoomSuccess,
     deleteRoomStart,
@@ -11,8 +11,9 @@ import {
     selectRoomType,
     setSelectRoomSuccess,
     toggleRoomVisibilityStart,
+    dragAndDropRoomStart,
 } from '../../actions/rooms';
-import {setIsOpenConfirmDialog} from '../../actions/dialog';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import RoomPage from '../../components/RoomsPage/RoomsPage';
 
 const mapStateToProps = (state) => ({
@@ -24,6 +25,7 @@ const mapStateToProps = (state) => ({
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
     loading: state.loadingIndicator.loading,
 });
+
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
     handleRoomFormSubmit: (values) => dispatch(handleRoomFormSubmitStart(values)),
@@ -38,6 +40,8 @@ const mapDispatchToProps = (dispatch) => ({
     setSelectRoom: (roomId) => dispatch(setSelectRoomSuccess(roomId)),
     clearRoomItem: () => dispatch(clearRoomSuccess()),
     setSelectRoomType: (typeId) => dispatch(selectRoomType(typeId)),
+    dragAndDropRoom: (dragRoom, afterRoomId) =>
+        dispatch(dragAndDropRoomStart(dragRoom, afterRoomId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RoomPage);

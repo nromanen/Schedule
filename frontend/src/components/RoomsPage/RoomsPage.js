@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {get} from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { get } from 'lodash';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import {dialogTypes} from '../../constants/dialogs';
-import {cardType} from '../../constants/cardType';
+import { dialogTypes } from '../../constants/dialogs';
+import { cardType } from '../../constants/cardType';
 import AddRoomForm from './RoomForm/RoomForm';
 import RoomTypeForm from './RoomTypeForm/RoomTypeForm';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
@@ -29,6 +29,7 @@ const RoomPage = (props) => {
         clearRoomItem,
         setSelectRoomType,
         loading,
+        dragAndDropRoom,
     } = props;
 
     const [isDisabled, setIsDisabled] = useState(false);
@@ -51,7 +52,8 @@ const RoomPage = (props) => {
 
     const submitRoomForm = (values) => {
         const type = roomTypes.find((roomType) => roomType.id === values.type);
-        handleRoomFormSubmit({ ...values, type });
+        const afterId = values.afterId ? values.afterId.id : null;
+        handleRoomFormSubmit({ ...values, type, afterId });
     };
 
     const showConfirmDialog = (id, dialogType, label) => {
@@ -93,6 +95,7 @@ const RoomPage = (props) => {
                                 clearRoomItem={clearRoomItem}
                                 oneRoom={oneRoom}
                                 roomTypes={roomTypes}
+                                rooms={rooms}
                             />
                             <RoomTypeForm
                                 onSubmit={handleRoomTypeFormSubmit}
@@ -114,6 +117,7 @@ const RoomPage = (props) => {
                         rooms={rooms}
                         setSelectRoom={setSelectRoom}
                         loading={loading}
+                        dragAndDropRoom={dragAndDropRoom}
                     />
                 )}
             </div>

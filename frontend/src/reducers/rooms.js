@@ -1,4 +1,5 @@
 import * as actionTypes from '../actions/actionsType';
+import { sortRooms } from '../helper/sortRoom';
 
 const initialState = {
     rooms: [],
@@ -10,12 +11,14 @@ const initialState = {
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.ADD_ROOM:
+        case actionTypes.ADD_ROOM: {
+            const newRooms = sortRooms([...state.rooms], action.room, action.afterId);
             return {
                 ...state,
-                rooms: [action.room, ...state.rooms],
+                rooms: newRooms,
                 oneRoom: {},
             };
+        }
 
         case actionTypes.DELETE_ROOM:
             if (action.isDisabled) {
@@ -46,6 +49,16 @@ const reducer = (state = initialState, action) => {
             const rooms = [...state.rooms];
             rooms[rooms.findIndex((roomItem) => roomItem.id === action.room.id)] = action.room;
             return { ...state, oneRoom: {}, rooms: [...rooms] };
+        }
+
+        case actionTypes.UPDATE_ROOM_ORDER_SUCCESS: {
+            const rooms = state.rooms.filter((room) => room.id !== action.room.id);
+            const newRooms = sortRooms(rooms, action.room, action.afterId);
+            return {
+                ...state,
+                rooms: newRooms,
+                oneRoom: {},
+            };
         }
 
         case actionTypes.CLEAR_ROOM:

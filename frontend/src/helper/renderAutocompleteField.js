@@ -1,18 +1,18 @@
 import React from 'react';
-import {Autocomplete} from '@material-ui/lab';
-import {FormControl, TextField} from '@material-ui/core';
-import {renderFromHelper} from '../share/renderedFields/error';
+import { Autocomplete } from '@material-ui/lab';
+import { FormControl, TextField } from '@material-ui/core';
+import { renderFromHelper } from '../share/renderedFields/error';
 
 export const renderAutocompleteField = ({
-    values,
-    label,
-    input,
-    handleChange,
-    getOptionLabel,
-    meta: { touched, error },
-    className,
-    ...custom
-}) => {
+                                            values,
+                                            label,
+                                            input,
+                                            handleChange,
+                                            getOptionLabel,
+                                            meta: { touched, error },
+                                            className,
+                                            ...custom
+                                        }) => {
     return (
         <Autocomplete
             {...input}
@@ -26,12 +26,11 @@ export const renderAutocompleteField = ({
                 if (handleChange) {
                     handleChange(value);
                 }
-
                 return input.onChange(value);
             }}
             onBlur={(_, value) => input.onBlur(value)}
             renderInput={(params) => (
-                <FormControl error={touched && !!error}>
+                <FormControl error={touched && !!error} fullWidth>
                     <TextField {...params} label={label} />
                     {renderFromHelper({ touched, error })}
                 </FormControl>

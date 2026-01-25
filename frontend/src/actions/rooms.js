@@ -1,13 +1,26 @@
 import * as actionsType from './actionsType';
 
-export const addRoomSuccess = (room) => ({
+export const addRoomSuccess = (room, afterId) => ({
     type: actionsType.ADD_ROOM,
     room,
+    afterId,
 });
 
 export const addRoomStart = (room) => ({
     type: actionsType.ADD_ROOM_START,
     room,
+});
+
+export const dragAndDropRoomStart = (dragRoom, afterRoomId) => ({
+    type: actionsType.DRAG_AND_DROP_ROOM_START,
+    dragRoom,
+    afterRoomId,
+});
+
+export const updateRoomOrderSuccess = (room, afterId) => ({
+    type: actionsType.UPDATE_ROOM_ORDER_SUCCESS,
+    room,
+    afterId,
 });
 
 export const deleteRoomSuccess = (roomId, isDisabled) => ({

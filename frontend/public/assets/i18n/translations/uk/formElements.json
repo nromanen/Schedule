@@ -88,7 +88,7 @@
     "cancel_button_title": "Скасувати",
     "choose_button_title": "Вибрати",
     "submit_button_label": "Підтвердити",
-    "find_free_room": "Вільні кімнати",
+    "find_free_room": "Вільні аудиторії",
     "number_label": "Номер аудиторії",
     "new_type_label": "Новий тип",
     "add_type_label": "Додати новий тип",
@@ -101,7 +101,7 @@
     "students_file_label": "cтудентів було",
     "student_file_label": "cтудента було",
     "class_element": "ця пара",
-    "room_element": "цю кімнату",
+    "room_element": "цю аудиторію",
     "subject_element": "цей предмет",
     "department_element": "цю кафедру",
     "semester_element": "цей семестр",
@@ -134,5 +134,6 @@
     "dont_have_an_account": "Не маєте облікового запису?",
     "reset_password_helper_text": "Просто введіть свою електронну адресу нижче, і ми надішлемо вам посилання для скидання пароля!",
     "form_group_label_after": "Виберіть після якої групи",
-    "students_uppercase": "Студентів"
+    "students_uppercase": "Студентів",
+    "room_label_after": "Після аудиторії"
 }

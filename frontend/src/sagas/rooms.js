@@ -15,6 +15,7 @@ import {
     ROOM_ORDERED_URL,
     ROOM_TYPES_URL,
     ROOM_URL,
+    ROOM_AFTER_URL,
 } from '../constants/axios';
 import {ROOM_FORM, ROOM_FORM_TYPE} from '../constants/reduxForms';
 import {createErrorMessage, createMessage} from '../utils/sagaUtils';
@@ -30,6 +31,7 @@ import {
     getListOfRoomsSuccess,
     updateRoomSuccess,
     updateRoomTypeSuccess,
+    updateRoomOrderSuccess,
 } from '../actions/rooms';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -57,6 +59,21 @@ export function* getListOfDisabledRooms() {
         yield put(setLoading(true));
         const { data } = yield call(axiosCall, DISABLED_ROOMS_URL);
         yield put(getListOfDisabledRoomsSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setLoading(false));
+    }
+}
+
+export function* dragAndDropRoom({ dragRoom, afterRoomId }) {
+    try {
+        yield put(setLoading(true));
+        const url = `${ROOM_AFTER_URL}/${afterRoomId || 0}`;
+        const { data } = yield call(axiosCall, url, PUT, dragRoom);
+        yield put(updateRoomOrderSuccess(data, afterRoomId));
+        const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, UPDATED_LABEL);
+        yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -117,9 +134,19 @@ export function* deleteRoomItem({ roomId, isDisabled }) {
 export function* handleRoomFormSubmit({ values }) {
     try {
         if (values.id) {
-            yield call(updateRoomItem, { values });
+            const url = `${ROOM_AFTER_URL}/${values.afterId || 0}`;
+            const { data } = yield call(axiosCall, url, PUT, values);
+            yield put(updateRoomOrderSuccess(data, values.afterId));
+            yield put(reset(ROOM_FORM));
+            const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, UPDATED_LABEL);
+            yield put(setOpenSuccessSnackbar(message));
         } else {
-            yield call(addRoomItem, { values });
+            const url = `${ROOM_AFTER_URL}/${values.afterId || 0}`;
+            const { data } = yield call(axiosCall, url, POST, values);
+            yield put(addRoomSuccess(data, values.afterId));  // <-- додати afterId
+            yield put(reset(ROOM_FORM));
+            const message = createMessage(BACK_END_SUCCESS_OPERATION, FORM_ROOM_LABEL, CREATED_LABEL);
+            yield put(setOpenSuccessSnackbar(message));
         }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
@@ -214,6 +241,7 @@ function* watchRooms() {
     yield takeLatest(actionTypes.GET_ALL_ROOM_TYPES_START, getAllRoomTypes);
     yield takeLatest(actionTypes.GET_FREE_ROOMS_START, getFreeRoomsByParams);
     yield takeEvery(actionTypes.ADD_ROOM_START, addRoomItem);
+    yield takeEvery(actionTypes.DRAG_AND_DROP_ROOM_START, dragAndDropRoom);
     yield takeEvery(actionTypes.UPDATE_ROOM_START, updateRoomItem);
     yield takeEvery(actionTypes.DELETE_ROOM_START, deleteRoomItem);
     yield takeEvery(actionTypes.DELETE_ROOM_TYPE_START, deleteRoomTypeItem);
