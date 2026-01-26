@@ -42,6 +42,9 @@ spring:
           starttls:
             enable: true
 
+hibernate:
+  hbm2ddl:
+    auto: create-drop
 
 # Application
 app:

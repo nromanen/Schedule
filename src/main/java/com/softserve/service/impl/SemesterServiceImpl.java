@@ -46,8 +46,18 @@ public class SemesterServiceImpl implements SemesterService {
     public SemesterWithGroupsDTO getById(Long id) {
         log.info("In getById(id = [{}])", id);
         Semester semester = findByIdOrThrow(id);
-        return semesterMapper.semesterToSemesterWithGroupsDTO(semester);
+        SemesterWithGroupsDTO dto = semesterMapper.semesterToSemesterWithGroupsDTO(semester);
+
+        if (dto.getGroups() != null) {
+            var enabledGroups = dto.getGroups().stream()
+                    .filter(g -> !Boolean.TRUE.equals(g.getDisable()))
+                    .collect(Collectors.toCollection(LinkedList::new));
+            dto.setGroups(enabledGroups);
+        }
+
+        return dto;
     }
+
 
     @Override
     @Transactional(readOnly = true)

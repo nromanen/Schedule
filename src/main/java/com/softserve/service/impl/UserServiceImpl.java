@@ -143,6 +143,12 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    public Optional<User> findByEmailOptional(String email) {
+        log.info("Enter into findByEmailOptional method with email:{}", email);
+        return userRepository.findByEmail(email);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -248,7 +254,13 @@ public class UserServiceImpl implements UserService {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
             User registrationUser = save(user);
-            sendRegistrationMail(user, registrationMessage);
+
+            try {
+                sendRegistrationMail(user, registrationMessage);
+            } catch (Exception e) {
+                log.error("Failed to send registration email to {}: {}", user.getEmail(), e.getMessage());
+            }
+
             return registrationUser;
         } else {
             throw new IncorrectPasswordException();

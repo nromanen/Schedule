@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-created-at-to-users
+      author: nromanen
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

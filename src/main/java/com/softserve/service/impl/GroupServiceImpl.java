@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.dto.GroupDTO;
-import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.dto.GroupWithStudentsDTO;
 import com.softserve.dto.SemesterWithGroupsDTO;
 import com.softserve.entity.Group;
@@ -19,7 +18,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +47,6 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    @Cacheable(value = "groups", key = "#id")
     public GroupDTO getById(Long id) {
         log.info("In getById(id = [{}])", id);
         Group group = findGroupById(id);
@@ -87,6 +85,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    @Cacheable(value = "groupsList")
     public List<GroupDTO> getAllBySortOrder() {
         log.debug("In getAllBySortOrder()");
         List<Group> groups = groupRepository.getAllBySortOrder();
@@ -96,6 +95,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "groupsList", allEntries = true)
     public GroupDTO save(GroupDTO groupDTO) {
         log.info("In save(groupDTO = [{}])", groupDTO);
         Group group = groupMapper.groupDTOToGroup(groupDTO);
@@ -106,19 +106,19 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "groups", key = "#groupForUpdateDTO.id")
-    public GroupForUpdateDTO update(GroupForUpdateDTO groupForUpdateDTO) {
-        log.info("In update(groupForUpdateDTO = [{}])", groupForUpdateDTO);
-        Group group = groupMapper.groupForUpdateDTOToGroup(groupForUpdateDTO);
+    @CacheEvict(value = "groupsList", allEntries = true)
+    public GroupDTO update(GroupDTO groupDTO) {
+        log.info("In update(groupDTO = [{}])", groupDTO);
+        Group group = groupMapper.groupDTOToGroup(groupDTO);
         checkTitleForUniquenessIgnoringId(group.getTitle(), group.getId());
         group.setSortOrder(sortOrderRepository.getSortOrderById(group.getId()).orElse(null));
         Group updatedGroup = groupRepository.update(group);
-        return groupMapper.groupToGroupForUpdateDTO(updatedGroup);
+        return groupMapper.groupToGroupDTO(updatedGroup);
     }
 
     @Override
     @Transactional
-    @CacheEvict(value = "groups", key = "#id")
+    @CacheEvict(value = "groupsList", allEntries = true)
     public void delete(Long id) {
         log.info("In delete(id = [{}])", id);
         Group group = findGroupById(id);
@@ -127,6 +127,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "groupsList", allEntries = true)
     public GroupDTO createAfterOrder(GroupDTO groupDTO, Long afterId) {
         log.debug("In createAfterOrder(groupDTO = [{}], afterId = [{}])", groupDTO, afterId);
         Group group = groupMapper.groupDTOToGroup(groupDTO);
@@ -136,7 +137,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "groups", key = "#groupDTO.id")
+    @CacheEvict(value = "groupsList", allEntries = true)
     public GroupDTO updateAfterOrder(GroupDTO groupDTO, Long afterId) {
         log.debug("In updateAfterOrder(groupDTO = [{}], afterId = [{}])", groupDTO, afterId);
         Group group = groupMapper.groupDTOToGroup(groupDTO);
@@ -166,21 +167,21 @@ public class GroupServiceImpl implements GroupService {
     public Set<GroupDTO> getGroupsForDefaultSemester() {
         log.info("In getGroupsForDefaultSemester()");
         SemesterWithGroupsDTO semesterDTO = semesterService.getDefaultSemester();
-        return new HashSet<>(semesterDTO.getGroups());
+        return new LinkedHashSet<>(semesterDTO.getGroups());
     }
 
     @Override
     public Set<GroupDTO> getGroupsForCurrentSemester() {
         log.info("In getGroupsForCurrentSemester()");
         SemesterWithGroupsDTO semesterDTO = semesterService.getCurrentSemester();
-        return new HashSet<>(semesterDTO.getGroups());
+        return new LinkedHashSet<>(semesterDTO.getGroups());
     }
 
     @Override
     public Set<GroupDTO> getGroupsBySemesterId(Long semesterId) {
         log.info("In getGroupsBySemesterId(semesterId = [{}])", semesterId);
         SemesterWithGroupsDTO semesterDTO = semesterService.getById(semesterId);
-        return new HashSet<>(semesterDTO.getGroups());
+        return new LinkedHashSet<>(semesterDTO.getGroups());
     }
 
     @Override

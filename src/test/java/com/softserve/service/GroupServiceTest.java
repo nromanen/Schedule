@@ -247,23 +247,23 @@ class GroupServiceTest {
 
     @Test
     void updateGroup() {
-        GroupForUpdateDTO groupForUpdateDTO = new GroupForUpdateDTO();
-        groupForUpdateDTO.setId(1L);
-        groupForUpdateDTO.setTitle("some group");
+        GroupDTO groupDTO = new GroupDTO();
+        groupDTO.setId(1L);
+        groupDTO.setTitle("some group");
 
-        when(groupMapper.groupForUpdateDTOToGroup(groupForUpdateDTO)).thenReturn(group);
+        when(groupMapper.groupDTOToGroup(groupDTO)).thenReturn(group);
         when(groupRepository.isExistsByTitleIgnoringId(group.getTitle(), group.getId())).thenReturn(false);
         when(sortOrderRepository.getSortOrderById(group.getId())).thenReturn(Optional.empty());
         when(groupRepository.update(group)).thenReturn(group);
-        when(groupMapper.groupToGroupForUpdateDTO(group)).thenReturn(groupForUpdateDTO);
+        when(groupMapper.groupToGroupDTO(group)).thenReturn(groupDTO);
 
-        GroupForUpdateDTO actual = groupService.update(groupForUpdateDTO);
+        GroupDTO actual = groupService.update(groupDTO);
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(groupForUpdateDTO);
-        verify(groupMapper).groupForUpdateDTOToGroup(groupForUpdateDTO);
+        assertThat(actual).usingRecursiveComparison().isEqualTo(groupDTO);
+        verify(groupMapper).groupDTOToGroup(groupDTO);
         verify(groupRepository).isExistsByTitleIgnoringId(group.getTitle(), group.getId());
         verify(groupRepository).update(group);
-        verify(groupMapper).groupToGroupForUpdateDTO(group);
+        verify(groupMapper).groupToGroupDTO(group);
     }
 
     @Test
@@ -397,20 +397,20 @@ class GroupServiceTest {
 
     @Test
     void throwFieldAlreadyExistsExceptionIfTitleAlreadyExistsOnUpdate() {
-        GroupForUpdateDTO groupForUpdateDTO = new GroupForUpdateDTO();
-        groupForUpdateDTO.setId(1L);
-        groupForUpdateDTO.setTitle("existing title");
+        GroupDTO groupDTO = new GroupDTO();
+        groupDTO.setId(1L);
+        groupDTO.setTitle("existing title");
 
         Group groupToUpdate = new Group();
         groupToUpdate.setId(1L);
         groupToUpdate.setTitle("existing title");
 
-        when(groupMapper.groupForUpdateDTOToGroup(groupForUpdateDTO)).thenReturn(groupToUpdate);
+        when(groupMapper.groupDTOToGroup(groupDTO)).thenReturn(groupToUpdate);
         when(groupRepository.isExistsByTitleIgnoringId(groupToUpdate.getTitle(), groupToUpdate.getId())).thenReturn(true);
 
-        assertThrows(FieldAlreadyExistsException.class, () -> groupService.update(groupForUpdateDTO));
+        assertThrows(FieldAlreadyExistsException.class, () -> groupService.update(groupDTO));
 
-        verify(groupMapper).groupForUpdateDTOToGroup(groupForUpdateDTO);
+        verify(groupMapper).groupDTOToGroup(groupDTO);
         verify(groupRepository).isExistsByTitleIgnoringId(groupToUpdate.getTitle(), groupToUpdate.getId());
         verify(groupRepository, never()).update(any());
         verify(sortOrderRepository, never()).getSortOrderById(any());

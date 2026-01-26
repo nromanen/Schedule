@@ -5,11 +5,13 @@ import {Link} from 'react-router-dom';
 import {
     FaCaretDown,
     FaClipboardList,
-    FaClock, FaEye,
+    FaClock,
+    FaEye,
     FaEyeSlash,
     FaHome,
     FaRunning,
     FaSignOutAlt,
+    FaTrash,
     FaUser,
 } from 'react-icons/fa';
 import Menu from '@material-ui/core/Menu';
@@ -18,9 +20,9 @@ import {useTranslation} from 'react-i18next';
 import MenuItem from '@material-ui/core/MenuItem';
 import {withStyles} from '@material-ui/core/styles';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import './Header.scss';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import {
     ADMIN_PAGE_LINK,
     HOME_PAGE_LINK,
@@ -39,6 +41,14 @@ import FreeRooms from '../../containers/Dialogs/FreeRoomsDialog';
 import {setSemesterLoadingService} from '../../services/loadingService';
 import {
     ADMIN_TITLE,
+    CLEAR_CACHE_BUTTON,
+    CLEAR_CACHE_CONFIRM,
+    CLEAR_CACHE_ERROR,
+    CLEAR_CACHE_SUCCESS,
+    CLEAR_CACHE_TITLE,
+    CLEARING_CACHE,
+    CANCEL_BUTTON_LABEL,
+    COMMON_YES_BUTTON_TITLE,
     HOME_TITLE,
     LOGIN_TITLE,
     LOGOUT_TITLE,
@@ -50,6 +60,7 @@ import {
 import {getCurrentSemesterRequsted} from '../../actions/schedule';
 import {axiosCall} from "../../services/axios";
 import {DELETE, POST} from "../../constants/methods";
+import CustomDialog from "../../containers/Dialogs/CustomDialog";
 
 const StyledMenu = withStyles({
     paper: {
@@ -91,6 +102,9 @@ const Header = (props) => {
     const handleCloseUserMenu = () => setAnchorElUser(null);
 
     const [schedulePublished, setSchedulePublished] = useState(true);
+    const [cacheClearing, setCacheClearing] = useState(false);
+    const [cacheDialogOpen, setCacheDialogOpen] = useState(false);
+    const [cacheResultDialog, setCacheResultDialog] = useState({ open: false, success: true });
 
     const { t } = useTranslation('common');
 
@@ -115,6 +129,34 @@ const Header = (props) => {
                 .catch(console.error);
         }
         handleCloseUserMenu();
+    };
+
+    const handleClearCacheClick = () => {
+        handleCloseUserMenu();
+        setCacheDialogOpen(true);
+    };
+
+    const handleClearCacheConfirm = () => {
+        setCacheDialogOpen(false);
+        setCacheClearing(true);
+        axiosCall('admin/cache/all', DELETE)
+            .then(() => {
+                setCacheResultDialog({ open: true, success: true });
+            })
+            .catch(() => {
+                setCacheResultDialog({ open: true, success: false });
+            })
+            .finally(() => {
+                setCacheClearing(false);
+            });
+    };
+
+    const handleClearCacheCancel = () => {
+        setCacheDialogOpen(false);
+    };
+
+    const handleResultDialogClose = () => {
+        setCacheResultDialog({ open: false, success: true });
     };
 
     const getUserMenu = (role) => {
@@ -191,6 +233,12 @@ const Header = (props) => {
                                     {schedulePublished ? <FaEyeSlash fontSize="normal" /> : <FaEye fontSize="normal" />}
                                 </ListItemIcon>
                                 {schedulePublished ? t('unpublish_schedule') : t('publish_schedule')}
+                            </StyledMenuItem>
+                            <StyledMenuItem onClick={handleClearCacheClick} disabled={cacheClearing}>
+                                <ListItemIcon>
+                                    <FaTrash fontSize="normal" />
+                                </ListItemIcon>
+                                {cacheClearing ? t(CLEARING_CACHE) : t(CLEAR_CACHE_BUTTON)}
                             </StyledMenuItem>
                             <Link
                                 to={MY_PROFILE_LINK}
@@ -578,6 +626,40 @@ const Header = (props) => {
                     <LanguageSelector />
                 </nav>
             </header>
+
+            <CustomDialog
+                open={cacheDialogOpen}
+                onClose={handleClearCacheCancel}
+                title={t(CLEAR_CACHE_TITLE)}
+                buttons={[
+                    {
+                        label: t(CANCEL_BUTTON_LABEL),
+                        handleClick: handleClearCacheCancel,
+                    },
+                    {
+                        label: t(COMMON_YES_BUTTON_TITLE),
+                        handleClick: handleClearCacheConfirm,
+                        color: 'primary',
+                    },
+                ]}
+            >
+                {t(CLEAR_CACHE_CONFIRM)}
+            </CustomDialog>
+
+            <CustomDialog
+                open={cacheResultDialog.open}
+                onClose={handleResultDialogClose}
+                title={t(CLEAR_CACHE_TITLE)}
+                buttons={[
+                    {
+                        label: 'OK',
+                        handleClick: handleResultDialogClose,
+                        color: 'primary',
+                    },
+                ]}
+            >
+                {cacheResultDialog.success ? t(CLEAR_CACHE_SUCCESS) : t(CLEAR_CACHE_ERROR)}
+            </CustomDialog>
         </>
     );
 };

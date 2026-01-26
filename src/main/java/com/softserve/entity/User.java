@@ -9,8 +9,10 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 
 @NamedQuery(
@@ -48,4 +50,8 @@ public class User implements Serializable {
     private Role role = Role.ROLE_USER;
 
     private String token;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 }

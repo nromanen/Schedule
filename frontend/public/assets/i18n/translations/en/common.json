@@ -223,5 +223,12 @@
     "publish_schedule": "Publish schedule",
     "unpublish_schedule": "Hide schedule",
     "add_type_label": "new room type",
-    "actions_label": "Actions"
+    "actions_label": "Actions",
+
+    "clear_cache_title": "Clear Cache",
+    "clear_cache_confirm": "Are you sure you want to clear all cache?",
+    "clear_cache_success": "Cache cleared successfully",
+    "clear_cache_error": "Failed to clear cache",
+    "clear_cache": "Clear cache",
+    "clearing_cache": "Clearing..."
 }

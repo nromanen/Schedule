@@ -5,6 +5,7 @@ import com.softserve.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,5 +57,15 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
                 .setParameter("userId", user.getId())
                 .getSingleResult();
         return count != 0;
+    }
+
+    @Override
+    public int deleteUnverifiedOlderThan(LocalDateTime threshold) {
+        log.info("Deleting unverified users older than {}", threshold);
+        return sessionFactory.getCurrentSession()
+                .createMutationQuery(
+                        "DELETE FROM AppUser u WHERE u.token IS NOT NULL AND u.createdAt < :threshold")
+                .setParameter("threshold", threshold)
+                .executeUpdate();
     }
 }

@@ -165,3 +165,10 @@ export const COMMON_FREE_ROOMS_LIST_EMPTY = 'common:free_rooms_list_empty';
 
 export const TEACHER_LESSONS_TITLE = 'teacher_lessons_title';
 export const COMMON_ACTIONS_LABEL = 'common:actions_label';
+
+export const CLEAR_CACHE_TITLE = 'clear_cache_title';
+export const CLEAR_CACHE_CONFIRM = 'clear_cache_confirm';
+export const CLEAR_CACHE_SUCCESS = 'clear_cache_success';
+export const CLEAR_CACHE_ERROR = 'clear_cache_error';
+export const CLEAR_CACHE_BUTTON = 'clear_cache';
+export const CLEARING_CACHE = 'clearing_cache';

@@ -6,13 +6,16 @@ import com.softserve.dto.TeacherImportDTO;
 import com.softserve.dto.UserDataDTO;
 import com.softserve.dto.enums.ImportSaveStatus;
 import com.softserve.entity.Department;
+import com.softserve.entity.Student;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
 import com.softserve.exception.EntityNotFoundException;
+import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.exception.FieldNullException;
 import com.softserve.mapper.TeacherMapper;
 import com.softserve.repository.DepartmentRepository;
+import com.softserve.repository.StudentRepository;
 import com.softserve.repository.TeacherRepository;
 import com.softserve.service.TeacherService;
 import com.softserve.service.UserService;
@@ -39,6 +42,7 @@ public class TeacherServiceImpl implements TeacherService {
     private final UserService userService;
     private final DepartmentRepository departmentRepository;
     private final TeacherMapper teacherMapper;
+    private final StudentRepository studentRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -189,8 +193,6 @@ public class TeacherServiceImpl implements TeacherService {
                 .orElse(null);
     }
 
-    // ==================== Private Helper Methods ====================
-
     private Teacher findTeacherById(Long id) {
         return teacherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Teacher.class, "id", id.toString()));
@@ -198,6 +200,38 @@ public class TeacherServiceImpl implements TeacherService {
 
     private Teacher registerTeacher(Teacher teacher, String email) {
         log.debug("Registering teacher with email: {}", email);
+
+        Optional<User> existingUser = userService.findByEmailOptional(email);
+
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+
+            if (user.getRole() == Role.ROLE_MANAGER) {
+                throw new FieldAlreadyExistsException(User.class, "email",
+                        "Email belongs to a manager account and cannot be used for teacher");
+            }
+
+            Optional<Teacher> teacherWithUserId = teacherRepository.findByUserId(user.getId());
+            if (teacherWithUserId.isPresent() && !teacherWithUserId.get().getId().equals(teacher.getId())) {
+                throw new FieldAlreadyExistsException(Teacher.class, "email",
+                        "Email is already used by another teacher");
+            }
+
+            if (studentRepository.isEmailInUse(email)) {
+                throw new FieldAlreadyExistsException(Student.class, "email",
+                        "Email is already used by a student");
+            }
+
+            teacher.setUserId(user.getId());
+
+            if (user.getRole() == Role.ROLE_USER) {
+                user.setRole(Role.ROLE_TEACHER);
+                userService.update(user);
+            }
+
+            return teacher;
+        }
+
         User registeredUser = userService.automaticRegistration(email, Role.ROLE_TEACHER);
         teacher.setUserId(registeredUser.getId());
         return teacher;

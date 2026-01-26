@@ -1,7 +1,6 @@
 package com.softserve.service;
 
 import com.softserve.dto.GroupDTO;
-import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.dto.GroupWithStudentsDTO;
 import com.softserve.entity.Group;
 
@@ -62,7 +61,7 @@ public interface GroupService extends SortService<GroupDTO> {
      * @param groupForUpdateDTO the group DTO to be updated
      * @return the updated group DTO
      */
-    GroupForUpdateDTO update(GroupForUpdateDTO groupForUpdateDTO);
+    GroupDTO update(GroupDTO groupForUpdateDTO);
 
     /**
      * Deletes a group by id.

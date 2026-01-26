@@ -3,7 +3,6 @@ package com.softserve.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.dto.GroupDTO;
-import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.dto.StudentWithoutGroupDTO;
 import com.softserve.exception.apierror.ApiValidationError;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -355,12 +354,12 @@ class GroupControllerTest {
 
     @Test
     void updateGroup() throws Exception {
-        GroupForUpdateDTO groupForUpdateDTO = GroupForUpdateDTO.builder()
+        GroupDTO groupDTO = GroupDTO.builder()
                 .id(groupDTOWithID4L.getId())
                 .title(groupDTOWithID4L.getTitle())
                 .disable(true)
                 .build();
-        assertions.assertForUpdate(groupForUpdateDTO);
+        assertions.assertForUpdate(groupDTO);
     }
 
     @Test

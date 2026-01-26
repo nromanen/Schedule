@@ -1,7 +1,6 @@
 package com.softserve.controller;
 
 import com.softserve.dto.GroupDTO;
-import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.dto.GroupOrderDTO;
 import com.softserve.dto.GroupWithStudentsDTO;
 import com.softserve.service.GroupService;
@@ -61,9 +60,9 @@ public class GroupController {
 
     @PutMapping
     @Operation(summary = "Update existing group by id")
-    public ResponseEntity<GroupForUpdateDTO> update(@RequestBody GroupForUpdateDTO groupForUpdateDTO) {
-        log.info("In update(groupForUpdateDTO = [{}])", groupForUpdateDTO);
-        return ResponseEntity.ok(groupService.update(groupForUpdateDTO));
+    public ResponseEntity<GroupDTO> update(@RequestBody GroupDTO groupDTO) {
+        log.info("In update(groupDTO = [{}])", groupDTO);
+        return ResponseEntity.ok(groupService.update(groupDTO));
     }
 
     @DeleteMapping("/{id}")

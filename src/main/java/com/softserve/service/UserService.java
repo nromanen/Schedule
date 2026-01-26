@@ -60,6 +60,8 @@ public interface UserService {
      */
     User findByEmail(String email);
 
+    Optional<User> findByEmailOptional(String email);
+
     /**
      * Retrieves a user by token from the repository.
      *

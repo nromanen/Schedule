@@ -2,7 +2,6 @@ package com.softserve.mapper;
 
 import com.softserve.dto.GroupDTO;
 import com.softserve.dto.GroupDTOInRoomSchedule;
-import com.softserve.dto.GroupForUpdateDTO;
 import com.softserve.dto.GroupWithStudentsDTO;
 import com.softserve.entity.Group;
 import org.mapstruct.Mapper;
@@ -24,14 +23,9 @@ public interface GroupMapper {
     @Mapping(target = "sortOrder", ignore = true)
     Group groupDTOToGroup(GroupDTO groupDTO);
 
-    GroupForUpdateDTO groupToGroupForUpdateDTO(Group group);
 
     @Mapping(target = "students", ignore = true)  // ігноруємо студентів тут
     GroupWithStudentsDTO groupToGroupWithStudentsDTO(Group group);
-
-    @Mapping(target = "students", ignore = true)
-    @Mapping(target = "sortOrder", ignore = true)
-    Group groupForUpdateDTOToGroup(GroupForUpdateDTO groupForUpdateDTO);
 
     List<GroupDTO> groupsToGroupDTOs(List<Group> groups);
     List<GroupDTO> groupsToGroupDTOs(Collection<Group> groups);
