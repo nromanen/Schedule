@@ -1,0 +1,37 @@
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+@import '../../styles/fonts.scss';
+
+.department-card {
+  width: 200px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &:hover {
+    height: auto;
+    min-height: 120px;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &__name {
+    text-align: center;
+    margin: 5px 0;
+    font-size: $font-m;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  &:hover &__name {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+}

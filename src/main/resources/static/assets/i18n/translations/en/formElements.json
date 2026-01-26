@@ -95,7 +95,7 @@
     "student_element": "student",
     "students_label": "Students",
     "class_element": "class",
-    "room_element": "class",
+    "room_element": "room",
     "subject_element": "subject",
     "department_element": "department",
     "semester_element": "semester",
@@ -127,5 +127,6 @@
     "dont_have_an_account": "Don't have an account?",
     "reset_password_helper_text": "Just enter your email address below and we'll send you a link to reset your password!",
     "form_group_label_after": "Select after which group",
-    "students_uppercase": "Students"
+    "students_uppercase": "Students",
+    "room_label_after": "After room"
 }

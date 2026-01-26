@@ -4,7 +4,6 @@ import com.softserve.dto.SubjectWithTypeDTO;
 import com.softserve.entity.Subject;
 import com.softserve.repository.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,11 +15,14 @@ public class SubjectRepositoryImpl extends BasicRepositoryImpl<Subject, Long> im
     private static final String GET_SUBJECTS = "SELECT new com.softserve.dto.SubjectWithTypeDTO(l.subject, l.lessonType) " +
             "FROM Lesson l WHERE l.teacher.id = :teacherId AND l.semester.id = :semesterId";
 
+    private static final String GET_ALL_QUERY =
+            "SELECT s FROM Subject s WHERE s.disable = false ORDER BY s.name ASC";
+
     @Override
     public List<Subject> getAll() {
-        log.info("In getAll()");
-        Session session = getSession();
-        return session.createQuery("SELECT s FROM Subject s ORDER BY s.name ASC", Subject.class)
+        log.info("Enter into getAll of SubjectRepositoryImpl");
+        return getSession()
+                .createQuery(GET_ALL_QUERY, Subject.class)
                 .getResultList();
     }
 

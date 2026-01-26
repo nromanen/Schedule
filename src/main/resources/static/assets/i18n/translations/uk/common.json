@@ -221,5 +221,6 @@
     "schedule_is_published": "Розклад опублікований",
     "admin_schedule_not_published": "Розклад не опублікований",
     "publish_schedule": "Опублікувати розклад",
-    "unpublish_schedule": "Приховати розклад"
+    "unpublish_schedule": "Приховати розклад",
+    "actions_label": "Дії"
 }

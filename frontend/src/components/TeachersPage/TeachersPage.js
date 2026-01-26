@@ -13,8 +13,8 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import {clearDepartment, getAllDepartmentsService} from '../../services/departmentService';
 import AddTeacherForm from './AddTeacherForm/AddTeacherForm';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
-import TeachersList from './TeachersList/TeachersList';
-import './TeachersList/TeachersList.scss';
+import TeachersTable from './TeachersList/TeachersTable';
+// import './TeachersList/TeachersList.scss';
 import {setDepartmentOptions, setOptions, setSemesterOptions} from '../../utils/selectUtils';
 
 const TeachersPage = (props) => {
@@ -160,10 +160,9 @@ const TeachersPage = (props) => {
                     </div>
                 )}
             </div>
-            <TeachersList
+            <TeachersTable
                 visibleItems={visibleItems}
                 isDisabled={isDisabled}
-                setTeacherId={setTeacherId}
                 showConfirmDialog={showConfirmDialog}
                 selectedTeacherCard={selectedTeacherCard}
             />

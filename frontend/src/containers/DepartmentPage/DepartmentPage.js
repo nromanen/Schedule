@@ -34,6 +34,7 @@ import {
 } from '../../constants/translationLabels/formElements';
 import {COMMON_SET_DISABLED, COMMON_SET_ENABLED} from '../../constants/translationLabels/common';
 import {getAllPublicTeachersByDepartmentStart} from '../../actions/teachers';
+import './DepartmentPage.scss';
 
 const DepartmentPage = (props) => {
     const {
@@ -146,9 +147,9 @@ const DepartmentPage = (props) => {
                     {visibleDepartments.map((departmentItem) => (
                         <Card
                             key={departmentItem.id}
-                            additionClassName="subject-card department-card"
+                            additionClassName="department-card"
                         >
-                            <h2 className="subject-card__name">{departmentItem.name}</h2>
+                            <h2 className="department-card__name">{departmentItem.name}</h2>
                             <div className="cards-btns">
                                 {isDisabled ? (
                                     <IoMdEye

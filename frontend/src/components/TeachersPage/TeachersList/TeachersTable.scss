@@ -1,0 +1,152 @@
+@import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+
+.teachers-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 15px;
+  padding-left: 50px;
+  padding-bottom: 50px;
+}
+
+.teachers-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: $white;
+  box-shadow: 0 2px 8px $shadow-box;
+  border-radius: 5px;
+  overflow: hidden;
+
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid $gray1;
+  }
+
+  th {
+    background-color: $blue;
+    color: $white;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: darken($blue, 5%);
+    }
+
+    &:last-child {
+      cursor: default;
+      &:hover {
+        background-color: $blue;
+      }
+    }
+  }
+
+  tbody tr {
+    &:hover {
+      background-color: rgba($blue, 0.05);
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.sort-icon {
+  margin-left: 5px;
+  opacity: 0.5;
+
+  &.active {
+    opacity: 1;
+  }
+}
+
+.email-link {
+  color: $link;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.actions-cell {
+  white-space: nowrap;
+}
+
+.action-icon {
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 1.1rem;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  padding: 15px;
+  background-color: $white;
+  border-radius: 0 0 5px 5px;
+  box-shadow: 0 2px 8px $shadow-box;
+}
+
+.pagination-rows {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  select {
+    padding: 5px 10px;
+    border: 1px solid $gray1;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+}
+
+.pagination-info {
+  color: $gray2;
+}
+
+.pagination-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid $gray1;
+  border-radius: 4px;
+  background-color: $white;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: $blue;
+    color: $white;
+    border-color: $blue;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

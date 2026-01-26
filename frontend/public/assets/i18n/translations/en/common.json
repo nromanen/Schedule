@@ -222,5 +222,6 @@
     "admin_schedule_not_published": "Schedule is not published",
     "publish_schedule": "Publish schedule",
     "unpublish_schedule": "Hide schedule",
-    "add_type_label": "new room type"
+    "add_type_label": "new room type",
+    "actions_label": "Actions"
 }

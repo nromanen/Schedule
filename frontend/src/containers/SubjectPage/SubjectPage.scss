@@ -1,22 +1,42 @@
-.subject-card {
-    width: 100%;
-    height: 6em;
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
+@import '../../styles/variables.scss';
+@import '../../styles/fonts.scss';
 
-    &__description {
-        text-align: center;
-        margin: 5px 0 0 0;
-    }
-    &__name {
-        text-align: left;
-        margin: 0;
-        max-width: auto;
-        overflow: hidden;
+.subject-card.done-card {
+    width: 200px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    overflow: hidden;
+
+    &:hover {
+        height: auto;
+        min-height: 120px;
+        z-index: 10;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 }
 
+.subject-card__name {
+    text-align: center;
+    margin: 5px 0;
+    font-size: $font-l;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.subject-card:hover .subject-card__name {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+}
+
 .wrapper {
-    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
