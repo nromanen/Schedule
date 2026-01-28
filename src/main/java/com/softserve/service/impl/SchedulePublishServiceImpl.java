@@ -1,6 +1,7 @@
-package com.softserve.service;
+package com.softserve.service.impl;
 
 import com.softserve.dto.ScheduleStatusDTO;
+import com.softserve.service.SchedulePublishService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;

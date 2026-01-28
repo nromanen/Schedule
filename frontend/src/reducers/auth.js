@@ -12,6 +12,15 @@ const reducer = (state = initialState, action) => {
     const { response } = action;
 
     switch (action.type) {
+        case actionTypes.AUTH_USER_CHECK_STATE:
+            if (action.token) {
+                axios.defaults.headers.common.Authorization = action.token;
+            }
+            return {
+                ...state,
+                token: action.token,
+                role: action.role
+            };
         case actionTypes.AUTH_USER_SUCCESS:
             return { ...state, token: response.token, role: response.role, error: null };
         case actionTypes.AUTH_USER_ERROR:

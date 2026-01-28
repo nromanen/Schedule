@@ -217,10 +217,16 @@
     "delete_all_links": "Видалити всі",
     "schedule_not_published": "Розклад з'явиться пізніше",
 
-
     "schedule_is_published": "Розклад опублікований",
     "admin_schedule_not_published": "Розклад не опублікований",
     "publish_schedule": "Опублікувати розклад",
     "unpublish_schedule": "Приховати розклад",
-    "actions_label": "Дії"
+    "actions_label": "Дії",
+
+    "clear_cache_title": "Очищення кешу",
+    "clear_cache_confirm": "Ви впевнені, що хочете очистити весь кеш?",
+    "clear_cache_success": "Кеш успішно очищено",
+    "clear_cache_error": "Помилка очищення кешу",
+    "clear_cache": "Очистити кеш",
+    "clearing_cache": "Очищення..."
 }
