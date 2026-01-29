@@ -68,7 +68,8 @@ public class SecurityConfig {
                                 "/auth/**", "/public/**", "/schedules/full/*",
                                 "/semesters/default", "/semesters/default/groups",
                                 "/semesters/current/groups", "/semesters/{semesterId}/groups",
-                                "/download/**"
+                                "/download/**",
+                                "/departments"
                         ).permitAll()
 
                         // Swagger endpoints

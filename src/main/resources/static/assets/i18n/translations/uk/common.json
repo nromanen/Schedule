@@ -228,5 +228,16 @@
     "clear_cache_success": "Кеш успішно очищено",
     "clear_cache_error": "Помилка очищення кешу",
     "clear_cache": "Очистити кеш",
-    "clearing_cache": "Очищення..."
+    "clearing_cache": "Очищення...",
+    "all_free": "Всі вільні",
+    "department_label": "Кафедра",
+    "day_label": "День",
+    "class_label": "Пара",
+    "day_of_week_short_MONDAY": "Пн",
+    "day_of_week_short_TUESDAY": "Вт",
+    "day_of_week_short_WEDNESDAY": "Ср",
+    "day_of_week_short_THURSDAY": "Чт",
+    "day_of_week_short_FRIDAY": "Пт",
+    "day_of_week_short_SATURDAY": "Сб",
+    "day_of_week_short_SUNDAY": "Нд"
 }

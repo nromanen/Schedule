@@ -1,0 +1,186 @@
+@import '../../styles/colors.scss';
+
+.department-schedule {
+  margin-top: 20px;
+  padding-bottom: 40px;
+
+  &.MuiTableContainer-root .MuiTable-root td.MuiTableCell-root.MuiTableCell-body {
+    height: 20px;
+    padding: 4px 4px;
+  }
+
+  .MuiTable-root {
+    border-collapse: collapse;
+  }
+
+  .MuiTableCell-root {
+    padding: 2px 6px;
+    font-size: 12px;
+    border: 1px solid $gray1;
+  }
+
+  // Header styles
+  .header-cell {
+    background-color: $gray2;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    padding: 4px 6px;
+  }
+
+  .day-header {
+    width: 80px;
+  }
+
+  .class-header {
+    width: 90px;
+  }
+
+  .week-header {
+    width: 40px;
+  }
+
+  .teacher-header {
+    min-width: 120px;
+    max-width: 150px;
+  }
+
+  // Striped rows by day
+  .day-even {
+    background-color: $white;
+  }
+
+  .day-odd {
+    background-color: $gray2;
+  }
+  tr.week-odd td {
+    border-bottom: 0.75px solid $gray1 !important;
+  }
+
+  // Day cell
+  .day-cell {
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    background-color: $blue2;
+    border-right: 2px solid $gray1;
+  }
+
+  // Class cell
+  .class-cell-wrapper {
+    text-align: center;
+    vertical-align: middle;
+    border-right: 1.5px solid $gray1;
+
+    .class-cell {
+      .class-name {
+        font-weight: bold;
+        font-size: 11px;
+      }
+
+      .class-time {
+        font-size: 10px;
+        color: $gray;
+      }
+    }
+  }
+
+  // Week cell
+  .week-cell {
+    text-align: center;
+    font-weight: bold;
+    width: 40px;
+    color: $gray;
+    font-size: 10px;
+  }
+
+  // Border between classes
+  .class-last {
+    border-bottom: 1.5px solid $gray1;
+  }
+
+  // Border between days (thicker)
+  .day-last {
+    border-bottom: 3px solid $gray;
+  }
+
+  // Lesson cell
+  .lesson-cell-wrapper {
+    vertical-align: top;
+    min-width: 100px;
+    line-height: 1.2;
+    text-align: center;
+
+    .lesson-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .subject {
+        font-weight: 500;
+        font-size: 11px;
+        margin-bottom: 1px;
+      }
+
+      .group {
+        font-size: 10px;
+        color: $gray;
+      }
+
+      .room {
+        font-size: 11px;
+        color: $gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+
+        .meeting-link {
+          text-decoration: none;
+          font-size: 12px;
+          color: $link;
+
+          &:hover {
+            transform: scale(1.2);
+          }
+        }
+      }
+    }
+
+    .empty-cell {
+      color: $gray3;
+      text-align: center;
+      display: block;
+    }
+  }
+
+  // Row where all teachers are free
+  .all-free {
+    &:hover {
+      .lesson-cell-wrapper {
+        background-color: $green1 !important;
+      }
+
+      .lesson-cell-wrapper:last-child {
+        position: relative;
+
+        &::after {
+          content: '✓ Всі вільні';
+          position: absolute;
+          right: -80px;
+          top: 50%;
+          transform: translateY(-50%);
+          background-color: $green;
+          color: $white;
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-size: 11px;
+          font-weight: bold;
+          z-index: 10;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+}

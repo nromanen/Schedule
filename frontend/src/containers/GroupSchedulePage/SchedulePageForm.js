@@ -7,6 +7,7 @@ const mapStateToProps = (state) => ({
     semester: state.schedule.scheduleSemester,
     group: state.schedule.scheduleGroup,
     teacher: state.schedule.scheduleTeacher,
+    department: state.schedule.scheduleDepartment,
 });
 
 export default connect(mapStateToProps)(

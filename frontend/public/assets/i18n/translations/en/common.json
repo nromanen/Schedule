@@ -230,5 +230,16 @@
     "clear_cache_success": "Cache cleared successfully",
     "clear_cache_error": "Failed to clear cache",
     "clear_cache": "Clear cache",
-    "clearing_cache": "Clearing..."
+    "clearing_cache": "Clearing...",
+    "all_free": "All free",
+    "department_label": "Department",
+    "day_label": "Day",
+    "class_label": "Class",
+    "day_of_week_short_MONDAY": "Mon",
+    "day_of_week_short_TUESDAY": "Tue",
+    "day_of_week_short_WEDNESDAY": "Wed",
+    "day_of_week_short_THURSDAY": "Thu",
+    "day_of_week_short_FRIDAY": "Fri",
+    "day_of_week_short_SATURDAY": "Sat",
+    "day_of_week_short_SUNDAY": "Sun"
 }

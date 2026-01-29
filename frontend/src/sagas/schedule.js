@@ -3,7 +3,7 @@ import {isEmpty} from 'lodash';
 import {addItemToSchedule, setLoading, setScheduleLoading, setSemesterLoading} from '../actions';
 import * as actionTypes from '../actions/actionsType';
 import {setMainScheduleLoading, setScheduleOperationLoading} from '../actions/loadingIndicator';
-import { setScheduleNotPublished } from '../actions/schedule';
+import { setScheduleNotPublished, setScheduleDepartment } from '../actions/schedule';
 import {
     CLEAR_SCHEDULE_URL,
     CURRENT_SEMESTER_URL,
@@ -49,7 +49,7 @@ import {
 import i18n from '../i18n';
 import {axiosCall} from '../services/axios';
 import {DELETE, POST, PUT} from '../constants/methods';
-import {FULL, GROUP, TEACHER} from '../constants/scheduleTypes';
+import {FULL, GROUP, TEACHER, DEPARTMENT} from '../constants/scheduleTypes';
 import {getAllPublicGroups} from './group';
 import {getAllPublicTeachers} from './teachers';
 
@@ -358,6 +358,7 @@ export function* selectGroupSchedule({ semesterId, groupId }) {
     const groups = yield select((state) => state.groups.groups);
     const group = groups.find((item) => item.id === Number(groupId));
     yield put(setScheduleGroup(group));
+    // yield put(setScheduleDepartment(null));
     yield call(getGroupSchedule, { semesterId, groupId });
 }
 export function* selectTeacherSchedule({ semesterId, teacherId }) {
@@ -365,10 +366,22 @@ export function* selectTeacherSchedule({ semesterId, teacherId }) {
     const teachers = yield select((state) => state.teachers.teachers);
     const teacher = teachers.find((item) => item.id === Number(teacherId));
     yield put(setScheduleTeacher(teacher));
+    // yield put(setScheduleDepartment(null));
     yield call(getTeacherSchedule, { semesterId, teacherId });
 }
 export function* selectFullSchedule({ semesterId }) {
     yield call(setSemesterAndType, semesterId, FULL);
+    // yield put(setScheduleDepartment(null));
+    yield call(getFullSchedule, { semesterId });
+}
+
+export function* selectDepartmentSchedule({ semesterId, departmentId }) {
+    yield call(setSemesterAndType, semesterId, DEPARTMENT);
+    const departments = yield select((state) => state.departments.departments);
+    const department = departments.find((item) => item.id === Number(departmentId));
+    yield put(setScheduleDepartment(department));
+    // yield put(setScheduleGroup(null));
+    // yield put(setScheduleTeacher(null));
     yield call(getFullSchedule, { semesterId });
 }
 
@@ -394,5 +407,6 @@ export default function* watchSchedule() {
     yield takeLatest(actionTypes.SELECT_GROUP_SCHEDULE_START, selectGroupSchedule);
     yield takeLatest(actionTypes.SELECT_TEACHER_SCHEDULE_START, selectTeacherSchedule);
     yield takeLatest(actionTypes.SELECT_FULL_SCHEDULE_START, selectFullSchedule);
+    yield takeLatest(actionTypes.SELECT_DEPARTMENT_SCHEDULE_START, selectDepartmentSchedule);
 }
 

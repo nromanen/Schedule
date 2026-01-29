@@ -9,11 +9,13 @@ import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';
 import { SCHEDULE_FOR_LINK } from '../../constants/links';
 import { renderSchedule } from '../../helper/renderSchedule';
 import { getScheduleType } from '../../helper/getScheduleType';
+import { getAllDepartmentsService } from '../../services/departmentService';
 
-const createSubmitValues = (semester, group, teacher) => ({
+const createSubmitValues = (semester, group, teacher, department) => ({
     semester,
     group: { id: group },
     teacher: { id: teacher },
+    department: { id: department },
 });
 
 const GroupSchedulePage = (props) => {
@@ -28,6 +30,7 @@ const GroupSchedulePage = (props) => {
         getGroupSchedule,
         getTeacherSchedule,
         getFullSchedule,
+        getDepartmentSchedule,
         groupSchedule,
         teacherSchedule,
         fullSchedule,
@@ -35,6 +38,7 @@ const GroupSchedulePage = (props) => {
 
     useEffect(() => {
         getDefaultSemester();
+        getAllDepartmentsService();
     }, [getDefaultSemester]);
 
     useEffect(() => {
@@ -67,24 +71,29 @@ const GroupSchedulePage = (props) => {
             const { semester } = values;
             getFullSchedule(semester.id);
         },
+        department: (values) => {
+            const { semester, department } = values;
+            getDepartmentSchedule(semester.id, department.id);
+        },
     };
 
     const handleSubmit = (values) => {
-        const { semester, group, teacher } = values;
+        const { semester, group, teacher, department } = values;
         const groupPath = get(group, 'id') ? `&group=${group.id}` : '';
         const teacherPath = get(teacher, 'id') ? `&teacher=${teacher.id}` : '';
+        const departmentPath = get(department, 'id') ? `&department=${department.id}` : '';
         const typeOfSchedule = getScheduleType(values);
         scheduleActions[typeOfSchedule](values);
-        history.push(`${SCHEDULE_FOR_LINK}?semester=${semester.id}${groupPath}${teacherPath}`);
+        history.push(`${SCHEDULE_FOR_LINK}?semester=${semester.id}${groupPath}${teacherPath}${departmentPath}`);
     };
 
     const getSchedule = () => {
-        const { semester, group, teacher } = getDataFromParams(location);
+        const { semester, group, teacher, department } = getDataFromParams(location);
 
         if (!semester) {
-            handleSubmit(createSubmitValues(defaultSemester, group, teacher));
+            handleSubmit(createSubmitValues(defaultSemester, group, teacher, department));
         } else {
-            handleSubmit(createSubmitValues({ id: Number(semester) }, group, teacher));
+            handleSubmit(createSubmitValues({ id: Number(semester) }, group, teacher, department));
         }
     };
 

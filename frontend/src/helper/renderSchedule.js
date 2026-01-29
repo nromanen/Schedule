@@ -2,8 +2,10 @@ import React from 'react';
 import {isEmpty} from 'lodash';
 import DownloadLink from '../components/DownloadLink/DownloadLink';
 import {renderFullSchedule, renderGroupTable, renderWeekTable} from './renderScheduleTable';
-import {getGroupScheduleTitle, getTeacherScheduleTitle} from '../utils/titlesUtil';
+import DepartmentSchedule from '../components/DepartmentSchedule/DepartmentSchedule';
+import {getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTitle} from '../utils/titlesUtil';
 import SchedulePublishBanner from "../components/GroupSchedulePage/SchedulePublishBanner/SchedulePublishBanner";
+import DepartmentDownloadLink from '../components/DownloadLink/DepartmentDownloadLink';
 
 const emptySchedule = (t) => <p className="empty_schedule">{t('common:empty_schedule')}</p>;
 
@@ -16,6 +18,7 @@ const renderSchedule = (props) => {
         groupData,
         teacherData,
         semesterData,
+        departmentData,
         notPublished,
         notPublishedMessage,
         isManager,
@@ -84,6 +87,29 @@ const renderSchedule = (props) => {
                             {t('common:even_week')}</span>
                     </h2>
                     {renderWeekTable(even)}
+                </>
+            );
+        }
+        case 'department': {
+            const { resultArray, semester } = fullSchedule;
+            if (isEmpty(resultArray)) return emptySchedule(t);
+            return (
+                <>
+                    <h1>
+                        {getDepartmentScheduleTitle(semester, departmentData)}
+                        <DepartmentDownloadLink
+                            departmentName={departmentData?.name}
+                            semesterDescription={semester?.description}
+                            semesterStartDay={semester?.startDay}
+                            semesterEndDay={semester?.endDay}
+                        />
+                    </h1>
+                    {isManager && (
+                        <div className="schedule-publish-banner-right">
+                            <SchedulePublishBanner />
+                        </div>
+                    )}
+                    <DepartmentSchedule fullSchedule={fullSchedule} departmentId={departmentData?.id} />
                 </>
             );
         }

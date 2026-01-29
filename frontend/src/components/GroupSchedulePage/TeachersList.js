@@ -16,6 +16,7 @@ const TeachersList = (props) => {
             type="text"
             handleChange={() => {
                 handleChange('group', null);
+                handleChange('department', null);
             }}
             values={teachers}
             getOptionLabel={(teacher) => (teacher ? getTeacherFullName(teacher) : '')}

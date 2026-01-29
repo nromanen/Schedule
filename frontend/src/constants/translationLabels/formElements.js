@@ -126,3 +126,4 @@ export const FORM_CHOOSE_GROUP_LABEL = 'choose_group_title';
 export const FORM_GROUP_LABEL_AFTER = 'form_group_label_after';
 export const STUDENTS_UPPERCASE = 'formElements:students_uppercase';
 export const FORM_ROOM_LABEL_AFTER = 'formElements:room_label_after';
+export const FORM_DEPARTMENT_TEACHERS_LABEL = 'formElements:department_teachers_label';

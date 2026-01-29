@@ -27,14 +27,14 @@ const transformSemesterDate = (date) => {
     return new Date(endDateString);
 };
 
-const checkSemesterEnd = (semesterEndDate) => {
+export const checkSemesterEnd = (semesterEndDate) => {
     const today = new Date();
 
     const endDate = transformSemesterDate(semesterEndDate);
     return today - endDate > 0;
 };
 
-const matchDayNumberSysytemToDayName = () => {
+export const matchDayNumberSysytemToDayName = () => {
     const now = new Date();
     return daysUppercase[now.getDay() - 1];
 };
@@ -46,7 +46,7 @@ const matchDayNumberSysytemToDayName = () => {
 //     return Math.ceil((date.getDay() + 1 + numberOfDays) / numberOfDaysInAWeek);
 // };
 
-const getWeekParity = (startDate, currentDate = new Date()) => {
+export const getWeekParity = (startDate, currentDate = new Date()) => {
     const semesterStart = startDate instanceof Date ? startDate : new Date(transformSemesterDate(startDate));
     const targetDate = currentDate instanceof Date ? currentDate : new Date(transformSemesterDate(currentDate));
 
@@ -80,7 +80,7 @@ const printWeekNumber = (startScheduleDate) => {
     return getWeekParity(startScheduleDate, date);
 };
 
-function isWeekOdd(num) {
+export function isWeekOdd(num) {
     return num % 2 === 1;
 }
 

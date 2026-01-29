@@ -22,7 +22,7 @@ a.pdf_link {
     max-width: 100%;
     overflow: scroll;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 120px;
 
     .MuiTable-root {
         border-collapse: separate;
@@ -150,4 +150,8 @@ a.pdf_link {
 
 .currentDay {
     background-color: $azure;
+}
+
+.schedule_page-container {
+    padding-bottom: 60px;
 }

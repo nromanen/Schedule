@@ -18,6 +18,7 @@ const GroupsList = (props) => {
             type="text"
             handleChange={() => {
                 handleChange('teacher', null);
+                handleChange('department', null);
             }}
             values={groups}
             getOptionLabel={(group) => (group ? group.title : '')}

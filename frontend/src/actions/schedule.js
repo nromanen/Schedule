@@ -252,3 +252,18 @@ export const setScheduleNotPublished = (message) => ({
     type: actionTypes.SCHEDULE_NOT_PUBLISHED,
     payload: message,
 });
+
+export const selectDepartmentSchedule = (semesterId, departmentId) => {
+    return {
+        type: actionTypes.SELECT_DEPARTMENT_SCHEDULE_START,
+        semesterId,
+        departmentId,
+    };
+};
+
+export const setScheduleDepartment = (department) => {
+    return {
+        type: actionTypes.SET_SCHEDULE_DEPARTMENT,
+        department,
+    };
+};

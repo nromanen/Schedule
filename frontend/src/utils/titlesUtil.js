@@ -20,4 +20,10 @@ const getTeacherScheduleTitle = (semester, teacher) => {
     return teacher ? semesterTitle + getTeacherWithPosition(teacher) : semesterTitle;
 };
 
-export { getSemesterTitle, getGroupScheduleTitle, getTeacherScheduleTitle };
+const getDepartmentScheduleTitle = (semester, department) => {
+    const semesterTitle = getSemesterTitle(semester);
+    return department ? semesterTitle + department.name : semesterTitle;
+};
+
+export { getSemesterTitle, getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTitle };
+
