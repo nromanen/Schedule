@@ -2,20 +2,26 @@
 @import "../../../styles/colors.scss";
 @import "../../../styles/mixins.scss";
 
+
 .board-container {
     @include displayFlex(stretch, center);
     position: relative;
+    // WARNING: This height is used in Schedule.js for listHeight calculation
+    // If you change it, update BOARD_CONTAINER_HEIGHT constant in Schedule.js
     height: 114px;
+    width: 100%;
+    box-sizing: border-box;
     .schedule-item,
     .board {
         position: relative;
         z-index: 1;
-        width: 150px;
+        width: 100%;
         height: 100px;
         overflow: hidden;
         box-shadow: 0 2px 8px $shadow-box;
     }
     .schedule-item {
+        width: calc(100% - 10px);
         position: relative;
         display: inline-block;
         margin: 5px;

@@ -96,6 +96,7 @@ const SchedulePage = (props) => {
             </section>
         );
     }
+
     return (
         <>
             <section className="schedule-control-panel">

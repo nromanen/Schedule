@@ -19,6 +19,8 @@
 .groups-section {
     position: relative;
     margin: 0;
+    width: 100%;
+    box-sizing: border-box;
     padding-top: 15px;
     margin-right: 10px;
     display: flex;
@@ -28,6 +30,10 @@
     > div {
         overflow-x: auto !important;
         overflow-y: hidden !important;
+        scrollbar-width: none; /* Firefox */
+        &::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
     }
 }
 

@@ -134,8 +134,9 @@ const Schedule = (props) => {
         );
     }, [groups, groupId, allLessons, currentSemester, dragItemData, t, scheduleOperationLoading]);
 
-    // Calculate list height based on lessons count
-    const listHeight = allLessons.length * 80 + 50;
+    const BOARD_CONTAINER_HEIGHT = 114; // Must match .board-container height in ScheduleBoard.scss
+    const GROUP_TITLE_HEIGHT = 50;
+    const listHeight = allLessons.length * BOARD_CONTAINER_HEIGHT + GROUP_TITLE_HEIGHT;
 
     return (
         <>
