@@ -25,8 +25,6 @@ export const general = [
 export const tabsComponents = [
     { name: navigationNames.LESSON_PAGE, title: LESSON_PAGE_TITLE },
     { name: navigationNames.SCHEDULE_PAGE, title: COMMON_SCHEDULE_TITLE },
-    // { name: navigationNames.MERGE_ROLE_PAGE, title: MERGE_ROLE_PAGE_TITLE },
     { name: navigationNames.TEACHER_LESSONS, title: TEACHER_LESSONS_TITLE },
-    // { name: navigationNames.CHANGES, title: CHANGES_TITLE },
     { name: navigationNames.BUSY_ROOMS, title: BUSY_ROOMS_TITLE },
 ];

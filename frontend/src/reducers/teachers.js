@@ -62,7 +62,6 @@ const reducer = (
             return { ...state, disabledTeachers: [...action.teachers] };
         case actionTypes.SHOW_ALL_TEACHERS_SUCCESS:
         case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
-        case actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS:
             return { ...state, teachers: [...action.teachers] };
 
         default:

@@ -1,9 +1,12 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import BusyRoomsTable from './BusyRoomsTable';
-import i18n from '../../../i18n';
+import { render, screen } from '@testing-library/react';
 
-const props = {
+jest.mock('../TableItem/TableItem', () => (props) => <div data-testid="table-item" />);
+jest.mock('../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar', () => (props) => <div data-testid="schedule-sidebar" />);
+
+import BusyRoomsTable from './BusyRoomsTable';
+
+const getProps = () => ({
     days: ['MONDAY', 'THURSDAY', 'FRIDAY'],
     columnsSize: 'sm',
     classes: [
@@ -25,25 +28,14 @@ const props = {
                                 {
                                     lessons: [
                                         {
-                                            groups: [
-                                                {
-                                                    group_id: 31,
-                                                    group_name: '18 (106)',
-                                                },
-                                            ],
+                                            groups: [{ group_id: 31, group_name: '18 (106)' }],
                                             subject_for_site: 'Аналітична геометрія',
                                             lesson_type: 'LECTURE',
                                             teacher_for_site: 'Мироник',
                                         },
                                         {
-                                            groups: [
-                                                {
-                                                    group_id: 28,
-                                                    group_name: '19 (105)',
-                                                },
-                                            ],
-                                            subject_for_site:
-                                                'Актуальні питання історії та культури України',
+                                            groups: [{ group_id: 28, group_name: '19 (105)' }],
+                                            subject_for_site: 'Актуальні питання історії та культури України',
                                             lesson_type: 'PRACTICAL',
                                             teacher_for_site: 'Дробіна',
                                         },
@@ -58,63 +50,51 @@ const props = {
                                 },
                             ],
                             odd: [
-                                {
-                                    lessons: [],
-                                    class_id: 1,
-                                    class_name: '1',
-                                },
-                                {
-                                    lessons: [],
-                                    class_id: 2,
-                                    class_name: '2',
-                                },
+                                { lessons: [], class_id: 1, class_name: '1' },
+                                { lessons: [], class_id: 2, class_name: '2' },
                             ],
                         },
                     ],
                 },
             ],
             room_id: 51,
-            room_name: '1 к.  11 ауд',
+            room_name: '1 к. 11 ауд',
             room_type: 'практична',
         },
     ],
-    t: i18n.t,
-};
+});
 
 describe('<BusyRoomsTable />', () => {
-    it('should renders BusyRoomsTable with props', () => {
-        const wrapper = mount(<BusyRoomsTable {...props} />);
-        expect(wrapper.exists()).toBeTruthy();
-        expect(wrapper.find('.view-rooms')).toHaveLength(1);
-        wrapper.unmount();
+    it('should render BusyRoomsTable with props', () => {
+        const { container } = render(<BusyRoomsTable {...getProps()} />);
+        expect(container.querySelector('.view-rooms')).toBeInTheDocument();
     });
+
     it('should render correct room name and title', () => {
-        const wrapper = mount(<BusyRoomsTable {...props} />);
-        expect(wrapper.exists()).toBeTruthy();
-        expect(wrapper.find('.busy-room-title').prop('title')).toEqual('практична');
-        expect(wrapper.find('.busy-room-title').prop('children')).toEqual('1 к.  11 ауд');
-        wrapper.unmount();
+        render(<BusyRoomsTable {...getProps()} />);
+        const roomTitle = screen.getByTitle('практична');
+        expect(roomTitle).toBeInTheDocument();
+        expect(roomTitle).toHaveTextContent('1 к. 11 ауд');
     });
+
     describe('render table item', () => {
-        it('should render table item inside table', () => {
-            const wrapper = mount(<BusyRoomsTable {...props} />);
-            expect(wrapper.exists()).toBeTruthy();
-            expect(wrapper.find('TableItem')).toHaveLength(1);
-            wrapper.unmount();
+        it('should render table item when day matches schedule', () => {
+            render(<BusyRoomsTable {...getProps()} />);
+            expect(screen.getAllByTestId('table-item')).toHaveLength(1);
         });
-        it('should render table without item inside table', () => {
-            props.days.shift();
-            const wrapper = mount(<BusyRoomsTable {...props} />);
-            expect(wrapper.exists()).toBeTruthy();
-            expect(wrapper.find('TableItem')).toHaveLength(0);
-            wrapper.unmount();
+
+        it('should not render table item when no day matches schedule', () => {
+            const props = getProps();
+            props.days = ['THURSDAY', 'FRIDAY'];
+            render(<BusyRoomsTable {...props} />);
+            expect(screen.queryByTestId('table-item')).not.toBeInTheDocument();
         });
     });
-    it('should render empty view-rooms div', () => {
+
+    it('should render empty view-rooms when no busyRooms', () => {
+        const props = getProps();
         props.busyRooms = [];
-        const wrapper = mount(<BusyRoomsTable {...props} />);
-        expect(wrapper.exists()).toBeTruthy();
-        expect(wrapper.find('.view-rooms').prop('children')).toEqual([]);
-        wrapper.unmount();
+        const { container } = render(<BusyRoomsTable {...props} />);
+        expect(container.querySelector('.view-rooms').children.length).toBe(0);
     });
 });

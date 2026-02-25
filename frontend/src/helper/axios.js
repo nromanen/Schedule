@@ -30,7 +30,8 @@ instance.interceptors.response.use(
         if (error.response?.status === 401 || error.response?.status === 403) {
             localStorage.removeItem('token');
             localStorage.removeItem('userRole');
-            window.location.href = '/login';
+            // window.location.href = '/login';
+            window.location.href = `${process.env.REACT_APP_BASE_PATH || ''}/login`;
         }
         return Promise.reject(error);
     }

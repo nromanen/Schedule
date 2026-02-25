@@ -32,6 +32,7 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                     "JOIN FETCH l.semester sem " +
                     "LEFT JOIN FETCH r.type " +
                     "LEFT JOIN FETCH t.department ";
+
     private static final String SELECT_COUNT = "SELECT COUNT(s.id) FROM Schedule s " +
             "WHERE s.lesson.semester.id = :semesterId " +
             "AND s.dayOfWeek = :dayOfWeek " +

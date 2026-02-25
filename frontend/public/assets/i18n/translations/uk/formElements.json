@@ -111,7 +111,6 @@
     "week_free_rooms": "Оберіть тиждень",
     "day_free_rooms": "Оберіть день",
     "class_free_rooms": "Оберіть номер пари",
-    "merge_button": "З'єднати",
     "max_count_classes_reached": "Ви створили максимальну кількість пар",
     "change_password_form_title": "Змінити пароль",
     "login_via_google": "Увійти із Google",
@@ -135,5 +134,6 @@
     "reset_password_helper_text": "Просто введіть свою електронну адресу нижче, і ми надішлемо вам посилання для скидання пароля!",
     "form_group_label_after": "Виберіть після якої групи",
     "students_uppercase": "Студентів",
-    "room_label_after": "Після аудиторії"
+    "room_label_after": "Після аудиторії",
+    "without_department": "Без кафедри"
 }

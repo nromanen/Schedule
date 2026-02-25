@@ -11,6 +11,7 @@ export const renderAutocompleteField = ({
                                             getOptionLabel,
                                             meta: { touched, error },
                                             className,
+                                            getItemTitle,
                                             ...custom
                                         }) => {
     return (

@@ -110,7 +110,7 @@ const GroupSchedulePage = (props) => {
         );
 
     return (
-        <>
+        <div className="schedule_page-container">
             {getTop()}
             {loading ? (
                 <section className="centered-container">
@@ -119,7 +119,7 @@ const GroupSchedulePage = (props) => {
             ) : (
                 renderSchedule({ ...props, t })
             )}
-        </>
+        </div>
     );
 };
 

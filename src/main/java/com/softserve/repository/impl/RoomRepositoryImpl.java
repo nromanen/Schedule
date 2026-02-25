@@ -98,6 +98,33 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     private static final String GET_MAX_SORT_ORDER =
             "SELECT max(r.sortOrder) FROM Room r";
 
+    private static final String OVERLAPPING_SEMESTERS_FILTER =
+            "s.lesson.semester.id IN " +
+                    "(SELECT sem.id FROM Semester sem " +
+                    "WHERE sem.startDay <= (SELECT s2.endDay FROM Semester s2 WHERE s2.id = :semesterId) " +
+                    "AND sem.endDay >= (SELECT s2.startDay FROM Semester s2 WHERE s2.id = :semesterId))";
+
+    private static final String GET_ALL_ROOMS_WITH_AVAILABILITY =
+            "SELECT r, CASE WHEN r.id IN " +
+                    "(SELECT room.id FROM Schedule s " +
+                    "JOIN s.room room " +
+                    "WHERE " + OVERLAPPING_SEMESTERS_FILTER + " " +
+                    "AND s.dayOfWeek = :dayOfWeek " +
+                    "AND s.period.id = :classId) " +
+                    "THEN false ELSE true END " +
+                    "FROM Room r WHERE r.disable = false";
+
+    private static final String GET_ALL_ROOMS_WITH_AVAILABILITY_2 =
+            "SELECT r, CASE WHEN r.id IN " +
+                    "(SELECT room.id FROM Schedule s " +
+                    "JOIN s.room room " +
+                    "WHERE " + OVERLAPPING_SEMESTERS_FILTER + " " +
+                    "AND s.dayOfWeek = :dayOfWeek " +
+                    "AND s.period.id = :classId " +
+                    "AND (s.evenOdd = :evenOdd OR s.evenOdd = 'WEEKLY')) " +
+                    "THEN false ELSE true END " +
+                    "FROM Room r WHERE r.disable = false";
+
     @Override
     public List<Room> getAll() {
         log.info("In getAll()");
@@ -173,6 +200,28 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
     }
 
     @Override
+    public List<Object[]> getAllRoomsWithAvailability(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
+        log.info("Enter into getAllRoomsWithAvailability with semesterId = {}, dayOfWeek = {}, evenOdd = {}, classId = {}",
+                semesterId, dayOfWeek, evenOdd, classId);
+        if (evenOdd == EvenOdd.WEEKLY) {
+            return getSession()
+                    .createQuery(GET_ALL_ROOMS_WITH_AVAILABILITY, Object[].class)
+                    .setParameter(Constants.SEMESTER_ID, semesterId)
+                    .setParameter(Constants.DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(Constants.CLASS_ID, classId)
+                    .getResultList();
+        } else {
+            return getSession()
+                    .createQuery(GET_ALL_ROOMS_WITH_AVAILABILITY_2, Object[].class)
+                    .setParameter(Constants.SEMESTER_ID, semesterId)
+                    .setParameter(Constants.DAY_OF_WEEK, dayOfWeek)
+                    .setParameter(Constants.CLASS_ID, classId)
+                    .setParameter(Constants.EVEN_ODD, evenOdd)
+                    .getResultList();
+        }
+    }
+
+    @Override
     public Long countRoomDuplicates(Room room) {
         log.info("In countRoomDuplicates(room = [{}])", room);
         return getSession()
@@ -227,3 +276,4 @@ public class RoomRepositoryImpl extends BasicRepositoryImpl<Room, Long> implemen
         log.debug("Updated sortOrder of {} rooms", updated);
     }
 }
+

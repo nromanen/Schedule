@@ -1,7 +1,6 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import {GroupTitle} from './GroupTitle';
-import i18n from '../../../i18n';
+import { render, screen } from '@testing-library/react';
+import { GroupTitle } from './GroupTitle';
 
 const props = {
     lessonArray: [
@@ -15,14 +14,13 @@ const props = {
             ],
         },
     ],
-    t: i18n.t,
 };
 
 describe('GroupTitle', () => {
     it('renders GroupTitle with props', () => {
-        const wrapper = mount(<GroupTitle {...props} />);
-        expect(wrapper.exists()).toBeTruthy();
-        expect(wrapper.find('.group-list')).toHaveLength(1);
-        wrapper.unmount();
+        const { container } = render(<GroupTitle {...props} />);
+        expect(container.querySelectorAll('.group-list')).toHaveLength(1);
+        expect(screen.getByTitle('teacher / Web-дизайн')).toBeInTheDocument();
+        expect(screen.getByText('152')).toBeInTheDocument();
     });
 });

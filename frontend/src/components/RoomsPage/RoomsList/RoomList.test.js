@@ -1,7 +1,24 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import {CircularProgress} from '@material-ui/core';
+import { render, screen } from '@testing-library/react';
 import RoomList from './RoomsList';
+
+jest.mock('./RoomCard/RoomCard', () => {
+    return function MockRoomCard({ room }) {
+        return <div data-testid="room-card">{room.name}</div>;
+    };
+});
+
+jest.mock('../../../share/NotFound/NotFound', () => {
+    return function MockNotFound() {
+        return <div data-testid="not-found" />;
+    };
+});
+
+jest.mock('../../../share/DraggableCard/DraggableCard', () => ({
+    DraggableCard: function MockDraggableCard({ children }) {
+        return <div data-testid="draggable-card">{children}</div>;
+    },
+}));
 
 const props = {
     loading: false,
@@ -22,18 +39,17 @@ const props = {
 
 describe('behavior of RoomList Component', () => {
     it('should render loading if "loading:true"', () => {
-        const wrapper = mount(<RoomList {...props} loading />);
-        expect(wrapper.find(CircularProgress)).toHaveLength(1);
-        wrapper.unmount();
+        render(<RoomList {...props} loading />);
+        expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
+
     it('should render NotFound component if visible items are empty', () => {
-        const wrapper = mount(<RoomList {...props} loading={false} rooms={[]} />);
-        expect(wrapper.find('NotFound')).toHaveLength(1);
-        wrapper.unmount();
+        render(<RoomList {...props} loading={false} rooms={[]} />);
+        expect(screen.getByTestId('not-found')).toBeInTheDocument();
     });
+
     it('should render RoomCard component if visible items are not empty', () => {
-        const wrapper = mount(<RoomList {...props} />);
-        expect(wrapper.find('RoomCard')).toHaveLength(1);
-        wrapper.unmount();
+        render(<RoomList {...props} />);
+        expect(screen.getByTestId('room-card')).toBeInTheDocument();
     });
 });

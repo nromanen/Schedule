@@ -8,7 +8,6 @@ import {
     DISABLED_TEACHERS_URL,
     PUBLIC_TEACHER_URL,
     TEACHER_URL,
-    TEACHERS_WITHOUT_ACCOUNT_URL,
 } from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -26,7 +25,6 @@ import * as actionTypes from '../actions/actionsType';
 import {
     addTeacherSuccess,
     getAllTeachersByDepartmentId,
-    getTeacherWithoutAccountSuccess,
     selectTeacherCard,
     updateTeacherCardSuccess,
 } from '../actions/teachers';
@@ -101,7 +99,7 @@ export function* updateTeacher({ teacher }) {
     const result = { ...teacher };
 
     if (isEmpty(teacher.department) || !teacher.department?.id) {
-        delete result.department;
+        result.department = null;
     }
     try {
         const { data } = yield call(axiosCall, TEACHER_URL, PUT, result);
@@ -153,16 +151,6 @@ export function* getAllPublicTeachers() {
     }
 }
 
-export function* getTeachersWithoutAccount() {
-    try {
-        const { data } = yield call(axiosCall, TEACHERS_WITHOUT_ACCOUNT_URL, GET);
-
-        yield put(getTeacherWithoutAccountSuccess(data));
-    } catch (error) {
-        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
-    }
-}
-
 export function* getAllPublicTeachersByDepartment({ departmentId }) {
     const requestUrl = `${DEPARTMENT_URL}/${departmentId}/${TEACHER_URL}`;
     try {
@@ -177,7 +165,6 @@ export default function* watchTeachers() {
     yield takeLatest(actionTypes.DELETE_TEACHER_START, removeTeacher);
     yield takeLatest(actionTypes.SHOW_ALL_TEACHERS_START, getEnabledTeachers);
     yield takeLatest(actionTypes.SET_DISABLED_TEACHERS_START, getDisabledTeachers);
-    yield takeLatest(actionTypes.GET_TEACHERS_WITHOUT_ACCOUNT_START, getTeachersWithoutAccount);
     yield takeLatest(actionTypes.ADD_TEACHER_START, createTeacher);
     yield takeLatest(actionTypes.UPDATE_TEACHER_START, updateTeacher);
     yield takeLatest(actionTypes.HANDLE_TEACHER_START, handleTeacher);

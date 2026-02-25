@@ -117,7 +117,7 @@
     }
   }
   .possible { background-color: $warning-color; } // Partially available
-  .available { background-color: $green1; }       // Fully available
+  //.available { background-color: $green1; }       // Fully available
   .allow { background-color: $green2; }           // Allowed
   .not-allow {                                    // Not available
     background-color: $red2;

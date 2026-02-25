@@ -8,6 +8,7 @@ import GroupsList from '../../containers/GroupSchedulePage/GroupsList';
 import SemestersList from '../../containers/GroupSchedulePage/SemestersList';
 import TeachersList from '../../containers/GroupSchedulePage/TeachersList';
 import DepartmentsList from '../../containers/GroupSchedulePage/DepartmentsList';
+import { userRoles } from '../../constants/userRoles';
 
 const SchedulePageForm = (props) => {
     const {
@@ -21,6 +22,7 @@ const SchedulePageForm = (props) => {
         group,
         teacher,
         department,
+        userRole,
     } = props;
     const { t } = useTranslation('common');
 
@@ -29,8 +31,13 @@ const SchedulePageForm = (props) => {
     }, [semester, group, teacher, department]);
 
     return (
-        <form onSubmit={handleSubmit} className="schedule-form">
-            <SemestersList handleSubmit={handleFormSubmit} />
+        <form
+            onSubmit={handleSubmit}
+            className={`schedule-form ${userRole !== userRoles.MANAGER ? 'no-semester' : ''}`}
+        >
+            {userRole === userRoles.MANAGER && (
+                <SemestersList handleSubmit={handleFormSubmit} handleChange={change} />
+            )}
             <GroupsList handleChange={change} />
             <TeachersList handleChange={change} />
             <DepartmentsList handleChange={change} />
@@ -41,7 +48,7 @@ const SchedulePageForm = (props) => {
                 disabled={pristine || submitting}
                 className="schedule-form_submit"
             >
-                <MdPlayArrow title={t(TEACHER_SCHEDULE_LABEL)} className="svg-btn" />
+                {t('preview')}
             </Button>
         </form>
     );

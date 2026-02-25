@@ -1,7 +1,12 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-
+import { render, screen } from '@testing-library/react';
 import LessonsList from './LessonsList';
+
+jest.mock('./LessonsCard', () => {
+    return function MockLessonsCard({ lesson }) {
+        return <div data-testid="lessons-card">{lesson.subjectForSite}</div>;
+    };
+});
 
 const props = {
     lessons: [
@@ -37,7 +42,7 @@ const props = {
 
 describe('behavior of LessonsList Component', () => {
     it('should render LessonsCard component if lessons exists', () => {
-        const wrapper = shallow(<LessonsList {...props} />);
-        expect(wrapper.find('LessonsCard')).toHaveLength(1);
+        render(<LessonsList {...props} />);
+        expect(screen.getAllByTestId('lessons-card')).toHaveLength(1);
     });
 });

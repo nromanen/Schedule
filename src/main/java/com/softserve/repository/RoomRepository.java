@@ -47,6 +47,17 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
     List<Room> getAvailableRoomsForSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId);
 
     /**
+     * Returns all enabled rooms with availability status, considering overlapping semesters.
+     *
+     * @param semesterId the id of the semester
+     * @param dayOfWeek  the day of the week
+     * @param evenOdd    the type of the week
+     * @param classId    the id of the class
+     * @return list of Object[] where [0] is Room and [1] is Boolean (available)
+     */
+    List<Object[]> getAllRoomsWithAvailability(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId);
+
+    /**
      * Returns the number of duplicates of given room.
      *
      * @param room the room entity that needs to be count
@@ -54,9 +65,6 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
      */
     Long countRoomDuplicates(Room room);
 
-    /**
-     * {@inheritDoc}
-     */
     List<Room> getDisabled();
 
     /**
@@ -91,3 +99,4 @@ public interface RoomRepository extends BasicRepository<Room, Long> {
     void shiftSortOrderRange(Integer lowerBound, Integer upperBound, Direction direction);
 
 }
+

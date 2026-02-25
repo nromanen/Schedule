@@ -1,5 +1,6 @@
 const esModules = ['react-icons'].join('|');
 module.exports = {
+    testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['./src/setupTests.js'],
     transform: {
         '^.+\\.js$': 'babel-jest',

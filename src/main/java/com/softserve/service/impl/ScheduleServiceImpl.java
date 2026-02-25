@@ -731,34 +731,46 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     @Transactional
-    public ScheduleDTO changeRoom(Long scheduleId, Long roomId) {
+    public List<ScheduleDTO> changeRoom(Long scheduleId, Long roomId) {
         log.info("In changeRoom(scheduleId = [{}], roomId = [{}])", scheduleId, roomId);
 
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new EntityNotFoundException(Schedule.class, "id", scheduleId.toString()));
 
-        // If room is the same - return without changes
         if (schedule.getRoom().getId().equals(roomId)) {
-            return scheduleMapper.scheduleToScheduleDTO(schedule);
+            return List.of(scheduleMapper.scheduleToScheduleDTO(schedule));
         }
 
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new EntityNotFoundException(Room.class, "id", roomId.toString()));
 
-        schedule.setRoom(room);
-        Schedule updated = scheduleRepository.update(schedule);
+        List<Schedule> schedulesToUpdate;
+        if (schedule.getLesson().isGrouped()) {
+            schedulesToUpdate = getSchedulesForGroupedLessons(schedule);
+        } else {
+            schedulesToUpdate = List.of(schedule);
+        }
 
-        // Evict caches after room change
-        Lesson lesson = schedule.getLesson();
-        cacheService.evictCachesForSchedule(
-                lesson.getSemester().getId(),
-                lesson.getGroup().getId(),
-                lesson.getTeacher().getId()
-        );
+        List<Schedule> updatedSchedules = new ArrayList<>();
+        for (Schedule s : schedulesToUpdate) {
+            s.setRoom(room);
+            updatedSchedules.add(scheduleRepository.update(s));
+        }
 
-        return scheduleMapper.scheduleToScheduleDTO(updated);
+        Long semesterId = schedule.getLesson().getSemester().getId();
+        for (Schedule s : updatedSchedules) {
+            Lesson lesson = s.getLesson();
+            cacheService.evictCachesForSchedule(
+                    semesterId,
+                    lesson.getGroup().getId(),
+                    lesson.getTeacher().getId()
+            );
+        }
+
+        return updatedSchedules.stream()
+                .map(scheduleMapper::scheduleToScheduleDTO)
+                .toList();
     }
-
     @Override
     @Transactional
     public List<Long> deleteScheduleById(Long id) {

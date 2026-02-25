@@ -34,8 +34,8 @@ const ScheduleLessonsList = (props) => {
     };
 
     const groupFinderHandle = (groupIdProp) => {
-        if (groupIdProp) return groups.find((group) => group.id === groupIdProp);
-        return '';
+        if (groupIdProp) return groups.find((group) => group.id === +groupIdProp);
+        return null;
     };
 
     useEffect(() => {

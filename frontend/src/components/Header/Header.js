@@ -7,7 +7,7 @@ import {
     FaClipboardList,
     FaClock,
     FaEye,
-    FaEyeSlash,
+    FaEyeSlash, FaFileExcel,
     FaHome,
     FaRunning,
     FaSignOutAlt,
@@ -61,6 +61,7 @@ import {getCurrentSemesterRequsted} from '../../actions/schedule';
 import {axiosCall} from "../../services/axios";
 import {DELETE, POST} from "../../constants/methods";
 import CustomDialog from "../../containers/Dialogs/CustomDialog";
+import {EXPORT_SCHEDULE_XLSX_URL} from "../../constants/axios";
 
 const StyledMenu = withStyles({
     paper: {
@@ -159,13 +160,38 @@ const Header = (props) => {
         setCacheResultDialog({ open: false, success: true });
     };
 
+    const handleExportXlsx = () => {
+        handleCloseUserMenu();
+        if (!currentSemester?.id) return;
+        axiosCall(`${EXPORT_SCHEDULE_XLSX_URL}${currentSemester.id}`, 'GET', null, {
+            responseType: 'blob',
+        })
+            .then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `schedule_${currentSemester.description}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(console.error);
+    };
+
     const getUserMenu = (role) => {
         let userMenu = null;
         if (isNil(role)) {
             return (
-                <Link to={LOGIN_LINK} className="navLinks">
+                <Button
+                    component={Link}
+                    to={LOGIN_LINK}
+                    variant="outlined"
+                    color="default"
+                >
+                    <FaSignOutAlt style={{ marginRight: '6px' }} />
                     {t(LOGIN_TITLE)}
-                </Link>
+                </Button>
             );
         }
         switch (role) {
@@ -175,8 +201,7 @@ const Header = (props) => {
                         <Button
                             aria-controls="customized-menu"
                             aria-haspopup="true"
-                            variant="contained"
-                            color="primary"
+                            variant="outlined"
                             onClick={handleClickUserMenu}
                         >
                             {localStorage.getItem('email')}
@@ -233,6 +258,12 @@ const Header = (props) => {
                                     {schedulePublished ? <FaEyeSlash fontSize="normal" /> : <FaEye fontSize="normal" />}
                                 </ListItemIcon>
                                 {schedulePublished ? t('unpublish_schedule') : t('publish_schedule')}
+                            </StyledMenuItem>
+                            <StyledMenuItem onClick={handleExportXlsx} disabled={!currentSemester?.id || loading}>
+                                <ListItemIcon>
+                                    <FaFileExcel fontSize="normal" />
+                                </ListItemIcon>
+                                {t('export_schedule_xlsx')}
                             </StyledMenuItem>
                             <StyledMenuItem onClick={handleClearCacheClick} disabled={cacheClearing}>
                                 <ListItemIcon>
@@ -627,6 +658,18 @@ const Header = (props) => {
                 </nav>
             </header>
 
+            {userRole === roles.MANAGER &&
+                currentSemester?.id &&
+                props.defaultSemester?.id &&
+                currentSemester.id !== props.defaultSemester.id && (
+                    <div className="schedule-warning-banner">
+                        {t('schedule_not_default_warning', {
+                            current: currentSemester.description,
+                            default: props.defaultSemester.description,
+                        })}
+                    </div>
+                )}
+
             <CustomDialog
                 open={cacheDialogOpen}
                 onClose={handleClearCacheCancel}
@@ -667,6 +710,7 @@ const Header = (props) => {
 const mapStateToProps = (state) => ({
     classScheduler: state.classActions.classScheduler,
     currentSemester: state.schedule.currentSemester,
+    defaultSemester: state.schedule.defaultSemester,
     loading: state.loadingIndicator.semesterLoading,
 });
 

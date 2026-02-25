@@ -62,16 +62,6 @@ export const showAllTeachersStart = (teachers) => ({
     teachers,
 });
 
-export const getTeacherWithoutAccountStart = (teachers) => ({
-    type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_START,
-    teachers,
-});
-
-export const getTeacherWithoutAccountSuccess = (teachers) => ({
-    type: actionsType.GET_TEACHERS_WITHOUT_ACCOUNT_SUCCESS,
-    teachers,
-});
-
 export const getAllPublicTeachersByDepartmentStart = (departmentId) => ({
     type: actionsType.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
     departmentId,

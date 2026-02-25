@@ -82,7 +82,10 @@ const TeachersPage = (props) => {
     };
 
     const teacherSubmit = (values) => {
-        const sendData = { ...values, department };
+        const sendData = {
+            ...values,
+            department: values.department ? department : null,
+        };
 
         handleTeacher(sendData);
         clearDepartment();

@@ -8,6 +8,7 @@ const mapStateToProps = (state) => ({
     group: state.schedule.scheduleGroup,
     teacher: state.schedule.scheduleTeacher,
     department: state.schedule.scheduleDepartment,
+    userRole: state.auth.role,
 });
 
 export default connect(mapStateToProps)(

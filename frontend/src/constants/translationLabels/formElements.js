@@ -9,7 +9,6 @@ export const FORM_CLASS_TO_LABEL = 'formElements:class_to_label';
 export const FORM_SEMESTER_LABEL = 'formElements:semester_label';
 export const FORM_STUDENT_ADD_LABEL = 'formElements:student_add_label';
 export const FORM_SHOW_STUDENTS = 'formElements:show_students';
-export const FORM_MERGE_BUTTON = 'formElements:merge_button';
 export const FORM_SHOW_GROUPS = 'formElements:show_groups';
 export const FORM_STUDENT_LABEL = 'formElements:student_a_label';
 export const FORM_SUBJECT_LABEL = 'formElements:subject_label';

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -120,14 +121,15 @@ public class RoomServiceImpl implements RoomService {
     public List<RoomForScheduleInfoDTO> getAllRoomsForCreatingSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId) {
         log.info("Getting all rooms for creating schedule");
 
-        List<Room> availableRooms = roomRepository.getAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
-        List<Room> notAvailableRooms = roomRepository.getNotAvailableRoomsForSchedule(semesterId, dayOfWeek, evenOdd, classId);
+        List<Object[]> rows = roomRepository.getAllRoomsWithAvailability(semesterId, dayOfWeek, evenOdd, classId);
 
-        List<RoomForScheduleInfoDTO> result = roomForScheduleInfoMapper.toRoomForScheduleDTOList(availableRooms);
-        result.forEach(room -> room.setAvailable(true));
-        result.addAll(roomForScheduleInfoMapper.toRoomForScheduleDTOList(notAvailableRooms));
-
-        return result;
+        return rows.stream().map(row -> {
+            Room room = (Room) row[0];
+            boolean available = (boolean) row[1];
+            RoomForScheduleInfoDTO dto = roomForScheduleInfoMapper.roomToRoomForScheduleInfoDTO(room);
+            dto.setAvailable(available);
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @Override

@@ -182,7 +182,7 @@ const LessonForm = (props) => {
                                 id="grouped"
                                 name="grouped"
                                 label={t(FORM_GROUPED_LABEL)}
-                                labelPlacement="Top"
+                                labelPlacement="top"
                                 defaultValue={checked}
                                 component={renderCheckboxField}
                                 checked={checked}

@@ -68,9 +68,6 @@ public class UserServiceImpl implements UserService {
         this.mailService = mailService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User getById(Long id) {
         log.info("Enter into getById method with id {}", id);
@@ -79,9 +76,6 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<User> getAll() {
         log.info("Enter into getAll method");
@@ -121,9 +115,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.update(object);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @CacheEvict(value = "userByEmail", key = "#object.email")
     public User delete(User object) {
@@ -131,9 +122,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.delete(object);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Cacheable(value = "userByEmail", key = "#email")
     public User findByEmail(String email) {
@@ -149,9 +137,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User findByToken(String token) {
         log.info("Enter into findByToken method with token:{}", token);
@@ -160,18 +145,12 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User registration(User user) {
         log.info("Enter into registration method  with email:{}", user.getEmail());
         return registration(user, MessageFormat.format(REGISTRATION_MESSAGE, user.getEmail()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public User automaticRegistration(String email, Role role) {
@@ -183,9 +162,6 @@ public class UserServiceImpl implements UserService {
         return registration(user, MessageFormat.format(AUTOMATIC_REGISTRATION_MESSAGE, user.getEmail()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void resetPassword(String email) {
         log.info("Enter into resetPassword method  with email:{}", email);
@@ -207,9 +183,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public User createSocialUser(OAuth2User oAuth2User) {
         log.info("Enter into emailExists method with OAuth2User = {}", oAuth2User);
@@ -217,18 +190,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email).orElseGet(() -> saveSocialUser(email));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Optional<User> findSocialUser(String email) {
         log.info("Enter into findSocialUser method with email = {}", email);
         return userRepository.findByEmail(email);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<User> getAllUsersWithRoleUser() {
         log.info("Enter into getAllUsersWithRoleUser of UserServiceImpl");
@@ -274,13 +241,11 @@ public class UserServiceImpl implements UserService {
         mailService.send(user.getEmail(), subject, message);
     }
 
-    // method for checking email in database
     private boolean emailExists(String email) {
         log.info("Enter into emailExists method with email:{}", email);
         return userRepository.findByEmail(email).isPresent();
     }
 
-    //check if password valid return true, else - false
     private boolean isPasswordValid(String password) {
         log.info("Enter into isPasswordValid method with password:{}", password);
         return (isNotBlank(password) && isMixedCase(password) && containsAny(password, NUMBERS)

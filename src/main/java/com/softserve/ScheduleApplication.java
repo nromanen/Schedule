@@ -11,5 +11,8 @@ public class ScheduleApplication {
     public static void main(String[] args) {
         SpringApplication.run(ScheduleApplication.class, args);
     }
+//    ./gradlew bootRun --args='--server.port=8080 --server.servlet.context-path=/otherdep /
+//    --spring.profiles.active=local --app.backend.url=http://localhost:8080/otherdep/'
+
 }
 

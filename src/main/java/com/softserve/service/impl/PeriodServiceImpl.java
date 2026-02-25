@@ -83,18 +83,22 @@ public class PeriodServiceImpl implements PeriodService {
         return periodMapper.convertToDtoList(savedPeriods);
     }
 
+    private void validatePeriodExists(List<Period> periods, Long id) {
+        periods.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException(Period.class, "id", id.toString()));
+    }
     @Override
     @CacheEvict(value = "allPeriods", allEntries = true)
     public PeriodDTO update(PeriodDTO periodDTO) {
-        log.info("Updating period: {}", periodDTO);
-
         validateTime(periodDTO.getStartTime(), periodDTO.getEndTime());
-        findPeriodById(periodDTO.getId());
+
+        List<Period> existingPeriods = periodRepository.getAll();
+        validatePeriodExists(existingPeriods, periodDTO.getId());
         validateNameUniqueness(periodDTO.getName(), periodDTO.getId());
 
         Period periodToUpdate = periodMapper.convertToEntity(periodDTO);
-        List<Period> existingPeriods = periodRepository.getAll();
-
         validateNoConflicts(existingPeriods, periodToUpdate);
 
         Period updated = periodRepository.update(periodToUpdate);

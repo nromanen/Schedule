@@ -1,7 +1,12 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
-import {CircularProgress} from '@material-ui/core';
+import { render, screen } from '@testing-library/react';
 import Lessons from './Lessons';
+
+jest.mock('./LessonsList/LessonsList', () => {
+    return function MockLessonsList() {
+        return <div data-testid="lessons-list" />;
+    };
+});
 
 const onClickOpen = jest.fn();
 const onSelectLesson = jest.fn();
@@ -17,7 +22,6 @@ const props = {
         id: 4,
         title: '123',
     },
-
     visibleItems: [
         {
             id: 6256,
@@ -51,18 +55,17 @@ const props = {
 
 describe('behavior of Lessons Component', () => {
     it('should render loading if "loading:true"', () => {
-        const wrapper = mount(<Lessons {...props} loading />);
-        expect(wrapper.find(CircularProgress)).toHaveLength(1);
-        wrapper.unmount();
+        render(<Lessons {...props} loading />);
+        expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 
     it('should render h2 text if visible items are empty', () => {
-        const wrapper = mount(<Lessons {...props} loading={false} visibleItems={[]} />);
-        expect(wrapper.find('h2')).toHaveLength(1);
+        render(<Lessons {...props} loading={false} visibleItems={[]} />);
+        expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();
     });
 
     it('should render LessonsList component if visible items are not empty', () => {
-        const wrapper = shallow(<Lessons {...props} loading={false} />);
-        expect(wrapper.find('LessonsList')).toHaveLength(1);
+        render(<Lessons {...props} loading={false} />);
+        expect(screen.getByTestId('lessons-list')).toBeInTheDocument();
     });
 });

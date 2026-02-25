@@ -76,7 +76,6 @@ const Schedule = (props) => {
     const handleChangeSchedule = (roomId, actionData) => {
         const { item, type } = actionData;
         setIsOpenScheduleDialog(false);
-        setScheduleOperationLoading(true);
         if (type === actionType.UPDATED) {
             editRoomItemToSchedule({ itemId: item.id, roomId });
         } else {

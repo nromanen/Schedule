@@ -35,6 +35,7 @@ public class TeacherController {
     }
 
     @GetMapping("/teachers/{id}")
+//    @GetMapping("/teachers/{id:\\d+}")
     @Operation(summary = "Get teacher by id")
     public ResponseEntity<TeacherDTO> getById(@PathVariable Long id) {
         log.info("Getting teacher by id: {}", id);

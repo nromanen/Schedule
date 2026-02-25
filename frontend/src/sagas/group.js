@@ -5,7 +5,7 @@ import * as actionTypes from '../actions/actionsType';
 import {setLoading} from '../actions/loadingIndicator';
 import {createDynamicMessage, createErrorMessage, createMessage} from '../utils/sagaUtils';
 import {setOpenErrorSnackbar, setOpenInfoSnackbar, setOpenSuccessSnackbar,} from '../actions/snackbar';
-import {DISABLED_GROUPS_URL, GROUP_URL, GROUPS_AFTER_URL, GROUPS_URL, SEMESTERS_URL,} from '../constants/axios';
+import {DISABLED_GROUPS_URL, GROUP_URL, GROUPS_AFTER_URL, GROUPS_URL, SEMESTERS_URL, GROUPS_FOR_CURRENT_SCHEDULE,} from '../constants/axios';
 import {DELETE, POST, PUT} from '../constants/methods';
 import {axiosCall} from '../services/axios';
 import {FORM_CHOSEN_SEMESTER_LABEL} from '../constants/translationLabels/formElements';
@@ -24,6 +24,7 @@ import {
     selectGroupSuccess,
     showAllGroupsSuccess,
     updateGroupSuccess,
+    setScheduleGroups,
 } from '../actions';
 import {GROUP} from '../constants/names';
 import {handleFormSubmit} from '../helper/handleFormSubmit';
@@ -35,6 +36,18 @@ function* getGroups(url) {
         yield put(setLoading(true));
         const res = yield call(axiosCall, url);
         yield put(showAllGroupsSuccess(res.data));
+    } catch (err) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(err)));
+    } finally {
+        yield put(setLoading(false));
+    }
+}
+
+function* getGroupsForCurrentSemester() {
+    try {
+        yield put(setLoading(true));
+        const res = yield call(axiosCall, GROUPS_FOR_CURRENT_SCHEDULE);
+        yield put(setScheduleGroups(res.data));
     } catch (err) {
         yield put(setOpenErrorSnackbar(createErrorMessage(err)));
     } finally {
@@ -174,4 +187,5 @@ export default function* groupWatcher() {
     yield takeLatest(actionTypes.GET_DISABLED_GROUPS_START, getDisabledGroups);
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_GROUPS_START, getAllPublicGroups);
     yield takeEvery(actionTypes.TOGGLE_DISABLED_STATUS_GROUP, toggleDisabledGroup);
+    yield takeLatest(actionTypes.GET_GROUPS_FOR_CURRENT_SEMESTER_START, getGroupsForCurrentSemester);
 }

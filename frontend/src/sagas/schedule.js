@@ -3,7 +3,7 @@ import {isEmpty} from 'lodash';
 import {addItemToSchedule, setLoading, setScheduleLoading, setSemesterLoading} from '../actions';
 import * as actionTypes from '../actions/actionsType';
 import {setMainScheduleLoading, setScheduleOperationLoading} from '../actions/loadingIndicator';
-import { setScheduleNotPublished, setScheduleDepartment } from '../actions/schedule';
+import {setScheduleNotPublished, setScheduleDepartment, updateScheduleItemSuccess} from '../actions/schedule';
 import {
     CLEAR_SCHEDULE_URL,
     CURRENT_SEMESTER_URL,
@@ -177,10 +177,19 @@ export function* clearSchedule({ semesterId }) {
 export function* deleteScheduleItem({ itemId }) {
     try {
         yield put(setScheduleOperationLoading(true));
+
+        const items = yield select((state) => state.schedule.items);
+        const itemToDelete = items.find((item) => item.id === itemId);
+        const groupId = itemToDelete?.lesson?.group?.id;
+
         const requestUrl = `${SCHEDULE_ITEMS_URL}/${itemId}`;
         const { data } = yield call(axiosCall, requestUrl, DELETE);
         for (const deletedId of data) {
             yield put(deleteScheduleItemSuccess(deletedId));
+        }
+
+        if (groupId) {
+            yield put({ type: actionTypes.GET_LESSONS_CARDS_START, id: groupId });
         }
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
@@ -191,19 +200,23 @@ export function* deleteScheduleItem({ itemId }) {
 
 export function* editRoomItemToSchedule({ item }) {
     try {
+        yield put(setScheduleOperationLoading(true));
         const { roomId, itemId } = item;
         const requestUrl = `${SCHEDULE_ITEM_ROOM_CHANGE}?roomId=${roomId}&scheduleId=${itemId}`;
-        yield call(axiosCall, requestUrl, PUT);
+        const { data } = yield call(axiosCall, requestUrl, PUT);
+        for (const schedule of data) {
+            yield put(updateScheduleItemSuccess(schedule));
+        }
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
             COMMON_SCHEDULE_TITLE,
             UPDATED_LABEL,
         );
         yield put(setOpenSuccessSnackbar(message));
-        yield call(getScheduleItems);
-        // yield call(forceRefreshScheduleItems);
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setScheduleOperationLoading(false));
     }
 }
 

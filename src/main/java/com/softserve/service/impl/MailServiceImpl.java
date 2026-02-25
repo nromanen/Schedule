@@ -6,8 +6,6 @@ import com.softserve.service.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -18,7 +16,6 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
-import jakarta.annotation.PostConstruct;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Multipart;
@@ -32,34 +29,21 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Service
-@PropertySource("classpath:mail.properties")
 @Slf4j
 public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
-    private final Environment environment;
     private final SpringTemplateEngine springTemplateEngine;
-    @Value("${spring.mail.username}")
-    private String username;
-    @Value("${mail.enabled:true}")
-    private boolean enabled;
+    @Value("${app.mail.sender}")
     private String credentialsUsername;
+    @Value("${app.mail.enabled:true}")
+    private boolean enabled;
 
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender,
-                           Environment environment,
                            SpringTemplateEngine springTemplateEngine) {
         this.mailSender = mailSender;
-        this.environment = environment;
         this.springTemplateEngine = springTemplateEngine;
-    }
-
-    @PostConstruct
-    private void postConstruct() {
-        credentialsUsername = environment.getProperty(username);
-        if (credentialsUsername == null) {
-            credentialsUsername = System.getenv("HEROKU_MAIL_USERNAME");
-        }
     }
 
     @Async

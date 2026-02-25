@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount} from 'enzyme';
+import { render } from '@testing-library/react';
 import TableItem from './TableItem';
 
 const props = {
@@ -43,21 +43,17 @@ const props = {
 
 describe('<TableItem />', () => {
     it('should render empty TableItem if classes array empty', () => {
-        const wrapper = mount(<TableItem classes={[]} />);
-        expect(wrapper.exists()).toBeTruthy();
-        expect(wrapper.prop('children')).toEqual(undefined);
-        wrapper.unmount();
+        const { container } = render(<TableItem classes={[]} />);
+        expect(container.innerHTML).toBe('');
     });
+
     it('should render odd and even table item', () => {
-        const wrapper = mount(<TableItem {...props} />);
-        expect(wrapper.exists()).toBeTruthy();
-        expect(wrapper.find('.class-info-container')).toHaveLength(2);
-        wrapper.unmount();
+        const { container } = render(<TableItem {...props} />);
+        expect(container.querySelectorAll('.class-info-container')).toHaveLength(2);
     });
+
     it('should render even card with group name', () => {
-        const wrapper = mount(<TableItem {...props} />);
-        expect(wrapper.exists()).toBeTruthy();
-        expect(wrapper.find('.group-list')).toHaveLength(1);
-        wrapper.unmount();
+        const { container } = render(<TableItem {...props} />);
+        expect(container.querySelectorAll('.group-list')).toHaveLength(1);
     });
 });

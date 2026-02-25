@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,7 +85,12 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "lessons", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "lessons", allEntries = true),
+            @CacheEvict(value = "scheduleForTeacher", allEntries = true),
+            @CacheEvict(value = "scheduleDTO", allEntries = true),
+            @CacheEvict(value = "scheduleForGroup", allEntries = true)
+    })
     public LessonInfoDTO update(LessonInfoDTO lessonInfoDTO) {
         log.info("In update(lessonInfoDTO = [{}])", lessonInfoDTO);
         Lesson lesson = lessonInfoMapper.lessonInfoDTOToLesson(lessonInfoDTO);

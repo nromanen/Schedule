@@ -17,5 +17,4 @@ export const SERVICE_MESSAGE_SENT_LABEL = 'serviceMessages:sent_label';
 export const EXIST_LABEL = 'serviceMessages:exist_label';
 export const GROUP_EXIST_IN_THIS_SEMESTER = 'serviceMessages:group_exist_in_this_semester';
 export const STUDENTS_EXIST_IN_THIS_GROUP = 'serviceMessages:students_exist_in_this_group';
-export const SUCCESSFULLY_MERGED = 'serviceMessages:successfully_merged';
 export const MOVED_TO_GROUP_LABEL = 'serviceMessages:moved_to_group';

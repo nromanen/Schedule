@@ -5,7 +5,7 @@ import Schedule from '../../components/EditCurrentSchedule/Schedule/Schedule';
 import {setScheduleOperationLoading} from "../../actions/loadingIndicator";
 
 const mapStateToProps = (state) => ({
-    groups: state.groups.groups,
+    groups: state.groups.scheduleGroups,
     scheduleOperationLoading: state.loadingIndicator.scheduleOperationLoading,
 });
 

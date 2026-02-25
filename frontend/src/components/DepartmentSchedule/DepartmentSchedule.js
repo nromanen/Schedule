@@ -13,6 +13,7 @@ import {
     isWeekOdd
 } from '../../helper/renderScheduleTable';
 
+import { lessonTypeColors } from '../GroupSchedulePage/LessonTemporaryCardCell';
 import i18n from '../../i18n';
 import './DepartmentSchedule.scss';
 
@@ -26,28 +27,32 @@ const renderClassCell = (classItem) => {
     );
 };
 
-const renderLessonCell = (lesson) => {
+const renderLessonCell = (lesson, groupTitles) => {
     if (!lesson) return <span className="empty-cell">-</span>;
+    const triangleColor = lessonTypeColors[lesson.lessonType?.toLowerCase()] || '#757575';
 
     return (
-        <div className="lesson-cell">
-            <div className="subject">{lesson.subject_for_site}</div>
-            <div className="group">{lesson.group_name}</div>
-            <div className="room">
-                {lesson.room?.name}
-                {lesson.linkToMeeting && (
-                    <a
+        <>
+            <div className="lesson-type-triangle" style={{ borderTopColor: triangleColor }} />
+            <div className="lesson-cell">
+                <div className="subject">{lesson.subjectForSite}</div>
+                <div className="group">{groupTitles.join(', ')}</div>
+                <div className="room">
+                    {lesson.room?.name}
+                    {lesson.linkToMeeting && (
+                        <a
                         href={lesson.linkToMeeting}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="meeting-link"
                         title="Перейти до онлайн-заняття"
-                    >
+                        >
                         🔗
-                    </a>
-                )}
+                        </a>
+                        )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
@@ -133,10 +138,12 @@ const DepartmentSchedule = ({fullSchedule, departmentId}) => {
                                     <TableCell className="week-cell">1</TableCell>
                                     {teachers.map(teacher => {
                                         const cards = classData.cards.odd || [];
-                                        const lesson = cards.find(c => c.card?.teacher?.id === teacher.id)?.card;
+                                        const matchedCards = cards.filter(c => c.card?.teacher?.id === teacher.id);
+                                        const lesson = matchedCards[0]?.card;
+                                        const groupTitles = matchedCards.map(c => c.group?.title).filter(Boolean);
                                         return (
                                             <TableCell key={`${teacher.id}_odd`} className="lesson-cell-wrapper">
-                                                {renderLessonCell(lesson)}
+                                                {renderLessonCell(lesson, groupTitles)}
                                             </TableCell>
                                         );
                                     })}
@@ -150,10 +157,12 @@ const DepartmentSchedule = ({fullSchedule, departmentId}) => {
                                     <TableCell className="week-cell">2</TableCell>
                                     {teachers.map(teacher => {
                                         const cards = classData.cards.even || [];
-                                        const lesson = cards.find(c => c.card?.teacher?.id === teacher.id)?.card;
+                                        const matchedCards = cards.filter(c => c.card?.teacher?.id === teacher.id);
+                                        const lesson = matchedCards[0]?.card;
+                                        const groupTitles = matchedCards.map(c => c.group?.title).filter(Boolean);
                                         return (
                                             <TableCell key={`${teacher.id}_even`} className="lesson-cell-wrapper">
-                                                {renderLessonCell(lesson)}
+                                                {renderLessonCell(lesson, groupTitles)}
                                             </TableCell>
                                         );
                                     })}

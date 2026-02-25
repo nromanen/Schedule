@@ -31,10 +31,10 @@ spring:
             client-secret: ${FACEBOOK_CLIENT_SECRET}
 
   mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
+    host: ${MAIL_HOST:smtp-relay.brevo.com}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:}
-    password: ${MAIL_PASSWORD:}
+    username: ${MAIL_USERNAME:test}
+    password: ${MAIL_PASSWORD:test}
     properties:
       mail:
         smtp:
@@ -56,6 +56,10 @@ app:
     url: ${BACKEND_URL:http://localhost:8080/}
   cors:
     allowed-origins: ${CORS_ORIGINS:http://localhost:3000}
+
+  mail:
+    sender: ${MAIL_SENDER:test@gmail.com}
+    enabled: ${MAIL_ENABLED:true}
 
 
 logging:

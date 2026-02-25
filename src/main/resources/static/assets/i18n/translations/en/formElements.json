@@ -104,7 +104,6 @@
     "week_free_rooms": "Choose the week",
     "day_free_rooms": "Choose the day",
     "class_free_rooms": "Choose the class number",
-    "merge_button": "Merge",
     "max_count_classes_reached": "You reach maximum classes quantity",
     "change_password_form_title": "Change password",
     "login_via_google": "Login via Google",
@@ -128,5 +127,6 @@
     "reset_password_helper_text": "Just enter your email address below and we'll send you a link to reset your password!",
     "form_group_label_after": "Select after which group",
     "students_uppercase": "Students",
-    "room_label_after": "After room"
+    "room_label_after": "After room",
+    "without_department": "Without department"
 }

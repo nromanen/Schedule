@@ -11,10 +11,20 @@ const SchedulePublishBanner = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
+
         axiosCall('schedules/public/status')
-            .then(({ data }) => setPublished(data.published))
+            .then(({ data }) => {
+                if (isMounted) setPublished(data.published);
+            })
             .catch(console.error)
-            .finally(() => setLoading(false));
+            .finally(() => {
+                if (isMounted) setLoading(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     const handleToggle = () => {

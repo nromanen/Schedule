@@ -152,6 +152,13 @@ const reducer = (state = initialState, action) => {
             return {...state, items: itemArr};
         }
 
+        case actionTypes.UPDATE_SCHEDULE_ITEM_SUCCESS: {
+            const updatedItems = state.items.map((item) =>
+                item.id === action.payload.id ? action.payload : item
+            );
+            return { ...state, items: updatedItems };
+        }
+
         case actionTypes.DELETE_SCHEDULE_ITEM_SUCCESS: {
             const index = state.items.findIndex((item) => item.id === action.itemId);
             state.items.splice(index, 1);

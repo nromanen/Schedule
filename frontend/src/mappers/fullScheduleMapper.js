@@ -13,17 +13,27 @@ const mapFullSchedule = (schedule, semesterDays, semesterClasses) => {
                 const groupFull = schedule.find(
                     (groupFullIterate) => groupFullIterate.group.id === groupItem.id,
                 );
+                if (!groupFull) {
+                    tepmOddCardsArray.push({ group: groupItem, card: null });
+                    tempEvenCardsArray.push({ group: groupItem, card: null });
+                    return;
+                }
                 const dayFull = groupFull.days.find((dayFullIterate) => dayFullIterate.day === day);
+                if (!dayFull) {
+                    tepmOddCardsArray.push({ group: groupItem, card: null });
+                    tempEvenCardsArray.push({ group: groupItem, card: null });
+                    return;
+                }
                 const classFull = dayFull.classes.find(
                     (dayFullIterable) => dayFullIterable.class.id === classItem.id,
                 );
                 tepmOddCardsArray.push({
                     group: groupItem,
-                    card: classFull.weeks.odd,
+                    card: classFull ? classFull.weeks.odd : null,
                 });
                 tempEvenCardsArray.push({
                     group: groupItem,
-                    card: classFull.weeks.even,
+                    card: classFull ? classFull.weeks.even : null,
                 });
             });
             tempClassesArray.push({

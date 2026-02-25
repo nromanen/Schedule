@@ -1,9 +1,11 @@
-import React, {Fragment} from 'react';
-import i18n from 'i18next';
+import React, { Fragment } from 'react';
+import { useTranslation } from 'react-i18next';
 import './ScheduleDaySidebar.scss';
 
 const ScheduleDaySidebar = (props) => {
     const { title, days, classes } = props;
+    const { t } = useTranslation('common');
+
     const getDayColour = (index) => {
         return index % 2 ? 'dark-blue-day' : 'blue-day';
     };
@@ -14,7 +16,7 @@ const ScheduleDaySidebar = (props) => {
             {days.map((day, index) => (
                 <div className="cards-container day-container" key={day}>
                     <span className={`${getDayColour(index)} schedule-day card`}>
-                        {i18n.t(`day_of_week_${day}`)}
+                        {t(`day_of_week_${day}`)}
                     </span>
                     <div className="class-section">
                         {classes.map((classScheduler) => (

@@ -267,10 +267,10 @@ public class ScheduleController {
     @PutMapping("/by-room")
     @Operation(summary = "Change schedule by room Id")
     @PreAuthorize("hasRole('MANAGER')")
-    public ResponseEntity<ScheduleDTO> changeScheduleByRoom(@RequestParam Long scheduleId,
-                                                            @RequestParam Long roomId) {
+    public ResponseEntity<List<ScheduleDTO>> changeScheduleByRoom(@RequestParam Long scheduleId,
+                                                                  @RequestParam Long roomId) {
         log.info("In changeScheduleByRoom with scheduleId = {} and roomId = {}", scheduleId, roomId);
-        ScheduleDTO updated = scheduleService.changeRoom(scheduleId, roomId);
+        List<ScheduleDTO> updated = scheduleService.changeRoom(scheduleId, roomId);
         return ResponseEntity.ok(updated);
     }
 

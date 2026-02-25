@@ -8,6 +8,7 @@ describe('getDataFromParams function', () => {
             group: '11',
             semester: '43',
             teacher: '12',
+            department: null
         });
     });
 });

@@ -24,7 +24,6 @@ export const ROOM_LIST_LINK = '/admin/rooms';
 export const SUBJECT_PAGE_LINK = '/admin/subjects';
 export const BUST_ROOMS_LINK = '/admin/busy-rooms';
 export const SEMESTER_PAGE_LINK = '/admin/semesters';
-export const MARGE_ROLE_PAGE_LINK = '/admin/users';
 export const CHANGES_LINK = '/admin/changes';
 export const SCHEDULE_FOR_LINK = '/schedule';
 export const REGISTRATION_LINK = '/registration';

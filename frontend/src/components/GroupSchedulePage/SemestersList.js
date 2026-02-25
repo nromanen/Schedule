@@ -6,7 +6,7 @@ import { FORM_SEMESTER_LABEL } from '../../constants/translationLabels/formEleme
 import { renderAutocompleteField } from '../../helper/renderAutocompleteField';
 
 const SemestersList = (props) => {
-    const { semesters, getAllGroups, defaultSemester } = props;
+    const { semesters, getAllGroups, defaultSemester, handleChange } = props;
     const { t } = useTranslation('common');
 
     useEffect(() => {
@@ -24,6 +24,11 @@ const SemestersList = (props) => {
                 type="text"
                 handleChange={(value) => {
                     if (!isEmpty(value)) getAllGroups(value.id);
+                    if (handleChange) {
+                        handleChange('group', null);
+                        handleChange('teacher', null);
+                        handleChange('department', null);
+                    }
                 }}
                 values={semesters}
                 getOptionLabel={(semester) => (semester ? semester.description : '')}

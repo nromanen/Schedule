@@ -59,6 +59,8 @@ export {
     showAllGroupsSuccess,
     toggleDisabledStatus,
     getEnabledGroupsStart,
+    getGroupsForCurrentSemesterStart,
+    setScheduleGroups,
 } from './groups';
 
 export {

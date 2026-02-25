@@ -3,6 +3,7 @@ import {sortGroups} from '../helper/sortGroup';
 
 const initialState = {
     groups: [],
+    scheduleGroups: [],
     group: {},
 };
 
@@ -63,6 +64,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 group: {},
+            };
+
+        case actionTypes.SET_SCHEDULE_GROUPS:
+            return {
+                ...state,
+                scheduleGroups: action.payload,
             };
 
         default:

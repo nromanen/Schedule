@@ -267,3 +267,10 @@ export const setScheduleDepartment = (department) => {
         department,
     };
 };
+
+export const updateScheduleItemSuccess = (item) => {
+    return {
+        type: actionTypes.UPDATE_SCHEDULE_ITEM_SUCCESS,
+        payload: item,
+    };
+};

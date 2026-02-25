@@ -123,10 +123,14 @@ const AddTeacherForm = (props) => {
                     label={t(DEPARTMENT_TEACHER_LABEL)}
                     type="text"
                     onChange={({ target }) => {
-                        getDepartmentByIdService(target.value);
+                        if (target.value) {
+                            getDepartmentByIdService(target.value);
+                        }
                     }}
                 >
-                    <MenuItem value="" className="hidden" disabled />
+                    <MenuItem value="">
+                        <em>{t('without_department')}</em>
+                    </MenuItem>
                     {departments.map((item) => (
                         <MenuItem key={item.id} value={item.value}>
                             {item.label}

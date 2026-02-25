@@ -157,12 +157,16 @@ dependencies {
     implementation 'commons-beanutils:commons-beanutils:1.9.4'
     implementation 'org.json:json:20240303'
     implementation 'com.github.java-json-tools:json-schema-validator:2.2.14'
-    implementation 'com.itextpdf:itextpdf:5.5.13.4'
+    implementation 'org.xhtmlrenderer:flying-saucer-pdf:10.0.6'
+    implementation 'org.jsoup:jsoup:1.18.3'
     implementation 'com.opencsv:opencsv:5.9'
 
     // commons-fileupload -> commons-fileupload2 для jakarta
     implementation 'org.apache.commons:commons-fileupload2-jakarta-servlet6:2.0.0-M2'
     implementation 'commons-io:commons-io:2.17.0'
+
+    // Source: https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    implementation 'org.apache.poi:poi-ooxml:5.5.1'
 
     // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

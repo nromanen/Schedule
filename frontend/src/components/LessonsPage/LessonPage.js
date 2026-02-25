@@ -51,7 +51,7 @@ const LessonPage = (props) => {
         handleLesson,
         selectByGroupId,
         selectGroupSuccess,
-        getEnabledGroupsStart,
+        getGroupsForLesson,
         showAllTeachers,
         getAllSemesters,
     } = props;
@@ -77,7 +77,7 @@ const LessonPage = (props) => {
     useEffect(() => {
         showAllTeachers();
         getLessonTypesStart();
-        getEnabledGroupsStart();
+        getGroupsForLesson();
         showAllSubjectsService();
         getAllSemesters();
     }, []);
@@ -150,7 +150,7 @@ const LessonPage = (props) => {
                 <div className="lessons-list">
                     <Autocomplete
                         id="group"
-                        value={group}
+                        value={group?.title ? group : null}
                         options={groups}
                         className="group-lesson"
                         clearOnEscape

@@ -1,6 +1,13 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import { render, screen, fireEvent } from '@testing-library/react';
 import LessonsCard from './LessonsCard';
+
+jest.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (key) => key,
+    }),
+    Trans: ({ children, count }) => <span>{count}</span>,
+}));
 
 const onClickOpen = jest.fn();
 const onSelectLesson = jest.fn();
@@ -29,64 +36,56 @@ const props = {
 };
 
 describe('LessonsCard component if grouped', () => {
-    let wrapper;
     beforeEach(() => {
-        wrapper = shallow(<LessonsCard {...props} grouped />);
+        jest.clearAllMocks();
+        render(<LessonsCard {...props} />);
     });
 
     it('should render FaUserPlus if grouped', () => {
-        expect(wrapper.find('FaEdit')).toHaveLength(1);
-        expect(wrapper.find('MdDelete')).toHaveLength(1);
-        expect(wrapper.find('MdContentCopy')).toHaveLength(1);
-        expect(wrapper.find('FaUserPlus')).toHaveLength(1);
+        expect(screen.getByTitle('formElements:grouped_label')).toBeInTheDocument();
+        expect(screen.getByTitle('edit_lesson')).toBeInTheDocument();
+        expect(screen.getByTitle('delete_lesson')).toBeInTheDocument();
+        expect(screen.getByTitle('copy_lesson')).toBeInTheDocument();
     });
 });
 
 describe('LessonsCard component if no grouped', () => {
-    let wrapper;
     beforeEach(() => {
-        wrapper = shallow(<LessonsCard {...props} grouped={false} />);
+        jest.clearAllMocks();
+        render(<LessonsCard {...props} lesson={{ ...props.lesson, grouped: false }} />);
     });
 
-    it('should render FaEdit,MdDelete,MdContentCopy if no grouped', () => {
-        expect(wrapper.find('FaEdit')).toHaveLength(1);
-        expect(wrapper.find('MdDelete')).toHaveLength(1);
-        expect(wrapper.find('MdContentCopy')).toHaveLength(1);
+    it('should render FaEdit, MdDelete, MdContentCopy if no grouped', () => {
+        expect(screen.getByTitle('edit_lesson')).toBeInTheDocument();
+        expect(screen.getByTitle('delete_lesson')).toBeInTheDocument();
+        expect(screen.getByTitle('copy_lesson')).toBeInTheDocument();
+        expect(screen.queryByTitle('formElements:grouped_label')).not.toBeInTheDocument();
     });
 
-    it('should call onClickOpen when click to MdDelete icon delete', () => {
-        wrapper.find('MdDelete').simulate('click');
-        expect(props.onClickOpen).toHaveBeenCalled();
-        expect(props.onClickOpen).toHaveBeenCalledWith(props.lesson.id);
+    it('should call onClickOpen when click to Delete icon', () => {
+        fireEvent.click(screen.getByTitle('delete_lesson'));
+        expect(onClickOpen).toHaveBeenCalledWith(props.lesson.id);
     });
 
-    it('should call onSelectLesson when click to FaEdit icon delete', () => {
-        wrapper.find('FaEdit').simulate('click');
-        expect(props.onSelectLesson).toHaveBeenCalled();
-        expect(props.onSelectLesson).toHaveBeenCalledWith(props.lesson.id);
+    it('should call onSelectLesson when click to Edit icon', () => {
+        fireEvent.click(screen.getByTitle('edit_lesson'));
+        expect(onSelectLesson).toHaveBeenCalledWith(props.lesson.id);
     });
 
-    it('should call onCopyLesson when click to MdContentCopy icon delete', () => {
-        wrapper.find('MdContentCopy').simulate('click');
-        expect(props.onCopyLesson).toHaveBeenCalled();
-        expect(props.onCopyLesson).toHaveBeenCalledWith(props.lesson);
+    it('should call onCopyLesson when click to Copy icon', () => {
+        fireEvent.click(screen.getByTitle('copy_lesson'));
+        expect(onCopyLesson).toHaveBeenCalledWith({ ...props.lesson, grouped: false });
     });
 
     it('should render lesson title', () => {
-        const title = wrapper.find('.lesson-card__title').text();
-
-        expect(title).toEqual(props.lesson.subjectForSite);
+        expect(screen.getByText('Web-дизайн')).toBeInTheDocument();
     });
 
     it('should render lesson teacherName surname n. p.', () => {
-        const teacherName = wrapper.find('.lesson-card__teacher').text();
-        const { surname, name, patronymic } = props.lesson.teacher;
-        expect(teacherName).toEqual(`${surname} ${name} ${patronymic}`);
+        expect(screen.getByText('surname n. p.')).toBeInTheDocument();
     });
 
     it('should render linkToMeeting if link passed', () => {
-        const link = wrapper.find('.lesson-card__link').text();
-
-        expect(link).toEqual(props.lesson.linkToMeeting);
+        expect(screen.getByText(props.lesson.linkToMeeting)).toBeInTheDocument();
     });
 });

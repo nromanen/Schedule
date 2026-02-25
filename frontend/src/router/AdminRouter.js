@@ -11,7 +11,6 @@ import {
     DEPARTMENTS_LINK,
     GROUP_LIST_PARAM_LINK,
     LESSON_PAGE_LINK,
-    MARGE_ROLE_PAGE_LINK,
     ROOM_LIST_LINK,
     SEMESTER_PAGE_LINK,
     SUBJECT_PAGE_LINK,
@@ -25,7 +24,6 @@ import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';
 import RoomPage from '../containers/RoomsPage/RoomsPage';
 import SubjectPage from '../containers/SubjectPage/SubjectPage';
 import SemesterPage from '../containers/SemesterPage/SemesterPage';
-import MergeRolePage from '../containers/MergeRolePage/MergeRolePage';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
 import TemporarySchedule from '../containers/TemporarySchedule/TemporarySchedule';
 import {AdminRoute} from './routes';
@@ -47,7 +45,6 @@ export default function Routers() {
                 <AdminRoute path={SUBJECT_PAGE_LINK} component={SubjectPage} />
                 <AdminRoute path={BUST_ROOMS_LINK} component={BusyRoomsPage} />
                 <AdminRoute path={SEMESTER_PAGE_LINK} component={SemesterPage} />
-                <AdminRoute path={MARGE_ROLE_PAGE_LINK} component={MergeRolePage} />
                 <AdminRoute path={CHANGES_LINK} component={TemporarySchedule} />
 
                 <AdminRoute path={TEACHER_LESSONS_LINK} component={TeacherLessonsPage} />

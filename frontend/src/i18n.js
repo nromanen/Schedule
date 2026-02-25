@@ -25,7 +25,7 @@ i18next
                 formatSeparator: ',',
             },
             backend: {
-                loadPath: '/assets/i18n/translations/{{lng}}/{{ns}}.json',
+                loadPath: `${process.env.PUBLIC_URL || ''}/assets/i18n/translations/{{lng}}/{{ns}}.json`,
             },
             react: {
                 bindI18n: 'languageChanged',
@@ -33,7 +33,6 @@ i18next
                 transEmptyNodeValue: '',
                 transSupportBasicHtmlNodes: true,
                 useSuspense: true,
-                wait: true,
             },
         },
         (err) => {

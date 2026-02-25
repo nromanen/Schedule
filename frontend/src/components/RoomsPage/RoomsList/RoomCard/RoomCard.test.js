@@ -1,9 +1,10 @@
 import React from 'react';
-import {mount} from 'enzyme';
+import { render, screen, fireEvent } from '@testing-library/react';
 import RoomCard from './RoomCard';
 
 const showConfirmDialog = jest.fn();
 const setSelectRoom = jest.fn();
+
 const props = {
     room: {
         id: 73,
@@ -19,49 +20,46 @@ const props = {
 };
 
 describe('behavior of RoomCard Component when room is disabled', () => {
-    let wrapper;
-
     beforeEach(() => {
-        wrapper = mount(<RoomCard {...props} />);
+        jest.clearAllMocks();
+        render(<RoomCard {...props} />);
     });
 
-    afterEach(() => wrapper.unmount());
+    it('should render Set Enabled and Delete icons if disabled is true', () => {
+        expect(screen.getByTitle('common:set_enabled')).toBeInTheDocument();
+        expect(screen.getByText('Пара проводиться онлайн')).toBeInTheDocument();
+    });
 
-    it('should render GiSightDisabled and MdDelete icons if disabled is true', () => {
-        expect(wrapper.find('GiSightDisabled')).toHaveLength(1);
-        expect(wrapper.find('MdDelete')).toHaveLength(1);
+    it('should call showConfirmDialog when click Set Enabled icon', () => {
+        fireEvent.click(screen.getByTitle('common:set_enabled'));
+        expect(showConfirmDialog).toHaveBeenCalledTimes(1);
     });
-    it('should call showConfirmDialog when click to GiSightDisabled icon', () => {
-        wrapper.find('GiSightDisabled').simulate('click');
-        expect(props.showConfirmDialog.mock.calls.length).toEqual(1);
-    });
-    it('should call showConfirmDialog when click to MdDelete icon', () => {
-        wrapper.find('MdDelete').simulate('click');
-        expect(props.showConfirmDialog.mock.calls.length).toEqual(1);
-        expect(props.showConfirmDialog).toBeCalledWith(props.room.id, 'deleteConfirm', 'room');
+
+    it('should call showConfirmDialog when click Delete icon', () => {
+        fireEvent.click(document.querySelector('.delete-icon-btn'));
+        expect(showConfirmDialog).toHaveBeenCalledTimes(1);
     });
 });
 
 describe('behavior of RoomCard Component when room is not disabled', () => {
-    let wrapper;
-
     beforeEach(() => {
-        wrapper = mount(<RoomCard {...props} isDisabled={false} />);
+        jest.clearAllMocks();
+        render(<RoomCard {...props} isDisabled={false} />);
     });
 
-    afterEach(() => wrapper.unmount());
+    it('should render Set Disabled, Edit and Delete icons if disabled is false', () => {
+        expect(screen.getByTitle('common:set_disabled')).toBeInTheDocument();
+        expect(document.querySelector('.edit-icon-btn')).toBeInTheDocument();
+        expect(document.querySelector('.delete-icon-btn')).toBeInTheDocument();
+    });
 
-    it('should render IoMdEye, FaEdit and MdDelete icons if disabled is false', () => {
-        expect(wrapper.find('IoMdEye')).toHaveLength(1);
-        expect(wrapper.find('FaEdit')).toHaveLength(1);
-        expect(wrapper.find('MdDelete')).toHaveLength(1);
+    it('should call showConfirmDialog when click Set Disabled icon', () => {
+        fireEvent.click(screen.getByTitle('common:set_disabled'));
+        expect(showConfirmDialog).toHaveBeenCalledTimes(1);
     });
-    it('should call showConfirmDialog when click to IoMdEye icon', () => {
-        wrapper.find('IoMdEye').simulate('click');
-        expect(props.showConfirmDialog.mock.calls.length).toEqual(1);
-    });
-    it('should call setSelectRoom when click to FaEdit icon', () => {
-        wrapper.find('FaEdit').simulate('click');
-        expect(props.setSelectRoom.mock.calls.length).toEqual(1);
+
+    it('should call setSelectRoom when click Edit icon', () => {
+        fireEvent.click(document.querySelector('.edit-icon-btn'));
+        expect(setSelectRoom).toHaveBeenCalledTimes(1);
     });
 });

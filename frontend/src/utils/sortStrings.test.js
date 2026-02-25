@@ -7,8 +7,8 @@ describe('sortStrings function', () => {
         expect(sortStrings(firstString, secondString)).toEqual(-1);
     });
     it('should return 1 if the second string is less than the first string', () => {
-        const firstString = 'first string longer';
-        const secondString = 'second string';
+        const firstString = 'second string';
+        const secondString = 'first string longer';
         expect(sortStrings(firstString, secondString)).toEqual(1);
     });
     it('should return 0 if the second string is equal the first string', () => {

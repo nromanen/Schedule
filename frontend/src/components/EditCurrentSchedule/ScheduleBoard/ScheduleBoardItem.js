@@ -48,11 +48,11 @@ const ScheduleItem = (props) => {
         openDialogWithData({ type: actionType.UPDATED, item: editObj, groupId: group.id });
         handleClose();
     };
+
     const handelDelete = () => {
         const { group } = lesson;
         deleteScheduleItem(itemData.id);
         selectByGroupId(group.id);
-        getLessonsByGroupId(group.id);
         handleClose();
     };
 

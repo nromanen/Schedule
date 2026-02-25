@@ -34,7 +34,7 @@ import AdminRouter from './AdminRouter';
 const Routers = (props) => {
     const { userRole } = props;
     return (
-        <Router>
+        <Router basename={process.env.REACT_APP_BASE_PATH || "/"}>
             <Header userRole={userRole} roles={userRoles} />
             <Switch>
                 <Route exact path={HOME_PAGE_LINK} component={HomePage} />

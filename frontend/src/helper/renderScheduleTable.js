@@ -17,6 +17,8 @@ import {FORM_GROUP_LABEL, GROUP_Y_LABEL} from '../constants/translationLabels/fo
 import {EMPTY_SCHEDULE} from '../constants/translationLabels/common';
 import LessonTemporaryCardCell from '../containers/GroupSchedulePage/LessonTemporaryCardCell';
 import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTemporaryCardCell';
+import { places } from '../constants/places';
+import { lessonTypeColors } from '../components/GroupSchedulePage/LessonTemporaryCardCell';
 
 const shortid = require('shortid');
 
@@ -108,7 +110,7 @@ export const renderGroupDayClass = (
                 return (
                     semesterDays.includes(day) && (
                         <TableCell key={shortid.generate()} className={className}>
-                            <LessonTemporaryCardCell card={card} day={day} />
+                            <LessonTemporaryCardCell card={card} day={day} place={places.TOGETHER}/>
                         </TableCell>
                     )
                 );
@@ -204,7 +206,7 @@ export const renderGroupCells = (groups, isOdd, weekType, isCurrentDay, dayName)
                 rowSpan={rowspan}
                 className={classname}
             >
-                <LessonTemporaryCardCell card={card} day={dayName} />
+                <LessonTemporaryCardCell card={card} day={dayName} place={places.TOGETHER} />
             </TableCell>
         );
     });
@@ -253,7 +255,7 @@ export const renderFirstDayFirstClassFirstCardLine = (
 
     return (
         <React.Fragment key={shortid.generate()}>
-            <TableRow>
+            <TableRow className="day-first-row">
                 <TableCell rowSpan={classesCount * 2} className={dayClassName}>
                     <span className="dayName">
                         <b>{i18n.t(`common:day_of_week_${dayName}`)}</b>
@@ -314,14 +316,31 @@ export const renderFirstDayOtherClassFirstCardLine = (
     );
 };
 
+const isClassEmpty = (classItem) => {
+    const { cards } = classItem;
+    const allOddEmpty = cards.odd.every(group => group.card === null);
+    const allEvenEmpty = cards.even.every(group => group.card === null);
+    return allOddEmpty && allEvenEmpty;
+};
+
 export const renderDay = (dayName, dayItem, semesterClassesCount, currentWeekType, currentDay) => {
-    return dayItem.map((classItem, classIndex) => {
+    let lastNonEmptyIndex = dayItem.length - 1;
+    while (lastNonEmptyIndex >= 0 && isClassEmpty(dayItem[lastNonEmptyIndex])) {
+        lastNonEmptyIndex--;
+    }
+    const trimmedDayItem = dayItem.slice(0, lastNonEmptyIndex + 1);
+
+    if (trimmedDayItem.length === 0) return null;
+
+    const actualClassesCount = trimmedDayItem.length;
+
+    return trimmedDayItem.map((classItem, classIndex) => {
         if (classIndex === 0) {
             return renderFirstDayFirstClassFirstCardLine(
                 dayName,
                 classItem.class,
                 classItem.cards,
-                semesterClassesCount,
+                actualClassesCount,
                 currentWeekType,
                 currentDay,
             );
@@ -355,6 +374,29 @@ const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, curre
     });
 };
 
+const ScheduleLegend = () => {
+    const legendItems = [
+        { type: 'lecture', label: i18n.t('lesson_type_lecture', 'Лекція') },
+        { type: 'practical', label: i18n.t('lesson_type_practical', 'Практична') },
+        { type: 'laboratory', label: i18n.t('lesson_type_lab', 'Лабораторна') },
+        // { type: 'seminar', label: i18n.t('lesson_type_seminar', 'Семінар') },
+    ];
+
+    return (
+        <div className="schedule-legend">
+            {legendItems.map(({ type, label }) => (
+                <span key={type} className="schedule-legend__item">
+                    <span
+                        className="schedule-legend__triangle"
+                        style={{ borderTopColor: lessonTypeColors[type] }}
+                    />
+                    {label}
+                </span>
+            ))}
+        </div>
+    );
+};
+
 export const renderFullSchedule = (fullResultSchedule) => {
     const { semester, groupList, semesterClasses, resultArray } = fullResultSchedule;
     const { startDay, description, endDay } = semester;
@@ -365,6 +407,7 @@ export const renderFullSchedule = (fullResultSchedule) => {
     return (
         <>
             <h1>{scheduleTitle}</h1>
+            <ScheduleLegend />
             <TableContainer>
                 <Table aria-label="sticky table">
                     {renderScheduleFullHeader(groupList)}

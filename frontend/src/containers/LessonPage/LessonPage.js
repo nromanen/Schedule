@@ -4,7 +4,7 @@ import LessonPage from '../../components/LessonsPage/LessonPage';
 import {
     copyLessonCardStart,
     deleteLessonCardStart,
-    getEnabledGroupsStart,
+    getGroupsForCurrentSemesterStart,
     getLessonsByGroupStart,
     getLessonTypesStart,
     selectGroupId,
@@ -24,7 +24,7 @@ const mapStateToProps = (state) => ({
     groupId: state.lesson.groupId,
     isUniqueError: state.lesson.uniqueError,
     teachers: state.teachers.teachers,
-    groups: state.groups.groups,
+    groups: state.groups.scheduleGroups,
     group: state.groups.group,
     subjects: state.subjects.subjects,
     loading: state.loadingIndicator.loading,
@@ -34,7 +34,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getEnabledGroupsStart: () => dispatch(getEnabledGroupsStart()),
+    getGroupsForLesson: () => dispatch(getGroupsForCurrentSemesterStart()),
     getLessonsByGroupStart: (groupId) => dispatch(getLessonsByGroupStart(groupId)),
     getLessonTypesStart: () => dispatch(getLessonTypesStart()),
     deleteLessonCardStart: (lessonId) => dispatch(deleteLessonCardStart(lessonId)),

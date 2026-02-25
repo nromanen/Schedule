@@ -6,3 +6,5 @@
 /src/main/resources/application-local.yaml
 /schedule_logs
 **/.DS_Store
+
+test*.js

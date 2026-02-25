@@ -22,7 +22,10 @@ export const getTeacherForSite = (teacher) => {
 };
 export const handleTeacherInfo = (teacher) => {
     const { name, surname, patronymic, position } = teacher;
-    return `${surname} ${name} ${patronymic} (${position})`;
+    if (position) {
+        return `${surname} ${name} ${patronymic} (${position})`;
+    }
+    return `${surname} ${name} ${patronymic}`;
 };
 export const getTeacherWithPosition = (teacher) => {
     const { name, surname, patronymic, position } = teacher;

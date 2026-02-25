@@ -13,7 +13,6 @@
     "students_exist_in_this_group": "{{cardType}} already {{actionType}} this group",
     "group_exist_in_this_semester": "{{cardType}} already {{actionType}} of this semester",
     "chosen_semester_has_not_groups": "{{cardType}} hasn't {{actionType}}",
-    "successfully_merged": "User and teacher have been successfully merged",
     "copied_label": "copied",
     "cleared_label": "cleared",
     "exist_label": "exist(s)",

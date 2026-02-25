@@ -12,5 +12,4 @@ import java.io.Serializable;
 public class LessonInScheduleByWeekDTO implements Serializable {
     private LessonsInScheduleDTO even;
     private LessonsInScheduleDTO odd;
-
 }

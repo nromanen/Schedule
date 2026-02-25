@@ -193,10 +193,10 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      *
      * @param scheduleId the ID of the schedule
      * @param roomId     the ID of the new room
-     * @return the updated schedule DTO
+     * @return the list of updated schedule DTOs
      * @throws com.softserve.exception.EntityNotFoundException if schedule or room not found
      */
-    ScheduleDTO changeRoom(Long scheduleId, Long roomId);
+    List<ScheduleDTO> changeRoom(Long scheduleId, Long roomId);
 
     @Transactional
     List<Long> deleteScheduleById(Long id);

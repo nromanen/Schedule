@@ -4,7 +4,7 @@ import {getLessonsByGroupStart, selectGroupId} from '../../actions';
 import ScheduleLessonsList from '../../components/EditCurrentSchedule/ScheduleLessonList/ScheduleLessonList';
 
 const mapStateToProps = (state) => ({
-    groups: state.groups.groups,
+    groups: state.groups.scheduleGroups,
     lessons: state.lesson.lessons,
     items: state.schedule.items,
 });

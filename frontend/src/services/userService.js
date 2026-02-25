@@ -1,13 +1,11 @@
 import axios from '../helper/axios';
 import {store} from '../store';
-import {MERGE_USER_AND_TEACHER_URL, UPDATE_USER_PROFILE, USER_PROFILE, USERS_URL,} from '../constants/axios';
+import {UPDATE_USER_PROFILE, USER_PROFILE, USERS_URL,} from '../constants/axios';
 import {setTeacher, setUser, setUsers} from '../actions/index';
 
 import i18n from '../i18n';
-import {setLoadingService} from './loadingService';
-import {getTeachersWithoutAccount} from './teacherService';
 import {errorHandler, successHandler} from '../helper/handlerAxios';
-import {BACK_END_SUCCESS_OPERATION, SUCCESSFULLY_MERGED,} from '../constants/translationLabels/serviceMessages';
+import {BACK_END_SUCCESS_OPERATION,} from '../constants/translationLabels/serviceMessages';
 import {FORM_TEACHER_LABEL, FORM_USER_LABEL} from '../constants/translationLabels/formElements';
 
 export const getUsersService = () => {
@@ -86,22 +84,3 @@ export const updateUserTeacher = (values) => {
         .catch((error) => errorHandler(error));
 };
 
-export const mergeUserAndTeacherService = (mergeObj) => {
-    axios
-        .put(MERGE_USER_AND_TEACHER_URL, mergeObj)
-        .then(() => {
-            getTeachersWithoutAccount(); // replace in future to saga from teachers
-            getUsersService();
-            setLoadingService(false);
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_USER_LABEL),
-                    actionType: i18n.t(SUCCESSFULLY_MERGED),
-                }),
-            );
-        })
-        .catch((error) => {
-            setLoadingService(false);
-            errorHandler(error);
-        });
-};

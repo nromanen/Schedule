@@ -13,6 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class GroupDTO implements Serializable {
     private Long id;
-    private Boolean disable;
+    @Builder.Default
+    private Boolean disable = false;
     private String title;
 }

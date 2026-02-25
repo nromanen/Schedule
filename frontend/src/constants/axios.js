@@ -50,8 +50,6 @@ export const DISABLED_SUBJECTS_URL = 'subjects/disabled';
 export const USERS_URL = 'users/with-role-user';
 export const USER_PROFILE = 'users/profile';
 export const UPDATE_USER_PROFILE = 'users/change-profile';
-export const TEACHERS_WITHOUT_ACCOUNT_URL = 'not-registered-teachers';
-export const MERGE_USER_AND_TEACHER_URL = 'managers/teacher_credentials';
 
 export const PUBLIC_CLASSES_URL = 'public/classes';
 export const PUBLIC_GROUP_URL = 'public/groups';
@@ -75,3 +73,7 @@ export const ARCHIVED_SEMESTERS_URL = '/archive/all-semesters';
 export const DEPARTMENT_URL = '/departments';
 
 export const LESSON_BY_TEACHER_URL = '/lessons/teacher';
+
+export const EXPORT_SCHEDULE_XLSX_URL = 'schedules/export/xlsx?semesterId=';
+
+export const GROUPS_FOR_CURRENT_SCHEDULE = '/semesters/current/groups'

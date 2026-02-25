@@ -1,11 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './BusyRoomsTable.scss';
 import TableItem from '../TableItem/TableItem';
 import ScheduleDaySidebar from '../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar';
 import {ROOM_LIST_TITLE} from '../../../constants/translationLabels/common';
 
 const BusyRoomsTable = (props) => {
-    const { busyRooms, days, classes, columnsSize, t } = props;
+    const { busyRooms, days, classes, columnsSize } = props;
+    const { t } = useTranslation('common');
     return (
         <section className="busy-rooms-table-container">
             <ScheduleDaySidebar title={t(ROOM_LIST_TITLE)} days={days} classes={classes} />
@@ -24,7 +26,6 @@ const BusyRoomsTable = (props) => {
                                     key={index.toString() + busyRoom.room_id}
                                     index={index.toString() + busyRoom.room_id}
                                     classes={classes}
-                                    t={t}
                                     schedule={schedule}
                                     columnsSize={columnsSize}
                                 />

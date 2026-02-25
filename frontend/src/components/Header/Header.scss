@@ -95,3 +95,24 @@
     font-weight: bold;
     color: $delete-color;
 }
+
+.schedule-warning-banner {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    padding: 10px 16px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.login-link {
+    color: #666;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        color: red;
+    }
+}

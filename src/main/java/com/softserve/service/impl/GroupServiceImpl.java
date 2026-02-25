@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -174,7 +175,9 @@ public class GroupServiceImpl implements GroupService {
     public Set<GroupDTO> getGroupsForCurrentSemester() {
         log.info("In getGroupsForCurrentSemester()");
         SemesterWithGroupsDTO semesterDTO = semesterService.getCurrentSemester();
-        return new LinkedHashSet<>(semesterDTO.getGroups());
+        return semesterDTO.getGroups().stream()
+                .filter(group -> !group.getDisable())
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override

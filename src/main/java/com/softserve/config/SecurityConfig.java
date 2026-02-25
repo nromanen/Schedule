@@ -60,7 +60,7 @@ public class SecurityConfig {
 
                         // SPA routes (React Router)
                         .requestMatchers(
-                                "/login", "/admin", "/schedule", "/activation-page"
+                                "/login", "/admin", "/admin/**", "/schedule", "/schedule/**", "/activation-page"
                         ).permitAll()
 
                         // Public API endpoints

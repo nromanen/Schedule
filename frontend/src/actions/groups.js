@@ -79,3 +79,12 @@ export const dragAndDropGroupStart = (dragGroup, afterGroupId) => ({
     dragGroup,
     afterGroupId,
 });
+
+export const getGroupsForCurrentSemesterStart = () => ({
+    type: actionTypes.GET_GROUPS_FOR_CURRENT_SEMESTER_START,
+});
+
+export const setScheduleGroups = (payload) => ({
+    type: actionTypes.SET_SCHEDULE_GROUPS,
+    payload,
+});
