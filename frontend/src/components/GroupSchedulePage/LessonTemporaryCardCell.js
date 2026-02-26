@@ -58,8 +58,8 @@ const LessonTemporaryCardCell = (props) => {
     return (
         <div className="lesson-cell-wrapper">
             <div
-                className="lesson-type-triangle"
-                style={{ borderTopColor: triangleColor }}
+                className="lesson-type-bar"
+                style={{ backgroundColor: triangleColor }}
             />
             <p className="lesson-teacher" title={i18n.t(`common:day_of_week_${day}`)}>
                 {getTeacherWithShortPosition(card.teacher)}

@@ -257,7 +257,6 @@ export function* getFullSchedule({ semesterId }) {
         yield put(setMainScheduleLoading(true));
         const { data } = yield call(axiosCall, requestUrl);
 
-        // Перевірка чи розклад опублікований
         if (data.published === false) {
             yield put(setScheduleNotPublished(data.message));
             return;

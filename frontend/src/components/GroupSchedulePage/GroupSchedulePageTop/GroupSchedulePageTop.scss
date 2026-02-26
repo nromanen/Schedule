@@ -5,102 +5,95 @@ p.empty_schedule {
     font-weight: bold;
     margin: 50px auto;
 }
+
 h1 {
     text-align: center;
 }
+
 .form-card.width-auto {
     width: auto;
+
     .MuiFormControl-root,
     .MuiInputBase-input {
-        margin: 0px 15px;
+        margin: 0 15px;
         width: auto;
     }
 }
+
 .place {
     padding: 10px;
     width: 120px;
     border-radius: 10px;
 }
 
-.schedule_page-container {
-    .schedule-form-card {
-        width: 85%;
+.schedule_page-container > * {
+    margin: 8px;
+}
 
-        .schedule-form {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr) auto;
-            grid-template-rows: 50px;
-            column-gap: 20px;
-            place-items: center;
+// Filter bar
+.schedule-filter-bar {
+    background: $white;
+    padding: 12px 24px;
+    width: 100%;
 
-            @media (max-width: 1280px) {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(2, 50px) auto;
-                gap: 10px 20px;
-            }
+    .schedule-form {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr) auto;
+        grid-template-rows: 50px;
+        column-gap: 40px;
+        padding: 0 40px;
+        place-items: center;
 
-            @media (max-width: 950px) {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(2, 50px) auto;
-                justify-items: center;
-            }
-
-            @media (max-width: 800px) {
-                grid-template-columns: 1fr;
-                grid-template-rows: repeat(5, 50px);
-                justify-items: center;
-            }
+        @media (max-width: 1280px) {
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 50px) auto;
+            gap: 10px 20px;
         }
 
-        .schedule-form_submit {
-            height: 36px;
-            width: auto;
-            min-width: 100px;
+        @media (max-width: 800px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(5, 50px);
+            justify-items: center;
+        }
+    }
+
+    .schedule-form.no-semester {
+        grid-template-columns: repeat(3, 1fr) auto;
+        column-gap: 100px;
+
+        @media (max-width: 1280px) {
+            grid-template-columns: repeat(2, 1fr);
         }
 
-        .schedule-form_semester,
-        .schedule-form_group,
-        .schedule-form_teacher,
-        .schedule-form_department {
-            width: 200px;
-            .MuiFormControl-root {
-                width: 100%;
-            }
+        @media (max-width: 800px) {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(4, 50px);
+        }
+    }
 
-            @media (max-width: 500px) {
-                width: 180px;
-            }
+    .schedule-form_submit {
+        height: 36px;
+        width: auto;
+        min-width: 100px;
+    }
+
+    .schedule-form_semester,
+    .schedule-form_group,
+    .schedule-form_teacher,
+    .schedule-form_department {
+        width: 100%;
+
+        .MuiFormControl-root {
+            width: 100%;
         }
 
-        .schedule-form_group,
-        .schedule-form_teacher {
-            @media (max-width: 1280px) {
-                grid-row: 2;
-            }
-            @media (max-width: 950px) {
-                grid-row: auto;
-            }
-        }
-
-        .schedule-form_department,
-        .schedule-form_submit {
-            @media (max-width: 1280px) {
-                grid-row: 3;
-            }
-            @media (max-width: 950px) {
-                grid-row: auto;
-            }
-        }
-
-        @media (max-width: 950px) {
-            position: static;
-        }
         @media (max-width: 500px) {
-            width: 95%;
+            width: 180px;
         }
     }
 }
 
+// Filter bar layout
 .schedule-form-buttons-container {
     display: flex;
     align-items: center;
@@ -113,6 +106,7 @@ h1 {
     }
 }
 
+// Place selector (manager only)
 #select-place {
     display: flex;
     flex-direction: column;
@@ -128,26 +122,5 @@ h1 {
     @media (max-width: 950px) {
         margin-left: 0;
         margin-top: 20px;
-    }
-}
-
-.schedule_page-container > * {
-    margin: 8px;
-}
-
-.schedule_page-container {
-    .schedule-form-card {
-        .schedule-form.no-semester {
-            grid-template-columns: repeat(3, 1fr) auto;
-
-            @media (max-width: 1280px) {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            @media (max-width: 800px) {
-                grid-template-columns: 1fr;
-                grid-template-rows: repeat(4, 50px);
-            }
-        }
     }
 }

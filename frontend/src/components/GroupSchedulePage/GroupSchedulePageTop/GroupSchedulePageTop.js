@@ -11,15 +11,15 @@ import SchedulePageForm from '../../../containers/GroupSchedulePage/SchedulePage
 
 const GroupSchedulePageTop = (props) => {
     const { t } = useTranslation('common');
-    const { handleSubmit } = props;
+    const { handleSubmit, isManager } = props;
 
     return (
         <section className="schedule_page-container">
             <section className="schedule-form-buttons-container">
-                <Card additionClassName="form-card schedule-form-card">
+                <div className="schedule-filter-bar">
                     <SchedulePageForm onSubmit={handleSubmit} />
-                </Card>
-                <SelectPlace />
+                </div>
+                {isManager && <SelectPlace />}
             </section>
         </section>
     );

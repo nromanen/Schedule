@@ -41,13 +41,6 @@ export const matchDayNumberSysytemToDayName = () => {
     return daysUppercase[now.getDay() - 1];
 };
 
-// const getWeekNumber = (startScheduleDate, date) => {
-//     const startDay = transformSemesterDate(startScheduleDate);
-//
-//     const numberOfDays = Math.floor((date - startDay) / numberOfMilisecondsInADay);
-//     return Math.ceil((date.getDay() + 1 + numberOfDays) / numberOfDaysInAWeek);
-// };
-
 export const getWeekParity = (startDate, currentDate = new Date()) => {
     const semesterStart = startDate instanceof Date ? startDate : new Date(transformSemesterDate(startDate));
     const targetDate = currentDate instanceof Date ? currentDate : new Date(transformSemesterDate(currentDate));
@@ -57,10 +50,8 @@ export const getWeekParity = (startDate, currentDate = new Date()) => {
 
     if (targetDate < semesterStart) return 0;
 
-    // Get the day of the week for the semester start (0 = Sunday, 6 = Saturday)
     const startDay = semesterStart.getDay();
 
-    // Find the first week boundary after semester start
     const firstWeekBoundary = new Date(semesterStart);
     if (startDay === 0) {
         firstWeekBoundary.setDate(semesterStart.getDate() + 7);
@@ -158,7 +149,6 @@ export const renderGroupTable = (classes, isOdd, semester) => {
 
 export const renderGroupCells = (groups, isOdd, weekType, isCurrentDay, dayName) => {
     const prepareGroups = (groupsArray) => {
-        // TODO map => reduce
         return groupsArray.map((group, groupIndex) => {
             const { card } = group;
             let colspan = 1;
@@ -232,6 +222,7 @@ export const renderFirstDayFirstClassFirstCardLine = (
     classesCount,
     currentWeekType,
     currentDay,
+    todayWeekIsOdd = null,
 ) => {
     let dayClassName = 'dayNameCell ';
     const classClassName = 'classNameCell ';
@@ -241,7 +232,6 @@ export const renderFirstDayFirstClassFirstCardLine = (
     let evenWeekClass = '';
     if (isCurrentDay) {
         dayClassName += ' currentDay';
-
         if (currentWeekType) {
             oddWeekClass = ' currentDay';
         } else {
@@ -251,6 +241,30 @@ export const renderFirstDayFirstClassFirstCardLine = (
 
     if (groups.even.length <= 2 || groups.odd.length <= 2) {
         dayClassName += ' minHeightDouble';
+    }
+
+    // Today mode - show only current week
+    if (todayWeekIsOdd !== null) {
+        const weekGroups = todayWeekIsOdd ? groups.odd : groups.even;
+        const weekLabel = todayWeekIsOdd ? 1 : 2;
+        const weekClass = '';
+        dayClassName = 'dayNameCell';
+
+        return (
+            <React.Fragment key={shortid.generate()}>
+                <TableRow className="day-first-row">
+                    <TableCell rowSpan={classesCount} className={dayClassName}>
+                    <span className="dayName">
+                        <b>{i18n.t(`common:day_of_week_${dayName}`)}</b>
+                    </span>
+                    </TableCell>
+                    <TableCell className={classClassName}>
+                        {renderClassCell(classItem)}
+                    </TableCell>
+                    {renderGroupCells(weekGroups, todayWeekIsOdd, currentWeekType, false, dayName)}
+                </TableRow>
+            </React.Fragment>
+        );
     }
 
     return (
@@ -283,6 +297,7 @@ export const renderFirstDayOtherClassFirstCardLine = (
     groups,
     currentWeekType,
     currentDay,
+    todayWeekIsOdd = null,
 ) => {
     const classClassName = 'classNameCell ';
     const isCurrentDay = dayName === currentDay;
@@ -295,6 +310,24 @@ export const renderFirstDayOtherClassFirstCardLine = (
         } else {
             evenWeekClass = ' currentDay';
         }
+    }
+
+    // Today mode - show only current week
+    if (todayWeekIsOdd !== null) {
+        const weekGroups = todayWeekIsOdd ? groups.odd : groups.even;
+        const weekLabel = todayWeekIsOdd ? 1 : 2;
+        const weekClass = '';
+
+        return (
+            <React.Fragment key={shortid.generate()}>
+                <TableRow>
+                    <TableCell className={classClassName}>
+                        {renderClassCell(classItem)}
+                    </TableCell>
+                    {renderGroupCells(weekGroups, todayWeekIsOdd, currentWeekType, false, dayName)}
+                </TableRow>
+            </React.Fragment>
+        );
     }
 
     return (
@@ -323,7 +356,7 @@ const isClassEmpty = (classItem) => {
     return allOddEmpty && allEvenEmpty;
 };
 
-export const renderDay = (dayName, dayItem, semesterClassesCount, currentWeekType, currentDay) => {
+export const renderDay = (dayName, dayItem, semesterClassesCount, currentWeekType, currentDay, todayWeekIsOdd = null) => {
     let lastNonEmptyIndex = dayItem.length - 1;
     while (lastNonEmptyIndex >= 0 && isClassEmpty(dayItem[lastNonEmptyIndex])) {
         lastNonEmptyIndex--;
@@ -343,6 +376,7 @@ export const renderDay = (dayName, dayItem, semesterClassesCount, currentWeekTyp
                 actualClassesCount,
                 currentWeekType,
                 currentDay,
+                todayWeekIsOdd,
             );
         }
         return renderFirstDayOtherClassFirstCardLine(
@@ -351,6 +385,7 @@ export const renderDay = (dayName, dayItem, semesterClassesCount, currentWeekTyp
             classItem.cards,
             currentWeekType,
             currentDay,
+            todayWeekIsOdd,
         );
     });
 };
@@ -368,9 +403,9 @@ export const renderScheduleFullHeader = (groupList) => (
     </TableHead>
 );
 
-const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, currentDay) => {
+const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, currentDay, todayWeekIsOdd = null) => {
     return resultArray.map(({ day, classes }) => {
-        return renderDay(day, classes, semesterClasses.length || 0, currentWeekType, currentDay);
+        return renderDay(day, classes, semesterClasses.length || 0, currentWeekType, currentDay, todayWeekIsOdd);
     });
 };
 
@@ -379,7 +414,6 @@ const ScheduleLegend = () => {
         { type: 'lecture', label: i18n.t('lesson_type_lecture', 'Лекція') },
         { type: 'practical', label: i18n.t('lesson_type_practical', 'Практична') },
         { type: 'laboratory', label: i18n.t('lesson_type_lab', 'Лабораторна') },
-        // { type: 'seminar', label: i18n.t('lesson_type_seminar', 'Семінар') },
     ];
 
     return (
@@ -387,8 +421,8 @@ const ScheduleLegend = () => {
             {legendItems.map(({ type, label }) => (
                 <span key={type} className="schedule-legend__item">
                     <span
-                        className="schedule-legend__triangle"
-                        style={{ borderTopColor: lessonTypeColors[type] }}
+                        className="schedule-legend__dot"
+                        style={{ backgroundColor: lessonTypeColors[type] }}
                     />
                     {label}
                 </span>
@@ -397,10 +431,16 @@ const ScheduleLegend = () => {
     );
 };
 
-export const renderFullSchedule = (fullResultSchedule) => {
+export const renderFullSchedule = (fullResultSchedule, todayWeekIsOdd = null, toggleComponent = null) => {
     const { semester, groupList, semesterClasses, resultArray } = fullResultSchedule;
     const { startDay, description, endDay } = semester;
-    const scheduleTitle = `[${getWeekParity(startDay)} ${i18n.t(`week_label`)}] ${'\u00A0'.repeat(5)} ${description} (${startDay}-${endDay})`;
+    const scheduleTitle = (
+        <>
+            <span className="schedule-week-badge">{getWeekParity(startDay)} {i18n.t('week_label')}</span>
+            {description} ({startDay}–{endDay})
+            {toggleComponent}
+        </>
+    );
     const currentWeekType = isWeekOdd(printWeekNumber(startDay));
     const currentDay = checkSemesterEnd(endDay) ? '' : matchDayNumberSysytemToDayName();
 
@@ -417,6 +457,7 @@ export const renderFullSchedule = (fullResultSchedule) => {
                             semesterClasses,
                             currentWeekType,
                             currentDay,
+                            todayWeekIsOdd,
                         )}
                     </TableBody>
                 </Table>

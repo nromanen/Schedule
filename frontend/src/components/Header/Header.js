@@ -93,7 +93,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 const Header = (props) => {
-    const { roles, userRole, loading, currentSemester, getCurrentSemester } = props;
+    const {roles, userRole, loading, currentSemester, getCurrentSemester} = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
@@ -105,16 +105,16 @@ const Header = (props) => {
     const [schedulePublished, setSchedulePublished] = useState(true);
     const [cacheClearing, setCacheClearing] = useState(false);
     const [cacheDialogOpen, setCacheDialogOpen] = useState(false);
-    const [cacheResultDialog, setCacheResultDialog] = useState({ open: false, success: true });
+    const [cacheResultDialog, setCacheResultDialog] = useState({open: false, success: true});
 
-    const { t } = useTranslation('common');
+    const {t} = useTranslation('common');
 
     useEffect(() => {
         if (userRole === roles.MANAGER) {
             setSemesterLoadingService(true);
             getCurrentSemester();
             axiosCall('schedules/public/status')
-                .then(({ data }) => setSchedulePublished(data.published))
+                .then(({data}) => setSchedulePublished(data.published))
                 .catch(console.error);
         }
     }, [userRole, roles.MANAGER, getCurrentSemester]);
@@ -142,10 +142,10 @@ const Header = (props) => {
         setCacheClearing(true);
         axiosCall('admin/cache/all', DELETE)
             .then(() => {
-                setCacheResultDialog({ open: true, success: true });
+                setCacheResultDialog({open: true, success: true});
             })
             .catch(() => {
-                setCacheResultDialog({ open: true, success: false });
+                setCacheResultDialog({open: true, success: false});
             })
             .finally(() => {
                 setCacheClearing(false);
@@ -157,7 +157,7 @@ const Header = (props) => {
     };
 
     const handleResultDialogClose = () => {
-        setCacheResultDialog({ open: false, success: true });
+        setCacheResultDialog({open: false, success: true});
     };
 
     const handleExportXlsx = () => {
@@ -189,7 +189,7 @@ const Header = (props) => {
                     variant="outlined"
                     color="default"
                 >
-                    <FaSignOutAlt style={{ marginRight: '6px' }} />
+                    <FaSignOutAlt style={{marginRight: '6px'}}/>
                     {t(LOGIN_TITLE)}
                 </Button>
             );
@@ -206,7 +206,7 @@ const Header = (props) => {
                         >
                             {localStorage.getItem('email')}
                             <ListItemIcon>
-                                <FaCaretDown fontSize="normall" />
+                                <FaCaretDown fontSize="normall"/>
                             </ListItemIcon>
                         </Button>
                         <StyledMenu
@@ -219,12 +219,12 @@ const Header = (props) => {
                             <Link
                                 to={ADMIN_PAGE_LINK}
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaUser fontSize="normall" />
+                                        <FaUser fontSize="normall"/>
                                     </ListItemIcon>
                                     {t(ADMIN_TITLE)}
                                 </StyledMenuItem>
@@ -232,54 +232,54 @@ const Header = (props) => {
                             <Link
                                 to={SCHEDULE_PAGE_LINK}
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaClock fontSize="normal" />
+                                        <FaClock fontSize="normal"/>
                                     </ListItemIcon>
                                     {t(SCHEDULE_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                             <span
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                                 role="button"
                                 tabIndex="0"
                             >
                                 <StyledMenuItem>
-                                    <FreeRooms classScheduler={props.classScheduler} />
+                                    <FreeRooms classScheduler={props.classScheduler}/>
                                 </StyledMenuItem>
                             </span>
                             <StyledMenuItem onClick={handleTogglePublish}>
                                 <ListItemIcon>
-                                    {schedulePublished ? <FaEyeSlash fontSize="normal" /> : <FaEye fontSize="normal" />}
+                                    {schedulePublished ? <FaEyeSlash fontSize="normal"/> : <FaEye fontSize="normal"/>}
                                 </ListItemIcon>
                                 {schedulePublished ? t('unpublish_schedule') : t('publish_schedule')}
                             </StyledMenuItem>
                             <StyledMenuItem onClick={handleExportXlsx} disabled={!currentSemester?.id || loading}>
                                 <ListItemIcon>
-                                    <FaFileExcel fontSize="normal" />
+                                    <FaFileExcel fontSize="normal"/>
                                 </ListItemIcon>
                                 {t('export_schedule_xlsx')}
                             </StyledMenuItem>
                             <StyledMenuItem onClick={handleClearCacheClick} disabled={cacheClearing}>
                                 <ListItemIcon>
-                                    <FaTrash fontSize="normal" />
+                                    <FaTrash fontSize="normal"/>
                                 </ListItemIcon>
                                 {cacheClearing ? t(CLEARING_CACHE) : t(CLEAR_CACHE_BUTTON)}
                             </StyledMenuItem>
                             <Link
                                 to={MY_PROFILE_LINK}
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaUser fontSize="normal" />
+                                        <FaUser fontSize="normal"/>
                                     </ListItemIcon>
                                     {t(MY_PROFILE)}
                                 </StyledMenuItem>
@@ -287,12 +287,12 @@ const Header = (props) => {
                             <Link
                                 to={LOGOUT_LINK}
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normal" />
+                                        <FaSignOutAlt fontSize="normal"/>
                                     </ListItemIcon>
                                     {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
@@ -313,7 +313,7 @@ const Header = (props) => {
                         >
                             {localStorage.getItem('email')}
                             <ListItemIcon>
-                                <FaCaretDown fontSize="normal" />
+                                <FaCaretDown fontSize="normal"/>
                             </ListItemIcon>
                         </Button>
                         <StyledMenu
@@ -326,19 +326,19 @@ const Header = (props) => {
                             <Link
                                 to={TEACHER_LIST_LINK}
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaClock fontSize="normal" />
+                                        <FaClock fontSize="normal"/>
                                     </ListItemIcon>
                                     {t(SCHEDULE_TITLE)}
                                 </StyledMenuItem>
                             </Link>
                             <span
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={() => {
                                     handleCloseUserMenu();
                                 }}
@@ -348,12 +348,12 @@ const Header = (props) => {
                             <Link
                                 to={MY_PROFILE_LINK}
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaUser fontSize="normal" />
+                                        <FaUser fontSize="normal"/>
                                     </ListItemIcon>
                                     {t(MY_PROFILE)}
                                 </StyledMenuItem>
@@ -361,12 +361,12 @@ const Header = (props) => {
                             <Link
                                 to={LOGOUT_LINK}
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normal" />
+                                        <FaSignOutAlt fontSize="normal"/>
                                     </ListItemIcon>
                                     {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
@@ -397,12 +397,12 @@ const Header = (props) => {
                             <Link
                                 to={LOGOUT_LINK}
                                 className="navLinks"
-                                style={{ textDecoration: 'none' }}
+                                style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
                             >
                                 <StyledMenuItem>
                                     <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normal" />
+                                        <FaSignOutAlt fontSize="normal"/>
                                     </ListItemIcon>
                                     {t(LOGOUT_TITLE)}
                                 </StyledMenuItem>
@@ -422,11 +422,11 @@ const Header = (props) => {
             <>
                 {loading ? (
                     <span className="navLinks nav-semester">
-                        <CircularProgress size={20} />
+                        <CircularProgress size={20}/>
                     </span>
                 ) : (
                     <span className="navLinks nav-semester">
-                        {t(SEMESTER_LABEL)}: {currentSemester.description}
+                    <strong>{t(SEMESTER_LABEL)}</strong>: {currentSemester.description}
                     </span>
                 )}
             </>
@@ -454,12 +454,12 @@ const Header = (props) => {
                     <Link
                         to={HOME_PAGE_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaHome fontSize="normall" />
+                                <FaHome fontSize="normall"/>
                             </ListItemIcon>
                             {t(HOME_TITLE)}
                         </StyledMenuItem>
@@ -468,12 +468,12 @@ const Header = (props) => {
                     <Link
                         to={SCHEDULE_PAGE_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaClock fontSize="normall" />
+                                <FaClock fontSize="normall"/>
                             </ListItemIcon>
                             {t(SCHEDULE_TITLE)}
                         </StyledMenuItem>
@@ -482,12 +482,12 @@ const Header = (props) => {
                     <Link
                         to={ADMIN_PAGE_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaUser fontSize="normall" />
+                                <FaUser fontSize="normall"/>
                             </ListItemIcon>
                             {t(ADMIN_TITLE)}
                         </StyledMenuItem>
@@ -495,25 +495,25 @@ const Header = (props) => {
 
                     <span
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                         role="button"
                         tabIndex="0"
                     >
                         <StyledMenuItem>
-                            <FreeRooms classScheduler={props.classScheduler} />
+                            <FreeRooms classScheduler={props.classScheduler}/>
                         </StyledMenuItem>
                     </span>
 
                     <Link
                         to={LOGOUT_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaSignOutAlt fontSize="normall" />
+                                <FaSignOutAlt fontSize="normall"/>
                             </ListItemIcon>
                             {t(LOGOUT_TITLE)}
                         </StyledMenuItem>
@@ -544,31 +544,31 @@ const Header = (props) => {
                     <Link
                         to={HOME_PAGE_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaHome fontSize="normall" />
+                                <FaHome fontSize="normall"/>
                             </ListItemIcon>
                             {t(HOME_TITLE)}
                         </StyledMenuItem>
                     </Link>
                     <StyledMenuItem>
                         <ListItemIcon>
-                            <FaClipboardList fontSize="normall" />
+                            <FaClipboardList fontSize="normall"/>
                         </ListItemIcon>
                     </StyledMenuItem>
 
                     <Link
                         to={TEACHER_SCHEDULE_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaClock fontSize="normall" />
+                                <FaClock fontSize="normall"/>
                             </ListItemIcon>
                             {t(SCHEDULE_TITLE)}
                         </StyledMenuItem>
@@ -577,12 +577,12 @@ const Header = (props) => {
                     <Link
                         to={LOGOUT_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaSignOutAlt fontSize="normall" />
+                                <FaSignOutAlt fontSize="normall"/>
                             </ListItemIcon>
                             {t(LOGOUT_TITLE)}
                         </StyledMenuItem>
@@ -612,14 +612,14 @@ const Header = (props) => {
                     <Link
                         to={HOME_PAGE_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={() => {
                             setAnchorEl(null);
                         }}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaHome fontSize="normall" />
+                                <FaHome fontSize="normall"/>
                             </ListItemIcon>
                             {t(HOME_TITLE)}
                         </StyledMenuItem>
@@ -627,12 +627,12 @@ const Header = (props) => {
                     <Link
                         to={LOGIN_LINK}
                         className="navLinks"
-                        style={{ textDecoration: 'none' }}
+                        style={{textDecoration: 'none'}}
                         onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
-                                <FaRunning fontSize="normall" />
+                                <FaRunning fontSize="normall"/>
                             </ListItemIcon>
                             {t(LOGIN_TITLE)}
                         </StyledMenuItem>
@@ -647,14 +647,14 @@ const Header = (props) => {
             <header className="header">
                 {menu}
                 <nav className="header-blocks header-blocks_one">
-                    <Link to={HOME_PAGE_LINK} className="navLinks">
-                        {t(HOME_TITLE)}
+                    <Link to={HOME_PAGE_LINK} className="header-logo">
+                        📅 {t('app_logo_title')}
                     </Link>
                     {leftLinks}
                 </nav>
-                <nav className="header-blocks header-blocks_two">{userMenu}</nav>
-                <nav className="header-blocks header-blocks_three">
-                    <LanguageSelector />
+                <nav className="header-blocks header-blocks_right">
+                    <LanguageSelector/>
+                    {userMenu}
                 </nav>
             </header>
 
@@ -678,6 +678,7 @@ const Header = (props) => {
                     {
                         label: t(CANCEL_BUTTON_LABEL),
                         handleClick: handleClearCacheCancel,
+                        additionClassName: 'close-button',
                     },
                     {
                         label: t(COMMON_YES_BUTTON_TITLE),

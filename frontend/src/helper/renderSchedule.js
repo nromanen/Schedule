@@ -7,7 +7,29 @@ import {getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTit
 import SchedulePublishBanner from "../components/GroupSchedulePage/SchedulePublishBanner/SchedulePublishBanner";
 import DepartmentDownloadLink from '../components/DownloadLink/DepartmentDownloadLink';
 
+import { daysUppercase } from '../constants/schedule/days';
+import { matchDayNumberSysytemToDayName } from './renderScheduleTable';
+
 const emptySchedule = (t) => <p className="empty_schedule">{t('common:empty_schedule')}</p>;
+
+const ViewModeToggle = ({ viewMode, setViewMode, t }) => {
+    return (
+        <div className="schedule-view-toggle">
+            <button
+                className={`schedule-view-toggle__btn ${viewMode === 'today' ? 'active' : ''}`}
+                onClick={() => setViewMode('today')}
+            >
+                {t('common:today_schedule', 'Сьогодні')}
+            </button>
+            <button
+                className={`schedule-view-toggle__btn ${viewMode === 'all' ? 'active' : ''}`}
+                onClick={() => setViewMode('all')}
+            >
+                {t('common:full_week_schedule', 'Весь тиждень')}
+            </button>
+        </div>
+    );
+};
 
 const renderSchedule = (props) => {
     const {
@@ -23,6 +45,8 @@ const renderSchedule = (props) => {
         notPublishedMessage,
         isManager,
         t,
+        viewMode,
+        setViewMode,
     } = props;
 
     if (notPublished) {
@@ -114,19 +138,34 @@ const renderSchedule = (props) => {
             );
         }
         case 'full': {
-            const {resultArray} = fullSchedule;
+            const { resultArray, semester } = fullSchedule;
             if (isEmpty(resultArray)) {
                 return emptySchedule(t);
             }
+
+            const currentDay = matchDayNumberSysytemToDayName();
+            const currentWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
+
+            const displaySchedule = viewMode === 'today'
+                ? { ...fullSchedule, resultArray: resultArray.filter(d => d.day === currentDay) }
+                : fullSchedule;
+
             return (
                 <>
-                    {/*{titleSuffix}*/}
                     {isManager && (
                         <div className="schedule-publish-banner-right">
                             <SchedulePublishBanner />
                         </div>
                     )}
-                    {renderFullSchedule(fullSchedule)}
+                    {/*<ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />*/}
+                    {viewMode === 'today' && !currentDay && (
+                        <p className="empty_schedule">{t('common:no_classes_today', 'Сьогодні немає занять')}</p>
+                    )}
+                    {renderFullSchedule(
+                        displaySchedule,
+                        viewMode === 'today' ? currentWeekIsOdd : null,
+                        <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
+                    )}
                 </>
             );
         }
