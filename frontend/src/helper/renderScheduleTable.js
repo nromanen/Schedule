@@ -409,7 +409,7 @@ const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, curre
     });
 };
 
-const ScheduleLegend = () => {
+export const ScheduleLegend = () => {
     const legendItems = [
         { type: 'lecture', label: i18n.t('lesson_type_lecture', 'Лекція') },
         { type: 'practical', label: i18n.t('lesson_type_practical', 'Практична') },

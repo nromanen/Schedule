@@ -176,7 +176,7 @@ h2 {
 
       // Grouped classes
       &.grouped {
-        background-color: #fafafa;
+        background-color: $blue1;
       }
 
       &.currentDay {
@@ -190,7 +190,6 @@ h2 {
         border-right: 1px solid $gray1;
         border-bottom: 1px solid $gray2;
         font-size: 1em;
-        position: relative;
         position: sticky;
         text-align: center;
         z-index: 1;
@@ -247,7 +246,7 @@ h2 {
 
 // Day separator line
 .MuiTable-root tbody tr.MuiTableRow-root.day-first-row td.MuiTableCell-root.MuiTableCell-body {
-  border-top: 3px solid #999;
+  border-top: 3px solid $gray3;
 }
 
 .schedule-legend {
@@ -256,7 +255,7 @@ h2 {
   gap: 20px;
   margin: 12px 0 20px;
   font-size: 13px;
-  color: #636e72;
+  color: $gray;
 }
 
 .schedule-legend__item {
@@ -275,8 +274,8 @@ h2 {
 .schedule-week-badge {
   vertical-align: middle;
   display: inline-block;
-  background: #5c6bc0;
-  color: #fff;
+  background: $blue7;
+  color: $white;
   font-size: 14px;
   font-weight: 600;
   padding: 3px 12px;

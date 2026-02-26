@@ -1,0 +1,46 @@
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+
+// ─── Calendar day rows ──────────────────────────────────────────
+
+.calendar-day-first-row td {
+  border-top: 2px solid $gray1 !important;
+}
+
+.calendar-day-cell {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: $white;
+  text-align: center;
+  min-width: 70px;
+  padding: 8px !important;
+  border-right: 1px solid $gray1;
+
+  .calendar-day-name {
+    display: block;
+    font-weight: 500;
+    font-size: 0.75em;
+    color: $blue5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .calendar-day-date {
+    display: block;
+    font-weight: 700;
+    font-size: 1.3em;
+    color: $black;
+    margin-top: 2px;
+  }
+}
+
+// ─── Highlight today ────────────────────────────────────────────
+
+.calendar-day-cell.today {
+  background: $blue2;
+
+  .calendar-day-name {
+    color: $blue;
+  }
+}

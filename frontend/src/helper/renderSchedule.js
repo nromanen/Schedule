@@ -9,10 +9,11 @@ import DepartmentDownloadLink from '../components/DownloadLink/DepartmentDownloa
 
 import { daysUppercase } from '../constants/schedule/days';
 import { matchDayNumberSysytemToDayName } from './renderScheduleTable';
+import CalendarSchedule, {isShortSemester} from "../components/CalendarSchedule/CalendarSchedule";
 
 const emptySchedule = (t) => <p className="empty_schedule">{t('common:empty_schedule')}</p>;
 
-const ViewModeToggle = ({ viewMode, setViewMode, t }) => {
+export const ViewModeToggle = ({ viewMode, setViewMode, t }) => {
     return (
         <div className="schedule-view-toggle">
             <button
@@ -143,6 +144,20 @@ const renderSchedule = (props) => {
                 return emptySchedule(t);
             }
 
+            // Short semester (≤28 days) → calendar view
+            if (isShortSemester(semester.startDay, semester.endDay)) {
+                return (
+                    <CalendarSchedule
+                        fullSchedule={fullSchedule}
+                        viewMode={viewMode}
+                        setViewMode={setViewMode}
+                        isManager={isManager}
+                        t={t}
+                    />
+                );
+            }
+
+            // Regular semester
             const currentDay = matchDayNumberSysytemToDayName();
             const currentWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
 
@@ -157,7 +172,6 @@ const renderSchedule = (props) => {
                             <SchedulePublishBanner />
                         </div>
                     )}
-                    {/*<ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />*/}
                     {viewMode === 'today' && !currentDay && (
                         <p className="empty_schedule">{t('common:no_classes_today', 'Сьогодні немає занять')}</p>
                     )}
