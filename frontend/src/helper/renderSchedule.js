@@ -10,6 +10,8 @@ import DepartmentDownloadLink from '../components/DownloadLink/DepartmentDownloa
 import { daysUppercase } from '../constants/schedule/days';
 import { matchDayNumberSysytemToDayName } from './renderScheduleTable';
 import CalendarSchedule, {isShortSemester} from "../components/CalendarSchedule/CalendarSchedule";
+import CalendarGroupSchedule from "../components/CalendarSchedule/CalendarGroupSchedule";
+
 
 const emptySchedule = (t) => <p className="empty_schedule">{t('common:empty_schedule')}</p>;
 
@@ -68,6 +70,27 @@ const renderSchedule = (props) => {
         case 'group': {
             const {semester, group, oddArray, evenArray} = groupSchedule;
             if (isEmpty(oddArray) && isEmpty(evenArray)) return emptySchedule(t);
+
+            // Short semester → calendar view
+            if (isShortSemester(semester.startDay, semester.endDay)) {
+                return (
+                    <>
+                        {titleSuffix}
+                        <h1>
+                            {getGroupScheduleTitle(semester, group)}
+                            <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
+                            {groupData?.id && (
+                                <DownloadLink entity="group" semesterId={semesterData.id} entityId={groupData.id} />
+                            )}
+
+                        </h1>
+                        <ScheduleLegend />
+                        <CalendarGroupSchedule groupSchedule={groupSchedule} viewMode={viewMode} t={t} />
+                    </>
+                );
+            }
+
+            // Regular semester
             return (
                 <>
                     {titleSuffix}
@@ -80,13 +103,13 @@ const renderSchedule = (props) => {
                         />
                     </h1>
                     <h2>
-                        <span className={getWeekParity(semester.startDay) % 2 === 1 ? "currentDay" : ""}>
-                            {t('common:odd_week')}</span>
+                <span className={getWeekParity(semester.startDay) % 2 === 1 ? "currentDay" : ""}>
+                    {t('common:odd_week')}</span>
                     </h2>
                     {renderGroupTable(oddArray, true, semester)}
                     <h2>
-                        <span className={getWeekParity(semester.startDay) % 2 === 0 ? "currentDay" : ""}>
-                            {t('common:even_week')}</span>
+                <span className={getWeekParity(semester.startDay) % 2 === 0 ? "currentDay" : ""}>
+                    {t('common:even_week')}</span>
                     </h2>
                     {renderGroupTable(evenArray, false, semester)}
                 </>
@@ -147,14 +170,22 @@ const renderSchedule = (props) => {
 
             // Short semester (≤28 days) → calendar view
             if (isShortSemester(semester.startDay, semester.endDay)) {
+                const weekNumber = getWeekParity(semester.startDay);
                 return (
-                    <CalendarSchedule
-                        fullSchedule={fullSchedule}
-                        viewMode={viewMode}
-                        setViewMode={setViewMode}
-                        isManager={isManager}
-                        t={t}
-                    />
+                    <>
+                        {isManager && (
+                            <div className="schedule-publish-banner-right">
+                                <SchedulePublishBanner />
+                            </div>
+                        )}
+                        <h1>
+                            <span className="schedule-week-badge">{weekNumber} {t('week_label')}</span>
+                            {semester.description} ({semester.startDay}–{semester.endDay})
+                            <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
+                        </h1>
+                        <ScheduleLegend />
+                        <CalendarSchedule fullSchedule={fullSchedule} viewMode={viewMode} t={t} />
+                    </>
                 );
             }
 

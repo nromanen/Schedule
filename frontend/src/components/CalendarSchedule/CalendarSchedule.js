@@ -7,14 +7,11 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import i18n from '../../i18n';
-import { getWeekParity, isWeekOdd, ScheduleLegend } from '../../helper/renderScheduleTable';
-import { ViewModeToggle } from '../../helper/renderSchedule';
-import { lessonTypeColors } from '../GroupSchedulePage/LessonTemporaryCardCell';
+import { getWeekParity, isWeekOdd } from '../../helper/renderScheduleTable';
 import LessonTemporaryCardCell from '../../containers/GroupSchedulePage/LessonTemporaryCardCell';
 import { places } from '../../constants/places';
 import { daysUppercase } from '../../constants/schedule/days';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
-import SchedulePublishBanner from '../GroupSchedulePage/SchedulePublishBanner/SchedulePublishBanner';
 
 import './CalendarSchedule.scss';
 
@@ -34,8 +31,6 @@ const formatDate = (date) => {
 };
 
 const getDayName = (date) => {
-    // getDay(): 0=Sunday, 1=Monday...
-    // daysUppercase: 0=MONDAY, 1=TUESDAY... 6=SUNDAY
     const jsDay = date.getDay();
     return jsDay === 0 ? daysUppercase[6] : daysUppercase[jsDay - 1];
 };
@@ -51,7 +46,6 @@ const generateCalendarDays = (startDay, endDay) => {
             date: new Date(current),
             dateFormatted: formatDate(current),
             dayName: getDayName(current),
-            dayLabel: `${i18n.t(`common:day_of_week_short_${getDayName(current)}`)} ${formatDate(current)}`,
         });
         current.setDate(current.getDate() + 1);
     }
@@ -65,23 +59,22 @@ export const isShortSemester = (startDay, endDay) => {
     return diffDays <= 28;
 };
 
-// ─── Check if a calendar day has any classes ────────────────────
+// ─── Helpers ────────────────────────────────────────────────────
 
-const isDayEmpty = (dayName, isOdd, resultArray, semesterClasses) => {
+const isDayEmpty = (dayName, isOdd, resultArray) => {
     const dayData = resultArray.find(d => d.day === dayName);
     if (!dayData) return true;
-
     return dayData.classes.every(classItem => {
         const cards = isOdd ? classItem.cards.odd : classItem.cards.even;
         return cards.every(g => g.card === null);
     });
 };
 
-// ─── Render helpers ─────────────────────────────────────────────
-
 const renderClassCell = (classItem) => {
     return `${classItem.class_name}\n\r\n\r${classItem.startTime} - ${classItem.endTime}`;
 };
+
+// ─── Sub-components ─────────────────────────────────────────────
 
 const CalendarScheduleHeader = ({ groupList }) => (
     <TableHead>
@@ -102,11 +95,8 @@ const CalendarGroupCells = ({ groups, dayName }) => {
         let colspan = 1;
         let classname = 'lesson';
 
-        if (card !== null && card.skip_render === 1) {
-            return null;
-        }
+        if (card !== null && card.skip_render === 1) return null;
 
-        // Merge identical adjacent cards
         for (let i = groupIndex + 1; i < groups.length; i += 1) {
             const { card: tempCard } = groups[i];
             if (
@@ -126,21 +116,16 @@ const CalendarGroupCells = ({ groups, dayName }) => {
         }
 
         return (
-            <TableCell
-                key={shortid.generate()}
-                colSpan={colspan}
-                className={classname}
-            >
+            <TableCell key={shortid.generate()} colSpan={colspan} className={classname}>
                 <LessonTemporaryCardCell card={card} day={dayName} place={places.TOGETHER} />
             </TableCell>
         );
     });
 };
 
-const CalendarDayRows = ({ calendarDay, dayData, semesterClasses, isOdd }) => {
+const CalendarDayRows = ({ calendarDay, dayData, isOdd }) => {
     if (!dayData) return null;
 
-    // Filter out classes where all groups have no cards
     const nonEmptyClasses = dayData.classes.filter(classItem => {
         const cards = isOdd ? classItem.cards.odd : classItem.cards.even;
         return !cards.every(g => g.card === null);
@@ -150,19 +135,12 @@ const CalendarDayRows = ({ calendarDay, dayData, semesterClasses, isOdd }) => {
 
     return nonEmptyClasses.map((classItem, classIndex) => {
         const cards = isOdd ? classItem.cards.odd : classItem.cards.even;
-
-        // Reset skip_render flags
-        cards.forEach(g => {
-            if (g.card) g.card.skip_render = 0;
-        });
+        cards.forEach(g => { if (g.card) g.card.skip_render = 0; });
 
         return (
             <TableRow key={shortid.generate()} className={classIndex === 0 ? 'calendar-day-first-row' : ''}>
                 {classIndex === 0 && (
-                    <TableCell
-                        rowSpan={nonEmptyClasses.length}
-                        className="calendar-day-cell"
-                    >
+                    <TableCell rowSpan={nonEmptyClasses.length} className="calendar-day-cell">
                         <span className="calendar-day-name">
                             {i18n.t(`common:day_of_week_short_${calendarDay.dayName}`)}
                         </span>
@@ -180,85 +158,58 @@ const CalendarDayRows = ({ calendarDay, dayData, semesterClasses, isOdd }) => {
     });
 };
 
+// ─── Main component (TABLE ONLY) ────────────────────────────────
 
-// ─── Main component ─────────────────────────────────────────────
+const CalendarSchedule = ({ fullSchedule, viewMode, t }) => {
+    const { semester, groupList, resultArray } = fullSchedule;
+    const { startDay, endDay } = semester;
 
-const CalendarSchedule = ({ fullSchedule, viewMode, setViewMode, isManager, t }) => {
-    const { semester, groupList, semesterClasses, resultArray } = fullSchedule;
-    const { startDay, description, endDay } = semester;
-
-    // Generate all calendar days
     const allCalendarDays = generateCalendarDays(startDay, endDay);
 
-    // Determine today
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const todayFormatted = formatDate(today);
 
-    // Filter for today mode
     const calendarDays = viewMode === 'today'
         ? allCalendarDays.filter(d => d.dateFormatted === todayFormatted)
         : allCalendarDays;
 
-    // Build schedule title
-    const weekNumber = getWeekParity(startDay);
-    const scheduleTitle = (
-        <>
-            <span className="schedule-week-badge">
-                {weekNumber} {i18n.t('week_label')}
-            </span>
-            {description} ({startDay}–{endDay})
-            <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
-        </>
-    );
-
-    // Filter out empty days
     const nonEmptyDays = calendarDays.filter(calendarDay => {
         const isOdd = isWeekOdd(getWeekParity(startDay, calendarDay.date));
-        return !isDayEmpty(calendarDay.dayName, isOdd, resultArray, semesterClasses);
+        return !isDayEmpty(calendarDay.dayName, isOdd, resultArray);
     });
 
+    if (nonEmptyDays.length === 0) {
+        return (
+            <p className="empty_schedule">
+                {viewMode === 'today'
+                    ? t('common:no_classes_today', 'Сьогодні немає занять')
+                    : t('common:empty_schedule')
+                }
+            </p>
+        );
+    }
+
     return (
-        <>
-            {isManager && (
-                <div className="schedule-publish-banner-right">
-                    <SchedulePublishBanner />
-                </div>
-            )}
-            <h1>{scheduleTitle}</h1>
-            <ScheduleLegend />
-
-            {nonEmptyDays.length === 0 ? (
-                <p className="empty_schedule">
-                    {viewMode === 'today'
-                        ? t('common:no_classes_today', 'Сьогодні немає занять')
-                        : t('common:empty_schedule')
-                    }
-                </p>
-            ) : (
-                <TableContainer>
-                    <Table aria-label="calendar schedule">
-                        <CalendarScheduleHeader groupList={groupList} />
-                        <TableBody>
-                            {nonEmptyDays.map(calendarDay => {
-                                const isOdd = isWeekOdd(getWeekParity(startDay, calendarDay.date));
-                                const dayData = resultArray.find(d => d.day === calendarDay.dayName);
-
-                                return (
-                                    <CalendarDayRows
-                                        key={calendarDay.dateFormatted}
-                                        calendarDay={calendarDay}
-                                        dayData={dayData}
-                                        semesterClasses={semesterClasses}
-                                        isOdd={isOdd}
-                                    />
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            )}
-        </>
+        <TableContainer>
+            <Table aria-label="calendar schedule">
+                <CalendarScheduleHeader groupList={groupList} />
+                <TableBody>
+                    {nonEmptyDays.map(calendarDay => {
+                        const isOdd = isWeekOdd(getWeekParity(startDay, calendarDay.date));
+                        const dayData = resultArray.find(d => d.day === calendarDay.dayName);
+                        return (
+                            <CalendarDayRows
+                                key={calendarDay.dateFormatted}
+                                calendarDay={calendarDay}
+                                dayData={dayData}
+                                isOdd={isOdd}
+                            />
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
     );
 };
 

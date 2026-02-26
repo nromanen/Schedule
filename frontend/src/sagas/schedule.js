@@ -359,8 +359,7 @@ function* setSemesterAndType(semesterId, type) {
     const teachers = yield select((state) => state.teachers.teachers);
     if (isEmpty(teachers)) yield call(getAllPublicTeachers);
 
-    const groups = yield select((state) => state.groups.groups);
-    if (isEmpty(groups)) yield call(getAllPublicGroups, { id: semesterId });
+    yield call(getAllPublicGroups, { id: semesterId });
 
     yield put(setScheduleSemester(semester));
     yield put(setScheduleType(type));
@@ -368,9 +367,11 @@ function* setSemesterAndType(semesterId, type) {
 export function* selectGroupSchedule({ semesterId, groupId }) {
     yield call(setSemesterAndType, semesterId, GROUP);
     const groups = yield select((state) => state.groups.groups);
-    const group = groups.find((item) => item.id === Number(groupId));
+    const scheduleGroups = yield select((state) => state.groups.scheduleGroups);
+    const group = groups.find((item) => item.id === Number(groupId))
+        || scheduleGroups.find((item) => item.id === Number(groupId))
+        || { id: Number(groupId) };
     yield put(setScheduleGroup(group));
-    // yield put(setScheduleDepartment(null));
     yield call(getGroupSchedule, { semesterId, groupId });
 }
 export function* selectTeacherSchedule({ semesterId, teacherId }) {
