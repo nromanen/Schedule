@@ -1,7 +1,7 @@
 import React from 'react';
 import {isEmpty} from 'lodash';
 import DownloadLink from '../components/DownloadLink/DownloadLink';
-import {renderFullSchedule, renderGroupTable, renderWeekTable} from './renderScheduleTable';
+import {renderFullSchedule, renderGroupTable, renderWeekTable, ScheduleLegend} from './renderScheduleTable';
 import DepartmentSchedule from '../components/DepartmentSchedule/DepartmentSchedule';
 import {getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTitle} from '../utils/titlesUtil';
 import SchedulePublishBanner from "../components/GroupSchedulePage/SchedulePublishBanner/SchedulePublishBanner";
@@ -58,7 +58,11 @@ const renderSchedule = (props) => {
         );
     }
 
-    const titleSuffix = isManager ? <SchedulePublishBanner /> : null;
+    const titleSuffix = isManager ? (
+        <div className="schedule-publish-banner-right">
+            <SchedulePublishBanner />
+        </div>
+    ) : null;
 
     switch (scheduleType) {
         case 'group': {
@@ -66,6 +70,7 @@ const renderSchedule = (props) => {
             if (isEmpty(oddArray) && isEmpty(evenArray)) return emptySchedule(t);
             return (
                 <>
+                    {titleSuffix}
                     <h1>
                         {getGroupScheduleTitle(semester, group)}
                         <DownloadLink
@@ -73,7 +78,6 @@ const renderSchedule = (props) => {
                             semesterId={semesterData.id}
                             entityId={groupData.id}
                         />
-                        {titleSuffix}
                     </h1>
                     <h2>
                         <span className={getWeekParity(semester.startDay) % 2 === 1 ? "currentDay" : ""}>
@@ -93,6 +97,7 @@ const renderSchedule = (props) => {
             if (isEmpty(odd?.classes) && isEmpty(even?.classes)) return emptySchedule(t);
             return (
                 <>
+                    {titleSuffix}
                     <h1>
                         {getTeacherScheduleTitle(semester, teacher)}
                         <DownloadLink
@@ -100,16 +105,16 @@ const renderSchedule = (props) => {
                             semesterId={semesterData.id}
                             entityId={teacherData.id}
                         />
-                        {titleSuffix}
                     </h1>
+                    <ScheduleLegend />
                     <h2>
-                        <span className={getWeekParity(semester.startDay) % 2 === 1 ? "currentDay" : ""}>
-                            {t('common:odd_week')}</span>
+                <span className={getWeekParity(semester.startDay) % 2 === 1 ? "currentDay" : ""}>
+                    {t('common:odd_week')}</span>
                     </h2>
                     {renderWeekTable(odd)}
                     <h2>
-                        <span className={getWeekParity(semester.startDay) % 2 === 0 ? "currentDay" : ""}>
-                            {t('common:even_week')}</span>
+                <span className={getWeekParity(semester.startDay) % 2 === 0 ? "currentDay" : ""}>
+                    {t('common:even_week')}</span>
                     </h2>
                     {renderWeekTable(even)}
                 </>
@@ -120,6 +125,7 @@ const renderSchedule = (props) => {
             if (isEmpty(resultArray)) return emptySchedule(t);
             return (
                 <>
+                    {titleSuffix}
                     <h1>
                         {getDepartmentScheduleTitle(semester, departmentData)}
                         <DepartmentDownloadLink
@@ -129,11 +135,6 @@ const renderSchedule = (props) => {
                             semesterEndDay={semester?.endDay}
                         />
                     </h1>
-                    {isManager && (
-                        <div className="schedule-publish-banner-right">
-                            <SchedulePublishBanner />
-                        </div>
-                    )}
                     <DepartmentSchedule fullSchedule={fullSchedule} departmentId={departmentData?.id} />
                 </>
             );
@@ -167,11 +168,7 @@ const renderSchedule = (props) => {
 
             return (
                 <>
-                    {isManager && (
-                        <div className="schedule-publish-banner-right">
-                            <SchedulePublishBanner />
-                        </div>
-                    )}
+                    {titleSuffix}
                     {viewMode === 'today' && !currentDay && (
                         <p className="empty_schedule">{t('common:no_classes_today', 'Сьогодні немає занять')}</p>
                     )}
