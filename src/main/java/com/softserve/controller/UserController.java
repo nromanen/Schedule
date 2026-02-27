@@ -1,9 +1,6 @@
 package com.softserve.controller;
 
-import com.softserve.dto.EmailMessageDTO;
-import com.softserve.dto.UserCreateDTO;
-import com.softserve.dto.UserDTO;
-import com.softserve.dto.UserDataDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.CurrentUser;
 import com.softserve.entity.User;
 import com.softserve.entity.enums.Role;
@@ -124,5 +121,16 @@ public class UserController {
         log.info("Sending email from user: {}", jwtUser.getUsername());
         mailService.send(jwtUser.getUsername(), emailMessageDTO);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}/set-password")
+    @Operation(summary = "Admin sets password for user")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<MessageDTO> adminSetPassword(
+            @PathVariable Long id,
+            @RequestBody AdminSetPasswordRequest request) {
+        log.info("Admin setting password for user id: {}", id);
+        userService.adminSetPassword(id, request.password());
+        return ResponseEntity.ok(new MessageDTO("Password set successfully."));
     }
 }

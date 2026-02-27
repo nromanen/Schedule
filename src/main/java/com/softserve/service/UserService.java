@@ -130,4 +130,27 @@ public interface UserService {
      * @throws com.softserve.exception.IncorrectPasswordException if password was incorrect or not strong enough
      */
     User automaticRegistration(String email, Role role);
+
+    /**
+     * Sets a new password for a user identified by the activation token and activates the account.
+     *
+     * @param token    the activation token sent to the user's email
+     * @param password the new password to set
+     * @return the updated user
+     * @throws com.softserve.exception.EntityNotFoundException    if no user is found with the given token
+     * @throws com.softserve.exception.IncorrectPasswordException if the password does not meet validation requirements
+     */
+    User setPasswordByToken(String token, String password);
+
+    /**
+     * Allows an admin to set a password for a user directly.
+     *
+     * @param userId   the id of the user
+     * @param password the new password to set
+     * @return the updated user
+     * @throws com.softserve.exception.EntityNotFoundException    if no user is found with the given id
+     * @throws com.softserve.exception.IncorrectPasswordException if the password does not meet validation requirements
+     */
+    User adminSetPassword(Long userId, String password);
 }
+

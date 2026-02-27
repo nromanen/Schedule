@@ -387,7 +387,7 @@ class StudentServiceTest {
         when(studentMapper.studentImportDTOToStudent(studentImportDTO3)).thenReturn(student3);
         when(studentMapper.studentToStudentImportDTO(student3registered)).thenReturn(studentImportDTO3);
 
-        List<StudentImportDTO> actualStudents = studentService.saveFromFile(multipartFile, 4L).getNow(new ArrayList<>());
+        List<StudentImportDTO> actualStudents = studentService.saveFromFile(multipartFile, 4L);
         assertNotNull(actualStudents);
         assertEquals(expectedStudents, actualStudents);
         verify(studentRepository).save(student1);

@@ -15,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -76,9 +75,9 @@ public class StudentController {
 
     @PostMapping("/import")
     @Operation(summary = "import students from file to database")
-    public ResponseEntity<List<StudentImportDTO>> importFromCsv(@Parameter(description = "csv format is required")
-                                                                @RequestParam("file") MultipartFile file, @RequestParam Long groupId) {
-        return ResponseEntity.ok(studentService.saveFromFile(file, groupId)
-                .getNow(new ArrayList<>()));
+    public ResponseEntity<List<StudentImportDTO>> importFromCsv(
+            @Parameter(description = "csv format is required")
+            @RequestParam("file") MultipartFile file, @RequestParam Long groupId) {
+        return ResponseEntity.ok(studentService.saveFromFile(file, groupId));
     }
 }

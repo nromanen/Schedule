@@ -64,7 +64,7 @@ public class UserRepositoryImpl extends BasicRepositoryImpl<User, Long> implemen
         log.info("Deleting unverified users older than {}", threshold);
         return sessionFactory.getCurrentSession()
                 .createMutationQuery(
-                        "DELETE FROM AppUser u WHERE u.token IS NOT NULL AND u.createdAt < :threshold")
+                        "DELETE FROM AppUser u WHERE u.activated = false AND u.createdAt < :threshold")
                 .setParameter("threshold", threshold)
                 .executeUpdate();
     }

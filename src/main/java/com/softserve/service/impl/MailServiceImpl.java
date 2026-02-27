@@ -52,16 +52,19 @@ public class MailServiceImpl implements MailService {
         log.info("Enter into send method with receiver {}, subject {}", receiver, subject);
 
         if (enabled) {
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-
-            mailMessage.setFrom(credentialsUsername);
-            mailMessage.setTo(receiver);
-            mailMessage.setSubject(subject);
-            mailMessage.setText(message);
-
-            mailSender.send(mailMessage);
+            try {
+                SimpleMailMessage mailMessage = new SimpleMailMessage();
+                mailMessage.setFrom(credentialsUsername);
+                mailMessage.setTo(receiver);
+                mailMessage.setSubject(subject);
+                mailMessage.setText(message);
+                mailSender.send(mailMessage);
+            } catch (Exception e) {
+                log.error("Failed to send email to {}", receiver, e);
+            }
         }
     }
+
 
     @Override
     public void send(String sender, EmailMessageDTO emailMessageDTO) {

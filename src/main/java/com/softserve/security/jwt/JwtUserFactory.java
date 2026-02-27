@@ -16,7 +16,7 @@ public final class JwtUserFactory {
                 user.getEmail(),
                 user.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString())),
-                (user.getToken() == null || user.getToken().equals(""))
+                user.isActivated()
         );
     }
 }

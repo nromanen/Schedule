@@ -217,6 +217,7 @@ class UserServiceTest {
         expectedUser.setPassword(PasswordGeneratingUtil.generatePassword());
         expectedUser.setRole(Role.ROLE_TEACHER);
         expectedUser.setToken(UUID.randomUUID().toString());
+        expectedUser.setActivated(false);
 
         when(encoder.encode(any(CharSequence.class))).thenReturn(expectedUser.getPassword());
         when(userRepository
@@ -226,14 +227,14 @@ class UserServiceTest {
         User actualUser = userService.automaticRegistration(expectedUser.getEmail(), expectedUser.getRole());
 
         assertThat(actualUser).usingRecursiveComparison().isEqualTo(expectedUser);
+        assertFalse(actualUser.isActivated());
         verify(userRepository, times(1)).save(any());
         verify(mailService, times(1)).send(
                 ArgumentMatchers.eq(actualUser.getEmail()),
                 ArgumentMatchers.contains("Activation account"),
-                ArgumentMatchers.contains("activation-page?token=")
+                ArgumentMatchers.contains("set-password-page?token=")
         );
     }
-
     private boolean equalsForUsersByEmailAndRoleAndCheckTokenAndPassForNotNull(User actualUser, User expectedUser) {
         return Objects.equals(actualUser.getEmail(), expectedUser.getEmail())
                 && actualUser.getRole() == expectedUser.getRole()
@@ -258,20 +259,17 @@ class UserServiceTest {
         user.setId(1L);
 
         when(userRepository.findByEmail("some@mail.com")).thenReturn(Optional.of(user));
-        //    when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(encoder.encode(any(CharSequence.class))).thenReturn("Qwerty123!@#");
         when(userRepository.update(user)).thenReturn(user);
 
         userService.resetPassword("some@mail.com");
-        assertEquals("Qwerty123!@#", user.getPassword());
+
+        assertNotNull(user.getToken());
         verify(userRepository, times(1)).findByEmail("some@mail.com");
-        //  verify(userRepository, times(1)).findById(1L);
-        verify(encoder, times(1)).encode(any(CharSequence.class));
         verify(userRepository, times(1)).update(user);
         verify(mailService, times(1)).send(
                 ArgumentMatchers.eq("some@mail.com"),
-                ArgumentMatchers.contains("Change password"),
-                ArgumentMatchers.contains("You received this email because you requested to reset your password.")
+                ArgumentMatchers.eq("Reset password"),
+                ArgumentMatchers.contains("To set a new password, please follow the link")
         );
     }
 

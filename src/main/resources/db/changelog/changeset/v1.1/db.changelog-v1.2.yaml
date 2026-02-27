@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-activated-to-users
+      author: nromanen
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: activated
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+        - update:
+            tableName: users
+            columns:
+              - column:
+                  name: activated
+                  valueBoolean: true
+            where: token IS NULL

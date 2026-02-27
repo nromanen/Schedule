@@ -22,14 +22,15 @@ export const getUserProfile = () => {
         .get(USER_PROFILE)
         .then((response) => {
             store.dispatch(setUser(response.data));
-            if (response.data.teacher_name) {
+            if (response.data.name) {
                 store.dispatch(
                     setTeacher({
-                        id: 15,
-                        name: response.data.teacher_name,
-                        surname: response.data.teacher_surname,
-                        patronymic: response.data.teacher_patronymic,
-                        position: response.data.teacher_position,
+                        id: response.data.id,
+                        name: response.data.name,
+                        surname: response.data.surname,
+                        patronymic: response.data.patronymic,
+                        position: response.data.position,
+                        department: response.data.department,
                     }),
                 );
             }

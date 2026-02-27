@@ -1,9 +1,6 @@
 package com.softserve.controller;
 
-import com.softserve.dto.AuthenticationRequestDTO;
-import com.softserve.dto.AuthenticationResponseDTO;
-import com.softserve.dto.MessageDTO;
-import com.softserve.dto.RegistrationRequestDTO;
+import com.softserve.dto.*;
 import com.softserve.entity.User;
 import com.softserve.mapper.UserMapper;
 import com.softserve.security.jwt.JwtTokenProvider;
@@ -51,7 +48,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-in")
-    @Operation(summary = "Get credentials  for login")
+    @Operation(summary = "Get credentials for login")
     public ResponseEntity<Object> signIn(@RequestBody AuthenticationRequestDTO requestDto) {
         log.info("Enter into signIn method with user email {}", requestDto.getEmail());
         User user = userService.findSocialUser(requestDto.getEmail()).orElseThrow(() ->
@@ -75,29 +72,36 @@ public class AuthenticationController {
         User user = userMapper.toCreateUser(registrationDTO);
         User createUser = userService.registration(user);
         String message = "You have successfully registered. Please, check Your email '" + createUser.getEmail() + "' to activate profile.";
-        MessageDTO messageDTO = new MessageDTO(message);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(messageDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageDTO(message));
     }
 
     @PutMapping("/activation-account")
-    @Operation(summary = "Update token after activation successfully account")
+    @Operation(summary = "Activate account by token")
     public ResponseEntity<MessageDTO> activationAccount(@RequestParam("token") String token) {
         log.info("Enter into activationAccount method");
         User user = userService.findByToken(token);
         user.setToken(null);
+        user.setActivated(true);
         userService.update(user);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("You successfully activated Your account."));
+        return ResponseEntity.ok(new MessageDTO("You successfully activated your account."));
     }
 
     @PutMapping("/reset-password")
-    @Operation(summary = "Reset password by email")
+    @Operation(summary = "Send reset password link to email")
     public ResponseEntity<MessageDTO> resetPassword(@RequestParam("email") String email) {
-        log.info("Enter into resetPassword method  with email:{}", email);
+        log.info("Enter into resetPassword method with email:{}", email);
         userService.resetPassword(email);
 
-        return ResponseEntity.ok().body(new MessageDTO("Check Your email, please. A new password has been sent to Your email."));
+        return ResponseEntity.ok(new MessageDTO("Check your email, please. A password reset link has been sent."));
+    }
+
+    @PutMapping("/set-password")
+    @Operation(summary = "Set password and activate account")
+    public ResponseEntity<MessageDTO> setPassword(@RequestBody SetPasswordRequest request) {
+        log.info("Enter into setPassword method");
+        userService.setPasswordByToken(request.token(), request.password());
+        return ResponseEntity.ok(new MessageDTO("Password set successfully. You can now sign in."));
     }
 
     @PostMapping("/sign-out")
@@ -112,12 +116,12 @@ public class AuthenticationController {
     @Operation(summary = "Get token after successful sign in via social network")
     public ResponseEntity<MessageDTO> getLoginInfo(@RequestParam("token") String token) {
         log.info("Enter into getLoginInfo method");
-        return ResponseEntity.ok().body(new MessageDTO(token));
+        return ResponseEntity.ok(new MessageDTO(token));
     }
 
     @GetMapping("/google")
     public ResponseEntity<String> getGoogleSignIn(HttpServletResponse response) throws IOException {
         response.sendRedirect(url + "oauth_login/google");
-        return ResponseEntity.ok().body("Ok");
+        return ResponseEntity.ok("Ok");
     }
 }

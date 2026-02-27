@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService {
 
     public static final String PASSWORD_FOR_SOCIAL_USER = "A&vbSdvSeук4му%ца349ІВмк432ем0!Qfdruevvb";
     private static final char[] NUMBERS = ("0123456789").toCharArray();
-
     private static final char[] SPECIAL_CHARACTERS = ("!@#$%^&*").toCharArray();
     private static final String EMAIL_MATCHES = "([a-z0-9][-a-z0-9_\\+\\.]*[a-z0-9])@([a-z0-9][-a-z0-9\\.]*[a-z0-9]\\." +
             "(arpa|root|aero|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq" +
@@ -53,13 +52,17 @@ public class UserServiceImpl implements UserService {
             "For successful profile activation, you have to follow the next link: ";
     private static final String AUTOMATIC_REGISTRATION_MESSAGE = "Hello, {0}.\n" +
             "You received this email due to automatic registration on our site.\n" +
-            "For successful profile activation and signing in, you have to follow the next link and reset password: ";
+            "For successful profile activation and setting your password, you have to follow the next link: ";
+    private static final String RESET_PASSWORD_MESSAGE = "Hello, {0}.\n" +
+            "You received this email because you requested to reset your password.\n" +
+            "To set a new password, please follow the link: ";
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
 
-    @Value("${app.backend.url}")
-    private String url;
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, MailService mailService) {
@@ -147,45 +150,92 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registration(User user) {
-        log.info("Enter into registration method  with email:{}", user.getEmail());
-        return registration(user, MessageFormat.format(REGISTRATION_MESSAGE, user.getEmail()));
+        log.info("Enter into registration method with email:{}", user.getEmail());
+        user.setActivated(false);
+        return registration(user, MessageFormat.format(REGISTRATION_MESSAGE, user.getEmail()), "activation-page");
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public User automaticRegistration(String email, Role role) {
-        log.info("Enter into registration method  with email:{} and role:{}", email, role);
+        log.info("Enter into automaticRegistration method with email:{} and role:{}", email, role);
         User user = new User();
         user.setRole(role);
         user.setEmail(email);
         user.setPassword(PasswordGeneratingUtil.generatePassword());
-        return registration(user, MessageFormat.format(AUTOMATIC_REGISTRATION_MESSAGE, user.getEmail()));
+        user.setActivated(false);
+        return registration(user, MessageFormat.format(AUTOMATIC_REGISTRATION_MESSAGE, user.getEmail()), "set-password-page");
     }
 
     @Override
     public void resetPassword(String email) {
-        log.info("Enter into resetPassword method  with email:{}", email);
+        log.info("Enter into resetPassword method with email:{}", email);
         if (!email.matches(EMAIL_MATCHES)) {
             throw new IncorrectEmailException("Invalid email. Try again, please.");
         }
         User user = userRepository.findByEmail(email).orElse(null);
         if (user != null) {
-            String password = PasswordGeneratingUtil.generatePassword();
-            user.setPassword(passwordEncoder.encode(password));
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
+            // TODO: Add token expiry time (e.g. 24h) to prevent tokens from living indefinitely
             userRepository.update(user);
 
-            String message = "Hello, " + user.getEmail() + ".\n" +
-                    "You received this email because you requested to reset your password.\n" +
-                    "Below your can see your new password. After sign in site you should change this password on your new password: ";
-            String bodyMessage = message + " \r\n" + "Password: " + password;
-            String subject = "Change password";
+            String link = frontendUrl + "set-password-page?token=" + token;
+            String bodyMessage = MessageFormat.format(RESET_PASSWORD_MESSAGE, user.getEmail()) + " \r\n" + link;
+            String subject = "Reset password";
             mailService.send(user.getEmail(), subject, bodyMessage);
         }
     }
 
+    /**
+     * Sets a new password for a user identified by the activation token and activates the account.
+     *
+     * @param token    the activation token sent to the user's email
+     * @param password the new password to set
+     * @return the updated user
+     * @throws EntityNotFoundException    if no user is found with the given token
+     * @throws IncorrectPasswordException if the password does not meet validation requirements
+     */
+    @Override
+    @CachePut(value = "userByEmail", key = "#result.email")
+    public User setPasswordByToken(String token, String password) {
+        log.info("Enter into setPasswordByToken method");
+        User user = findByToken(token);
+        if (!isPasswordValid(password)) {
+            throw new IncorrectPasswordException();
+        }
+        user.setPassword(passwordEncoder.encode(password));
+        user.setToken(null);
+        user.setActivated(true);
+        return userRepository.update(user);
+    }
+
+    /**
+     * Allows an admin to set a password for a user directly.
+     *
+     * @param userId   the id of the user
+     * @param password the new password to set
+     * @return the updated user
+     * @throws EntityNotFoundException    if no user is found with the given id
+     * @throws IncorrectPasswordException if the password does not meet validation requirements
+     */
+    @Override
+    @CachePut(value = "userByEmail", key = "#result.email")
+    public User adminSetPassword(Long userId, String password) {
+        log.info("Enter into adminSetPassword method for userId: {}", userId);
+        User user = getById(userId);
+        if (!isPasswordValid(password)) {
+            throw new IncorrectPasswordException();
+        }
+        user.setPassword(passwordEncoder.encode(password));
+        user.setToken(null);
+        user.setActivated(true);
+        return userRepository.update(user);
+    }
+
     @Override
     public User createSocialUser(OAuth2User oAuth2User) {
-        log.info("Enter into emailExists method with OAuth2User = {}", oAuth2User);
+        log.info("Enter into createSocialUser method with OAuth2User = {}", oAuth2User);
         String email = oAuth2User.getAttribute(Constants.EMAIL);
         return userRepository.findByEmail(email).orElseGet(() -> saveSocialUser(email));
     }
@@ -216,16 +266,18 @@ public class UserServiceImpl implements UserService {
         return passwordEncoder.encode(newPassword);
     }
 
-    private User registration(User user, String registrationMessage) {
+    private User registration(User user, String registrationMessage, String page) {
         if (isPasswordValid(user.getPassword())) {
             String token = UUID.randomUUID().toString();
             user.setToken(token);
+            // TODO: Add token expiry time (e.g. 24h) to prevent tokens from living indefinitely
             User registrationUser = save(user);
 
             try {
-                sendRegistrationMail(user, registrationMessage);
+                String link = frontendUrl + page + "?token=" + token;
+                sendRegistrationMail(user, registrationMessage, link);
             } catch (Exception e) {
-                log.error("Failed to send registration email to {}: {}", user.getEmail(), e.getMessage());
+                log.error("Failed to send registration email to {}", user.getEmail(), e);
             }
 
             return registrationUser;
@@ -234,8 +286,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void sendRegistrationMail(User user, String registrationMessage) {
-        String link = url + "activation-page?token=" + user.getToken();
+    private void sendRegistrationMail(User user, String registrationMessage, String link) {
         String message = registrationMessage + " \r\n" + link;
         String subject = "Activation account";
         mailService.send(user.getEmail(), subject, message);
@@ -252,13 +303,13 @@ public class UserServiceImpl implements UserService {
                 && containsAny(password, SPECIAL_CHARACTERS) && length(password) >= 8 && length(password) <= 30);
     }
 
-    //save User in db after sign up via social network
     private User saveSocialUser(String email) {
         User user = new User();
         user.setEmail(email);
         user.setPassword(PASSWORD_FOR_SOCIAL_USER);
         user.setToken(null);
         user.setRole(Role.ROLE_USER);
+        user.setActivated(true);
         return userRepository.save(user);
     }
 }

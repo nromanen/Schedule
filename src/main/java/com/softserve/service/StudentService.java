@@ -6,7 +6,6 @@ import com.softserve.entity.Student;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public interface StudentService extends BasicService<Student, Long> {
 
@@ -36,6 +35,6 @@ public interface StudentService extends BasicService<Student, Long> {
      * @param groupId the id of the group
      * @return list of imported and saved students
      */
-    CompletableFuture<List<StudentImportDTO>> saveFromFile(MultipartFile file, Long groupId);
+    List<StudentImportDTO> saveFromFile(MultipartFile file, Long groupId);
 
 }
