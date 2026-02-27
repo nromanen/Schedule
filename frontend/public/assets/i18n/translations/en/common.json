@@ -241,5 +241,9 @@
     "day_of_week_short_SATURDAY": "Sat",
     "day_of_week_short_SUNDAY": "Sun",
     "export_schedule_xlsx": "Export all schedule to XLSX",
-    "schedule_not_default_warning": "Ви переглядаєте семестр \"{{current}}\". Студенти бачать: \"{{default}}\""
+    "schedule_not_default_warning": "Ви переглядаєте семестр \"{{current}}\". Студенти бачать: \"{{default}}\"",
+    "app_logo_title": "FMI Schedule",
+    "today_schedule": "Today",
+    "full_week_schedule": "All days",
+    "no_classes_today": "No classes today"
 }

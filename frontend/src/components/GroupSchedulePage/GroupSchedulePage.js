@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './GroupSchedulePage.scss';
@@ -22,6 +22,7 @@ const GroupSchedulePage = (props) => {
     const history = useHistory();
     const location = useLocation();
     const { t } = useTranslation('common');
+    const [viewMode, setViewMode] = useState('all'); // 'all' | 'today'
     const {
         defaultSemester,
         scheduleType,
@@ -106,7 +107,11 @@ const GroupSchedulePage = (props) => {
 
     const getTop = () =>
         scheduleType !== 'archived' && (
-            <GroupSchedulePageTop scheduleType={scheduleType} handleSubmit={handleSubmit} />
+            <GroupSchedulePageTop
+                scheduleType={scheduleType}
+                handleSubmit={handleSubmit}
+                isManager={props.isManager}
+            />
         );
 
     return (
@@ -117,7 +122,7 @@ const GroupSchedulePage = (props) => {
                     <CircularProgress />
                 </section>
             ) : (
-                renderSchedule({ ...props, t })
+                renderSchedule({ ...props, t, viewMode, setViewMode })
             )}
         </div>
     );

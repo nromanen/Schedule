@@ -11,14 +11,22 @@
 
   &.published {
     .MuiFormControlLabel-label {
-      color: $green;
+      color: $lesson-type-practical;
+    }
+
+    .MuiSwitch-colorPrimary.Mui-checked {
+      color: $lesson-type-practical;
+    }
+
+    .MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track {
+      background-color: $lesson-type-practical;
     }
   }
 
   .MuiFormControlLabel-label {
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: 500;
   }
-
 }
 
 .schedule-publish-banner-right {

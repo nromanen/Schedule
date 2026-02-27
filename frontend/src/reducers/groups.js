@@ -50,7 +50,8 @@ const reducer = (state = initialState, action) => {
         }
 
         case actionTypes.SELECT_GROUP_SUCCESS: {
-            let selectedGroup = state.groups.find((group) => group.id === +action.id);
+            let selectedGroup = state.scheduleGroups.find((group) => group.id === +action.id)
+                || state.groups.find((group) => group.id === +action.id);
             if (!selectedGroup) {
                 selectedGroup = { id: null };
             }
