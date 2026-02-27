@@ -1,3 +1,33 @@
+@import "../../styles/colors.scss";
+
 .form-title {
     word-wrap: break-word;
+}
+
+.profile-container {
+    padding: 20px;
+}
+
+.teacher-info {
+    margin: 16px 0;
+
+    .info-row {
+        display: flex;
+        padding: 8px 0;
+        border-bottom: 1px solid $gray2;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .info-label {
+        font-weight: 600;
+        min-width: 180px;
+        color: $gray;
+    }
+
+    .info-value {
+        color: $black;
+    }
 }

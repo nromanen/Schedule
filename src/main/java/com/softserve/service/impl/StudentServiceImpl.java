@@ -23,7 +23,6 @@ import com.softserve.util.CsvFileParser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +31,6 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -162,8 +160,7 @@ public class StudentServiceImpl implements StudentService {
      */
     @Override
     @Transactional
-    @Async
-    public CompletableFuture<List<StudentImportDTO>> saveFromFile(MultipartFile file, Long groupId) {
+    public List<StudentImportDTO> saveFromFile(MultipartFile file, Long groupId) {
         log.info("Enter into saveFromFile of StudentServiceImpl with groupId {}", groupId);
 
         List<StudentImportDTO> students = CsvFileParser.getStudentsFromFile(file);
@@ -174,7 +171,7 @@ public class StudentServiceImpl implements StudentService {
             StudentImportDTO test = saveStudentFromFile(groupId, student);
             savedStudents.add(test);
         }
-        return CompletableFuture.completedFuture(savedStudents);
+        return savedStudents;
     }
 
     public StudentImportDTO saveStudentFromFile(Long groupId, StudentImportDTO student) {

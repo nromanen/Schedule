@@ -52,6 +52,8 @@ app:
     token:
       secret: ${JWT_SECRET:jwttoken}
       expired: ${JWT_EXPIRED:24h}
+  frontend:
+    url: ${FRONTEND_URL:http://localhost:3000/}
   backend:
     url: ${BACKEND_URL:http://localhost:8080/}
   cors:
