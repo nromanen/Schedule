@@ -1,10 +1,15 @@
 package com.softserve.controller;
 
 import com.softserve.dto.*;
+import com.softserve.entity.CurrentUser;
+import com.softserve.entity.Teacher;
 import com.softserve.entity.enums.LessonType;
+import com.softserve.exception.EntityNotFoundException;
 import com.softserve.mapper.LessonInfoMapper;
+import com.softserve.security.jwt.JwtUser;
 import com.softserve.service.LessonService;
 import com.softserve.service.ScheduleService;
+import com.softserve.service.TeacherService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +31,8 @@ public class LessonController {
 
     private final LessonService lessonService;
     private final LessonInfoMapper lessonInfoMapper;
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
+    private final TeacherService teacherService;
 
     @Operation(summary = "Get list of all lessons")
     @GetMapping
@@ -51,6 +58,18 @@ public class LessonController {
     public ResponseEntity<List<LessonInfoDTO>> getByTeacher(@RequestParam Long teacherId) {
         log.info("In getByTeacher(teacherId = [{}])", teacherId);
         return ResponseEntity.ok(lessonService.getByTeacher(teacherId));
+    }
+
+    @Operation(summary = "Get lessons for current teacher")
+    @GetMapping("/teacher/my-lessons")
+    @PreAuthorize("hasRole('TEACHER')")
+    public ResponseEntity<List<LessonInfoDTO>> getMyLessons(@CurrentUser JwtUser jwtUser) {
+        log.info("In getMyLessons for user: {}", jwtUser.getUsername());
+        UserDataDTO userData = teacherService.getUserDataByUserId(jwtUser.getId());
+        if (userData == null) {
+            throw new EntityNotFoundException(Teacher.class, "userId", jwtUser.getId().toString());
+        }
+        return ResponseEntity.ok(lessonService.getByTeacher(userData.getTeacherId()));
     }
 
     @Operation(summary = "Create new lessons")

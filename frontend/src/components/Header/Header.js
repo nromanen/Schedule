@@ -28,10 +28,10 @@ import {
     HOME_PAGE_LINK,
     LOGIN_LINK,
     LOGOUT_LINK,
+    MY_LESSONS_LINK,
     MY_PROFILE_LINK,
     SCHEDULE_PAGE_LINK,
-    TEACHER_LIST_LINK,
-    TEACHER_SCHEDULE_LINK,
+    SCHEDULE_FOR_LINK,
 } from '../../constants/links';
 
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
@@ -324,7 +324,7 @@ const Header = (props) => {
                             onClose={handleCloseUserMenu}
                         >
                             <Link
-                                to={TEACHER_LIST_LINK}
+                                to={`${SCHEDULE_FOR_LINK}?teacher=${props.teacher?.id || ''}`}
                                 className="navLinks"
                                 style={{textDecoration: 'none'}}
                                 onClick={handleCloseUserMenu}
@@ -333,18 +333,22 @@ const Header = (props) => {
                                     <ListItemIcon>
                                         <FaClock fontSize="normal"/>
                                     </ListItemIcon>
-                                    {t(SCHEDULE_TITLE)}
+                                    {t('my_schedule') || 'Мій розклад'}
                                 </StyledMenuItem>
                             </Link>
-                            <span
+                            <Link
+                                to={MY_LESSONS_LINK}
                                 className="navLinks"
                                 style={{textDecoration: 'none'}}
-                                onClick={() => {
-                                    handleCloseUserMenu();
-                                }}
-                                role="button"
-                                tabIndex="0"
-                            ></span>
+                                onClick={handleCloseUserMenu}
+                            >
+                                <StyledMenuItem>
+                                    <ListItemIcon>
+                                        <FaClipboardList fontSize="normal"/>
+                                    </ListItemIcon>
+                                    {t('my_lessons') || 'Мої пари'}
+                                </StyledMenuItem>
+                            </Link>
                             <Link
                                 to={MY_PROFILE_LINK}
                                 className="navLinks"
@@ -554,14 +558,23 @@ const Header = (props) => {
                             {t(HOME_TITLE)}
                         </StyledMenuItem>
                     </Link>
-                    <StyledMenuItem>
-                        <ListItemIcon>
-                            <FaClipboardList fontSize="normall"/>
-                        </ListItemIcon>
-                    </StyledMenuItem>
 
                     <Link
-                        to={TEACHER_SCHEDULE_LINK}
+                        to={MY_LESSONS_LINK}
+                        className="navLinks"
+                        style={{textDecoration: 'none'}}
+                        onClick={handleClose}
+                    >
+                        <StyledMenuItem>
+                            <ListItemIcon>
+                                <FaClipboardList fontSize="normall"/>
+                            </ListItemIcon>
+                            {t('my_lessons') || 'Мої пари'}
+                        </StyledMenuItem>
+                    </Link>
+
+                    <Link
+                        to={`${SCHEDULE_FOR_LINK}?teacher=${props.teacher?.id || ''}`}
                         className="navLinks"
                         style={{textDecoration: 'none'}}
                         onClick={handleClose}
@@ -570,7 +583,7 @@ const Header = (props) => {
                             <ListItemIcon>
                                 <FaClock fontSize="normall"/>
                             </ListItemIcon>
-                            {t(SCHEDULE_TITLE)}
+                            {t('my_schedule') || 'Мій розклад'}
                         </StyledMenuItem>
                     </Link>
 
@@ -613,9 +626,7 @@ const Header = (props) => {
                         to={HOME_PAGE_LINK}
                         className="navLinks"
                         style={{textDecoration: 'none'}}
-                        onClick={() => {
-                            setAnchorEl(null);
-                        }}
+                        onClick={handleClose}
                     >
                         <StyledMenuItem>
                             <ListItemIcon>
@@ -713,6 +724,7 @@ const mapStateToProps = (state) => ({
     currentSemester: state.schedule.currentSemester,
     defaultSemester: state.schedule.defaultSemester,
     loading: state.loadingIndicator.semesterLoading,
+    teacher: state.teachers.teacher,
 });
 
 const mapDispatchToProps = (dispatch) => ({

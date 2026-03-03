@@ -28,11 +28,15 @@ public interface TeacherRepository extends BasicRepository<Teacher, Long> {
     List<Teacher> getAllTeacherWithoutUser();
 
     /**
-     * Retrieves a teacher entity by his full name and position.
+     * Finds a teacher by their full name (name, surname, and patronymic).
      *
-     * @param teacher the teacher with given full name and position
-     * @return an Optional describing the teacher with the given user id or an empty Optional if none found
+     * @param name       the teacher's first name
+     * @param surname    the teacher's surname
+     * @param patronymic the teacher's patronymic
+     * @return an {@link Optional} containing the found {@link Teacher},
+     *         or empty if no match exists
      */
-    Optional<Teacher> getExistingTeacher(Teacher teacher);
+    Optional<Teacher> findByFullName(
+            String name, String surname, String patronymic);
 
 }

@@ -40,3 +40,7 @@ export const updateLessonsLinkSuccess = (lessons) => ({
     type: actionsType.UPDATE_LESSONS_LINK_SUCCESS,
     lessons,
 });
+
+export const getMyLessonsStart = () => ({
+    type: actionsType.GET_MY_LESSONS_START,
+});

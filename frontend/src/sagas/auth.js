@@ -2,7 +2,7 @@ import {call, delay, put, takeEvery, takeLatest} from 'redux-saga/effects';
 import jwtDecode from 'jwt-decode';
 import * as actionTypes from '../actions/actionsType';
 
-import {ACTIVATE_ACCOUNT_URL, LOGIN_URL, LOGOUT_URL, REGISTRATION_URL, RESET_PASSWORD_URL,} from '../constants/axios';
+import {ACTIVATE_ACCOUNT_URL, LOGIN_URL, LOGOUT_URL, REGISTRATION_URL, RESET_PASSWORD_URL, USER_PROFILE,} from '../constants/axios';
 import {
     activateSuccess,
     authAutoLogout,
@@ -11,14 +11,35 @@ import {
     registerUserSuccess,
     resetUserPasswordSuccess,
     setAuthError,
+    setTeacher,
+    setUser,
+    setAuthLoading
 } from '../actions';
 import {axiosCall} from '../services/axios';
 import {GOOGLE} from '../constants/common';
 import {TOKEN_BEGIN} from '../constants/tokenBegin';
 import axios from '../helper/axios';
-import {setAuthLoading} from '../actions/loadingIndicator';
-import {POST, PUT} from '../constants/methods';
+import {GET, POST, PUT} from '../constants/methods';
 import {createErrorMessage} from '../utils/sagaUtils';
+
+function* loadTeacherProfile() {
+    try {
+        const profileResponse = yield call(axiosCall, USER_PROFILE, GET);
+        yield put(setUser(profileResponse.data));
+        if (profileResponse.data.name) {
+            yield put(setTeacher({
+                id: profileResponse.data.id,
+                name: profileResponse.data.name,
+                surname: profileResponse.data.surname,
+                patronymic: profileResponse.data.patronymic,
+                position: profileResponse.data.position,
+                department: profileResponse.data.department,
+            }));
+        }
+    } catch (error) {
+        console.error('Failed to load teacher profile', error);
+    }
+}
 
 function* loginToAccount({ payload }) {
     try {
@@ -41,6 +62,12 @@ function* loginToAccount({ payload }) {
 
         yield put(authSuccess({ token, role: decodedJWT.roles, email }));
         yield put(authAutoLogout(decodedJWT.exp * 1000 - new Date().getTime()));
+
+        if (decodedJWT.roles === 'ROLE_TEACHER') {
+            if (decodedJWT.roles === 'ROLE_TEACHER') {
+                yield call(loadTeacherProfile);
+            }
+        }
     } catch (error) {
         yield put(
             setAuthError({
@@ -87,6 +114,10 @@ function* checkAuthState(payload) {
         yield put(logout());
     } else {
         yield put(authSuccess({ token, role }));
+
+        if (role === 'ROLE_TEACHER') {
+            yield call(loadTeacherProfile);
+        }
     }
 }
 

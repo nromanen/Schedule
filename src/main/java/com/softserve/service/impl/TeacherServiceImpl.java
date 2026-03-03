@@ -66,6 +66,8 @@ public class TeacherServiceImpl implements TeacherService {
     @CacheEvict(value = {"teachers", "teachersList"}, allEntries = true)
     public TeacherDTO save(TeacherDTO teacherDTO) {
         log.info("Saving teacher: {}", teacherDTO);
+        checkForDuplicateTeacher(teacherDTO.getName(), teacherDTO.getSurname(),
+                teacherDTO.getPatronymic(), null);
         Teacher teacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
 
         if (!isEmailNullOrEmpty(teacherDTO.getEmail())) {
@@ -80,6 +82,8 @@ public class TeacherServiceImpl implements TeacherService {
     @CacheEvict(value = {"teachers", "teachersList"}, allEntries = true)
     public TeacherForUpdateDTO update(TeacherForUpdateDTO teacherForUpdateDTO) {
         log.info("Updating teacher: {}", teacherForUpdateDTO);
+        checkForDuplicateTeacher(teacherForUpdateDTO.getName(), teacherForUpdateDTO.getSurname(),
+                teacherForUpdateDTO.getPatronymic(), teacherForUpdateDTO.getId());
         Teacher teacher = teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO);
 
         if (isEmailNullOrEmpty(teacherForUpdateDTO.getEmail())) {
@@ -99,6 +103,18 @@ public class TeacherServiceImpl implements TeacherService {
 
         Teacher updated = teacherRepository.update(teacher);
         return teacherMapper.teacherToTeacherForUpdateDTO(updated);
+    }
+
+
+    private void checkForDuplicateTeacher(String name, String surname,
+                                          String patronymic, Long excludeId) {
+        Optional<Teacher> existing = teacherRepository
+                .findByFullName(name, surname, patronymic);
+
+        if (existing.isPresent() && !existing.get().getId().equals(excludeId)) {
+            throw new FieldAlreadyExistsException(
+                    Teacher.class, "name", name, "surname", surname, "patronymic", patronymic);
+        }
     }
 
     @Override
@@ -142,29 +158,30 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherImportDTO saveTeacher(Long departmentId, TeacherImportDTO teacher) {
+    public TeacherImportDTO saveTeacher(Long departmentId, TeacherImportDTO teacherDTO) {
         try {
-            Optional<User> userOptional = userService.findSocialUser(teacher.getEmail());
-            Teacher newTeacher = teacherMapper.teacherImportDTOToTeacher(teacher);
-            Optional<Teacher> teacherFromBase = teacherRepository.getExistingTeacher(newTeacher);
+            Optional<User> userOptional = userService.findSocialUser(teacherDTO.getEmail());
+            Teacher teacher = teacherMapper.teacherImportDTOToTeacher(teacherDTO);
+            Optional<Teacher> teacherFromBase = teacherRepository.findByFullName(teacher.getName(),
+                    teacher.getSurname(), teacher.getPatronymic());
 
             Department department = departmentRepository.findById(departmentId)
                     .orElseThrow(() -> new EntityNotFoundException(
                             Department.class, "id", departmentId.toString()));
 
             if (userOptional.isEmpty() && teacherFromBase.isEmpty()) {
-                return registerAndSaveNewTeacher(teacher, newTeacher, department);
+                return registerAndSaveNewTeacher(teacherDTO, teacher, department);
             } else if (userOptional.isEmpty()) {
-                return registerUserAndUpdateTeacher(teacher, teacherFromBase, department);
+                return registerUserAndUpdateTeacher(teacherDTO, teacherFromBase, department);
             } else if (teacherFromBase.isEmpty()) {
-                return assignUserToNewTeacher(teacher, userOptional, newTeacher, department);
+                return assignUserToNewTeacher(teacherDTO, userOptional, teacher, department);
             } else {
-                return checkForEmptyFieldsOfExistingTeacher(teacher, userOptional, teacherFromBase, department);
+                return checkForEmptyFieldsOfExistingTeacher(teacherDTO, userOptional, teacherFromBase, department);
             }
         } catch (ConstraintViolationException e) {
-            teacher.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
-            log.error("Error occurred while saving teacher with email {}", teacher.getEmail(), e);
-            return teacher;
+            teacherDTO.setImportSaveStatus(ImportSaveStatus.VALIDATION_ERROR);
+            log.error("Error occurred while saving teacher with email {}", teacherDTO.getEmail(), e);
+            return teacherDTO;
         }
     }
 

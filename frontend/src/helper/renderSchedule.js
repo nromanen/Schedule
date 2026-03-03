@@ -200,13 +200,21 @@ const renderSchedule = (props) => {
             return (
                 <>
                     {titleSuffix}
-                    {viewMode === 'today' && !currentDay && (
-                        <p className="empty_schedule">{t('common:no_classes_today', 'Сьогодні немає занять')}</p>
-                    )}
-                    {renderFullSchedule(
-                        displaySchedule,
-                        viewMode === 'today' ? currentWeekIsOdd : null,
-                        <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
+                    {viewMode === 'today' && (!currentDay || displaySchedule.resultArray.length === 0) ? (
+                        <>
+                            <h1>
+                                <span className="schedule-week-badge">{getWeekParity(semester.startDay)} {t('week_label')}</span>
+                                {semester.description} ({semester.startDay}–{semester.endDay})
+                                <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
+                            </h1>
+                            <p className="empty_schedule">{t('common:no_classes_today', 'Сьогодні немає занять')}</p>
+                        </>
+                    ) : (
+                        renderFullSchedule(
+                            displaySchedule,
+                            viewMode === 'today' ? currentWeekIsOdd : null,
+                            <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
+                        )
                     )}
                 </>
             );

@@ -16,7 +16,7 @@ insert into teachers(id, name, patronymic, position, surname, department_id, use
 values (10, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1, 1);
 
 insert into teachers(id, name, patronymic, position, surname, department_id, disable)
-values (20, 'Ivan', 'Ivanovych', 'docent', 'Ivanov', 1, true);
+values (20, 'Petro', 'Petrovych', 'docent', 'Petrov', 1, true);
 
 insert into teachers(id, name, patronymic, position, surname, department_id, user_id)
 values (DEFAULT, 'SecondName', 'SecondPatronymic', 'SecondPosition', 'SecondSurname', null, null);

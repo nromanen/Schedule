@@ -19,3 +19,12 @@ databaseChangeLog:
                   name: activated
                   valueBoolean: true
             where: token IS NULL
+
+  - changeSet:
+      id: add-unique-teacher-full-name
+      author: nromanen
+      changes:
+        - addUniqueConstraint:
+            tableName: teachers
+            columnNames: name, surname, patronymic
+            constraintName: uk_teacher_full_name

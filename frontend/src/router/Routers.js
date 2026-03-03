@@ -28,6 +28,8 @@ import GroupSchedulePage from '../containers/GroupSchedulePage/GroupSchedulePage
 import {Register} from '../components/Register/Register';
 import {ResetPassword} from '../components/ResetPassword/ResetPassword';
 import {Login} from '../components/Login/Login';
+import MyLessonsPage from '../components/MyLessonsPage/MyLessonsPage';
+import { MY_LESSONS_LINK } from '../constants/links';
 import {AdminRoute, UserRoute} from './routes';
 import AdminRouter from './AdminRouter';
 
@@ -44,6 +46,7 @@ const Routers = (props) => {
                 <Route path={REGISTRATION_LINK} component={Register} />
                 <Route path={LOGIN_LINK} component={Login} />
                 <UserRoute path={TEACHER_SCHEDULE_LINK} component={TeacherSchedule} />
+                <UserRoute path={MY_LESSONS_LINK} component={MyLessonsPage} />
                 <UserRoute path={MY_PROFILE_LINK} component={ProfilePage} />
                 <UserRoute path={LOGOUT_LINK} component={Logout} />
                 <AdminRoute path={SCHEDULE_PAGE_LINK} component={EditCurrentSchedulePage} />

@@ -30,9 +30,7 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
             "SELECT t FROM Teacher t " +
                     "WHERE t.name = :tName " +
                     "AND t.surname = :tSurname " +
-                    "AND t.patronymic = :tPatronymic " +
-                    "AND t.position = :tPosition" +
-                    DISABLE_FILTER;
+                    "AND t.patronymic = :tPatronymic ";
 
     @Override
     public List<Teacher> getAll() {
@@ -75,13 +73,13 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
     }
 
     @Override
-    public Optional<Teacher> getExistingTeacher(Teacher teacher) {
+    public Optional<Teacher> findByFullName(String name, String surname,
+                                                String patronymic) {
         return getSession()
                 .createQuery(GET_EXISTING_TEACHER, Teacher.class)
-                .setParameter("tName", teacher.getName())
-                .setParameter("tSurname", teacher.getSurname())
-                .setParameter("tPatronymic", teacher.getPatronymic())
-                .setParameter("tPosition", teacher.getPosition())
+                .setParameter("tName", name)
+                .setParameter("tSurname", surname)
+                .setParameter("tPatronymic", patronymic)
                 .uniqueResultOptional();
     }
 }

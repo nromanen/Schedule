@@ -15,7 +15,12 @@ import java.io.Serializable;
 @ToString
 @Entity
 @EqualsAndHashCode
-@Table(name = "teachers")
+@Table(name = "teachers", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_teacher_full_name",
+                columnNames = {"name", "surname", "patronymic"}
+        )
+})
 public class Teacher implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

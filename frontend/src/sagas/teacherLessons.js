@@ -1,7 +1,7 @@
 import {call, put, select, takeLatest} from 'redux-saga/effects';
 import {axiosCall} from '../services/axios';
 import {GET, PUT} from '../constants/methods';
-import {LESSON_URL} from '../constants/axios';
+import {LESSON_URL, MY_LESSONS_URL} from '../constants/axios';
 import {BACK_END_SUCCESS_OPERATION, UPDATED_LABEL,} from '../constants/translationLabels/serviceMessages';
 import {FORM_LESSON_LABEL} from '../constants/translationLabels/formElements';
 import {createErrorMessage, createMessage} from '../utils/sagaUtils';
@@ -55,7 +55,24 @@ export function* updateLessonsLink({ linkData }) {
     }
 }
 
+export function* getMyLessons() {
+    try {
+        yield put(setTeacherLessonsLoading(true));
+
+        const { data } = yield call(axiosCall, MY_LESSONS_URL, GET);
+
+        const state = yield select();
+        const teacher = state.teachers.teacher;
+
+        yield put(getLessonsByTeacherSuccess(data, teacher));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+        yield put(setTeacherLessonsLoading(false));
+    }
+}
+
 export default function* watchTeacherLessons() {
     yield takeLatest(actionTypes.GET_LESSONS_BY_TEACHER_START, getLessonsByTeacher);
+    yield takeLatest(actionTypes.GET_MY_LESSONS_START, getMyLessons);
     yield takeLatest(actionTypes.UPDATE_LESSONS_LINK_START, updateLessonsLink);
 }

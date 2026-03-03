@@ -81,6 +81,9 @@ public class SecurityConfig {
                                 "/webjars/**"
                         ).permitAll()
 
+                        // Teacher-specific endpoints
+                        .requestMatchers("/lessons/teacher/my-lessons").hasRole("TEACHER")
+
                         // Role-based access
                         .requestMatchers("/groups/teacher/**", "/groups/*/with-students")
                         .hasAnyRole("MANAGER", "TEACHER")

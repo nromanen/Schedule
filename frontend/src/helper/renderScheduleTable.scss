@@ -40,7 +40,7 @@ h2 {
 .MuiTableContainer-root {
   max-height: 40em;
   max-width: 100%;
-  overflow: scroll;
+  overflow: auto;
   position: relative;
   margin-bottom: 30px;
 
@@ -92,6 +92,7 @@ h2 {
       }
 
       &.lesson {
+        padding: 10px 10px 10px 18px;
         position: relative;
         border: none;
         border-right: 1px solid $gray1;
@@ -107,7 +108,7 @@ h2 {
           border-right: none;
         }
 
-        // Lesson type triangle indicator
+         Lesson type triangle indicator
         .lesson-type-triangle {
           position: absolute;
           top: 0;

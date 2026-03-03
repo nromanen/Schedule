@@ -29,30 +29,30 @@ const renderClassCell = (classItem) => {
 
 const renderLessonCell = (lesson, groupTitles) => {
     if (!lesson) return <span className="empty-cell">-</span>;
-    const triangleColor = lessonTypeColors[lesson.lessonType?.toLowerCase()] || '#757575';
+    const color = lessonTypeColors[lesson.lessonType?.toLowerCase()] || '#757575';
 
     return (
-        <>
-            <div className="lesson-type-triangle" style={{ borderTopColor: triangleColor }} />
-            <div className="lesson-cell">
-                <div className="subject">{lesson.subjectForSite}</div>
-                <div className="group">{groupTitles.join(', ')}</div>
-                <div className="room">
-                    {lesson.room?.name}
-                    {lesson.linkToMeeting && (
-                        <a
-                        href={lesson.linkToMeeting}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="meeting-link"
-                        title="Перейти до онлайн-заняття"
-                        >
-                        🔗
-                        </a>
-                        )}
-                </div>
+        <div className="lesson-cell">
+            <div className="subject">
+                <span className="lesson-type-dot" style={{ backgroundColor: color }} />
+                {lesson.subjectForSite}
             </div>
-        </>
+            <div className="group">{groupTitles.join(', ')}</div>
+            <div className="room">
+                {lesson.room?.name}
+                {lesson.linkToMeeting && (
+                    <a
+                    href={lesson.linkToMeeting}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="meeting-link"
+                    title="Перейти до онлайн-заняття"
+                    >
+                    🔗
+                    </a>
+                    )}
+            </div>
+        </div>
     );
 };
 

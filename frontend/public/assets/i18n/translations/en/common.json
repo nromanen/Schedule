@@ -245,5 +245,9 @@
     "app_logo_title": "FMI Schedule",
     "today_schedule": "Today",
     "full_week_schedule": "All days",
-    "no_classes_today": "No classes today"
+    "no_classes_today": "No classes today",
+    "my_lessons": "Links for my lessons in semester",
+    "my_schedule": "My schedule",
+    "loading": "Loading",
+    "link": "link"
 }

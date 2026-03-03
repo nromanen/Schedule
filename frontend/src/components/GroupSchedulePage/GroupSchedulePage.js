@@ -103,7 +103,7 @@ const GroupSchedulePage = (props) => {
             getSchedule();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [defaultSemester]);
+    }, [defaultSemester, location.search]);
 
     const getTop = () =>
         scheduleType !== 'archived' && (

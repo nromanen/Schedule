@@ -77,3 +77,5 @@ export const LESSON_BY_TEACHER_URL = '/lessons/teacher';
 export const EXPORT_SCHEDULE_XLSX_URL = 'schedules/export/xlsx?semesterId=';
 
 export const GROUPS_FOR_CURRENT_SCHEDULE = '/semesters/current/groups'
+
+export const MY_LESSONS_URL = 'lessons/teacher/my-lessons';

@@ -66,6 +66,15 @@
     border-right: 2px solid $gray1;
   }
 
+  .lesson-type-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 3px;
+    vertical-align: middle;
+  }
+
   // Class cell
   .class-cell-wrapper {
     text-align: center;
@@ -121,9 +130,11 @@
       border-style: solid;
       border-width: 16px 16px 0 0;
       border-color: transparent;
+      //opacity: 1.0;
     }
 
     .lesson-cell {
+      padding: 0 0 0 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
