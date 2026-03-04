@@ -19,6 +19,6 @@ public class LessonBaseDTO implements Serializable {
     private String subjectForSite;
     private LessonType lessonType;
     private SubjectDTO subject;
-    private TeacherNameDTO teacher;
+    private TeacherBaseDTO teacher;
     private Long semesterId;
 }

@@ -49,14 +49,6 @@ public abstract class TeacherMapper {
 
     @Mapping(target = "department", source = "departmentDTO")
     @Mapping(target = "userId", source = "email", qualifiedByName = "emailToUserId")
-    public abstract Teacher teacherForUpdateDTOToTeacher(TeacherForUpdateDTO teacherForUpdateDTO);
-
-    @InheritInverseConfiguration
-    @Mapping(target = "email", source = "userId", qualifiedByName = "userIdToEmail")
-    public abstract TeacherForUpdateDTO teacherToTeacherForUpdateDTO(Teacher teacher);
-
-    @Mapping(target = "department", source = "departmentDTO")
-    @Mapping(target = "userId", source = "email", qualifiedByName = "emailToUserId")
     public abstract Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
 
     @Mapping(target = "department", source = "departmentDTO")

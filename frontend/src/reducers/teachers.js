@@ -15,6 +15,7 @@ const reducer = (
         teachers: [],
         teacher: {},
         disabledTeachers: [],
+        teachersWithEmail: [],
     },
     action,
 ) => {
@@ -63,6 +64,8 @@ const reducer = (
         case actionTypes.SHOW_ALL_TEACHERS_SUCCESS:
         case actionTypes.GET_TEACHERS_BY_DEPARTMENT:
             return { ...state, teachers: [...action.teachers] };
+        case actionTypes.GET_TEACHERS_WITH_EMAIL_SUCCESS:
+            return { ...state, teachersWithEmail: [...action.teachers] };
 
         default:
             return state;

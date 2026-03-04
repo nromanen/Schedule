@@ -3,7 +3,6 @@ package com.softserve.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.dto.DepartmentDTO;
 import com.softserve.dto.TeacherDTO;
-import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.exception.apierror.ApiValidationError;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.core.IsNull;
@@ -135,7 +134,7 @@ class TeacherControllerTest {
     }
     @Test
     public void updateTeacherWithEmailAndUserId() throws Exception {
-        TeacherForUpdateDTO teacher = createTeacherForUpdateDTO(10L, "Ivan", "Ivanov",
+        TeacherDTO teacher = createTeacherDTO(10L, "Ivan", "Ivanov",
                 "Ivanovych", "docent", "teacher@gmail.com", false);
 
         mockMvc.perform(put(BASE_URL)
@@ -148,7 +147,7 @@ class TeacherControllerTest {
 
     @Test
     public void updateTeacherWithoutEmailAndUserId() throws Exception {
-        TeacherForUpdateDTO teacher = createTeacherForUpdateDTO(20L, "Petro", "Petrov",
+        TeacherDTO teacher = createTeacherDTO(20L, "Petro", "Petrov",
                 "Petrovych", "docent", null, true);
 
         mockMvc.perform(put(BASE_URL)
@@ -269,21 +268,6 @@ class TeacherControllerTest {
                                         String patronymic, String position,
                                         String email, boolean disable) {
         TeacherDTO dto = new TeacherDTO();
-        dto.setId(id);
-        dto.setName(name);
-        dto.setSurname(surname);
-        dto.setPatronymic(patronymic);
-        dto.setPosition(position);
-        dto.setEmail(email);
-        dto.setDisable(disable);
-        dto.setDepartmentDTO(departmentDTO);
-        return dto;
-    }
-
-    private TeacherForUpdateDTO createTeacherForUpdateDTO(Long id, String name, String surname,
-                                                          String patronymic, String position,
-                                                          String email, boolean disable) {
-        TeacherForUpdateDTO dto = new TeacherForUpdateDTO();
         dto.setId(id);
         dto.setName(name);
         dto.setSurname(surname);

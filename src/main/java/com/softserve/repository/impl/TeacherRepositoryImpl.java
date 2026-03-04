@@ -32,6 +32,21 @@ public class TeacherRepositoryImpl extends BasicRepositoryImpl<Teacher, Long> im
                     "AND t.surname = :tSurname " +
                     "AND t.patronymic = :tPatronymic ";
 
+    private static final String GET_ALL_WITH_EMAIL =
+            "SELECT t FROM Teacher t " +
+                    "JOIN AppUser u ON u.id = t.userId " +
+                    "WHERE t.disable = false " +
+                    "AND u.email IS NOT NULL " +
+                    "ORDER BY t.surname ASC";
+
+    @Override
+    public List<Teacher> getAllTeachersWithEmail() {
+        log.info("Enter into getAllTeachersWithEmail of TeacherRepositoryImpl");
+        return getSession()
+                .createQuery(GET_ALL_WITH_EMAIL, Teacher.class)
+                .getResultList();
+    }
+
     @Override
     public List<Teacher> getAll() {
         log.info("Enter into getAll of TeacherRepositoryImpl");

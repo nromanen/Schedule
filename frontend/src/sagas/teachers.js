@@ -7,7 +7,7 @@ import {
     DEPARTMENT_URL,
     DISABLED_TEACHERS_URL,
     PUBLIC_TEACHER_URL,
-    TEACHER_URL,
+    TEACHER_URL, TEACHERS_WITH_EMAIL_URL,
 } from '../constants/axios';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -24,7 +24,7 @@ import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar'
 import * as actionTypes from '../actions/actionsType';
 import {
     addTeacherSuccess,
-    getAllTeachersByDepartmentId,
+    getAllTeachersByDepartmentId, getTeachersWithEmailSuccess,
     selectTeacherCard,
     updateTeacherCardSuccess,
 } from '../actions/teachers';
@@ -161,6 +161,15 @@ export function* getAllPublicTeachersByDepartment({ departmentId }) {
     }
 }
 
+export function* getTeachersWithEmail() {
+    try {
+        const { data } = yield call(axiosCall, TEACHERS_WITH_EMAIL_URL, GET);
+        yield put(getTeachersWithEmailSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    }
+}
+
 export default function* watchTeachers() {
     yield takeLatest(actionTypes.DELETE_TEACHER_START, removeTeacher);
     yield takeLatest(actionTypes.SHOW_ALL_TEACHERS_START, getEnabledTeachers);
@@ -174,4 +183,5 @@ export default function* watchTeachers() {
         actionTypes.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
         getAllPublicTeachersByDepartment,
     );
+    yield takeLatest(actionTypes.GET_TEACHERS_WITH_EMAIL_START, getTeachersWithEmail);
 }

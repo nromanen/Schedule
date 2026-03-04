@@ -9,7 +9,7 @@ import {
 import {getPublicClassScheduleStart} from '../../actions/classes';
 import {getAllSemestersStart} from '../../actions/semesters';
 import {
-    deleteTeacherStart,
+    deleteTeacherStart, getTeachersWithEmailStart,
     handleTeacherStart,
     setDisabledTeachersStart,
     showAllTeachersStart,
@@ -26,6 +26,7 @@ const mapStateToProps = (state) => ({
     department: state.departments.department,
     isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
     teacher: state.teachers.teacher,
+    teachersWithEmail: state.teachers.teachersWithEmail,
 });
 const mapDispatchToProps = (dispatch) => ({
     setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
@@ -40,6 +41,7 @@ const mapDispatchToProps = (dispatch) => ({
     getDisabledTeachers: () => dispatch(setDisabledTeachersStart()),
     handleTeacher: (values) => dispatch(handleTeacherStart(values)),
     getPublicClassSchedule: () => dispatch(getPublicClassScheduleStart()),
+    getTeachersWithEmail: () => dispatch(getTeachersWithEmailStart()),
     toggleDisabledTeacher: (teacherId, isDisabled) =>
         dispatch(toggleTeacherStart(teacherId, isDisabled)),
 });

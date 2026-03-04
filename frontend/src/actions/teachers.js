@@ -81,3 +81,12 @@ export const setDisabledTeachersStart = (teachers) => ({
     type: actionsType.SET_DISABLED_TEACHERS_START,
     teachers,
 });
+
+export const getTeachersWithEmailStart = () => ({
+    type: actionsType.GET_TEACHERS_WITH_EMAIL_START,
+});
+
+export const getTeachersWithEmailSuccess = (teachers) => ({
+    type: actionsType.GET_TEACHERS_WITH_EMAIL_SUCCESS,
+    teachers,
+});

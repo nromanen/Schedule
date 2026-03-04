@@ -1,7 +1,6 @@
 package com.softserve.service.impl;
 
 import com.softserve.dto.TeacherDTO;
-import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherImportDTO;
 import com.softserve.dto.UserDataDTO;
 import com.softserve.dto.enums.ImportSaveStatus;
@@ -80,15 +79,15 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     @CacheEvict(value = {"teachers", "teachersList"}, allEntries = true)
-    public TeacherForUpdateDTO update(TeacherForUpdateDTO teacherForUpdateDTO) {
+    public TeacherDTO update(TeacherDTO teacherForUpdateDTO) {
         log.info("Updating teacher: {}", teacherForUpdateDTO);
         checkForDuplicateTeacher(teacherForUpdateDTO.getName(), teacherForUpdateDTO.getSurname(),
                 teacherForUpdateDTO.getPatronymic(), teacherForUpdateDTO.getId());
-        Teacher teacher = teacherMapper.teacherForUpdateDTOToTeacher(teacherForUpdateDTO);
+        Teacher teacher = teacherMapper.teacherDTOToTeacher(teacherForUpdateDTO);
 
         if (isEmailNullOrEmpty(teacherForUpdateDTO.getEmail())) {
             Teacher updated = teacherRepository.update(teacher);
-            return teacherMapper.teacherToTeacherForUpdateDTO(updated);
+            return teacherMapper.teacherToTeacherDTO(updated);
         }
 
         Teacher existingTeacher = findTeacherById(teacherForUpdateDTO.getId());
@@ -102,7 +101,7 @@ public class TeacherServiceImpl implements TeacherService {
         }
 
         Teacher updated = teacherRepository.update(teacher);
-        return teacherMapper.teacherToTeacherForUpdateDTO(updated);
+        return teacherMapper.teacherToTeacherDTO(updated);
     }
 
 
@@ -334,5 +333,12 @@ public class TeacherServiceImpl implements TeacherService {
             return existedTeacher;
         }
         return null;
+    }
+
+    @Transactional(readOnly = true)
+    public List<TeacherDTO> getAllTeachersWithEmail() {
+        log.info("Getting all teachers with email");
+        List<Teacher> teachers = teacherRepository.getAllTeachersWithEmail();
+        return teacherMapper.teachersToTeacherDTOs(teachers);
     }
 }

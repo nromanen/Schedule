@@ -93,11 +93,11 @@ class ScheduleControllerTest {
         TeacherDTO savedTeacher = teacherService.save(teacherDTO);
 
         // Create TeacherNameDTO
-        TeacherNameDTO teacherNameDTO = new TeacherNameDTO();
-        teacherNameDTO.setId(savedTeacher.getId());
-        teacherNameDTO.setName(savedTeacher.getName());
-        teacherNameDTO.setSurname(savedTeacher.getSurname());
-        teacherNameDTO.setPatronymic(savedTeacher.getPatronymic());
+        TeacherBaseDTO teacherBaseDTO = new TeacherBaseDTO();
+        teacherBaseDTO.setId(savedTeacher.getId());
+        teacherBaseDTO.setName(savedTeacher.getName());
+        teacherBaseDTO.setSurname(savedTeacher.getSurname());
+        teacherBaseDTO.setPatronymic(savedTeacher.getPatronymic());
 
         // Create SubjectDTO
         SubjectDTO subjectDTO = new SubjectDTO();
@@ -115,7 +115,7 @@ class ScheduleControllerTest {
         lessonDTO.setLessonType(LECTURE);
         lessonDTO.setSubject(subjectDTO);
         lessonDTO.setGroup(groupDTO);
-        lessonDTO.setTeacher(teacherNameDTO);
+        lessonDTO.setTeacher(teacherBaseDTO);
         lessonDTO.setSemesterId(4L);
 
         LessonInfoDTO savedLesson = lessonService.save(lessonDTO);

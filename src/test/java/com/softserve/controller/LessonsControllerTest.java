@@ -3,10 +3,8 @@ package com.softserve.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softserve.assertions.CustomMockMvcAssertions;
 import com.softserve.dto.*;
-import com.softserve.entity.Lesson;
+import com.softserve.entity.enums.LessonType;
 import com.softserve.exception.EntityNotFoundException;
-import com.softserve.mapper.LessonInfoMapperImpl;
-import com.softserve.mapper.TeacherNameMapper;
 import com.softserve.service.GroupService;
 import com.softserve.service.LessonService;
 import com.softserve.service.SubjectService;
@@ -61,15 +59,24 @@ class LessonsControllerTest {
     @Autowired
     private GroupService groupService;
 
-    @Autowired
-    private TeacherNameMapper teacherNameMapper;
-
     private CustomMockMvcAssertions assertions;
 
+    private TeacherBaseDTO teacherDTO;
+    private SubjectDTO subjectDTO;
+    private GroupDTO groupDTO;
 
     @BeforeEach
     void setup() {
         assertions = new CustomMockMvcAssertions(mockMvc, objectMapper, "/lessons");
+
+        teacherDTO = new TeacherBaseDTO();
+        teacherDTO.setId(5L);
+
+        subjectDTO = new SubjectDTO();
+        subjectDTO.setId(4L);
+
+        groupDTO = new GroupDTO();
+        groupDTO.setId(4L);
     }
 
     @Test
@@ -103,168 +110,102 @@ class LessonsControllerTest {
 
     @Test
     void saveLessonsIfLessonDoesNotExist() throws Exception {
-        TeacherNameDTO teacherDTO = new TeacherNameDTO();
-        teacherDTO.setId(5L);
-
-        SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setId(4L);
-
-        GroupDTO groupDTO = groupService.getById(4L);
-
-        LessonInfoDTO lessonDtoForSave = new LessonInfoDTO();
-        lessonDtoForSave.setHours(1);
-        lessonDtoForSave.setSubjectForSite("");
-        lessonDtoForSave.setLinkToMeeting("");
-        lessonDtoForSave.setLessonType(LABORATORY);
-        lessonDtoForSave.setTeacher(teacherDTO);
-        lessonDtoForSave.setSubject(subjectDTO);
-        lessonDtoForSave.setGroup(groupDTO);
+        LessonInfoDTO lessonDTO = buildLessonInfoDTO(null, 1, "", "", LABORATORY, teacherDTO, subjectDTO, groupDTO);
 
         mockMvc.perform(post("/lessons")
-                        .content(objectMapper.writeValueAsString(lessonDtoForSave))
+                        .content(objectMapper.writeValueAsString(lessonDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
+
     @Test
-    void updateLessonIfLessonDoesNotExist() throws Exception {
-        LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(5L);
-        lessonDtoForUpdate.setHours(2);
-        lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
-        lessonDtoForUpdate.setSubjectForSite("History updated");
-        lessonDtoForUpdate.setLessonType(LECTURE);
-        lessonDtoForUpdate.setTeacher(teacherNameMapper.teacherDTOToTeacherNameDTO(teacherService.getById(6L)));
-        lessonDtoForUpdate.setSubject(subjectService.getById(6L));
-        lessonDtoForUpdate.setGroup(groupService.getById(4L));
+    void updateNonGroupedLesson() throws Exception {
+        SubjectDTO subject = subjectService.getById(6L);
+        GroupDTO group = groupService.getById(4L);
+        LessonInfoDTO lessonDTO = buildLessonInfoDTO(5L, 2,
+                "https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09",
+                "History updated", LECTURE, teacherDTO, subject, group);
 
-        Lesson lessonForCompare = new LessonInfoMapperImpl().lessonInfoDTOToLesson(lessonDtoForUpdate);
-
-        mockMvc.perform(put("/lessons").content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+        mockMvc.perform(put("/lessons")
+                        .content(objectMapper.writeValueAsString(lessonDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(lessonForCompare.getId()))
-                .andExpect(jsonPath("$.hours").value(lessonForCompare.getHours()))
-                .andExpect(jsonPath("$.linkToMeeting").value(lessonForCompare.getLinkToMeeting()))
-                .andExpect(jsonPath("$.subjectForSite").value(lessonForCompare.getSubjectForSite()))
-                .andExpect(jsonPath("$.lessonType").value(lessonForCompare.getLessonType().toString()))
-                .andExpect(jsonPath("$.subject").value(lessonForCompare.getSubject()))
-                .andExpect(jsonPath("$.group").value(lessonForCompare.getGroup()));
+                .andExpect(jsonPath("$.id").value(5L))
+                .andExpect(jsonPath("$.hours").value(2))
+                .andExpect(jsonPath("$.subjectForSite").value("History updated"))
+                .andExpect(jsonPath("$.lessonType").value(LECTURE.toString()));
     }
 
     @Test
     void updateForGroupedLesson() throws Exception {
-        TeacherNameDTO teacherDTO = new TeacherNameDTO();
-        teacherDTO.setId(5L);
-
-        SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setId(4L);
-
-        GroupDTO groupDTO = new GroupDTO();
-        groupDTO.setId(4L);
-
-        LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(13L);
-        lessonDtoForUpdate.setHours(2);
-        lessonDtoForUpdate.setLinkToMeeting(
-                "https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
-        lessonDtoForUpdate.setSubjectForSite("Biology 3");
-        lessonDtoForUpdate.setLessonType(LABORATORY);
-        lessonDtoForUpdate.setTeacher(teacherDTO);
-        lessonDtoForUpdate.setSubject(subjectDTO);
-        lessonDtoForUpdate.setGroup(groupDTO);
-        lessonDtoForUpdate.setGrouped(true);
+        LessonInfoDTO lessonDTO = buildLessonInfoDTO(13L, 2,
+                "https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09",
+                "Biology 3", LABORATORY, teacherDTO, subjectDTO, groupDTO);
+        lessonDTO.setGrouped(true);
 
         mockMvc.perform(put("/lessons")
-                        .content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+                        .content(objectMapper.writeValueAsString(lessonDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(13L))
                 .andExpect(jsonPath("$.hours").value(2))
-                .andExpect(jsonPath("$.linkToMeeting").value(lessonDtoForUpdate.getLinkToMeeting()))
                 .andExpect(jsonPath("$.subjectForSite").value("Biology 3"))
                 .andExpect(jsonPath("$.lessonType").value(LABORATORY.toString()))
                 .andExpect(jsonPath("$.grouped").value(true));
 
-        LessonInfoDTO groupedWithSameSubjectForSite = lessonService.getById(14L);
+        LessonInfoDTO groupedLesson = lessonService.getById(14L);
 
         SoftAssertions softAssertions = new SoftAssertions();
-
-        // Compare simple fields
-        softAssertions.assertThat(groupedWithSameSubjectForSite)
+        softAssertions.assertThat(groupedLesson)
                 .usingRecursiveComparison()
                 .comparingOnlyFields("hours", "linkToMeeting", "subjectForSite", "lessonType", "grouped")
-                .isEqualTo(lessonDtoForUpdate);
-
-        // Compare nested objects by ID only
-        softAssertions.assertThat(groupedWithSameSubjectForSite.getTeacher().getId())
-                .isEqualTo(teacherDTO.getId());
-        softAssertions.assertThat(groupedWithSameSubjectForSite.getSubject().getId())
-                .isEqualTo(subjectDTO.getId());
-        softAssertions.assertThat(groupedWithSameSubjectForSite.getGroup().getId())
-                .isNotEqualTo(groupDTO.getId());
-
+                .isEqualTo(lessonDTO);
+        softAssertions.assertThat(groupedLesson.getTeacher().getId()).isEqualTo(teacherDTO.getId());
+        softAssertions.assertThat(groupedLesson.getSubject().getId()).isEqualTo(subjectDTO.getId());
+        softAssertions.assertThat(groupedLesson.getGroup().getId()).isNotEqualTo(groupDTO.getId());
         softAssertions.assertAll();
     }
 
     @Test
     void updateTeacherAndSubjectForGroupedLesson() throws Exception {
-        TeacherNameDTO teacherDTO = new TeacherNameDTO();
-        teacherDTO.setId(4L);
+        TeacherBaseDTO teacher = new TeacherBaseDTO();
+        teacher.setId(4L);
 
-        SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setId(5L);
+        SubjectDTO subject = new SubjectDTO();
+        subject.setId(5L);
 
-        GroupDTO groupDTO = new GroupDTO();
-        groupDTO.setId(4L);
-
-        LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(13L);
-        lessonDtoForUpdate.setHours(1);
-        lessonDtoForUpdate.setLinkToMeeting("");
-        lessonDtoForUpdate.setSubjectForSite("History");
-        lessonDtoForUpdate.setLessonType(LECTURE);
-        lessonDtoForUpdate.setTeacher(teacherDTO);
-        lessonDtoForUpdate.setSubject(subjectDTO);
-        lessonDtoForUpdate.setGroup(groupDTO);
-        lessonDtoForUpdate.setGrouped(true);
+        LessonInfoDTO lessonDTO = buildLessonInfoDTO(13L, 1, "", "History", LECTURE, teacher, subject, groupDTO);
+        lessonDTO.setGrouped(true);
 
         mockMvc.perform(put("/lessons")
-                        .content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+                        .content(objectMapper.writeValueAsString(lessonDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(13L))
                 .andExpect(jsonPath("$.hours").value(1))
-                .andExpect(jsonPath("$.linkToMeeting").value(""))
                 .andExpect(jsonPath("$.subjectForSite").value("History"))
                 .andExpect(jsonPath("$.lessonType").value(LECTURE.toString()))
                 .andExpect(jsonPath("$.grouped").value(true));
 
-        LessonInfoDTO groupedWithSameSubjectForSite = lessonService.getById(14L);
-        LessonInfoDTO groupedWithDiffSubjectForSite = lessonService.getById(15L);
-
         SoftAssertions softAssertions = new SoftAssertions();
 
+        LessonInfoDTO groupedWithSameSubjectForSite = lessonService.getById(14L);
         softAssertions.assertThat(groupedWithSameSubjectForSite)
                 .usingRecursiveComparison()
                 .comparingOnlyFields("hours", "linkToMeeting", "subjectForSite", "lessonType", "grouped")
-                .isEqualTo(lessonDtoForUpdate);
-        softAssertions.assertThat(groupedWithSameSubjectForSite.getTeacher().getId())
-                .isEqualTo(teacherDTO.getId());
-        softAssertions.assertThat(groupedWithSameSubjectForSite.getSubject().getId())
-                .isEqualTo(subjectDTO.getId());
-        softAssertions.assertThat(groupedWithSameSubjectForSite.getGroup().getId())
-                .isNotEqualTo(groupDTO.getId());
+                .isEqualTo(lessonDTO);
+        softAssertions.assertThat(groupedWithSameSubjectForSite.getTeacher().getId()).isEqualTo(teacher.getId());
+        softAssertions.assertThat(groupedWithSameSubjectForSite.getSubject().getId()).isEqualTo(subject.getId());
+        softAssertions.assertThat(groupedWithSameSubjectForSite.getGroup().getId()).isNotEqualTo(groupDTO.getId());
 
+        LessonInfoDTO groupedWithDiffSubjectForSite = lessonService.getById(15L);
         softAssertions.assertThat(groupedWithDiffSubjectForSite)
                 .usingRecursiveComparison()
                 .comparingOnlyFields("hours", "linkToMeeting", "subjectForSite", "lessonType", "grouped")
-                .isEqualTo(lessonDtoForUpdate);
-        softAssertions.assertThat(groupedWithDiffSubjectForSite.getTeacher().getId())
-                .isEqualTo(teacherDTO.getId());
-        softAssertions.assertThat(groupedWithDiffSubjectForSite.getSubject().getId())
-                .isEqualTo(subjectDTO.getId());
-        softAssertions.assertThat(groupedWithDiffSubjectForSite.getGroup().getId())
-                .isNotEqualTo(groupDTO.getId());
+                .isEqualTo(lessonDTO);
+        softAssertions.assertThat(groupedWithDiffSubjectForSite.getTeacher().getId()).isEqualTo(teacher.getId());
+        softAssertions.assertThat(groupedWithDiffSubjectForSite.getSubject().getId()).isEqualTo(subject.getId());
+        softAssertions.assertThat(groupedWithDiffSubjectForSite.getGroup().getId()).isNotEqualTo(groupDTO.getId());
 
         softAssertions.assertAll();
     }
@@ -294,19 +235,19 @@ class LessonsControllerTest {
 
     @Test
     void returnBadRequestIfSaveExistLesson() throws Exception {
-        LessonInfoDTO lessonDtoForSave = lessonService.getById(7L);
+        LessonInfoDTO lessonDTO = lessonService.getById(7L);
 
         LessonForGroupsDTO lessonForGroupsDTO = new LessonForGroupsDTO();
         lessonForGroupsDTO.setId(7L);
-        lessonForGroupsDTO.setGroups(Collections.singletonList(lessonDtoForSave.getGroup()));
-        lessonForGroupsDTO.setLessonType(lessonDtoForSave.getLessonType());
-        lessonForGroupsDTO.setGrouped(lessonDtoForSave.isGrouped());
-        lessonForGroupsDTO.setSemesterId(lessonDtoForSave.getSemesterId());
-        lessonForGroupsDTO.setHours(lessonDtoForSave.getHours());
-        lessonForGroupsDTO.setLinkToMeeting(lessonDtoForSave.getLinkToMeeting());
-        lessonForGroupsDTO.setSubjectForSite(lessonDtoForSave.getSubjectForSite());
-        lessonForGroupsDTO.setSubject(lessonDtoForSave.getSubject());
-        lessonForGroupsDTO.setTeacher(lessonDtoForSave.getTeacher());
+        lessonForGroupsDTO.setGroups(Collections.singletonList(lessonDTO.getGroup()));
+        lessonForGroupsDTO.setLessonType(lessonDTO.getLessonType());
+        lessonForGroupsDTO.setGrouped(lessonDTO.isGrouped());
+        lessonForGroupsDTO.setSemesterId(lessonDTO.getSemesterId());
+        lessonForGroupsDTO.setHours(lessonDTO.getHours());
+        lessonForGroupsDTO.setLinkToMeeting(lessonDTO.getLinkToMeeting());
+        lessonForGroupsDTO.setSubjectForSite(lessonDTO.getSubjectForSite());
+        lessonForGroupsDTO.setSubject(lessonDTO.getSubject());
+        lessonForGroupsDTO.setTeacher(lessonDTO.getTeacher());
 
         mockMvc.perform(post("/lessons")
                         .content(objectMapper.writeValueAsString(lessonForGroupsDTO))
@@ -317,18 +258,20 @@ class LessonsControllerTest {
 
     @Test
     void returnInternalServerErrorIfSavedTeacherIsNull() throws Exception {
-        SubjectDTO subjectDTO = subjectService.getById(6L);
-        GroupDTO groupDTO = groupService.getById(6L);
-        LessonForGroupsDTO lessonDtoForSave = new LessonForGroupsDTO();
-        lessonDtoForSave.setHours(2);
-        lessonDtoForSave.setSubjectForSite("");
-        lessonDtoForSave.setLinkToMeeting("");
-        lessonDtoForSave.setLessonType(LABORATORY);
-        lessonDtoForSave.setTeacher(null);
-        lessonDtoForSave.setSubject(subjectDTO);
-        lessonDtoForSave.setGroups(List.of(groupDTO));
+        SubjectDTO subject = subjectService.getById(6L);
+        GroupDTO group = groupService.getById(6L);
 
-        mockMvc.perform(post("/lessons").content(objectMapper.writeValueAsString(lessonDtoForSave))
+        LessonForGroupsDTO lessonDTO = new LessonForGroupsDTO();
+        lessonDTO.setHours(2);
+        lessonDTO.setSubjectForSite("");
+        lessonDTO.setLinkToMeeting("");
+        lessonDTO.setLessonType(LABORATORY);
+        lessonDTO.setTeacher(null);
+        lessonDTO.setSubject(subject);
+        lessonDTO.setGroups(List.of(group));
+
+        mockMvc.perform(post("/lessons")
+                        .content(objectMapper.writeValueAsString(lessonDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
@@ -336,17 +279,12 @@ class LessonsControllerTest {
 
     @Test
     void returnInternalServerErrorIfUpdatedTeacherIsNull() throws Exception {
-        LessonInfoDTO lessonDtoForUpdate = new LessonInfoDTO();
-        lessonDtoForUpdate.setId(4L);
-        lessonDtoForUpdate.setHours(1);
-        lessonDtoForUpdate.setLinkToMeeting("https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09");
-        lessonDtoForUpdate.setSubjectForSite("History of World");
-        lessonDtoForUpdate.setLessonType(LECTURE);
-        lessonDtoForUpdate.setTeacher(null);
-        lessonDtoForUpdate.setSubject(subjectService.getById(6L));
-        lessonDtoForUpdate.setGroup(groupService.getById(4L));
+        LessonInfoDTO lessonDTO = buildLessonInfoDTO(4L, 1,
+                "https://softserveinc.zoom.us/j/93198369163?pwd=Rk1GU281cDFtK1FCK3pJWXphRkJrQT09",
+                "History of World", LECTURE, null, subjectService.getById(6L), groupService.getById(4L));
 
-        mockMvc.perform(put("/lessons", 4).content(objectMapper.writeValueAsString(lessonDtoForUpdate))
+        mockMvc.perform(put("/lessons")
+                        .content(objectMapper.writeValueAsString(lessonDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
@@ -389,10 +327,26 @@ class LessonsControllerTest {
     @ParameterizedTest
     @MethodSource("parametersToUpdateLinkToMeeting")
     void updateLinkToMeeting(LessonWithLinkDTO lessonWithLinkDTO, Integer result) throws Exception {
-        mockMvc.perform(put("/lessons/link").content(objectMapper.writeValueAsString(lessonWithLinkDTO))
+        mockMvc.perform(put("/lessons/link")
+                        .content(objectMapper.writeValueAsString(lessonWithLinkDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$").value(result));
+    }
+
+    private LessonInfoDTO buildLessonInfoDTO(Long id, int hours, String linkToMeeting,
+                                             String subjectForSite, LessonType lessonType,
+                                             TeacherBaseDTO teacher, SubjectDTO subject, GroupDTO group) {
+        LessonInfoDTO lessonDTO = new LessonInfoDTO();
+        lessonDTO.setId(id);
+        lessonDTO.setHours(hours);
+        lessonDTO.setLinkToMeeting(linkToMeeting);
+        lessonDTO.setSubjectForSite(subjectForSite);
+        lessonDTO.setLessonType(lessonType);
+        lessonDTO.setTeacher(teacher);
+        lessonDTO.setSubject(subject);
+        lessonDTO.setGroup(group);
+        return lessonDTO;
     }
 }

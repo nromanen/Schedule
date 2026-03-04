@@ -39,4 +39,12 @@ public interface TeacherRepository extends BasicRepository<Teacher, Long> {
     Optional<Teacher> findByFullName(
             String name, String surname, String patronymic);
 
+    /**
+     * Retrieves all active teachers who have an associated user account with an email.
+     *
+     * @return a {@link List} of {@link Teacher} objects who have a linked user account,
+     *         sorted by surname in ascending order; an empty list if none found
+     */
+    List<Teacher> getAllTeachersWithEmail();
+
 }

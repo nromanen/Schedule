@@ -1,7 +1,6 @@
 package com.softserve.controller;
 
 import com.softserve.dto.TeacherDTO;
-import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherImportDTO;
 import com.softserve.service.ScheduleService;
 import com.softserve.service.TeacherService;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,9 +52,9 @@ public class TeacherController {
 
     @PutMapping("/teachers")
     @Operation(summary = "Update existing teacher by id")
-    public ResponseEntity<TeacherForUpdateDTO> update(@RequestBody TeacherForUpdateDTO teacherForUpdateDTO) {
+    public ResponseEntity<TeacherDTO> update(@RequestBody TeacherDTO teacherForUpdateDTO) {
         log.info("Updating teacher: {}", teacherForUpdateDTO);
-        TeacherForUpdateDTO updated = teacherService.update(teacherForUpdateDTO);
+        TeacherDTO updated = teacherService.update(teacherForUpdateDTO);
         return ResponseEntity.ok(updated);
     }
 
@@ -100,5 +100,13 @@ public class TeacherController {
         log.info("Importing teachers from file for department: {}", departmentId);
         List<TeacherImportDTO> imported = teacherService.saveFromFile(file, departmentId);
         return ResponseEntity.ok(imported);
+    }
+
+    @GetMapping("/teachers/with-email")
+    @PreAuthorize("hasRole('MANAGER')")
+    @Operation(summary = "Get the list of all teachers with email")
+    public ResponseEntity<List<TeacherDTO>> getAllTeachersWithEmail() {
+        log.info("Getting all teachers with email");
+        return ResponseEntity.ok(teacherService.getAllTeachersWithEmail());
     }
 }

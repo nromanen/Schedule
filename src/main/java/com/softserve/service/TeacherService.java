@@ -1,7 +1,6 @@
 package com.softserve.service;
 
 import com.softserve.dto.TeacherDTO;
-import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.dto.TeacherImportDTO;
 import com.softserve.dto.UserDataDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,10 +36,10 @@ public interface TeacherService {
     /**
      * Updates an existing teacher and registers user if email was added.
      *
-     * @param teacherForUpdateDTO the teacher with info to be updated
+     * @param teacherDTO the teacher with info to be updated
      * @return the updated teacher DTO
      */
-    TeacherForUpdateDTO update(TeacherForUpdateDTO teacherForUpdateDTO);
+    TeacherDTO update(TeacherDTO teacherDTO);
 
     /**
      * Deletes a teacher by its ID.
@@ -97,4 +96,12 @@ public interface TeacherService {
      * @return the user data DTO or null if teacher not found
      */
     UserDataDTO getUserDataByUserId(Long userId);
+
+    /**
+     * Retrieves all active teachers who have an associated user account with an email.
+     *
+     * @return a {@link List} of {@link TeacherDTO} containing teacher details including email,
+     *         sorted by surname in ascending order; an empty list if none found
+     */
+    List<TeacherDTO> getAllTeachersWithEmail();
 }

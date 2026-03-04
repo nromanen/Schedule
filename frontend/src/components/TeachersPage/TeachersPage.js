@@ -42,6 +42,8 @@ const TeachersPage = (props) => {
         handleTeacher,
         getPublicClassSchedule,
         toggleDisabledTeacher,
+        teachersWithEmail,
+        getTeachersWithEmail,
     } = props;
     const [term, setTerm] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
@@ -134,6 +136,11 @@ const TeachersPage = (props) => {
         };
     };
 
+    const openMultiSelectDialog = () => {
+        getTeachersWithEmail();
+        setIsOpenMultiSelectDialog(true);
+    };
+
     return (
         <div className="cards-container">
             <div className="form-with-search-panel">
@@ -145,9 +152,7 @@ const TeachersPage = (props) => {
                             className="send-button"
                             variant="contained"
                             color="primary"
-                            onClick={() => {
-                                setIsOpenMultiSelectDialog(true);
-                            }}
+                            onClick= {openMultiSelectDialog}
                         >
                             {t(SEND_SCHEDULE_FOR_TEACHER)}
                         </Button>
@@ -173,7 +178,7 @@ const TeachersPage = (props) => {
             {isOpenMultiSelectDialog && (
                 <MultiSelect
                     open={isOpenMultiSelectDialog}
-                    options={setOptions(enabledTeachers)}
+                    options={setOptions(teachersWithEmail)}
                     value={selected}
                     onChange={setSelected}
                     onCancel={cancelSelection}

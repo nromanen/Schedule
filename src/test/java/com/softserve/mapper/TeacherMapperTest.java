@@ -1,7 +1,6 @@
 package com.softserve.mapper;
 
 import com.softserve.dto.TeacherDTO;
-import com.softserve.dto.TeacherForUpdateDTO;
 import com.softserve.entity.Teacher;
 import com.softserve.entity.User;
 import com.softserve.service.UserService;
@@ -51,8 +50,8 @@ class TeacherMapperTest {
     @Test
     void testUserIdToEmailInTeacherToTeacherForUpdateDTOIfUserIdExists() {
         when(userService.getById(1L)).thenReturn(userOnlyWithEmail);
-        TeacherForUpdateDTO actualTeacherForUpdateDTO
-                = teacherMapper.teacherToTeacherForUpdateDTO(teacherOnlyWithUserId1);
+        TeacherDTO actualTeacherForUpdateDTO
+                = teacherMapper.teacherToTeacherDTO(teacherOnlyWithUserId1);
         assertThat(actualTeacherForUpdateDTO.getEmail()).isEqualTo(userOnlyWithEmail.getEmail());
         verify(userService).getById(1L);
     }
@@ -67,7 +66,7 @@ class TeacherMapperTest {
     @Test
     void testUserIdToEmailInTeacherToTeacherForUpdateDTOIfUserIdNotExist() {
         Teacher teacher = new Teacher();
-        TeacherForUpdateDTO teacherForUpdateDTO = teacherMapper.teacherToTeacherForUpdateDTO(teacher);
+        TeacherDTO teacherForUpdateDTO = teacherMapper.teacherToTeacherDTO(teacher);
         assertThat(teacherForUpdateDTO.getEmail()).isNull();
     }
 
