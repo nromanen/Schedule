@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {Field, reduxForm, reset} from 'redux-form';
-
 import {connect} from 'react-redux';
 import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
@@ -16,8 +15,6 @@ import {
     greaterThanTime,
     lessThanTime,
     required,
-    timeIntersect,
-    uniqueClassName,
 } from '../../validation/validateFields';
 
 import {CLASS_FORM} from '../../constants/reduxForms';
@@ -33,17 +30,25 @@ import {
     SAVE_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
 import {hourFormat, timeFormat} from '../../constants/formats';
+import {queryClient} from '../../queryClient';
+import {CLASSES_QUERY_KEY} from '../../hooks/useClassSchedule';
+import {checkUniqClassName, timeIntersectService} from "../../validation/storeValidation";
+
+const validate = (values, props) => {
+    const classes = queryClient.getQueryData([CLASSES_QUERY_KEY]) || [];
+    const errors = {};
+    errors.class_name = checkUniqClassName(values.class_name, classes, props.classSchedule?.id);
+    errors.startTime = timeIntersectService(values.startTime, values.endTime, classes, props.classSchedule?.id);
+    return errors;
+};
+
 
 const ClassFormFunc = (props) => {
     const {t} = useTranslation('formElements');
-    const {handleSubmit, pristine, onReset, submitting, classSchedule, initialize, change, dispatch} =
-        props;
+    const {handleSubmit, pristine, onReset, submitting, classSchedule, initialize, change, dispatch} = props;
+
     useEffect(() => {
-        let initialValues = {};
-        if (classSchedule) {
-            initialValues = classSchedule;
-        }
-        initialize(initialValues);
+        initialize(classSchedule || {});
     }, [classSchedule, initialize]);
 
     const setEndTime = (startTime) =>
@@ -57,10 +62,11 @@ const ClassFormFunc = (props) => {
         dispatch(reset(CLASS_FORM));
     };
 
+
     return (
         <Card additionClassName="form-card">
             <h2 className="form-title">
-                {classSchedule.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
+                {classSchedule?.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
             </h2>
             <form onSubmit={handleSubmit}>
                 <Field
@@ -70,7 +76,7 @@ const ClassFormFunc = (props) => {
                     id="class_name"
                     label={t(CLASS_LABEL)}
                     type="text"
-                    validate={[required, uniqueClassName]}
+                    validate={[required]}
                 />
                 <div className="form-time-block">
                     <Field
@@ -79,7 +85,7 @@ const ClassFormFunc = (props) => {
                         name="startTime"
                         label={t(CLASS_FROM_LABEL)}
                         type="time"
-                        validate={[required, lessThanTime, timeIntersect]}
+                        validate={[required, lessThanTime]}
                         onChange={(event, value) => {
                             if (value) {
                                 setEndTime(value);
@@ -92,7 +98,7 @@ const ClassFormFunc = (props) => {
                         name="endTime"
                         label={t(CLASS_TO_LABEL)}
                         type="time"
-                        validate={[required, greaterThanTime, timeIntersect]}
+                        validate={[required, greaterThanTime]}
                     />
                 </div>
 
@@ -110,10 +116,10 @@ const ClassFormFunc = (props) => {
                         className="buttons-style"
                         type="button"
                         variant="contained"
-                        disabled={setDisableButton(pristine, submitting, classSchedule.id)}
+                        disabled={setDisableButton(pristine, submitting, classSchedule?.id)}
                         onClick={handleReset}
                     >
-                        {getClearOrCancelTitle(classSchedule.id, t)}
+                        {getClearOrCancelTitle(classSchedule?.id, t)}
                     </Button>
                 </div>
             </form>
@@ -121,12 +127,9 @@ const ClassFormFunc = (props) => {
     );
 };
 
-const mapStateToProps = (state) => ({
-    classSchedule: state.classActions.classSchedule,
-});
-
-export default connect(mapStateToProps)(
+export default connect()(
     reduxForm({
         form: CLASS_FORM,
+        validate,
     })(ClassFormFunc),
 );

@@ -40,12 +40,12 @@ export {
     authSuccess,
 } from './auth';
 export {
-    addClassScheduleSuccess,
+    // addClassScheduleSuccess,
     getClassScheduleListSuccess,
-    getClassScheduleByIdSuccess,
-    deleteClassScheduleSuccess,
-    updateClassScheduleSuccess,
-    clearClassScheduleSuccess,
+    // getClassScheduleByIdSuccess,
+    // deleteClassScheduleSuccess,
+    // updateClassScheduleSuccess,
+    // clearClassScheduleSuccess,
     getPublicClassScheduleSuccess,
 } from './classes';
 

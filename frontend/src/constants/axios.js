@@ -81,7 +81,6 @@ export const DEPARTMENT_URL = '/departments';
 
 // Public
 export const PUBLIC_CLASSES_URL = 'public/classes';
-export const PUBLIC_GROUP_URL = 'public/groups';
 export const PUBLIC_TEACHER_URL = 'public/teachers';
 export const PUBLIC_SEMESTERS_URL = 'public/semesters';
 

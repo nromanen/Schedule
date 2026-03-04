@@ -4,23 +4,17 @@ import {store} from '../store';
 import i18n from '../i18n';
 import {INTERSECT_TIME_ERROR_MESSAGE, UNIQUE_ERROR_MESSAGE,} from '../constants/translationLabels/validationMessages';
 
-export const checkUniqClassName = (className) => {
-    const classId = store.getState().classActions.classSchedule.id;
+export const checkUniqClassName = (className, classes = [], currentClassId) => {
     let find = false;
-    if (classId) {
-        find = store.getState().classActions.classScheduler.some((value) => {
-            return value.class_name === className && value.id !== classId;
-        });
+    if (currentClassId) {
+        find = classes.some(value => value.class_name === className && value.id !== currentClassId);
     } else {
-        find = store.getState().classActions.classScheduler.some((value) => {
-            return value.class_name === className;
-        });
+        find = classes.some(value => value.class_name === className);
     }
     return find ? i18n.t(UNIQUE_ERROR_MESSAGE) : undefined;
 };
 
-export const timeIntersectService = (startTime, endTime) => {
-    const classId = store.getState().classActions.classSchedule.id;
+export const timeIntersectService = (startTime, endTime, classes = [], currentClassId) => {
     const moment = extendMoment(Moment);
     let find = false;
     if (startTime && endTime) {
@@ -28,32 +22,29 @@ export const timeIntersectService = (startTime, endTime) => {
             moment(startTime, 'HH:mm').toDate(),
             moment(endTime, 'HH:mm').toDate(),
         );
-        if (classId) {
-            find = store.getState().classActions.classScheduler.some((value) => {
-                return (
-                    incomeRange.intersect(
-                        moment.range(
-                            moment(value.startTime, 'HH:mm').toDate(),
-                            moment(value.endTime, 'HH:mm').toDate(),
-                        ),
-                    ) !== null && value.id !== classId
-                );
-            });
+        if (currentClassId) {
+            find = classes.some((value) =>
+                incomeRange.intersect(
+                    moment.range(
+                        moment(value.startTime, 'HH:mm').toDate(),
+                        moment(value.endTime, 'HH:mm').toDate(),
+                    ),
+                ) !== null && value.id !== currentClassId
+            );
         } else {
-            find = store.getState().classActions.classScheduler.some((value) => {
-                return (
-                    incomeRange.intersect(
-                        moment.range(
-                            moment(value.startTime, 'HH:mm').toDate(),
-                            moment(value.endTime, 'HH:mm').toDate(),
-                        ),
-                    ) !== null
-                );
-            });
+            find = classes.some((value) =>
+                incomeRange.intersect(
+                    moment.range(
+                        moment(value.startTime, 'HH:mm').toDate(),
+                        moment(value.endTime, 'HH:mm').toDate(),
+                    ),
+                ) !== null
+            );
         }
     }
     return find ? i18n.t(INTERSECT_TIME_ERROR_MESSAGE) : undefined;
 };
+
 export const checkUniqLesson = (lessons, currentLesson) => {
     if (!currentLesson?.id) {
         return !lessons.find(

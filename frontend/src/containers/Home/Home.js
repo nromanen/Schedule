@@ -7,11 +7,11 @@ import {getPublicClassScheduleStart} from '../../actions/classes';
 import {HOME_TITLE} from '../../constants/translationLabels/common';
 
 const HomePage = (props) => {
-    const { getClassScheduleList } = props;
+    const { getPublicClassScheduleList } = props;
     const { t } = useTranslation('common');
 
     useEffect(() => {
-        getClassScheduleList();
+        getPublicClassScheduleList();
     }, []);
 
     return (
@@ -22,7 +22,7 @@ const HomePage = (props) => {
     );
 };
 const mapDispatchToProps = (dispatch) => ({
-    getClassScheduleList: () => dispatch(getPublicClassScheduleStart()),
+    getPublicClassScheduleList: () => dispatch(getPublicClassScheduleStart()),
 });
 
 export default connect(null, mapDispatchToProps)(HomePage);

@@ -18,6 +18,11 @@ const renderTimePicker = ({
                 error={touched && invalid}
                 helperText={touched && error ? touched && error : label}
                 format="HH:mm"
+                InputProps={{
+                    style: {
+                        color: value ? 'inherit' : '#9c9c9c'
+                    }
+                }}
                 {...inputProps}
                 {...custom}
             />
