@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
-import {Field, reduxForm, reset} from 'redux-form';
-import {connect} from 'react-redux';
+import {useForm} from 'react-hook-form';
 import * as moment from 'moment';
 import Button from '@material-ui/core/Button';
 import {useTranslation} from 'react-i18next';
@@ -8,16 +7,6 @@ import Card from '../../share/Card/Card';
 
 import './ClassForm.scss';
 
-import renderTextField from '../../share/renderedFields/input';
-import renderTimePicker from '../../share/renderedFields/time';
-
-import {
-    greaterThanTime,
-    lessThanTime,
-    required,
-} from '../../validation/validateFields';
-
-import {CLASS_FORM} from '../../constants/reduxForms';
 import {CLASS_DURATION} from '../../constants/common';
 import {getClearOrCancelTitle, setDisableButton} from '../../helper/disableComponent';
 import {
@@ -32,73 +21,132 @@ import {
 import {hourFormat, timeFormat} from '../../constants/formats';
 import {queryClient} from '../../queryClient';
 import {CLASSES_QUERY_KEY} from '../../hooks/useClassSchedule';
-import {checkUniqClassName, timeIntersectService} from "../../validation/storeValidation";
+import {checkUniqClassName, timeIntersectService} from '../../validation/storeValidation';
+import {RHFTextField, RHFTimePicker} from '../../share/rhf';
+import i18n from "i18next";
+import {BIGGER_THAN_FIELD_MESSAGE, LESS_THAN_FIELD_MESSAGE} from "../../constants/translationLabels/validationMessages";
 
-const validate = (values, props) => {
-    const classes = queryClient.getQueryData([CLASSES_QUERY_KEY]) || [];
-    const errors = {};
-    errors.class_name = checkUniqClassName(values.class_name, classes, props.classSchedule?.id);
-    errors.startTime = timeIntersectService(values.startTime, values.endTime, classes, props.classSchedule?.id);
-    return errors;
-};
-
-
-const ClassFormFunc = (props) => {
+const ClassForm = ({onSubmit, onReset, classSchedule}) => {
     const {t} = useTranslation('formElements');
-    const {handleSubmit, pristine, onReset, submitting, classSchedule, initialize, change, dispatch} = props;
+    const classes = queryClient.getQueryData([CLASSES_QUERY_KEY]) || [];
+
+    // const {
+    //     control,
+    //     handleSubmit,
+    //     reset,
+    //     setValue,
+    //     watch,
+    //     formState: {isDirty, isSubmitting},
+    // } = useForm({
+    //     defaultValues: {
+    //         class_name: '',
+    //         startTime: null,
+    //         endTime: null,
+    //     },
+    // });
+    const {
+        control,
+        handleSubmit,
+        reset,
+        setValue,
+        watch,
+        trigger,
+        formState: {isDirty, isSubmitting},
+    } = useForm({
+        mode: 'onChange',
+        defaultValues: {
+            class_name: '',
+            startTime: null,
+            endTime: null,
+        },
+    });
+
+    const handleStartTimeChange = (value) => {
+        if (value) {
+            const newEndTime = moment(value, timeFormat)
+                .add(CLASS_DURATION, hourFormat)
+                .format(timeFormat);
+            setValue('endTime', newEndTime);
+            trigger('startTime');
+        }
+    };
+
+    const startTime = watch('startTime');
+    const endTime = watch('endTime');
 
     useEffect(() => {
-        initialize(classSchedule || {});
-    }, [classSchedule, initialize]);
+        reset({
+            class_name: classSchedule?.class_name || '',
+            startTime: classSchedule?.startTime || null,
+            endTime: classSchedule?.endTime || null,
+        });
+    }, [classSchedule, reset]);
 
-    const setEndTime = (startTime) =>
-        change(
-            'endTime',
-            moment(startTime, timeFormat).add(CLASS_DURATION, hourFormat).format(timeFormat),
-        );
 
     const handleReset = () => {
         onReset();
-        dispatch(reset(CLASS_FORM));
+        reset({class_name: '', startTime: null, endTime: null});
     };
 
+    const onFormSubmit = (values) => {
+        onSubmit({...values, id: classSchedule?.id});
+    };
 
     return (
         <Card additionClassName="form-card">
             <h2 className="form-title">
                 {classSchedule?.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(CLASS_Y_LABEL)}
             </h2>
-            <form onSubmit={handleSubmit}>
-                <Field
-                    component={renderTextField}
-                    className="form-field"
+            <form onSubmit={handleSubmit(onFormSubmit)}>
+                <RHFTextField
+                    control={control}
                     name="class_name"
-                    id="class_name"
                     label={t(CLASS_LABEL)}
-                    type="text"
-                    validate={[required]}
+                    className="form-field"
+                    rules={{
+                        required: t('required'),
+                        validate: (value) => checkUniqClassName(value, classes, classSchedule?.id),
+                    }}
                 />
+
                 <div className="form-time-block">
-                    <Field
-                        component={renderTimePicker}
-                        className="time-input"
+                    <RHFTimePicker
+                        control={control}
                         name="startTime"
                         label={t(CLASS_FROM_LABEL)}
-                        type="time"
-                        validate={[required, lessThanTime]}
-                        onChange={(event, value) => {
-                            if (value) {
-                                setEndTime(value);
-                            }
+                        className="time-input"
+                        onChange={handleStartTimeChange}
+                        rules={{
+                            required: t('required'),
+                            validate: {
+                                lessThan: (value) =>
+                                    !endTime ||
+                                    moment(value, 'HH:mm').toDate() <=
+                                    moment(endTime, 'HH:mm').toDate() ||
+                                    i18n.t(LESS_THAN_FIELD_MESSAGE, {field: t(CLASS_TO_LABEL)}),
+                                noIntersect: (value) => {
+                                    const error = timeIntersectService(value, endTime, classes, classSchedule?.id);
+                                    return error ? error : true;
+                                },
+                            },
                         }}
                     />
-                    <Field
-                        component={renderTimePicker}
-                        className="time-input"
+
+                    <RHFTimePicker
+                        control={control}
                         name="endTime"
                         label={t(CLASS_TO_LABEL)}
-                        type="time"
-                        validate={[required, greaterThanTime]}
+                        className="time-input"
+                        rules={{
+                            required: t('required'),
+                            validate: {
+                                greaterThan: (value) =>
+                                    !startTime ||
+                                    moment(value, 'HH:mm').toDate() >=
+                                    moment(startTime, 'HH:mm').toDate() ||
+                                    i18n.t(BIGGER_THAN_FIELD_MESSAGE, {field: t(CLASS_FROM_LABEL)}),
+                            },
+                        }}
                     />
                 </div>
 
@@ -108,7 +156,7 @@ const ClassFormFunc = (props) => {
                         type="submit"
                         variant="contained"
                         color="primary"
-                        disabled={pristine || submitting}
+                        disabled={!isDirty || isSubmitting}
                     >
                         {t(SAVE_BUTTON_LABEL)}
                     </Button>
@@ -116,7 +164,7 @@ const ClassFormFunc = (props) => {
                         className="buttons-style"
                         type="button"
                         variant="contained"
-                        disabled={setDisableButton(pristine, submitting, classSchedule?.id)}
+                        disabled={setDisableButton(!isDirty, isSubmitting, classSchedule?.id)}
                         onClick={handleReset}
                     >
                         {getClearOrCancelTitle(classSchedule?.id, t)}
@@ -127,9 +175,4 @@ const ClassFormFunc = (props) => {
     );
 };
 
-export default connect()(
-    reduxForm({
-        form: CLASS_FORM,
-        validate,
-    })(ClassFormFunc),
-);
+export default ClassForm;

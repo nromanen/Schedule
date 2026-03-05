@@ -1,1 +1,13 @@
- 
+@import '../../styles/colors.scss';
+@import '../../styles/fonts.scss';
+@import '../../styles/variables.scss';
+
+.class-card-width {
+  width: 200px;
+
+  p:last-child {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $blue;
+  }
+}

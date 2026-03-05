@@ -21,6 +21,7 @@ import {useClasses, useCreateClass, useDeleteClass, useUpdateClass} from '../../
 import {useDispatch} from "react-redux";
 import {reset} from 'redux-form';
 import {CLASS_FORM} from '../../constants/reduxForms';
+import './ClassSchedule.scss'
 
 const ClassSchedule = () => {
     const {t} = useTranslation('formElements');
