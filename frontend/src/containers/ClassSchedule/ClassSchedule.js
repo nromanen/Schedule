@@ -80,22 +80,22 @@ const ClassSchedule = () => {
 
             <section className="container-flex-wrap">
                 {classes.map((schedule) => (
-                    <Card additionClassName="class-card-width" key={schedule.id}>
+                    <Card additionClassName="class-card" key={schedule.id}>
+                        <h2 className="class-card__name">{schedule.class_name}</h2>
+                        <p className="class-card__label">{t(CLASS_FROM_LABEL)} — {t(CLASS_TO_LABEL)}</p>
+                        <p className="class-card__time">{schedule.startTime} — {schedule.endTime}</p>
                         <div className="cards-btns">
                             <FaEdit
-                                className="svg-btn"
+                                className="svg-btn edit-btn"
                                 title={t(COMMON_EDIT_HOVER_TITLE)}
                                 onClick={() => handleEdit(schedule.id)}
                             />
                             <MdDelete
-                                className="svg-btn"
+                                className="svg-btn delete-btn"
                                 title={t(COMMON_DELETE_HOVER_TITLE)}
                                 onClick={() => handleClickOpen(schedule.id)}
                             />
                         </div>
-                        <p>{t(CLASS_LABEL)}: {schedule.class_name}</p>
-                        <p>{t(CLASS_FROM_LABEL)} - {t(CLASS_TO_LABEL)}</p>
-                        <p>{schedule.startTime} - {schedule.endTime}</p>
                     </Card>
                 ))}
             </section>

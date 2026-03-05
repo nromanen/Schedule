@@ -67,7 +67,7 @@ const AddDepartmentForm = ({ onSubmit, onReset, department }) => {
                             checkUniqueDepartment(value, departments, department?.id),
                     }}
                 />
-                <div className="form-buttons-container subject-btns">
+                <div className="form-buttons-container form-btns">
                     <Button
                         variant="contained"
                         color="primary"

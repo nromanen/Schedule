@@ -1,0 +1,197 @@
+@import './colors.scss';
+@import './variables.scss';
+@import './fonts.scss';
+
+// ── Card Base Mixin ───────────────────────────────────────────
+@mixin card-base-style {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  position: relative;
+  border-radius: 10px !important;
+  border: 1px solid $grey4 !important;
+  box-shadow: 0 1px 4px $shadow-box !important;
+  padding-bottom: 8px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $blue, $blue3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 10px 10px 0 0;
+  }
+
+  &:hover {
+    z-index: 10;
+    box-shadow: 0 6px 20px $blue-shadow-box !important;
+    border-color: $blue3 !important;
+    transform: translateY(-2px);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+}
+
+// ── Card Name Mixin ───────────────────────────────────────────
+@mixin card-name-style {
+  text-align: center;
+  margin: 0;
+  font-size: $font-s;
+  font-weight: 600;
+  color: $black;
+  line-height: 1.4;
+  padding: 12px 10px 8px;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+// ── Card Action Buttons ───────────────────────────────────────
+.cards-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 4px;
+  border-top: 1px solid $grey4;
+  margin-top: 4px;
+}
+
+.svg-btn {
+  cursor: pointer;
+  font-size: $icon-size;
+  padding: 4px;
+  border-radius: 6px;
+  color: $gray3;
+  transition: all 0.2s ease;
+  box-sizing: content-box;
+
+  &:hover {
+    transform: scale(1.15);
+  }
+
+  &.copy-btn:hover {
+    background: $blue2;
+    color: $blue;
+  }
+
+  &.edit-btn:hover {
+    background: $green1;
+    color: $green;
+  }
+
+  &.delete-btn:hover {
+    background: $red1;
+    color: $red;
+  }
+}
+
+// ── Form Card ─────────────────────────────────────────────────
+.form-card {
+  border-radius: 10px !important;
+  border: 1px solid $grey4 !important;
+  box-shadow: 0 1px 4px $shadow-box !important;
+
+  h2 {
+    font-size: $font-m !important;
+    font-weight: 700 !important;
+    color: $black !important;
+    text-align: center !important;
+    margin-bottom: 16px !important;
+  }
+
+  .form-field {
+    width: 100%;
+    margin-bottom: 16px !important;
+  }
+}
+
+// ── Form Buttons ──────────────────────────────────────────────
+.form-btns{
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+
+  .buttons-style {
+    flex: 1;
+    min-height: 40px;
+    border-radius: 8px !important;
+    font-size: $font-2xs !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+  }
+
+  .MuiButton-containedPrimary {
+    background: $blue !important;
+    box-shadow: none !important;
+
+    &:hover {
+      background: $blue4 !important;
+      box-shadow: 0 4px 12px $blue-shadow-box !important;
+    }
+
+    &:disabled {
+      background: $gray1 !important;
+      color: $gray !important;
+    }
+  }
+
+  .MuiButton-contained:not(.MuiButton-containedPrimary) {
+    background: $blue2 !important;
+    color: $gray !important;
+    box-shadow: none !important;
+    border: 1px solid $grey4 !important;
+
+    &:hover {
+      background: $gray1 !important;
+      color: $black !important;
+    }
+  }
+}
+
+// ── Cards Container ───────────────────────────────────────────
+.container-flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-content: start;
+  align-items: stretch;
+  flex: 1;
+  padding: 4px;
+}
+
+.scroll-top-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: $blue;
+  color: $white;
+  border: none;
+  font-size: $font-l;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px $blue-shadow-box;
+  transition: all 0.2s ease;
+  z-index: 100;
+
+  &:hover {
+    background: $blue4;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px $blue-shadow-box;
+  }
+}

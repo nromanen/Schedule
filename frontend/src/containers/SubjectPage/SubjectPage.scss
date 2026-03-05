@@ -1,32 +1,11 @@
-@import '../../styles/variables.scss';
-@import '../../styles/fonts.scss';
+@import '../../styles/cards.scss';
 
-.subject-card.done-card {
-    width: 200px;
-    height: 120px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: all 0.3s ease;
-    overflow: hidden;
-
-    &:hover {
-        height: auto;
-        min-height: 120px;
-        z-index: 10;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
+.subject-card {
+    @include card-base-style;
 }
 
 .subject-card__name {
-    text-align: center;
-    margin: 5px 0;
-    font-size: $font-l;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    @include card-name-style;
 }
 
 .subject-card:hover .subject-card__name {
@@ -37,6 +16,125 @@
 
 .wrapper {
     display: flex;
-    justify-content: space-around;
     flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-start;
+    flex: 1;
+    padding: 4px;
+}
+
+// ── View Toggle ───────────────────────────────────────────────
+.view-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    &__btn {
+        padding: 6px 14px;
+        border-radius: 8px;
+        border: 1px solid $grey4;
+        background: $white;
+        color: $gray;
+        font-weight: 600;
+        font-size: $font-2xs;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+            background: $blue2;
+            color: $blue;
+            border-color: $blue3;
+        }
+
+        &--active {
+            background: $blue !important;
+            color: $white !important;
+            border-color: $blue !important;
+        }
+    }
+
+    &__count {
+        margin-left: auto;
+        font-size: $font-2xs;
+        color: $gray3;
+        background: $blue2;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+}
+
+// ── Grouped View ──────────────────────────────────────────────
+.grouped-view {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.letter-jump-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 10px 12px;
+    background: $white;
+    border-radius: 10px;
+    border: 1px solid $grey4;
+    box-shadow: 0 1px 4px $shadow-box;
+}
+
+.letter-jump-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: $blue2;
+    color: $blue;
+    font-weight: 700;
+    font-size: $font-2xs;
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: $blue;
+        color: $white;
+    }
+}
+
+.letter-group {
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+    }
+
+    &__badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, $blue, $blue3);
+        color: $white;
+        font-weight: 800;
+        font-size: $font-m;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    &__line {
+        flex: 1;
+        height: 1px;
+        background: $grey4;
+    }
+
+    &__count {
+        font-size: $font-2xs;
+        color: $gray3;
+    }
 }

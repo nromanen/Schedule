@@ -40,12 +40,7 @@ export {
     authSuccess,
 } from './auth';
 export {
-    // addClassScheduleSuccess,
     getClassScheduleListSuccess,
-    // getClassScheduleByIdSuccess,
-    // deleteClassScheduleSuccess,
-    // updateClassScheduleSuccess,
-    // clearClassScheduleSuccess,
     getPublicClassScheduleSuccess,
 } from './classes';
 
@@ -108,13 +103,8 @@ export {
 export { setIsOpenConfirmDialog } from './dialog';
 
 export {
-    addSubject,
-    clearSubject,
-    deleteSubject,
     selectSubject,
-    setDisabledSubjects,
     showAllSubjects,
-    updateSubject,
 } from './subjects';
 export {
     setTeacher,

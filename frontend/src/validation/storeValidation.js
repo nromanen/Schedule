@@ -88,14 +88,11 @@ export const checkUniqueGroup = (groupTitle) => {
     return find ? i18n.t(UNIQUE_ERROR_MESSAGE) : undefined;
 };
 
-export const checkUniqueSubject = (subjectTitle) => {
-    if (!subjectTitle) {
-        return undefined;
-    }
-    const find = store.getState().subjects.subjects.some((value) => {
-        return value.name.toUpperCase().trim() === subjectTitle.toUpperCase().trim();
-    });
-    return find ? i18n.t(UNIQUE_ERROR_MESSAGE) : undefined;
+export const checkUniqueSubject = (value, subjects, currentId) => {
+    const isDuplicate = subjects.some(
+        (subj) => subj.name.trim().toLowerCase() === value.trim().toLowerCase() && subj.id !== currentId
+    );
+    return isDuplicate ? i18n.t('Name must be unique') : true;
 };
 
 export const checkUniqueDepartment = (value, departments, currentId) => {

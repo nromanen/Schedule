@@ -1,13 +1,32 @@
-@import '../../styles/colors.scss';
-@import '../../styles/fonts.scss';
-@import '../../styles/variables.scss';
+@import '../../styles/cards.scss';
 
-.class-card-width {
-  width: 200px;
+.class-card {
+  @include card-base-style;
+  gap: 8px;
 
-  p:last-child {
-    font-size: 1.1rem;
-    font-weight: 600;
+  &__name {
+    @include card-name-style;
+    -webkit-line-clamp: 1;
+  }
+
+  &__time {
+    text-align: center;
+    font-size: $font-m;
+    font-weight: 700;
     color: $blue;
+    padding: 4px 10px;
+    background: $blue2;
+    border-radius: 6px;
+    margin: 0 10px;
+  }
+
+  &__label {
+    text-align: center;
+    font-size: $font-2xs;
+    color: $gray3;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+    padding: 0 10px;
   }
 }

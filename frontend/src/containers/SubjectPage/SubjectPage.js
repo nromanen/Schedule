@@ -1,186 +1,266 @@
-import {connect} from 'react-redux';
-import {FaEdit} from 'react-icons/fa';
-import {MdDelete} from 'react-icons/md';
-import {useTranslation} from 'react-i18next';
-import React, {useEffect, useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { FaEdit } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
+import { GiSightDisabled, IoMdEye } from 'react-icons/all';
+import { useTranslation } from 'react-i18next';
 
 import './SubjectPage.scss';
-import {GiSightDisabled, IoMdEye} from 'react-icons/all';
 import Card from '../../share/Card/Card';
-import {search} from '../../helper/search';
+import { search } from '../../helper/search';
 import NotFound from '../../share/NotFound/NotFound';
 import CustomDialog from '../Dialogs/CustomDialog';
-import {dialogTypes} from '../../constants/dialogs';
+import { dialogTypes } from '../../constants/dialogs';
 import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
-import AddSubject from '../../components/AddSubjectForm/AddSubjectForm';
-import {handleSnackbarCloseService} from '../../services/snackbarService';
-import {setIsOpenConfirmDialog} from '../../actions/dialog';
+import AddSubjectForm from '../../components/AddSubjectForm/AddSubjectForm';
+import { handleSnackbarCloseService } from '../../services/snackbarService';
+import { setIsOpenConfirmDialog } from '../../actions/dialog';
 import {
-    clearSubjectService,
-    getDisabledSubjectsService,
-    handleSubjectService,
-    removeSubjectCardService,
-    selectSubjectService,
-    setDisabledSubjectsService,
-    setEnabledSubjectsService,
-    showAllSubjectsService,
-} from '../../services/subjectService';
-import {DELETE_TITLE, EDIT_TITLE, SUBJECT_Y_LABEL,} from '../../constants/translationLabels/formElements';
-import {COMMON_SET_DISABLED, COMMON_SET_ENABLED} from '../../constants/translationLabels/common';
+    DELETE_TITLE,
+    EDIT_TITLE,
+    SUBJECT_Y_LABEL,
+} from '../../constants/translationLabels/formElements';
+import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
+import {
+    useSubjects,
+    useDisabledSubjects,
+    useCreateSubject,
+    useUpdateSubject,
+    useDeleteSubject,
+} from '../../hooks/useSubjects';
 
-const SubjectPage = (props) => {
+// ── Subject Card ──────────────────────────────────────────────
+const SubjectCard = ({ subject, isDisabled, onEdit, onDelete, onEnable, onDisable, t }) => (
+    <Card additionClassName="subject-card">
+        <h2 className="subject-card__name">{subject.name}</h2>
+        <div className="cards-btns">
+            {isDisabled ? (
+                <IoMdEye
+                    className="svg-btn copy-btn"
+                    title={t(COMMON_SET_ENABLED)}
+                    onClick={() => onEnable(subject)}
+                />
+            ) : (
+                <>
+                    <GiSightDisabled
+                        className="svg-btn copy-btn"
+                        title={t(COMMON_SET_DISABLED)}
+                        onClick={() => onDisable(subject)}
+                    />
+                    <FaEdit
+                        className="svg-btn edit-btn"
+                        title={t(EDIT_TITLE)}
+                        onClick={() => onEdit(subject)}
+                    />
+                </>
+            )}
+            <MdDelete
+                className="svg-btn delete-btn"
+                title={t(DELETE_TITLE)}
+                onClick={() => onDelete(subject)}
+            />
+        </div>
+    </Card>
+);
+
+// ── Grouped View ──────────────────────────────────────────────
+const GroupedView = ({ subjects, ...cardProps }) => {
+
+    const grouped = subjects.reduce((acc, subject) => {
+        const letter = subject.name[0].toUpperCase();
+        if (!acc[letter]) acc[letter] = [];
+        acc[letter].push(subject);
+        return acc;
+    }, {});
+
+    const letters = Object.keys(grouped).sort();
+
+    return (
+        <div className="grouped-view">
+            <div className="letter-jump-bar" id="letter-jump-bar">
+                {letters.map((letter) => (
+                    <a key={letter} href={`#letter-${letter}`} className="letter-jump-btn">
+                        {letter}
+                    </a>
+                ))}
+            </div>
+
+            {letters.map((letter) => (
+                <div key={letter} id={`letter-${letter}`} className="letter-group">
+                    <div className="letter-group__header">
+                        <span className="letter-group__badge">{letter}</span>
+                        <div className="letter-group__line" />
+                        <span className="letter-group__count">{grouped[letter].length}</span>
+                    </div>
+                    <div className="container-flex-wrap wrapper">
+                        {grouped[letter].map((subject) => (
+                            <SubjectCard key={subject.id} subject={subject} {...cardProps} />
+                        ))}
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};
+
+// ── Main Page ─────────────────────────────────────────────────
+const SubjectPage = () => {
     const { t } = useTranslation('formElements');
-    const {
-        isSnackbarOpen,
-        snackbarType,
-        snackbarMessage,
-        disabledSubjects,
-        subjects,
-        setOpenConfirmDialog,
-        isOpenConfirmDialog,
-    } = props;
+    const dispatch = useDispatch();
 
-    const [confirmDialogType, setConfirmDialogType] = useState('');
-    const [subjectId, setSubjectId] = useState(-1);
-    const [term, setTerm] = useState('');
-
-    const [disabled, setDisabled] = useState(false);
+    const [showScrollTop, setShowScrollTop] = useState(false);
 
     useEffect(() => {
-        showAllSubjectsService();
-        getDisabledSubjectsService();
+        const handleScroll = () => setShowScrollTop(window.scrollY > 300);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const handleFormReset = () => clearSubjectService();
-    const visibleSubjects = disabled
-        ? search(disabledSubjects, term, ['name'])
-        : search(subjects, term, ['name']);
-    const SearchChange = setTerm;
+    // ── snackbar & dialog from Redux ──────────────────────────
+    const isSnackbarOpen = useSelector((state) => state.snackbar.isSnackbarOpen);
+    const snackbarType = useSelector((state) => state.snackbar.snackbarType);
+    const snackbarMessage = useSelector((state) => state.snackbar.message);
+    const isOpenConfirmDialog = useSelector((state) => state.dialog.isOpenConfirmDialog);
+    const setOpenConfirmDialog = (state) => dispatch(setIsOpenConfirmDialog(state));
 
-    const showConfirmDialog = (subjId, dialogType) => {
-        setSubjectId(subjId);
+    // ── server state ──────────────────────────────────────────
+    const { data: subjects = [] } = useSubjects();
+    const { data: disabledSubjects = [] } = useDisabledSubjects();
+
+    const createSubject = useCreateSubject();
+    const updateSubject = useUpdateSubject();
+    const deleteSubject = useDeleteSubject();
+
+    // ── local UI state ────────────────────────────────────────
+    const [term, setTerm] = useState('');
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [confirmDialogType, setConfirmDialogType] = useState('');
+    const [selectedSubject, setSelectedSubject] = useState(null);
+    const [viewMode, setViewMode] = useState('grid');
+
+    // ── derived data ──────────────────────────────────────────
+    const visibleSubjects = search(
+        isDisabled ? disabledSubjects : subjects,
+        term,
+        ['name'],
+    );
+
+    // ── handlers ──────────────────────────────────────────────
+    const handleSubmit = (data) => {
+        data.id ? updateSubject.mutate(data) : createSubject.mutate(data);
+        setSelectedSubject(null);
+    };
+
+    const handleReset = () => setSelectedSubject(null);
+
+    const showConfirmDialog = (subject, dialogType) => {
+        setSelectedSubject(subject);
         setConfirmDialogType(dialogType);
         setOpenConfirmDialog(true);
     };
 
-    const acceptConfirmDialog = (id) => {
+    const handleCloseConfirmDialog = () => {
         setOpenConfirmDialog(false);
-        if (!id) return;
+        setSelectedSubject(null);
+    };
+
+    const acceptConfirmDialog = () => {
+        setOpenConfirmDialog(false);
+        const subject = selectedSubject;
         switch (confirmDialogType) {
             case dialogTypes.DELETE_CONFIRM:
-                removeSubjectCardService(subjectId);
+                deleteSubject.mutate(subject.id);
                 break;
             case dialogTypes.SET_VISIBILITY_DISABLED:
-                {
-                    const group = subjects.find((subject) => subject.id === subjectId);
-                    setDisabledSubjectsService(group);
-                }
-                break;
             case dialogTypes.SET_VISIBILITY_ENABLED:
-                {
-                    const group = disabledSubjects.find((subject) => subject.id === subjectId);
-                    setEnabledSubjectsService(group);
-                }
+                updateSubject.mutate({ ...subject, disable: !subject.disable });
                 break;
             default:
                 break;
         }
+        setSelectedSubject(null);
     };
 
-    const showDisabledHandle = () => {
-        setDisabled((prev) => !prev);
+    const cardProps = {
+        isDisabled,
+        onEdit: setSelectedSubject,
+        onDelete: (subject) => showConfirmDialog(subject, dialogTypes.DELETE_CONFIRM),
+        onEnable: (subject) => showConfirmDialog(subject, dialogTypes.SET_VISIBILITY_ENABLED),
+        onDisable: (subject) => showConfirmDialog(subject, dialogTypes.SET_VISIBILITY_DISABLED),
+        t,
     };
+
     return (
         <>
             <CustomDialog
                 type={confirmDialogType}
                 whatDelete="subject"
                 open={isOpenConfirmDialog}
-                handelConfirm={() => acceptConfirmDialog(subjectId)}
+                handelConfirm={acceptConfirmDialog}
+                onClose={handleCloseConfirmDialog}
             />
 
             <div className="cards-container">
                 <aside className="search-list__panel">
-                    <SearchPanel SearchChange={SearchChange} showDisabled={showDisabledHandle} />
-                    {disabled ? (
-                        ''
-                    ) : (
-                        <AddSubject
-                            className="form"
-                            onSubmit={handleSubjectService}
-                            onReset={handleFormReset}
+                    <SearchPanel
+                        SearchChange={setTerm}
+                        showDisabled={() => setIsDisabled((prev) => !prev)}
+                    />
+                    {!isDisabled && (
+                        <AddSubjectForm
+                            onSubmit={handleSubmit}
+                            onReset={handleReset}
+                            subject={selectedSubject}
                         />
                     )}
                 </aside>
-                <section className="container-flex-wrap wrapper">
-                    {visibleSubjects.length === 0 && <NotFound name={t(SUBJECT_Y_LABEL)} />}
-                    {visibleSubjects.map((subject) => (
-                        <Card key={subject.id} additionClassName="subject-card done-card">
-                            <h2 className="subject-card__name">{subject.name}</h2>
-                            <div className="cards-btns">
-                                {disabled ? (
-                                    <GiSightDisabled
-                                        className="svg-btn copy-btn"
-                                        title={t(COMMON_SET_ENABLED)}
-                                        onClick={() => {
-                                            showConfirmDialog(
-                                                subject.id,
-                                                dialogTypes.SET_VISIBILITY_ENABLED,
-                                            );
-                                        }}
-                                    />
-                                ) : (
-                                    <>
-                                        <IoMdEye
-                                            className="svg-btn copy-btn"
-                                            title={t(COMMON_SET_DISABLED)}
-                                            onClick={() => {
-                                                showConfirmDialog(
-                                                    subject.id,
-                                                    dialogTypes.SET_VISIBILITY_DISABLED,
-                                                );
-                                            }}
-                                        />
-                                        <FaEdit
-                                            className="svg-btn edit-btn"
-                                            title={t(EDIT_TITLE)}
-                                            onClick={() => selectSubjectService(subject.id)}
-                                        />
-                                    </>
-                                )}
 
-                                <MdDelete
-                                    className="svg-btn delete-btn"
-                                    title={t(DELETE_TITLE)}
-                                    onClick={() =>
-                                        showConfirmDialog(subject.id, dialogTypes.DELETE_CONFIRM)
-                                    }
-                                />
-                            </div>
-                        </Card>
-                    ))}
+                <section className="container-flex-wrap wrapper">
+                    {/* View toggle */}
+                    <div className="view-toggle">
+                        <button
+                            className={`view-toggle__btn ${viewMode === 'grid' ? 'view-toggle__btn--active' : ''}`}
+                            onClick={() => setViewMode('grid')}
+                        >
+                            ▦ Grid
+                        </button>
+                        <button
+                            className={`view-toggle__btn ${viewMode === 'grouped' ? 'view-toggle__btn--active' : ''}`}
+                            onClick={() => setViewMode('grouped')}
+                        >
+                            🔤 A-Z
+                        </button>
+                        <span className="view-toggle__count">{visibleSubjects.length}</span>
+                    </div>
+
+                    {visibleSubjects.length === 0 && <NotFound name={t(SUBJECT_Y_LABEL)} />}
+
+                    {viewMode === 'grid'
+                        ? visibleSubjects.map((subject) => (
+                            <SubjectCard key={subject.id} subject={subject} {...cardProps} />
+                        ))
+                        : <GroupedView subjects={visibleSubjects} {...cardProps} />
+                    }
                 </section>
             </div>
+
             <SnackbarComponent
                 message={snackbarMessage}
                 type={snackbarType}
                 isOpen={isSnackbarOpen}
                 handleSnackbarClose={handleSnackbarCloseService}
             />
+            {showScrollTop && (
+                <button
+                    className="scroll-top-btn"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                >
+                    ↑
+                </button>
+            )}
         </>
     );
 };
-const mapStateToProps = (state) => ({
-    subjects: state.subjects.subjects,
-    disabledSubjects: state.subjects.disabledSubjects,
-    isSnackbarOpen: state.snackbar.isSnackbarOpen,
-    snackbarType: state.snackbar.snackbarType,
-    snackbarMessage: state.snackbar.message,
-    isOpenConfirmDialog: state.dialog.isOpenConfirmDialog,
-});
-const mapDispatchToProps = (dispatch) => ({
-    setOpenConfirmDialog: (newState) => dispatch(setIsOpenConfirmDialog(newState)),
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(SubjectPage);
+export default SubjectPage;
