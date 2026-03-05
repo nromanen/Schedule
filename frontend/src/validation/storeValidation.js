@@ -97,14 +97,12 @@ export const checkUniqueSubject = (subjectTitle) => {
     });
     return find ? i18n.t(UNIQUE_ERROR_MESSAGE) : undefined;
 };
-export const checkUniqueDepartment = (departmentTitle) => {
-    if (!departmentTitle) {
-        return undefined;
-    }
-    const find = store.getState().departments.departments.some((value) => {
-        return value.name.toUpperCase().trim() === departmentTitle.toUpperCase().trim();
-    });
-    return find ? i18n.t(UNIQUE_ERROR_MESSAGE) : undefined;
+
+export const checkUniqueDepartment = (value, departments, currentId) => {
+    const isDuplicate = departments.some(
+        (dept) => dept.name.trim().toLowerCase() === value.trim().toLowerCase() && dept.id !== currentId
+    );
+    return isDuplicate ? i18n.t('Name must be unique') : true;
 };
 
 export const checkUniqSemester = (semester) => {

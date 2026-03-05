@@ -248,5 +248,6 @@
     "my_schedule": "Мій розклад",
     "loading": "Завантаження",
     "link": "Посилання",
-    "Unable to delete period": "Неможливо видалити пару"
+    "Unable to delete period": "Неможливо видалити пару",
+    "Unable to delete department": "Неможливо видалити кафедру"
 }

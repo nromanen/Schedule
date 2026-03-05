@@ -7,10 +7,6 @@ import java.util.Optional;
 
 public interface TeacherRepository extends BasicRepository<Teacher, Long> {
 
-    /**
-     * {@inheritDoc}
-     */
-    List<Teacher> getDisabled();
 
     /**
      * Retrieves a teacher by user id.

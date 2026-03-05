@@ -1,40 +1,35 @@
-import React, {useState} from 'react';
-import {FaEdit} from 'react-icons/fa';
-import {MdDelete} from 'react-icons/md';
-import {useTranslation} from 'react-i18next';
+import React, { useState } from 'react';
+import { FaEdit } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
+import { useTranslation } from 'react-i18next';
 
 import ClassForm from '../../components/ClassForm/ClassForm';
 import Card from '../../share/Card/Card';
 import CustomDialog from '../Dialogs/CustomDialog';
-import {dialogTypes} from '../../constants/dialogs';
-import {cardType} from '../../constants/cardType';
-import {handleSnackbarOpenService} from '../../services/snackbarService';
-import {snackbarTypes} from '../../constants/snackbarTypes';
+import { dialogTypes } from '../../constants/dialogs';
+import { cardType } from '../../constants/cardType';
+import { handleSnackbarOpenService } from '../../services/snackbarService';
+import { snackbarTypes } from '../../constants/snackbarTypes';
 import {
     CLASS_FROM_LABEL,
     CLASS_LABEL,
     CLASS_TO_LABEL,
     MAX_COUNT_CLASSES_REACHED,
 } from '../../constants/translationLabels/formElements';
-import {COMMON_DELETE_HOVER_TITLE, COMMON_EDIT_HOVER_TITLE} from '../../constants/translationLabels/common';
-import {useClasses, useCreateClass, useDeleteClass, useUpdateClass} from '../../hooks/useClassSchedule';
-import {useDispatch} from "react-redux";
-import {reset} from 'redux-form';
-import {CLASS_FORM} from '../../constants/reduxForms';
-import './ClassSchedule.scss'
+import { COMMON_DELETE_HOVER_TITLE, COMMON_EDIT_HOVER_TITLE } from '../../constants/translationLabels/common';
+import { useClasses, useCreateClass, useDeleteClass, useUpdateClass } from '../../hooks/useClassSchedule';
+import './ClassSchedule.scss';
 
 const ClassSchedule = () => {
-    const {t} = useTranslation('formElements');
+    const { t } = useTranslation('formElements');
     const [classId, setClassId] = useState(-1);
     const [selectedClass, setSelectedClass] = useState({});
     const [isOpenConfirmDialog, setIsOpenConfirmDialog] = useState(false);
 
-    const {data: classes = []} = useClasses();
-
+    const { data: classes = [] } = useClasses();
     const updateClass = useUpdateClass();
     const createClass = useCreateClass();
     const deleteClass = useDeleteClass();
-    const dispatch = useDispatch();
 
     const submit = (values) => {
         if (!values.id && classes.length >= 7) {
@@ -42,22 +37,15 @@ const ClassSchedule = () => {
         }
         if (values.id) {
             updateClass.mutate(values, {
-                onSuccess: () => {
-                    setSelectedClass({});
-                    dispatch(reset(CLASS_FORM));
-                }
+                onSuccess: () => setSelectedClass({}),
             });
         } else {
-            createClass.mutate(values, {
-                onSuccess: () => {
-                    dispatch(reset(CLASS_FORM));
-                }
-            });
+            createClass.mutate(values);
         }
     };
 
     const handleEdit = (id) => {
-        const found = classes.find(item => item.id === id);
+        const found = classes.find((item) => item.id === id);
         setSelectedClass(found || {});
     };
 

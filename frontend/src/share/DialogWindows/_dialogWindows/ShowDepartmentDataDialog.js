@@ -1,10 +1,8 @@
 import React from 'react';
-
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import { isEmpty } from 'lodash';
 
-import {connect} from 'react-redux';
-import {useTranslation} from 'react-i18next';
-import {isEmpty} from 'lodash';
 import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import '../dialog.scss';
 import RenderTeacherTable from '../../../helper/renderTeacherTable';
@@ -15,17 +13,14 @@ import {
     TEACHER_LABEL,
     TEACHERS_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import {dialogCloseButton} from '../../../constants/dialogs';
+import { dialogCloseButton } from '../../../constants/dialogs';
 
-const ShowDepartmentDataDialog = (props) => {
-    const { onClose, cardId, open, teachers, department } = props;
+const ShowDepartmentDataDialog = ({ onClose, cardId, open, teachers, department }) => {
     const { t } = useTranslation('formElements');
-    const handleClose = () => {
-        onClose(cardId);
-    };
+
     return (
         <CustomDialog
-            onClose={handleClose}
+            onClose={() => onClose(cardId)}
             open={open}
             title="Show dependencies data"
             buttons={[dialogCloseButton(() => onClose(''))]}
@@ -34,7 +29,7 @@ const ShowDepartmentDataDialog = (props) => {
                 <>
                     <h2 className="title-align">
                         {`${t(DEPARTMENT_TEACHER_LABEL)} - `}
-                        <span>{`${department.name}`}</span>
+                        <span>{department?.name}</span>
                     </h2>
                     {t(NO_EXIST_TEACHER_AT_DEPARTMENT)}
                 </>
@@ -47,7 +42,7 @@ const ShowDepartmentDataDialog = (props) => {
                                 : `${t(TEACHER_LABEL)} `}
                         </span>
                         {`${t(DEPARTMENT_TEACHERS)} `}
-                        <span>{`${department.name}`}</span>
+                        <span>{department?.name}</span>
                     </h3>
                     <RenderTeacherTable teachers={teachers} />
                 </>
@@ -59,9 +54,8 @@ const ShowDepartmentDataDialog = (props) => {
 ShowDepartmentDataDialog.propTypes = {
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    department: PropTypes.object,
+    teachers: PropTypes.array,
 };
-const mapStateToProps = (state) => ({
-    department: state.departments.department,
-});
 
-export default connect(mapStateToProps, {})(ShowDepartmentDataDialog);
+export default ShowDepartmentDataDialog;

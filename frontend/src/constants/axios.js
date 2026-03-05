@@ -77,7 +77,7 @@ export const EXPORT_SCHEDULE_XLSX_URL = 'schedules/export/xlsx?semesterId=';
 export const CLASS_URL = 'classes';
 
 // Departments
-export const DEPARTMENT_URL = '/departments';
+export const DEPARTMENT_URL = 'departments';
 
 // Public
 export const PUBLIC_CLASSES_URL = 'public/classes';
