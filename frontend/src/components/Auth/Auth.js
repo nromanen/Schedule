@@ -1,10 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useHistory} from 'react-router-dom';
-import {ADMIN_PAGE_LINK, HOME_PAGE_LINK, LOGIN_LINK} from '../../constants/links';
+import {LOGIN_LINK} from '../../constants/links';
 import {authTypes, successAuthMessages} from '../../constants/auth';
 import {GOOGLE_LOGIN_URL} from '../../constants/axios';
-import {userRoles} from '../../constants/userRoles';
 import {snackbarTypes} from '../../constants/snackbarTypes';
 import LoginForm from '../LoginForm/LoginForm';
 import RegistrationForm from '../RegistrationForm/RegistrationForm';
@@ -17,9 +16,7 @@ import {GOOGLE} from '../../constants/common';
 
 import './Auth.scss';
 import {
-    ADMIN_TITLE,
     BROKEN_TOKEN,
-    HOME_TITLE,
     LOGIN_TITLE,
     REGISTRATION_PAGE_TITLE,
     RESET_PASSWORD_PAGE_TITLE,
@@ -46,7 +43,7 @@ const Auth = (props) => {
     const parser = new URL(url);
 
     const loginHandler = loginData => {
-        onAuth(loginData);
+        onAuth({ ...loginData, history });
         setLoadingForm(true);
         resetFormHandler(LOGIN_FORM);
     };
@@ -54,17 +51,6 @@ const Auth = (props) => {
     const showSuccessMessage = massage => {
         handleSnackbarOpenService(true, snackbarTypes.SUCCESS, t(massage));
     };
-
-    const successLoginRedirect = useCallback(() => {
-        if (userRole === userRoles.MANAGER) {
-            document.title = t(ADMIN_TITLE);
-            history.push(ADMIN_PAGE_LINK);
-        } else {
-            document.title = t(HOME_TITLE);
-            history.push(HOME_PAGE_LINK);
-        }
-        showSuccessMessage(successAuthMessages[authType]);
-    }, []);
 
     const registrationHandler = registrationData => {
         onRegister({
@@ -123,7 +109,7 @@ const Auth = (props) => {
 
     useEffect(() => {
         if (userRole) {
-            successLoginRedirect();
+            showSuccessMessage(successAuthMessages[authType]);
         }
     }, [userRole]);
 

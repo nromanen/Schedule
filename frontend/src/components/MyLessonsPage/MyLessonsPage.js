@@ -30,16 +30,6 @@ const MyLessonsPage = (props) => {
         };
     }, []);
 
-    // useEffect(() => {
-    //     console.log('semesters:', semesters);
-    //     console.log('lessons:', lessons);
-    //     getMyLessons();
-    //     return () => {
-    //         clearLessons();
-    //     };
-    // }, []);
-
-
     const handleUpdateLink = (linkData) => {
         updateLessonsLink(linkData);
     };

@@ -11,7 +11,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const LessonGroupRow = React.memo((props) => {
     const { group, groupKey, linkValue, getLessonTypeLabel, onUpdateLink, onDeleteLink, onLinkChange, t } = props;
-    const [isExpanded, setIsExpanded] = useState(true);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const groupTitles = group.lessons.map((l) => l.group?.title).filter(Boolean);
     const uniqueGroups = [...new Set(groupTitles)].sort((a, b) => a.localeCompare(b, 'uk'));

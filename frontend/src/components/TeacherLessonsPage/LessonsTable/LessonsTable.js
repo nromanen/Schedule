@@ -104,7 +104,7 @@ const LessonsTable = ({ lessons, onUpdateLink, selectedTeacher, onUnsavedChanges
             const newExpanded = { ...prev };
             groupedBySubject.forEach((subject) => {
                 if (newExpanded[subject.subjectName] === undefined) {
-                    newExpanded[subject.subjectName] = true;
+                    newExpanded[subject.subjectName] = false;
                 }
             });
             return newExpanded;

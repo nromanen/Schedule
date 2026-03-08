@@ -1,4 +1,4 @@
-import {call, delay, put, takeEvery, takeLatest} from 'redux-saga/effects';
+import {call, delay, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 import jwtDecode from 'jwt-decode';
 import * as actionTypes from '../actions/actionsType';
 
@@ -21,6 +21,7 @@ import {TOKEN_BEGIN} from '../constants/tokenBegin';
 import axios from '../helper/axios';
 import {GET, POST, PUT} from '../constants/methods';
 import {createErrorMessage} from '../utils/sagaUtils';
+import {ADMIN_PAGE_LINK, HOME_PAGE_LINK, SCHEDULE_FOR_LINK} from '../constants/links';
 
 function* loadTeacherProfile() {
     try {
@@ -43,11 +44,12 @@ function* loadTeacherProfile() {
 
 function* loginToAccount({ payload }) {
     try {
+        const { history, ...loginData } = payload; // ← витягни history
         let response;
-        if (payload.type === GOOGLE) {
-            response = { data: { token: payload.token, email: '' } };
+        if (loginData.type === GOOGLE) {
+            response = { data: { token: loginData.token, email: '' } };
         } else {
-            response = yield call(axiosCall, LOGIN_URL, POST, payload);
+            response = yield call(axiosCall, LOGIN_URL, POST, loginData); // ← loginData замість payload
         }
         const { token, email } = response.data;
         const decodedJWT = jwtDecode(token);
@@ -64,9 +66,13 @@ function* loginToAccount({ payload }) {
         yield put(authAutoLogout(decodedJWT.exp * 1000 - new Date().getTime()));
 
         if (decodedJWT.roles === 'ROLE_TEACHER') {
-            if (decodedJWT.roles === 'ROLE_TEACHER') {
-                yield call(loadTeacherProfile);
-            }
+            yield call(loadTeacherProfile);
+            const teacher = yield select(state => state.teachers.teacher);
+            history.push(`${SCHEDULE_FOR_LINK}?teacher=${teacher?.id || ''}`);
+        } else if (decodedJWT.roles === 'ROLE_MANAGER') {
+            history.push(ADMIN_PAGE_LINK);
+        } else {
+            history.push(HOME_PAGE_LINK);
         }
     } catch (error) {
         yield put(
