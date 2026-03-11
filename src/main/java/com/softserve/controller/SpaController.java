@@ -19,7 +19,8 @@ public class SpaController {
             "/admin/**",
             "/schedule",
             "/schedule/**",
-            "/activation-page"
+            "/activation-page",
+            "/set-password-page"
     })
     public String forwardToReact() {
         return "forward:/index.html";

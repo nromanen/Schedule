@@ -9,13 +9,12 @@ import TableRow from '@material-ui/core/TableRow';
 import {
     checkSemesterEnd,
     matchDayNumberSysytemToDayName,
-    getWeekParity,
-    isWeekOdd
 } from '../../helper/renderScheduleTable';
 
 import { lessonTypeColors } from '../GroupSchedulePage/LessonTemporaryCardCell';
 import i18n from '../../i18n';
 import './DepartmentSchedule.scss';
+import {getWeekParity, isWeekOdd} from "../../utils/weekUtils";
 
 
 const renderClassCell = (classItem) => {

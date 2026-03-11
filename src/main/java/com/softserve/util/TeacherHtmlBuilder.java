@@ -28,7 +28,8 @@ public class TeacherHtmlBuilder {
             DayOfWeek.WEDNESDAY, "schedule.wednesday",
             DayOfWeek.THURSDAY, "schedule.thursday",
             DayOfWeek.FRIDAY, "schedule.friday",
-            DayOfWeek.SATURDAY, "schedule.saturday"
+            DayOfWeek.SATURDAY, "schedule.saturday",
+            DayOfWeek.SUNDAY, "schedule.sunday"
     );
 
     /**

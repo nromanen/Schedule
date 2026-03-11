@@ -247,5 +247,8 @@
     "my_lessons": "Посилання на мої заняття в семестрі",
     "my_schedule": "Мій розклад",
     "loading": "Завантаження",
-    "link": "Посилання"
+    "link": "Посилання",
+    "Unable to delete period": "Неможливо видалити пару",
+    "Unable to delete department": "Неможливо видалити кафедру",
+    "semester_ended": "Семестр вже завершився"
 }

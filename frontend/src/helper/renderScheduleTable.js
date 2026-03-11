@@ -19,15 +19,9 @@ import LessonTemporaryCardCell from '../containers/GroupSchedulePage/LessonTempo
 import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTemporaryCardCell';
 import { places } from '../constants/places';
 import { lessonTypeColors } from '../components/GroupSchedulePage/LessonTemporaryCardCell';
+import {getWeekParity, isWeekOdd, transformSemesterDate} from "../utils/weekUtils";
 
 const shortid = require('shortid');
-
-const transformSemesterDate = (date) => {
-    const [day, month, year] = date.split('/');
-    const endDateString = `${month}/${day}/${year}`;
-
-    return new Date(endDateString);
-};
 
 export const checkSemesterEnd = (semesterEndDate) => {
     const today = new Date();
@@ -41,41 +35,12 @@ export const matchDayNumberSysytemToDayName = () => {
     return daysUppercase[now.getDay() - 1];
 };
 
-export const getWeekParity = (startDate, currentDate = new Date()) => {
-    const semesterStart = startDate instanceof Date ? startDate : new Date(transformSemesterDate(startDate));
-    const targetDate = currentDate instanceof Date ? currentDate : new Date(transformSemesterDate(currentDate));
-
-    semesterStart.setHours(0, 0, 0, 0);
-    targetDate.setHours(0, 0, 0, 0);
-
-    if (targetDate < semesterStart) return 0;
-
-    const startDay = semesterStart.getDay();
-
-    const firstWeekBoundary = new Date(semesterStart);
-    if (startDay === 0) {
-        firstWeekBoundary.setDate(semesterStart.getDate() + 7);
-    } else {
-        firstWeekBoundary.setDate(semesterStart.getDate() + (7 - startDay));
-    }
-
-    if (targetDate < firstWeekBoundary) return 1;
-
-    const diffTime = targetDate - firstWeekBoundary;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const additionalWeeks = Math.floor(diffDays / 7) + 1;
-
-    return additionalWeeks + 1;
-}
-
 const printWeekNumber = (startScheduleDate) => {
     const date = new Date();
     return getWeekParity(startScheduleDate, date);
 };
 
-export function isWeekOdd(num) {
-    return num % 2 === 1;
-}
+
 
 const renderClassCell = (classItem) => {
     return `${classItem.class_name}\n\r\n\r${classItem.startTime} - ${classItem.endTime}`;
@@ -431,34 +396,23 @@ export const ScheduleLegend = () => {
     );
 };
 
-export const renderFullSchedule = (fullResultSchedule, todayWeekIsOdd = null, toggleComponent = null) => {
+export const renderFullSchedule = (fullResultSchedule, todayWeekIsOdd = null) => {
     const { semester, groupList, semesterClasses, resultArray } = fullResultSchedule;
-    const { startDay, description, endDay } = semester;
-    const scheduleTitle = (
-        <>
-            <span className="schedule-week-badge">{getWeekParity(startDay)} {i18n.t('week_label')}</span>
-            {description} ({startDay}–{endDay})
-            {toggleComponent}
-        </>
-    );
-    const currentWeekType = isWeekOdd(printWeekNumber(startDay));
-    const currentDay = checkSemesterEnd(endDay) ? '' : matchDayNumberSysytemToDayName();
+    const currentWeekType = isWeekOdd(printWeekNumber(semester.startDay));
+    const currentDay = checkSemesterEnd(semester.endDay) ? '' : matchDayNumberSysytemToDayName();
+    const isSemesterEnded = checkSemesterEnd(semester.endDay);
 
     return (
         <>
-            <h1>{scheduleTitle}</h1>
+            {isSemesterEnded && (
+                <p className="semester-ended-notice">{i18n.t('semester_ended')}</p>
+            )}
             <ScheduleLegend />
             <TableContainer>
                 <Table aria-label="sticky table">
                     {renderScheduleFullHeader(groupList)}
                     <TableBody>
-                        {renderScheduleDays(
-                            resultArray,
-                            semesterClasses,
-                            currentWeekType,
-                            currentDay,
-                            todayWeekIsOdd,
-                        )}
+                        {renderScheduleDays(resultArray, semesterClasses, currentWeekType, currentDay, todayWeekIsOdd)}
                     </TableBody>
                 </Table>
             </TableContainer>

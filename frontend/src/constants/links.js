@@ -32,4 +32,5 @@ export const DEPARTMENTS_LINK = '/admin/departments';
 
 export const TEACHER_LESSONS_LINK = '/admin/teacher-lessons';
 export const MY_LESSONS_LINK = '/my-lessons';
+export const SET_PASSWORD_LINK = '/set-password-page';
 

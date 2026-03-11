@@ -10,5 +10,6 @@
     "email": "Invalid email address",
     "password": "Password has to include at least 1 uppercase letter, 1 number and 1 special number",
     "bigger_than_this_year_message": "Bigger then this year",
-    "url": "Invalid URL"
+    "url": "Invalid URL",
+    "passwords_mismatch_message": "Passwords do not match"
 }

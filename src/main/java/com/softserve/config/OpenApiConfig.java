@@ -6,11 +6,16 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
+
+    @Value("${openapi.server-url:}")
+    private String serverUrl;
 
 //    @Bean
 //    public OpenAPI customOpenAPI() {
@@ -38,7 +43,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "bearerAuth";
-        return new OpenAPI()
+        OpenAPI openAPI = new OpenAPI()
                 .info(new Info()
                         .title("Schedule API")
                         .version("1.0")
@@ -55,6 +60,10 @@ public class OpenApiConfig {
                                         .in(SecurityScheme.In.HEADER)
                                         .name("Authorization")
                                         .description("Enter: Bearer_<token>")));
+        if (!serverUrl.isEmpty()) {
+            openAPI.addServersItem(new Server().url(serverUrl));
+        }
+        return openAPI;
     }
 }
 

@@ -22,7 +22,9 @@ import {
     SCHEDULE_FOR_LINK,
     SCHEDULE_PAGE_LINK,
     TEACHER_SCHEDULE_LINK,
+    SET_PASSWORD_LINK
 } from '../constants/links';
+import SetPasswordForm from '../components/SetPasswordForm/SetPasswordForm';
 import {userRoles} from '../constants/userRoles';
 import GroupSchedulePage from '../containers/GroupSchedulePage/GroupSchedulePage';
 import {Register} from '../components/Register/Register';
@@ -42,6 +44,7 @@ const Routers = (props) => {
                 <Route exact path={HOME_PAGE_LINK} component={HomePage} />
                 <Route path={SCHEDULE_FOR_LINK} component={GroupSchedulePage} />
                 <Route path={ACTIVATION_PAGE_LINK} component={ActivationPage} />
+                <Route path={SET_PASSWORD_LINK} component={SetPasswordForm} />
                 <Route path={RESET_PASSWORD_LINK} component={ResetPassword} />
                 <Route path={REGISTRATION_LINK} component={Register} />
                 <Route path={LOGIN_LINK} component={Login} />

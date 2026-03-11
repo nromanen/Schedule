@@ -6,33 +6,43 @@ import DepartmentSchedule from '../components/DepartmentSchedule/DepartmentSched
 import {getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTitle} from '../utils/titlesUtil';
 import SchedulePublishBanner from "../components/GroupSchedulePage/SchedulePublishBanner/SchedulePublishBanner";
 import DepartmentDownloadLink from '../components/DownloadLink/DepartmentDownloadLink';
-
-import { daysUppercase } from '../constants/schedule/days';
 import { matchDayNumberSysytemToDayName } from './renderScheduleTable';
 import CalendarSchedule, {isShortSemester} from "../components/CalendarSchedule/CalendarSchedule";
 import CalendarGroupSchedule from "../components/CalendarSchedule/CalendarGroupSchedule";
+import {getWeekParity} from "../utils/weekUtils";
 
+// ─── Shared components ────────────────────────────────────────────────────────
 
 const emptySchedule = (t) => <p className="empty_schedule">{t('common:empty_schedule')}</p>;
 
-export const ViewModeToggle = ({ viewMode, setViewMode, t }) => {
-    return (
-        <div className="schedule-view-toggle">
-            <button
-                className={`schedule-view-toggle__btn ${viewMode === 'today' ? 'active' : ''}`}
-                onClick={() => setViewMode('today')}
-            >
-                {t('common:today_schedule', 'Сьогодні')}
-            </button>
-            <button
-                className={`schedule-view-toggle__btn ${viewMode === 'all' ? 'active' : ''}`}
-                onClick={() => setViewMode('all')}
-            >
-                {t('common:full_week_schedule', 'Весь тиждень')}
-            </button>
-        </div>
-    );
-};
+export const ViewModeToggle = ({ viewMode, setViewMode, t }) => (
+    <div className="schedule-view-toggle">
+        <button
+            className={`schedule-view-toggle__btn ${viewMode === 'today' ? 'active' : ''}`}
+            onClick={() => setViewMode('today')}
+        >
+            {t('common:today_schedule', 'Сьогодні')}
+        </button>
+        <button
+            className={`schedule-view-toggle__btn ${viewMode === 'all' ? 'active' : ''}`}
+            onClick={() => setViewMode('all')}
+        >
+            {t('common:full_week_schedule', 'Весь тиждень')}
+        </button>
+    </div>
+);
+
+const ScheduleHeader = ({ semester, t, toggle }) => (
+    <h1>
+        <span className="schedule-week-badge">
+            {getWeekParity(semester.startDay)} {t('week_label')}
+        </span>
+        {semester.description} ({semester.startDay}–{semester.endDay})
+        {toggle}
+    </h1>
+);
+
+// ─── Main render ──────────────────────────────────────────────────────────────
 
 const renderSchedule = (props) => {
     const {
@@ -71,7 +81,10 @@ const renderSchedule = (props) => {
             const {semester, group, oddArray, evenArray} = groupSchedule;
             if (isEmpty(oddArray) && isEmpty(evenArray)) return emptySchedule(t);
 
-            // Short semester → calendar view
+            const downloadLink = groupData?.id && (
+                <DownloadLink entity="group" semesterId={semesterData.id} entityId={groupData.id} />
+            );
+
             if (isShortSemester(semester.startDay, semester.endDay)) {
                 return (
                     <>
@@ -79,10 +92,7 @@ const renderSchedule = (props) => {
                         <h1>
                             {getGroupScheduleTitle(semester, group)}
                             <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
-                            {groupData?.id && (
-                                <DownloadLink entity="group" semesterId={semesterData.id} entityId={groupData.id} />
-                            )}
-
+                            {downloadLink}
                         </h1>
                         <ScheduleLegend />
                         <CalendarGroupSchedule groupSchedule={groupSchedule} viewMode={viewMode} t={t} />
@@ -90,34 +100,37 @@ const renderSchedule = (props) => {
                 );
             }
 
-            // Regular semester
+            const currentWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
+
             return (
                 <>
                     {titleSuffix}
                     <h1>
                         {getGroupScheduleTitle(semester, group)}
-                        <DownloadLink
-                            entity="group"
-                            semesterId={semesterData.id}
-                            entityId={groupData.id}
-                        />
+                        {downloadLink}
                     </h1>
                     <h2>
-                <span className={getWeekParity(semester.startDay) % 2 === 1 ? "currentDay" : ""}>
-                    {t('common:odd_week')}</span>
+                        <span className={currentWeekIsOdd ? 'currentDay' : ''}>
+                            {t('common:odd_week')}
+                        </span>
                     </h2>
                     {renderGroupTable(oddArray, true, semester)}
                     <h2>
-                <span className={getWeekParity(semester.startDay) % 2 === 0 ? "currentDay" : ""}>
-                    {t('common:even_week')}</span>
+                        <span className={!currentWeekIsOdd ? 'currentDay' : ''}>
+                            {t('common:even_week')}
+                        </span>
                     </h2>
                     {renderGroupTable(evenArray, false, semester)}
                 </>
             );
         }
+
         case 'teacher': {
             const {semester, teacher, odd, even} = teacherSchedule;
             if (isEmpty(odd?.classes) && isEmpty(even?.classes)) return emptySchedule(t);
+
+            const currentWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
+
             return (
                 <>
                     {titleSuffix}
@@ -131,18 +144,21 @@ const renderSchedule = (props) => {
                     </h1>
                     <ScheduleLegend />
                     <h2>
-                <span className={getWeekParity(semester.startDay) % 2 === 1 ? "currentDay" : ""}>
-                    {t('common:odd_week')}</span>
+                        <span className={currentWeekIsOdd ? 'currentDay' : ''}>
+                            {t('common:odd_week')}
+                        </span>
                     </h2>
                     {renderWeekTable(odd)}
                     <h2>
-                <span className={getWeekParity(semester.startDay) % 2 === 0 ? "currentDay" : ""}>
-                    {t('common:even_week')}</span>
+                        <span className={!currentWeekIsOdd ? 'currentDay' : ''}>
+                            {t('common:even_week')}
+                        </span>
                     </h2>
                     {renderWeekTable(even)}
                 </>
             );
         }
+
         case 'department': {
             const { resultArray, semester } = fullSchedule;
             if (isEmpty(resultArray)) return emptySchedule(t);
@@ -162,34 +178,24 @@ const renderSchedule = (props) => {
                 </>
             );
         }
+
         case 'full': {
             const { resultArray, semester } = fullSchedule;
-            if (isEmpty(resultArray)) {
-                return emptySchedule(t);
-            }
+            if (isEmpty(resultArray)) return emptySchedule(t);
 
-            // Short semester (≤28 days) → calendar view
+            const toggle = <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />;
+
             if (isShortSemester(semester.startDay, semester.endDay)) {
-                const weekNumber = getWeekParity(semester.startDay);
                 return (
                     <>
-                        {isManager && (
-                            <div className="schedule-publish-banner-right">
-                                <SchedulePublishBanner />
-                            </div>
-                        )}
-                        <h1>
-                            <span className="schedule-week-badge">{weekNumber} {t('week_label')}</span>
-                            {semester.description} ({semester.startDay}–{semester.endDay})
-                            <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
-                        </h1>
+                        {titleSuffix}
+                        <ScheduleHeader semester={semester} t={t} toggle={toggle} />
                         <ScheduleLegend />
                         <CalendarSchedule fullSchedule={fullSchedule} viewMode={viewMode} t={t} />
                     </>
                 );
             }
 
-            // Regular semester
             const currentDay = matchDayNumberSysytemToDayName();
             const currentWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
 
@@ -197,67 +203,23 @@ const renderSchedule = (props) => {
                 ? { ...fullSchedule, resultArray: resultArray.filter(d => d.day === currentDay) }
                 : fullSchedule;
 
+            const hasClassesToday = currentDay && displaySchedule.resultArray.length > 0;
+
             return (
                 <>
                     {titleSuffix}
-                    {viewMode === 'today' && (!currentDay || displaySchedule.resultArray.length === 0) ? (
-                        <>
-                            <h1>
-                                <span className="schedule-week-badge">{getWeekParity(semester.startDay)} {t('week_label')}</span>
-                                {semester.description} ({semester.startDay}–{semester.endDay})
-                                <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
-                            </h1>
-                            <p className="empty_schedule">{t('common:no_classes_today', 'Сьогодні немає занять')}</p>
-                        </>
-                    ) : (
-                        renderFullSchedule(
-                            displaySchedule,
-                            viewMode === 'today' ? currentWeekIsOdd : null,
-                            <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t} />
-                        )
-                    )}
+                    <ScheduleHeader semester={semester} t={t} toggle={toggle} />
+                    {viewMode === 'today' && !hasClassesToday
+                        ? <p className="empty_schedule">{t('common:no_classes_today', 'Сьогодні немає занять')}</p>
+                        : renderFullSchedule(displaySchedule, viewMode === 'today' ? currentWeekIsOdd : null)
+                    }
                 </>
             );
         }
+
         default:
             return null;
     }
-};
-
-const getWeekParity = (startDate, currentDate = new Date()) => {
-    const semesterStart = startDate instanceof Date ? startDate : new Date(transformSemesterDate(startDate));
-    const targetDate = currentDate instanceof Date ? currentDate : new Date(transformSemesterDate(currentDate));
-
-    semesterStart.setHours(0, 0, 0, 0);
-    targetDate.setHours(0, 0, 0, 0);
-
-    if (targetDate < semesterStart) return 0;
-
-    // Get the day of the week for the semester start (0 = Sunday, 6 = Saturday)
-    const startDay = semesterStart.getDay();
-
-    // Find the first week boundary after semester start
-    const firstWeekBoundary = new Date(semesterStart);
-    if (startDay === 0) {
-        firstWeekBoundary.setDate(semesterStart.getDate() + 7);
-    } else {
-        firstWeekBoundary.setDate(semesterStart.getDate() + (7 - startDay));
-    }
-
-    if (targetDate < firstWeekBoundary) return 1;
-
-    const diffTime = targetDate - firstWeekBoundary;
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const additionalWeeks = Math.floor(diffDays / 7) + 1;
-
-    return additionalWeeks + 1;
-}
-
-const transformSemesterDate = (date) => {
-    const [day, month, year] = date.split('/');
-    const endDateString = `${month}/${day}/${year}`;
-
-    return new Date(endDateString);
 };
 
 export {renderSchedule};

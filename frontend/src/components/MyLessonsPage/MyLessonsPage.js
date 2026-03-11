@@ -35,10 +35,18 @@ const MyLessonsPage = (props) => {
     };
 
     const getSemesterDescription = () => {
-        if (lessons.length === 0 || !semesters.length) return '';
-        const semesterId = lessons[0].semesterId;
-        const semester = semesters.find(s => s.id === semesterId);
-        return semester ? semester.description : '';
+        if (lessons.length > 0 && semesters?.length) {
+            const semesterId = lessons[0].semesterId;
+            const semester = semesters.find(s => s.id === semesterId);
+            return semester?.description ?? '';
+        }
+
+        if (semesters?.length) {
+            const currentSemester = semesters.find(s => s.currentSemester);
+            return currentSemester?.description ?? '';
+        }
+
+        return '';
     };
 
     return (

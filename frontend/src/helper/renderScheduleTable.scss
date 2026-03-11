@@ -317,3 +317,57 @@ h2 {
   border-radius: 4px;
   padding: 4px;
 }
+
+.semester-ended-notice {
+  text-align: center;
+  color: $red2;
+  font-size: 2.9em;
+  margin: 10px 0 20px;
+}
+
+.schedule-week-badge {
+  display: inline-block;
+  vertical-align: middle;
+  background: $blue5;
+  color: $white;
+  font-size: $font-2xs;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 7px;
+  margin-right: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px $blue-shadow-box;
+}
+
+.schedule-view-toggle {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 20px;
+  background: $gray2;
+  border-radius: 10px;
+  padding: 3px;
+  border: 1px solid $gray1;
+
+  &__btn {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    font-size: $font-2xs;
+    font-weight: 600;
+    cursor: pointer;
+    color: $gray3;
+    border-radius: 7px;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+
+    &:hover {
+      color: $gray;
+    }
+
+    &.active {
+      background: $white;
+      color: $blue5;
+      box-shadow: 0 1px 3px $shadow-box;
+    }
+  }
+}

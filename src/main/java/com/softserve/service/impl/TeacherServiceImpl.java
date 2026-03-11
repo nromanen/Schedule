@@ -78,7 +78,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    @CacheEvict(value = {"teachers", "teachersList"}, allEntries = true)
+    @CacheEvict(value = {"teachers", "teachersList", "scheduleForGroup"}, allEntries = true)
     public TeacherDTO update(TeacherDTO teacherForUpdateDTO) {
         log.info("Updating teacher: {}", teacherForUpdateDTO);
         checkForDuplicateTeacher(teacherForUpdateDTO.getName(), teacherForUpdateDTO.getSurname(),

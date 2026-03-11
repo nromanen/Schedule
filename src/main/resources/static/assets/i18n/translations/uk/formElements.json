@@ -135,5 +135,9 @@
     "form_group_label_after": "Виберіть після якої групи",
     "students_uppercase": "Студентів",
     "room_label_after": "Після аудиторії",
-    "without_department": "Без кафедри"
+    "without_department": "Без кафедри",
+    "set_password_title": "Встановлення пароля",
+    "set_password_button": "Встановити пароль",
+    "confirm_password_label": "Підтвердіть пароль",
+    "invalid_token_message": "Недійсне або відсутнє посилання. Будь ласка, використайте посилання з листа."
 }

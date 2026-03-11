@@ -249,5 +249,6 @@
     "loading": "Завантаження",
     "link": "Посилання",
     "Unable to delete period": "Неможливо видалити пару",
-    "Unable to delete department": "Неможливо видалити кафедру"
+    "Unable to delete department": "Неможливо видалити кафедру",
+    "semester_ended": "Семестр вже завершився"
 }

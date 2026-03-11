@@ -128,5 +128,9 @@
     "form_group_label_after": "Select after which group",
     "students_uppercase": "Students",
     "room_label_after": "After room",
-    "without_department": "Without department"
+    "without_department": "Without department",
+    "set_password_title": "Set New Password",
+    "set_password_button": "Set Password",
+    "confirm_password_label": "Confirm Password",
+    "invalid_token_message": "Invalid or missing token. Please use the link from your email."
 }

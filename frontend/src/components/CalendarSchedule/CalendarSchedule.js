@@ -7,13 +7,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import i18n from '../../i18n';
-import { getWeekParity, isWeekOdd } from '../../helper/renderScheduleTable';
 import LessonTemporaryCardCell from '../../containers/GroupSchedulePage/LessonTemporaryCardCell';
 import { places } from '../../constants/places';
 import { daysUppercase } from '../../constants/schedule/days';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 
 import './CalendarSchedule.scss';
+import {getWeekParity, isWeekOdd} from "../../utils/weekUtils";
 
 const shortid = require('shortid');
 
@@ -149,8 +149,9 @@ const CalendarDayRows = ({ calendarDay, dayData, isOdd }) => {
                         </span>
                     </TableCell>
                 )}
-                <TableCell className="classNameCell">
-                    {renderClassCell(classItem.class)}
+                <TableCell className="classNameCell calendar-class-cell">
+                    <span className="calendar-class-name">{classItem.class.class_name}</span>
+                    <span className="calendar-class-time">{classItem.class.startTime} - {classItem.class.endTime}</span>
                 </TableCell>
                 <CalendarGroupCells groups={cards} dayName={calendarDay.dayName} />
             </TableRow>

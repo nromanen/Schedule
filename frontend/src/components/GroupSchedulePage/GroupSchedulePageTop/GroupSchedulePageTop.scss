@@ -1,4 +1,6 @@
 @import '../../../styles/colors.scss';
+@import '../../../styles/variables.scss';
+@import '../../../styles/mixins.scss';
 
 p.empty_schedule {
     text-align: center;
@@ -30,97 +32,192 @@ h1 {
     margin: 8px;
 }
 
-// Filter bar
+// ── Filter bar ────────────────────────────────────────────────────────────────
 .schedule-filter-bar {
     background: $white;
-    padding: 12px 24px;
-    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px $shadow-box;
+    padding: 16px 24px;
+    width: $full-size;
 
     .schedule-form {
         display: grid;
         grid-template-columns: repeat(4, 1fr) auto;
-        grid-template-rows: 50px;
-        column-gap: 40px;
-        padding: 0 40px;
-        place-items: center;
+        column-gap: 20px;
+        align-items: end;
 
-        @media (max-width: 1280px) {
+        @media (max-width: $md-xl) {
             grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 50px) auto;
-            gap: 10px 20px;
+            gap: 12px 20px;
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: $md-m) {
             grid-template-columns: 1fr;
-            grid-template-rows: repeat(5, 50px);
-            justify-items: center;
+            justify-items: stretch;
         }
     }
 
     .schedule-form.no-semester {
         grid-template-columns: repeat(3, 1fr) auto;
-        column-gap: 100px;
 
-        @media (max-width: 1280px) {
+        @media (max-width: $md-xl) {
             grid-template-columns: repeat(2, 1fr);
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: $md-m) {
             grid-template-columns: 1fr;
-            grid-template-rows: repeat(4, 50px);
         }
     }
 
+    // Submit button
     .schedule-form_submit {
-        height: 36px;
-        width: auto;
-        min-width: 100px;
+        align-self: end;
+        height: 44px;
+        min-width: 110px;
+        border-radius: 10px !important;
+        font-weight: 700 !important;
+        font-size: $font-xs !important;
+        letter-spacing: 0.02em !important;
+        background-color: $blue !important;
+        box-shadow: 0 2px 8px $blue-shadow-box !important;
+        transition: background-color 0.15s, box-shadow 0.15s, transform 0.1s !important;
+
+        &:hover {
+            background-color: $blue-btn-hover !important;
+            box-shadow: 0 4px 12px $blue-shadow-box !important;
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &.Mui-disabled {
+            background-color: $gray1 !important;
+            box-shadow: none !important;
+            color: $white !important;
+        }
     }
 
+    // Autocomplete fields
     .schedule-form_semester,
     .schedule-form_group,
     .schedule-form_teacher,
     .schedule-form_department {
-        width: 100%;
+        width: $full-size;
+
+        &.MuiAutocomplete-root {
+            width: $full-size;
+        }
 
         .MuiFormControl-root {
-            width: 100%;
+            width: $full-size;
+            overflow: visible !important;
         }
 
-        @media (max-width: 500px) {
-            width: 180px;
+        // Rounded card container
+        .MuiInputBase-root {
+            background: $gray2;
+            border-radius: 10px !important;
+            padding: 4px 12px !important;
+            min-height: 44px;
+            overflow: visible !important;
+            transition: background 0.15s, box-shadow 0.15s;
+
+            &:hover {
+                background: $white;
+                box-shadow: 0 0 0 1.5px $gray1;
+            }
+
+            &.Mui-focused {
+                background: $white;
+                box-shadow: 0 0 0 2px $blue-shadow-box;
+            }
         }
+
+        // Hide underline
+        .MuiInput-underline:before,
+        .MuiInput-underline:after {
+            display: none;
+        }
+
+        // Label
+        .MuiInputLabel-root {
+            font-size: $font-s;
+            font-weight: 500;
+            color: $gray;
+            overflow: visible !important;
+            white-space: nowrap;
+            z-index: 1 !important;
+            transform: translate(12px, 30px) scale(1) !important;
+
+            &.MuiInputLabel-shrink {
+                transform: translate(12px, -4px) scale(0.85) !important;
+                color: $blue;
+                font-weight: 600;
+            }
+        }
+
+        // Input text
+        .MuiInputBase-input {
+            font-size: $font-xs;
+            font-weight: 600;
+            color: $black;
+            padding: 14px 0 2px !important;
+        }
+
+        // Clear and popup icons
+        .MuiAutocomplete-endAdornment {
+            right: 8px;
+            top: calc(#{$medium-size} - 12px);
+
+            .MuiIconButton-root {
+                color: $gray;
+                padding: 4px;
+            }
+        }
+
+        @media (max-width: $md-small) {
+            width: $full-size;
+        }
+    }
+
+    // Single semester text (when only 1 semester exists)
+    p.schedule-form_semester {
+        font-size: $font-xs;
+        font-weight: 600;
+        color: $black;
+        padding: 0 12px;
+        align-self: center;
     }
 }
 
-// Filter bar layout
+// ── Filter bar layout ─────────────────────────────────────────────────────────
 .schedule-form-buttons-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
+    @include displayFlex(center, space-between);
+    width: $full-size;
 
-    @media (max-width: 950px) {
+    @media (max-width: $schedule-pc-screen) {
         flex-direction: column;
         align-items: center;
     }
 }
 
-// Place selector (manager only)
+// ── Place selector (manager only) ─────────────────────────────────────────────
 #select-place {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    @include displayFlex(center, center, column);
     flex-shrink: 0;
-    margin-left: 20px;
+    margin-left: 16px;
 
     label {
         color: $label-color;
         margin-bottom: 8px;
+        font-size: $font-2xs;
+        font-weight: 600;
     }
 
-    @media (max-width: 950px) {
+    @media (max-width: $schedule-pc-screen) {
         margin-left: 0;
-        margin-top: 20px;
+        margin-top: 16px;
     }
 }

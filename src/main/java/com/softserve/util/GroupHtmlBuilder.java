@@ -16,7 +16,7 @@ public class GroupHtmlBuilder {
 
     private static final List<DayOfWeek> WEEKDAYS = List.of(
             DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
-            DayOfWeek.THURSDAY, DayOfWeek.FRIDAY
+            DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY
     );
 
     private static final Map<DayOfWeek, String> DAY_KEYS = Map.of(
@@ -24,7 +24,9 @@ public class GroupHtmlBuilder {
             DayOfWeek.TUESDAY, "schedule.tuesday",
             DayOfWeek.WEDNESDAY, "schedule.wednesday",
             DayOfWeek.THURSDAY, "schedule.thursday",
-            DayOfWeek.FRIDAY, "schedule.friday"
+            DayOfWeek.FRIDAY, "schedule.friday",
+            DayOfWeek.SATURDAY, "schedule.saturday",
+            DayOfWeek.SUNDAY, "schedule.sunday"
     );
 
     /**

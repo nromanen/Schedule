@@ -5,6 +5,7 @@ export const LOGOUT_URL = 'auth/sign-out';
 export const REGISTRATION_URL = 'auth/sign-up';
 export const RESET_PASSWORD_URL = 'auth/reset-password';
 export const ACTIVATE_ACCOUNT_URL = 'auth/activation-account';
+export const SET_PASSWORD_URL = 'auth/set-password';
 
 // Users
 export const USERS_URL = 'users/with-role-user';

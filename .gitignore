@@ -4,6 +4,7 @@
 /gradle
 /backup
 /src/main/resources/application-local.yaml
+/src/main/resources/application-server.yaml
 /schedule_logs
 **/.DS_Store
 
