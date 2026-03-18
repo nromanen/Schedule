@@ -1,17 +1,21 @@
 import './GroupPage.scss';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import GroupList from './GroupList';
 import Sidebar from './Sidebar';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
-import {handleSnackbarCloseService} from '../../services/snackbarService';
-import AddGroup from '../../containers/GroupPage/GroupForm';
+import { handleSnackbarCloseService } from '../../services/snackbarService';
+import AddGroup from "../AddGroupForm/AddGroupForm";
 
-const GroupPage = (props) => {
-    const { isSnackbarOpen, snackbarMessage, snackbarType, match } = props;
+const GroupPage = ({ match }) => {
+    const isSnackbarOpen = useSelector(state => state.snackbar.isSnackbarOpen);
+    const snackbarMessage = useSelector(state => state.snackbar.message);
+    const snackbarType = useSelector(state => state.snackbar.snackbarType);
 
     const [group, setGroup] = useState({});
     const [searchItem, setSearchItem] = useState('');
     const [isDisabled, setIsDisabled] = useState(false);
+
     return (
         <>
             <div className="group-container">
@@ -30,7 +34,6 @@ const GroupPage = (props) => {
                         setGroup={setGroup}
                         searchItem={searchItem}
                         isDisabled={isDisabled}
-                        {...props}
                     />
                 </div>
             </div>

@@ -6,7 +6,6 @@ import {
     getDisabledSemestersStart,
     handleSemesterFormSubmitStart,
 } from '../../actions/semesters';
-import {getEnabledGroupsStart} from '../../actions/groups';
 import {setOpenErrorSnackbar} from '../../actions/snackbar';
 
 const mapStateToProps = (state) => ({
@@ -25,7 +24,6 @@ const mapDispatchToProps = (dispatch) => ({
     getArchivedSemestersItems: () => dispatch(getArchivedSemestersStart()),
     handleSemesterFormSubmit: (values) => dispatch(handleSemesterFormSubmitStart(values)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
-    getAllGroupsItems: () => dispatch(getEnabledGroupsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

@@ -20,19 +20,20 @@ import {getClassScheduleListStart} from '../../actions/classes';
 import {showAllSubjectsService} from '../../services/subjectService';
 import './TemporarySchedule.scss';
 import {EMPTY_LABEL} from '../../constants/translationLabels/common';
-import {getEnabledGroupsStart, getLessonTypesStart} from '../../actions';
+import {getLessonTypesStart} from '../../actions';
+import {useEnabledGroups} from '../../hooks/useGroups';
 import {getListOfRoomsStart} from '../../actions/rooms';
 import {showAllTeachersStart} from '../../actions/teachers';
 
 const TemporarySchedule = (props) => {
     const { t } = useTranslation('common');
+    const { data: groups = [] } = useEnabledGroups();
     const {
         teachers,
         teacherId,
         isLoading,
         getListOfRooms,
         getClassScheduleList,
-        getEnabledGroups,
         showAllTeachers,
     } = props;
     const [fromDate, setFromDate] = useState(null);
@@ -45,7 +46,6 @@ const TemporarySchedule = (props) => {
         showAllSubjectsService();
         getClassScheduleList();
         getLessonTypesStart();
-        getEnabledGroups();
     }, []);
 
     const handleTemporaryScheduleSubmit = (values) => {
@@ -138,7 +138,6 @@ const mapStateToProps = (state) => ({
     subjects: state.subjects.subjects,
     rooms: state.rooms.rooms,
     periods: state.classActions.classScheduler,
-    groups: state.groups.groups,
     loading: state.loadingIndicator.loading,
     teachers: state.teachers.teachers,
     teacherId: state.temporarySchedule.teacherId,
@@ -147,7 +146,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     getLessonTypesStart: () => dispatch(getLessonTypesStart()),
     getClassScheduleList: () => dispatch(getClassScheduleListStart()),
-    getEnabledGroups: () => dispatch(getEnabledGroupsStart()),
     getListOfRooms: (rooms) => dispatch(getListOfRoomsStart(rooms)),
     showAllTeachers: () => dispatch(showAllTeachersStart()),
 });

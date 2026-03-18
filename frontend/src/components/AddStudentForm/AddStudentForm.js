@@ -2,6 +2,7 @@ import Button from '@material-ui/core/Button';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Field} from 'redux-form';
+import MenuItem from '@material-ui/core/MenuItem';
 import './AddStudentForm.scss';
 import {required} from '../../validation/validateFields';
 import renderTextField from '../../share/renderedFields/input';
@@ -9,7 +10,7 @@ import renderSelectField from '../../share/renderedFields/select';
 import {CANCEL_BUTTON_LABEL, TYPE_LABEL} from '../../constants/translationLabels/common';
 import {
     CLEAR_BUTTON_LABEL,
-    EMAIL_FIELD,
+    EMAIL_FIELD, GROUP_LABEL,
     NAME_PLACEHOLDER,
     PATRONYMIC_PLACEHOLDER,
     SAVE_BUTTON_LABEL,
@@ -101,14 +102,13 @@ export const AddStudentForm = (props) => {
                     className="form-field"
                     component={renderSelectField}
                     name="group"
-                    label={t(TYPE_LABEL)}
+                    label={t(GROUP_LABEL)}
                     validate={[required]}
                 >
-                    defaultValue={groupId}
-                    {groups.map((groupItem) => (
-                        <option key={groupItem.id} value={groupItem.id}>
+                    {groups && groups.filter(g => !g.disable).map((groupItem) => (
+                        <MenuItem key={groupItem.id} value={groupItem.id}>
                             {groupItem.title}
-                        </option>
+                        </MenuItem>
                     ))}
                 </Field>
             )}

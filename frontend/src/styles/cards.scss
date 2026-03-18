@@ -3,17 +3,18 @@
 @import './fonts.scss';
 
 // ── Card Base Mixin ───────────────────────────────────────────
-@mixin card-base-style {
-  width: 200px;
+@mixin card-base-style($width: 200px) {
+  width: $width;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: all 0.3s ease;
   position: relative;
   border-radius: 10px !important;
-  border: 1px solid $grey4 !important;
+  border: 1px solid $gray1 !important;
   box-shadow: 0 1px 4px $shadow-box !important;
-  padding-bottom: 8px;
+  padding-bottom: 4px;
+  background: $white;
 
   &::before {
     content: '';
@@ -22,9 +23,8 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, $blue, $blue3);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    background: $blue;
+    opacity: 1;
     border-radius: 10px 10px 0 0;
   }
 
@@ -35,7 +35,7 @@
     transform: translateY(-2px);
 
     &::before {
-      opacity: 1;
+      background: linear-gradient(90deg, $blue, $blue3);
     }
   }
 }
@@ -48,7 +48,7 @@
   font-weight: 600;
   color: $black;
   line-height: 1.4;
-  padding: 12px 10px 8px;
+  padding: 8px 6px 4px;
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -62,18 +62,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2px;
-  padding: 6px 4px;
-  border-top: 1px solid $grey4;
-  margin-top: 4px;
+  gap: 0;
+  padding: 3px 2px;
+  border-top: 1px solid $gray1;
+  margin-top: 2px;
 }
 
 .svg-btn {
   cursor: pointer;
-  font-size: $icon-size;
-  padding: 4px;
+  font-size: 15px;
+  padding: 4px 5px;
   border-radius: 6px;
-  color: $gray3;
+  color: $gray;
   transition: all 0.2s ease;
   box-sizing: content-box;
 
@@ -95,12 +95,17 @@
     background: $red1;
     color: $red;
   }
+
+  &.student-btn:hover {
+    background: $green1;
+    color: $green;
+  }
 }
 
 // ── Form Card ─────────────────────────────────────────────────
 .form-card {
   border-radius: 10px !important;
-  border: 1px solid $grey4 !important;
+  border: 1px solid $gray1 !important;
   box-shadow: 0 1px 4px $shadow-box !important;
 
   h2 {
@@ -118,7 +123,7 @@
 }
 
 // ── Form Buttons ──────────────────────────────────────────────
-.form-btns{
+.form-btns {
   display: flex;
   gap: 8px;
   margin-top: 4px;
@@ -152,7 +157,7 @@
     background: $blue2 !important;
     color: $gray !important;
     box-shadow: none !important;
-    border: 1px solid $grey4 !important;
+    border: 1px solid $gray1 !important;
 
     &:hover {
       background: $gray1 !important;
@@ -165,13 +170,14 @@
 .container-flex-wrap {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 10px;
   align-content: start;
   align-items: stretch;
   flex: 1;
   padding: 4px;
 }
 
+// ── Scroll Top ────────────────────────────────────────────────
 .scroll-top-btn {
   position: fixed;
   bottom: 32px;
@@ -193,5 +199,92 @@
     background: $blue4;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px $blue-shadow-box;
+  }
+}
+
+// ── View Toggle ───────────────────────────────────────────────
+.view-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  &__btn {
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid $gray1;
+    background: $white;
+    color: $gray;
+    font-weight: 600;
+    font-size: $font-2xs;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $blue2;
+      color: $blue;
+      border-color: $blue3;
+    }
+
+    &--active {
+      background: $blue !important;
+      color: $white !important;
+      border-color: $blue !important;
+    }
+  }
+
+  &__count {
+    margin-left: auto;
+    font-size: $font-2xs;
+    color: $gray3;
+    background: $blue2;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+}
+
+// ── Grouped View ──────────────────────────────────────────────
+.grouped-view {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.letter-group {
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  &__badge {
+    min-width: 36px;
+    width: auto;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, $blue, $blue3);
+    color: $white;
+    font-weight: 800;
+    font-size: $font-m;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__line {
+    flex: 1;
+    height: 1px;
+    background: $gray1;
+  }
+
+  &__count {
+    font-size: $font-2xs;
+    color: $gray3;
   }
 }

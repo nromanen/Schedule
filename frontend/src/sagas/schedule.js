@@ -7,7 +7,6 @@ import {setScheduleNotPublished, setScheduleDepartment, updateScheduleItemSucces
 import {
     CLEAR_SCHEDULE_URL,
     CURRENT_SEMESTER_URL,
-    DEFAULT_SEMESTER_URL,
     FOR_TEACHER_SCHEDULE_URL,
     FULL_SCHEDULE_URL,
     GROUP_SCHEDULE_URL,
@@ -76,39 +75,6 @@ export function* getScheduleItems() {
         yield put(setLoading(false));
     }
 }
-
-// let scheduleDataLoaded = false;
-//
-// export function* getScheduleItems() {
-//     try {
-//         if (scheduleDataLoaded) {
-//             yield put(setScheduleLoading(false));
-//             return;
-//         }
-//
-//         const { data } = yield call(axiosCall, CURRENT_SEMESTER_URL);
-//         yield put(getCurrentSemesterSuccess(data));
-//         const { id } = data;
-//         yield call(getScheduleItemsBySemester, { semesterId: id });
-//
-//         scheduleDataLoaded = true;
-//     } catch (error) {
-//         yield put(setOpenErrorSnackbar(i18n.t(NO_CURRENT_SEMESTER_ERROR)));
-//         yield put(setScheduleLoading(false));
-//     }
-// }
-//
-// export function* forceRefreshScheduleItems() {
-//     try {
-//         const { data } = yield call(axiosCall, CURRENT_SEMESTER_URL);
-//         yield put(getCurrentSemesterSuccess(data));
-//         const { id } = data;
-//         yield call(getScheduleItemsBySemester, { semesterId: id });
-//     } catch (error) {
-//         yield put(setOpenErrorSnackbar(i18n.t(NO_CURRENT_SEMESTER_ERROR)));
-//         yield put(setLoading(false));
-//     }
-// }
 
 export function* addItemsToSchedule({ item }) {
     try {
@@ -242,8 +208,13 @@ export function* getCurrentSemester() {
 
 export function* getDefaultSemester() {
     try {
-        const { data } = yield call(axiosCall, DEFAULT_SEMESTER_URL);
-        yield put(getDefaultSemesterSuccess(data));
+        let semesters = yield select(getSemestersFromState);
+        if (isEmpty(semesters)) {
+            yield call(getAllPublicSemesters);
+            semesters = yield select(getSemestersFromState);
+        }
+        const defaultSemester = semesters.find((s) => s.defaultSemester === true);
+        yield put(getDefaultSemesterSuccess(defaultSemester));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -346,9 +317,9 @@ export function* sendTeacherSchedule({ data }) {
 
 const getSemestersFromState = (state) => state.schedule.semesters;
 
-// Refactor required
+// Refactor required: consider splitting into separate sagas per schedule type
+// to avoid loading unnecessary data (e.g. teachers for department schedule)
 function* setSemesterAndType(semesterId, type) {
-    yield put(setMainScheduleLoading(true));
     let semesters = yield select(getSemestersFromState);
     if (isEmpty(semesters)) {
         yield call(getAllPublicSemesters);
@@ -359,7 +330,8 @@ function* setSemesterAndType(semesterId, type) {
     const teachers = yield select((state) => state.teachers.teachers);
     if (isEmpty(teachers)) yield call(getAllPublicTeachers);
 
-    yield call(getAllPublicGroups, { id: semesterId });
+    const groups = yield select((state) => state.groups.groups);
+    if (isEmpty(groups)) yield call(getAllPublicGroups, { id: semesterId });
 
     yield put(setScheduleSemester(semester));
     yield put(setScheduleType(type));
@@ -379,23 +351,31 @@ export function* selectTeacherSchedule({ semesterId, teacherId }) {
     const teachers = yield select((state) => state.teachers.teachers);
     const teacher = teachers.find((item) => item.id === Number(teacherId));
     yield put(setScheduleTeacher(teacher));
-    // yield put(setScheduleDepartment(null));
     yield call(getTeacherSchedule, { semesterId, teacherId });
 }
-export function* selectFullSchedule({ semesterId }) {
-    yield call(setSemesterAndType, semesterId, FULL);
-    // yield put(setScheduleDepartment(null));
-    yield call(getFullSchedule, { semesterId });
-}
-
 export function* selectDepartmentSchedule({ semesterId, departmentId }) {
+    const currentSemesterId = yield select((state) => state.schedule.scheduleSemester?.id);
+    const hasFullSchedule = yield select((state) => !isEmpty(state.schedule.fullSchedule?.resultArray));
+
     yield call(setSemesterAndType, semesterId, DEPARTMENT);
     const departments = yield select((state) => state.departments.departments);
     const department = departments.find((item) => item.id === Number(departmentId));
     yield put(setScheduleDepartment(department));
-    // yield put(setScheduleGroup(null));
-    // yield put(setScheduleTeacher(null));
-    yield call(getFullSchedule, { semesterId });
+
+    if (!hasFullSchedule || currentSemesterId !== Number(semesterId)) {
+        yield call(getFullSchedule, { semesterId });
+    }
+}
+
+export function* selectFullSchedule({ semesterId }) {
+    const currentSemesterId = yield select((state) => state.schedule.scheduleSemester?.id);
+    const hasFullSchedule = yield select((state) => !isEmpty(state.schedule.fullSchedule?.resultArray));
+
+    yield call(setSemesterAndType, semesterId, FULL);
+
+    if (!hasFullSchedule || currentSemesterId !== Number(semesterId)) {
+        yield call(getFullSchedule, { semesterId });
+    }
 }
 
 export default function* watchSchedule() {

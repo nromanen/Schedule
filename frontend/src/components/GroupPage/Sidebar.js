@@ -11,7 +11,7 @@ const Sidebar = (props) => {
                 SearchChange={setSearchItem}
                 showDisabled={() => setIsDisabled((prev) => !prev)}
             />
-            {!isDisabled && children}
+            <div style={{ display: isDisabled ? 'none' : 'block' }}>{children}</div>
         </aside>
     );
 };

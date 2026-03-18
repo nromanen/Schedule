@@ -1,21 +1,18 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 
-import Card from '../../share/Card/Card';
-import { getClearOrCancelTitle, setDisableButton } from '../../helper/disableComponent';
+import FormWrapper from '../../share/FormWrapper/FormWrapper';
 import { RHFTextField } from '../../share/rhf';
 import { checkUniqueDepartment } from '../../validation/storeValidation';
+import { queryClient } from '../../queryClient';
+import { DEPARTMENTS_QUERY_KEY } from '../../hooks/useDepartments';
 import {
     CREATE_TITLE,
     DEPARTMENT_LABEL,
     EDIT_TITLE,
     NAME_LABEL,
-    SAVE_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
-import { DEPARTMENTS_QUERY_KEY } from '../../hooks/useDepartments';
-import { queryClient } from '../../queryClient';
 
 const AddDepartmentForm = ({ onSubmit, onReset, department }) => {
     const { t } = useTranslation('formElements');
@@ -28,16 +25,11 @@ const AddDepartmentForm = ({ onSubmit, onReset, department }) => {
         formState: { isDirty, isSubmitting },
     } = useForm({
         mode: 'onChange',
-        defaultValues: {
-            name: '',
-        },
+        defaultValues: { name: '' },
     });
 
-    // Populate form when editing
     useEffect(() => {
-        reset({
-            name: department?.name || '',
-        });
+        reset({ name: department?.name || '' });
     }, [department, reset]);
 
     const handleReset = () => {
@@ -51,44 +43,25 @@ const AddDepartmentForm = ({ onSubmit, onReset, department }) => {
     };
 
     return (
-        <Card additionClassName="form-card subject-form">
-            <h2 style={{ textAlign: 'center' }}>
-                {department?.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(DEPARTMENT_LABEL)}
-            </h2>
-            <form onSubmit={handleSubmit(onFormSubmit)}>
-                <RHFTextField
-                    control={control}
-                    name="name"
-                    label={`${t(NAME_LABEL)}:`}
-                    className="form-field"
-                    rules={{
-                        required: t('required'),
-                        validate: (value) =>
-                            checkUniqueDepartment(value, departments, department?.id),
-                    }}
-                />
-                <div className="form-buttons-container form-btns">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        className="buttons-style"
-                        disabled={!isDirty || isSubmitting}
-                        type="submit"
-                    >
-                        {t(SAVE_BUTTON_LABEL)}
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="contained"
-                        className="buttons-style"
-                        disabled={setDisableButton(!isDirty, isSubmitting, department?.id)}
-                        onClick={handleReset}
-                    >
-                        {getClearOrCancelTitle(department?.id, t)}
-                    </Button>
-                </div>
-            </form>
-        </Card>
+        <FormWrapper
+            title={`${department?.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} ${t(DEPARTMENT_LABEL)}`}
+            onSubmit={handleSubmit(onFormSubmit)}
+            onReset={handleReset}
+            isDirty={isDirty}
+            isSubmitting={isSubmitting}
+            entityId={department?.id}
+        >
+            <RHFTextField
+                control={control}
+                name="name"
+                label={`${t(NAME_LABEL)}:`}
+                className="form-field"
+                rules={{
+                    required: t('required'),
+                    validate: (value) => checkUniqueDepartment(value, departments, department?.id),
+                }}
+            />
+        </FormWrapper>
     );
 };
 

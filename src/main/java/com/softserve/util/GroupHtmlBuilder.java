@@ -47,6 +47,7 @@ public class GroupHtmlBuilder {
         }
 
         List<PeriodDTO> periods = collectSortedPeriods(schedule);
+        List<DayOfWeek> activeDays = getActiveDays(dayMap);
 
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html>");
@@ -55,27 +56,24 @@ public class GroupHtmlBuilder {
         html.append("<style>").append(SchedulePdfStyles.get()).append("</style>");
         html.append("</head><body>");
 
-        // Header
         html.append("<div class=\"header__title\">")
                 .append(esc(bundle.getString("schedule.group.for")))
                 .append(" ")
                 .append(esc(schedule.getGroup().getTitle()))
                 .append("</div>");
 
-        // Legend
         html.append(SchedulePdfStyles.legendHtml(bundle));
 
-        // Table
         html.append("<table class=\"schedule\">");
         html.append("<colgroup><col class=\"col-time\"/>");
-        for (int i = 0; i < WEEKDAYS.size(); i++) {
+        for (int i = 0; i < activeDays.size(); i++) {
             html.append("<col/>");
         }
         html.append("</colgroup>");
 
         html.append("<thead><tr>");
         html.append("<th>").append(esc(bundle.getString("schedule.pair"))).append("</th>");
-        for (DayOfWeek day : WEEKDAYS) {
+        for (DayOfWeek day : activeDays) {
             html.append("<th>").append(esc(getDayName(day, bundle))).append("</th>");
         }
         html.append("</tr></thead><tbody>");
@@ -86,7 +84,7 @@ public class GroupHtmlBuilder {
             html.append("<tr class=\"even\">");
             html.append(SchedulePdfStyles.timeCellHtml(period));
 
-            for (DayOfWeek dayOfWeek : WEEKDAYS) {
+            for (DayOfWeek dayOfWeek : activeDays) {
                 html.append("<td>");
                 LessonsInScheduleDTO even = getLesson(dayMap.get(dayOfWeek), period, true);
                 html.append(SchedulePdfStyles.lessonCardHtml(even, bundle));
@@ -96,7 +94,7 @@ public class GroupHtmlBuilder {
 
             // Row 2: odd week (no time cell - covered by rowspan)
             html.append("<tr class=\"odd\">");
-            for (DayOfWeek dayOfWeek : WEEKDAYS) {
+            for (DayOfWeek dayOfWeek : activeDays) {
                 html.append("<td>");
                 LessonsInScheduleDTO odd = getLesson(dayMap.get(dayOfWeek), period, false);
                 html.append(SchedulePdfStyles.lessonCardHtml(odd, bundle));
@@ -109,7 +107,28 @@ public class GroupHtmlBuilder {
         return html.toString();
     }
 
-    // ==================== Helpers ====================
+
+    /**
+     * Returns only days that have at least one lesson in either even or odd week.
+     * A day is excluded only if both even and odd weeks have no lessons at all.
+     *
+     * @param dayMap map of day data keyed by day of week
+     * @return ordered list of active days
+     */
+    private List<DayOfWeek> getActiveDays(Map<DayOfWeek, DaysOfWeekWithClassesForGroupDTO> dayMap) {
+        return WEEKDAYS.stream()
+                .filter(day -> {
+                    DaysOfWeekWithClassesForGroupDTO dayData = dayMap.get(day);
+                    if (dayData == null || dayData.getClasses() == null) {
+                        return false;
+                    }
+                    return dayData.getClasses().stream()
+                            .anyMatch(cls -> cls.getWeeks() != null
+                                    && (cls.getWeeks().getEven() != null
+                                    || cls.getWeeks().getOdd() != null));
+                })
+                .collect(Collectors.toList());
+    }
 
     /**
      * Gets even or odd lesson for a given day and period.

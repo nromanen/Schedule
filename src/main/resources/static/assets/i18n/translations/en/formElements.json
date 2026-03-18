@@ -132,5 +132,8 @@
     "set_password_title": "Set New Password",
     "set_password_button": "Set Password",
     "confirm_password_label": "Confirm Password",
-    "invalid_token_message": "Invalid or missing token. Please use the link from your email."
+    "invalid_token_message": "Invalid or missing token. Please use the link from your email.",
+    "grid_view": "Grid",
+    "courses_view": "Year Group",
+    "az_view": "A-Z"
 }

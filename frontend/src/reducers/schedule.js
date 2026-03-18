@@ -30,6 +30,8 @@ const initialState = {
 
     availability: {},
     itemGroupId: null,
+
+    schedulePublished: true,
 };
 
 const reducer = (state = initialState, action) => {
@@ -82,7 +84,7 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 scheduleType: action.newType,
                 groupSchedule: {},
-                fullSchedule: []
+                // fullSchedule: []
             };
 
         case actionTypes.GET_FULL_SCHEDULE_SUCCESS: {
@@ -186,6 +188,9 @@ const reducer = (state = initialState, action) => {
                 notPublished: true,
                 notPublishedMessage: action.payload,
             };
+            
+        case actionTypes.SET_SCHEDULE_PUBLISHED:
+            return { ...state, schedulePublished: action.payload };
 
 
         default:

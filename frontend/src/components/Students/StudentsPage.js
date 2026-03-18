@@ -20,13 +20,14 @@ export const StudentsPage = (props) => {
         setIsOpenMoveStudentDialog,
     } = props;
 
-    const [student, setStudent] = useState(0);
+    const [student, setStudent] = useState(null);
     const [isOpenUpdateDialog, setIsOpenUpdateDialog] = useState(false);
 
     const confirmDeleteStudent = (studentId) => {
         setIsOpenConfirmDialog(false);
         deleteStudentStart(studentId);
     };
+
     const closeAddStudentDialog = () => {
         setIsOpenUpdateDialog(false);
         selectStudentSuccess(null);
@@ -55,13 +56,14 @@ export const StudentsPage = (props) => {
                     groupId={group.id}
                     open={isOpenUpdateDialog}
                     setOpen={closeAddStudentDialog}
+                    groups={groups}
                 />
             )}
             <CustomDialog
                 whatDelete={STUDENT}
                 open={isOpenConfirmDialog}
                 type={dialogTypes.DELETE_CONFIRM}
-                handelConfirm={() => confirmDeleteStudent(student.id)}
+                handelConfirm={() => confirmDeleteStudent(student?.id)}
             />
         </>
     );

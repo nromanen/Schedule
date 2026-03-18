@@ -7,8 +7,12 @@ import {
     getAllDepartments,
     getDepartItemById,
 } from '../actions/departments';
+import {isEmpty} from "lodash";
 
 export const getAllDepartmentsService = () => {
+    const departments = store.getState().departments.departments;
+    if (!isEmpty(departments)) return;
+
     axios
         .get(DEPARTMENT_URL)
         .then((response) => {

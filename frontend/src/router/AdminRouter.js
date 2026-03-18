@@ -19,7 +19,7 @@ import {
 } from '../constants/links';
 import TeachersPage from '../containers/TeachersPage/TeachersPage';
 import BusyRoomsPage from '../containers/Rooms/BusyRoomsPage';
-import GroupList from '../containers/GroupPage/GroupPage';
+import GroupList from '../components/GroupPage/GroupPage';
 import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';
 import RoomPage from '../containers/RoomsPage/RoomsPage';
 import SubjectPage from '../containers/SubjectPage/SubjectPage';

@@ -5,7 +5,6 @@ import {getAllStudentsStart, uploadStudentsToGroupStart} from '../../actions/stu
 const mapStateToProps = (state) => ({
     loading: state.loadingIndicator.studentsLoading,
     students: state.students.students,
-    groups: state.groups.groups,
 });
 
 const mapDispatchToProps = {

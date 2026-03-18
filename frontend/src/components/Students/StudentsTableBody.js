@@ -72,7 +72,7 @@ export const StudentsTableBody = (props) => {
                                     className="edit-button-table"
                                     title={t(EDIT_TITLE)}
                                     onClick={() => {
-                                        selectStudentSuccess(student.id);
+                                        selectStudentSuccess(student);
                                         setIsOpenUpdateDialog(true);
                                     }}
                                 />

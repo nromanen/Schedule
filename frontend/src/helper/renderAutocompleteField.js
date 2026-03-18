@@ -1,6 +1,6 @@
 import React from 'react';
 import { Autocomplete } from '@material-ui/lab';
-import { FormControl, TextField } from '@material-ui/core';
+import { FormControl, TextField, Tooltip } from '@material-ui/core';
 import { renderFromHelper } from '../share/renderedFields/error';
 
 export const renderAutocompleteField = ({
@@ -32,7 +32,14 @@ export const renderAutocompleteField = ({
             onBlur={(_, value) => input.onBlur(value)}
             renderInput={(params) => (
                 <FormControl error={touched && !!error} fullWidth>
-                    <TextField {...params} label={label} />
+                    <TextField
+                        {...params}
+                        label={label}
+                        inputProps={{
+                            ...params.inputProps,
+                            title: input.value?.name || '',
+                        }}
+                    />
                     {renderFromHelper({ touched, error })}
                 </FormControl>
             )}

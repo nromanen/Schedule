@@ -8,6 +8,7 @@ import CustomDialog from '../../../containers/Dialogs/CustomDialog';
 import {GROUP_LABEL} from '../../../constants/translationLabels/formElements';
 import {ShowStudentsOnGroupContent} from '../../../components/Students/ShowStudentsOnGroupContent';
 import {dialogChooseGroupButton, dialogCloseButton, dialogUploadFromFileButton,} from '../../../constants/dialogs';
+import {useEnabledGroups, useDisabledGroups} from "../../../hooks/useGroups";
 
 const ShowStudentsOnGroupDialog = (props) => {
     const {
@@ -20,9 +21,12 @@ const ShowStudentsOnGroupDialog = (props) => {
         loading,
         open,
         match,
-        groups,
     } = props;
     const { t } = useTranslation('formElements');
+
+    const { data: enabledGroups = [] } = useEnabledGroups();
+    const { data: disabledGroups = [] } = useDisabledGroups();
+    const groups = [...enabledGroups, ...disabledGroups];
 
     const [group, setGroup] = useState({});
     const [isOpenUploadFileDialog, setIsOpenUploadFileDialog] = useState(false);

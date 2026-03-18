@@ -10,11 +10,6 @@ export const addTeacherSuccess = (teacher) => ({
     teacher,
 });
 
-export const addTeacherStart = (teacher) => ({
-    type: actionsType.ADD_TEACHER_START,
-    teacher,
-});
-
 export const setTeacher = (teacher) => ({
     type: actionsType.SET_TEACHER,
     teacher,
@@ -47,11 +42,6 @@ export const updateTeacherCardSuccess = (teacher) => ({
     teacher,
 });
 
-export const updateTeacherCardStart = (teacher) => ({
-    type: actionsType.UPDATE_TEACHER_START,
-    teacher,
-});
-
 export const showAllTeachersSuccess = (teachers) => ({
     type: actionsType.SHOW_ALL_TEACHERS_SUCCESS,
     teachers,
@@ -60,11 +50,6 @@ export const showAllTeachersSuccess = (teachers) => ({
 export const showAllTeachersStart = (teachers) => ({
     type: actionsType.SHOW_ALL_TEACHERS_START,
     teachers,
-});
-
-export const getAllPublicTeachersByDepartmentStart = (departmentId) => ({
-    type: actionsType.GET_ALL_PUBLIC_TEACHERS_BY_DEPARTMENT_START,
-    departmentId,
 });
 
 export const getAllTeachersByDepartmentId = (teachers) => ({

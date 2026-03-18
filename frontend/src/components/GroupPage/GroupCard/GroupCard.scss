@@ -1,47 +1,30 @@
-@import "../../../styles/colors.scss";
-@import "../../../styles/fonts.scss";
-@import "../../../styles/variables.scss";
-@import "../../../styles/mixins.scss";
+@import '../../../styles/cards.scss';
 
 .group-card {
-  @include displayFlex(center, center, column);
-  width: 155px;
-  height: 135px;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 2px;
-  border: 1px solid $gray1;
-  background-color: $white;
-  box-shadow: 0 1px 4px $shadow-box;
+  @include card-base-style(80px);
+  align-items: center;
 
-  &__number {
+  &__label {
+    display: none;
+  }
+
+  &__title {
     text-align: center;
     text-transform: uppercase;
-    font-size: $font-xl;
-    margin: 5px 0;
+    font-size: $font-l;
+    font-weight: 700;
+    margin: 10px 0 4px;
+    padding: 0 6px;
+    word-break: break-word;
+    line-height: 1.2;
   }
 
-  &__description {
-    text-align: center;
-    margin: 5px 0;
-    font-size: $font-xs;
-  }
-
-  &-buttons {
-    @include displayFlex(center, space-between);
-    width: $full-size;
-    &-add-student {
-      @include button-icon($green, $green3);
-    }
-  }
-
-  &-button-students {
-    @include displayFlex(center, center);
-    @include button-icon($blue-btn-hover, $blue, $font-l);
-    width: $full-size;
+  &__students-btns {
+    border-top: 1px dashed darken($grey4, 5%);
+    margin-top: 0;
   }
 }
 
-.drag-border-card{
-  box-shadow: 10px 0 5px -2px $blue3;
+.drag-border-card {
+  box-shadow: 10px 0 5px -2px $blue3 !important;
 }

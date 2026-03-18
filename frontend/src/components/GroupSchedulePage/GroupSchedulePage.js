@@ -83,22 +83,27 @@ const GroupSchedulePage = (props) => {
         const groupPath = get(group, 'id') ? `&group=${group.id}` : '';
         const teacherPath = get(teacher, 'id') ? `&teacher=${teacher.id}` : '';
         const departmentPath = get(department, 'id') ? `&department=${department.id}` : '';
-        const typeOfSchedule = getScheduleType(values);
-        scheduleActions[typeOfSchedule](values);
         history.push(`${SCHEDULE_FOR_LINK}?semester=${semester.id}${groupPath}${teacherPath}${departmentPath}`);
     };
 
     const getSchedule = () => {
         const { semester, group, teacher, department } = getDataFromParams(location);
+        const semesterValue = semester ? { id: Number(semester) } : defaultSemester;
+        const values = createSubmitValues(semesterValue, group, teacher, department);
+        const typeOfSchedule = getScheduleType(values);
 
         if (!semester) {
-            handleSubmit(createSubmitValues(defaultSemester, group, teacher, department));
-        } else {
-            handleSubmit(createSubmitValues({ id: Number(semester) }, group, teacher, department));
+            const groupPath = get(values.group, 'id') ? `&group=${values.group.id}` : '';
+            const teacherPath = get(values.teacher, 'id') ? `&teacher=${values.teacher.id}` : '';
+            const departmentPath = get(values.department, 'id') ? `&department=${values.department.id}` : '';
+            history.push(`${SCHEDULE_FOR_LINK}?semester=${semesterValue.id}${groupPath}${teacherPath}${departmentPath}`);
         }
+
+        scheduleActions[typeOfSchedule](values);
     };
 
     useEffect(() => {
+
         if (defaultSemester.id) {
             getSchedule();
         }

@@ -15,11 +15,11 @@ import SearchPanel from '../../share/SearchPanel/SearchPanel';
 import SnackbarComponent from '../../share/Snackbar/SnackbarComponent';
 import AddSubjectForm from '../../components/AddSubjectForm/AddSubjectForm';
 import { handleSnackbarCloseService } from '../../services/snackbarService';
-import { setIsOpenConfirmDialog } from '../../actions/dialog';
+import { setIsOpenConfirmDialog } from '../../actions';
 import {
     DELETE_TITLE,
-    EDIT_TITLE,
-    SUBJECT_Y_LABEL,
+    EDIT_TITLE, GROUP_VIEW_GRID,
+    SUBJECT_Y_LABEL, VIEW_AZ
 } from '../../constants/translationLabels/formElements';
 import { COMMON_SET_DISABLED, COMMON_SET_ENABLED } from '../../constants/translationLabels/common';
 import {
@@ -93,7 +93,7 @@ const GroupedView = ({ subjects, ...cardProps }) => {
                         <div className="letter-group__line" />
                         <span className="letter-group__count">{grouped[letter].length}</span>
                     </div>
-                    <div className="container-flex-wrap wrapper">
+                    <div className="container-flex-wrap">
                         {grouped[letter].map((subject) => (
                             <SubjectCard key={subject.id} subject={subject} {...cardProps} />
                         ))}
@@ -216,20 +216,20 @@ const SubjectPage = () => {
                     )}
                 </aside>
 
-                <section className="container-flex-wrap wrapper">
+                <section className="container-flex-wrap">
                     {/* View toggle */}
                     <div className="view-toggle">
                         <button
                             className={`view-toggle__btn ${viewMode === 'grid' ? 'view-toggle__btn--active' : ''}`}
                             onClick={() => setViewMode('grid')}
                         >
-                            ▦ Grid
+                            ▦ {t(GROUP_VIEW_GRID)}
                         </button>
                         <button
                             className={`view-toggle__btn ${viewMode === 'grouped' ? 'view-toggle__btn--active' : ''}`}
                             onClick={() => setViewMode('grouped')}
                         >
-                            🔤 A-Z
+                            🔤 {t(VIEW_AZ)}
                         </button>
                         <span className="view-toggle__count">{visibleSubjects.length}</span>
                     </div>

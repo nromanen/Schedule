@@ -14,9 +14,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+//import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+//import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -97,12 +97,12 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(endpoint ->
-                                endpoint.baseUri("/oauth_login")
-                        )
-                        .successHandler(authenticationSuccessHandler())
-                )
+//                .oauth2Login(oauth2 -> oauth2
+//                        .authorizationEndpoint(endpoint ->
+//                                endpoint.baseUri("/oauth_login")
+//                        )
+//                        .successHandler(authenticationSuccessHandler())
+//                )
                 .addFilterBefore(
                         new JwtTokenFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class
@@ -122,15 +122,15 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return (request, response, authentication) -> {
-            OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-            var user = userService.createSocialUser(oAuth2User);
-            String jwtToken = jwtTokenProvider.createToken(
-                    user.getEmail(), user.getRole().toString()
-            );
-            response.sendRedirect(backendUrl + "login?social=true&token=" + jwtToken);
-        };
-    }
+//    @Bean
+//    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+//        return (request, response, authentication) -> {
+//            OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+//            var user = userService.createSocialUser(oAuth2User);
+//            String jwtToken = jwtTokenProvider.createToken(
+//                    user.getEmail(), user.getRole().toString()
+//            );
+//            response.sendRedirect(backendUrl + "login?social=true&token=" + jwtToken);
+//        };
+//    }
 }

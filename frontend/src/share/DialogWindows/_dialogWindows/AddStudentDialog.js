@@ -12,7 +12,7 @@ import '../dialog.scss';
 import {CREATE_TITLE, EDIT_TITLE, STUDENT_A_LABEL,} from '../../../constants/translationLabels/formElements';
 
 const AddStudentDialog = (props) => {
-    const { setOpen, open, student, groupId } = props;
+    const { setOpen, open, student, groupId, groups } = props;
     const { t } = useTranslation('formElements');
     const history = useHistory();
 
@@ -32,7 +32,7 @@ const AddStudentDialog = (props) => {
             onClose={handleClose}
             buttons={[dialogCloseButton(handleClose)]}
         >
-            <AddStudentForm groupId={groupId} onReset={onReset} student={student} />
+            <AddStudentForm groupId={groupId} onReset={onReset} student={student} groups={groups} />
         </CustomDialog>
     );
 };

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Switch, FormControlLabel } from '@material-ui/core';
 import './SchedulePublishBanner.scss';
-import {DELETE, POST} from "../../../constants/methods";
-import {axiosCall} from "../../../services/axios";
+import { DELETE, POST } from "../../../constants/methods";
+import { axiosCall } from "../../../services/axios";
+import { setSchedulePublished } from "../../../actions/schedule";
 
-const SchedulePublishBanner = () => {
+const SchedulePublishBanner = ({ published, setPublished }) => {
     const { t } = useTranslation('common');
-    const [published, setPublished] = useState(true);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -22,19 +23,18 @@ const SchedulePublishBanner = () => {
                 if (isMounted) setLoading(false);
             });
 
-        return () => {
-            isMounted = false;
-        };
+        return () => { isMounted = false; };
+// eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleToggle = () => {
         if (published) {
             axiosCall('schedules/publish', DELETE)
-                .then(() => setPublished(false))
+                .then(() => setPublished(false)) // → Redux
                 .catch(console.error);
         } else {
             axiosCall('schedules/publish', POST)
-                .then(() => setPublished(true))
+                .then(() => setPublished(true)) // → Redux
                 .catch(console.error);
         }
     };
@@ -58,4 +58,12 @@ const SchedulePublishBanner = () => {
     );
 };
 
-export default SchedulePublishBanner;
+const mapStateToProps = (state) => ({
+    published: state.schedule.schedulePublished,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    setPublished: (val) => dispatch(setSchedulePublished(val)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SchedulePublishBanner);

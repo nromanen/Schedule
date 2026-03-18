@@ -57,11 +57,11 @@ import {
     SCHEDULE_TITLE,
     SEMESTER_LABEL,
 } from '../../constants/translationLabels/common';
-import {getCurrentSemesterRequsted} from '../../actions/schedule';
 import {axiosCall} from "../../services/axios";
 import {DELETE, POST} from "../../constants/methods";
 import CustomDialog from "../../containers/Dialogs/CustomDialog";
 import {EXPORT_SCHEDULE_XLSX_URL} from "../../constants/axios";
+import {getCurrentSemesterRequsted, setSchedulePublished} from '../../actions/schedule';
 
 const StyledMenu = withStyles({
     paper: {
@@ -93,7 +93,7 @@ const StyledMenuItem = withStyles((theme) => ({
 }))(MenuItem);
 
 const Header = (props) => {
-    const {roles, userRole, loading, currentSemester, getCurrentSemester} = props;
+    const {roles, userRole, loading, currentSemester, getCurrentSemester, schedulePublished, setSchedulePublished} = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
@@ -102,7 +102,6 @@ const Header = (props) => {
     const handleClickUserMenu = (event) => setAnchorElUser(event.currentTarget);
     const handleCloseUserMenu = () => setAnchorElUser(null);
 
-    const [schedulePublished, setSchedulePublished] = useState(true);
     const [cacheClearing, setCacheClearing] = useState(false);
     const [cacheDialogOpen, setCacheDialogOpen] = useState(false);
     const [cacheResultDialog, setCacheResultDialog] = useState({open: false, success: true});
@@ -110,7 +109,7 @@ const Header = (props) => {
     const {t} = useTranslation('common');
 
     useEffect(() => {
-        if (userRole === roles.MANAGER) {
+        if (userRole === roles.MANAGER && !currentSemester?.id) {
             setSemesterLoadingService(true);
             getCurrentSemester();
             axiosCall('schedules/public/status')
@@ -725,10 +724,12 @@ const mapStateToProps = (state) => ({
     defaultSemester: state.schedule.defaultSemester,
     loading: state.loadingIndicator.semesterLoading,
     teacher: state.teachers.teacher,
+    schedulePublished: state.schedule.schedulePublished,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     getCurrentSemester: () => dispatch(getCurrentSemesterRequsted()),
+    setSchedulePublished: (val) => dispatch(setSchedulePublished(val)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

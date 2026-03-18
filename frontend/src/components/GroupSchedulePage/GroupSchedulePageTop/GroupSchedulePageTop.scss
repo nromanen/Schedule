@@ -164,6 +164,10 @@ h1 {
             font-weight: 600;
             color: $black;
             padding: 14px 0 2px !important;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            padding-right: 56px !important;
         }
 
         // Clear and popup icons

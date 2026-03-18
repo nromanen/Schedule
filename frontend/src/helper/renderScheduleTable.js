@@ -12,7 +12,6 @@ import Card from '../share/Card/Card';
 import i18n from '../i18n';
 
 import {daysUppercase,} from '../constants/schedule/days';
-import './renderScheduleTable.scss';
 import {FORM_GROUP_LABEL, GROUP_Y_LABEL} from '../constants/translationLabels/formElements';
 import {EMPTY_SCHEDULE} from '../constants/translationLabels/common';
 import LessonTemporaryCardCell from '../containers/GroupSchedulePage/LessonTemporaryCardCell';
@@ -20,6 +19,7 @@ import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTem
 import { places } from '../constants/places';
 import { lessonTypeColors } from '../components/GroupSchedulePage/LessonTemporaryCardCell';
 import {getWeekParity, isWeekOdd, transformSemesterDate} from "../utils/weekUtils";
+import './renderScheduleTable.scss';
 
 const shortid = require('shortid');
 

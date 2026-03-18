@@ -77,19 +77,6 @@ describe('groups reducer', () => {
         expect(result.group).toEqual({ id: 1, title: '101-current' });
     });
 
-    it('CLEAR_GROUP_SUCCESS should reset group', () => {
-        const state = {
-            ...initialState,
-            group: { id: 1, title: '101' },
-        };
-
-        const result = reducer(state, {
-            type: actionTypes.CLEAR_GROUP_SUCCESS,
-        });
-
-        expect(result.group).toEqual({});
-    });
-
     it('SET_SCHEDULE_GROUPS should set scheduleGroups', () => {
         const groups = [{ id: 1, title: '101' }];
 

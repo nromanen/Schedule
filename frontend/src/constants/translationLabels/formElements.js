@@ -126,3 +126,6 @@ export const FORM_GROUP_LABEL_AFTER = 'form_group_label_after';
 export const STUDENTS_UPPERCASE = 'formElements:students_uppercase';
 export const FORM_ROOM_LABEL_AFTER = 'formElements:room_label_after';
 export const FORM_DEPARTMENT_TEACHERS_LABEL = 'formElements:department_teachers_label';
+export const GROUP_VIEW_GRID = 'grid_view';
+export const GROUP_VIEW_COURSES = 'courses_view';
+export const VIEW_AZ = 'az_view';

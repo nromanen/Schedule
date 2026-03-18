@@ -42,14 +42,9 @@ const reducer = (state = initialState, action) => {
         }
 
         case actionTypes.SET_STUDENT: {
-            let student = state.students.find((stud) => stud.id === +action.id);
-
-            if (!student) {
-                student = { id: null };
-            }
             return {
                 ...state,
-                student,
+                student: action.student || {},
             };
         }
 

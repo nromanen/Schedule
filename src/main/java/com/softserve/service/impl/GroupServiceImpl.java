@@ -4,6 +4,7 @@ import com.softserve.dto.GroupDTO;
 import com.softserve.dto.GroupWithStudentsDTO;
 import com.softserve.dto.SemesterWithGroupsDTO;
 import com.softserve.entity.Group;
+import com.softserve.exception.EntityAlreadyExistsException;
 import com.softserve.exception.EntityNotFoundException;
 import com.softserve.exception.FieldAlreadyExistsException;
 import com.softserve.mapper.GroupMapper;
@@ -131,6 +132,11 @@ public class GroupServiceImpl implements GroupService {
     @CacheEvict(value = "groupsList", allEntries = true)
     public GroupDTO createAfterOrder(GroupDTO groupDTO, Long afterId) {
         log.debug("In createAfterOrder(groupDTO = [{}], afterId = [{}])", groupDTO, afterId);
+        if (groupRepository.isExistsByTitle(groupDTO.getTitle())) {
+            throw new EntityAlreadyExistsException(
+                    "Group with title '" + groupDTO.getTitle() + "' already exists"
+            );
+        }
         Group group = groupMapper.groupDTOToGroup(groupDTO);
         Group createdGroup = sortOrderRepository.createAfterOrder(group, afterId);
         return groupMapper.groupToGroupDTO(createdGroup);

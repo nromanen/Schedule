@@ -2,24 +2,32 @@
 @import "../../styles/fonts.scss";
 @import "../../styles/variables.scss";
 @import "../../styles/mixins.scss";
+@import '../../styles/cards.scss';
 
 .group {
   &-container {
     display: flex;
+    //background: $gray2;
+    min-height: 100vh;
+
     @media (max-width: $md-m) {
-      @include displayFlex(center,center, column);
+      @include displayFlex(center, center, column);
     }
   }
+
   &-sidebar {
     margin: 0 10px;
+
     .MuiTypography-body1 {
       font-size: $font-s;
     }
+
     @media (max-width: $md-m) {
-      @include displayFlex(center,center);
+      @include displayFlex(center, center);
       width: $full-size;
     }
   }
+
   &-aside {
     width: 360px;
     position: sticky;
@@ -27,11 +35,15 @@
   }
 
   &-wrapper {
-    @include displayFlex(start,center);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     width: $full-size;
+    padding: 0 10px;
   }
+
   &-list {
-    @include displayFlex(start,center);
+    @include displayFlex(start, center);
     flex-wrap: wrap;
     width: $full-size;
   }

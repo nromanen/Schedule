@@ -78,14 +78,11 @@ export const checkUniqueRoomName = (roomName) => {
     return find ? i18n.t(UNIQUE_ERROR_MESSAGE) : undefined;
 };
 
-export const checkUniqueGroup = (groupTitle) => {
-    if (!groupTitle) {
-        return undefined;
-    }
-    const find = store.getState().groups.groups.some((value) => {
-        return value.title.toUpperCase().trim() === groupTitle.toUpperCase().trim();
-    });
-    return find ? i18n.t(UNIQUE_ERROR_MESSAGE) : undefined;
+export const checkUniqueGroup = (value, groups, currentId) => {
+    const isDuplicate = groups.some(
+        (group) => group.title.trim().toLowerCase() === value.trim().toLowerCase() && group.id !== currentId
+    );
+    return isDuplicate ? i18n.t(UNIQUE_ERROR_MESSAGE) : true;
 };
 
 export const checkUniqueSubject = (value, subjects, currentId) => {

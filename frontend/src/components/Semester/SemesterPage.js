@@ -2,16 +2,15 @@ import React, {useEffect, useState} from 'react';
 import SemesterList from '../../containers/SemesterPage/SemesterList';
 import {getGroupsOptionsForSelect} from '../../utils/selectUtils';
 import SemesterSidebar from './SemesterSidebar';
+import {useEnabledGroups} from "../../hooks/useGroups";
 
 const SemesterPage = (props) => {
     const {
-        groups,
         semester,
         getAllSemestersItems,
         getDisabledSemestersItems,
         handleSemesterFormSubmit,
         setOpenErrorSnackbar,
-        getAllGroupsItems,
         classScheduler,
         // it doesnt work, need to finish implement archived functionality
         // getArchivedSemestersItems,
@@ -21,11 +20,9 @@ const SemesterPage = (props) => {
     const [term, setTerm] = useState('');
     const [disabled, setDisabled] = useState(false);
     const [archived, setArchived] = useState(false);
+    const { data: groups = [] } = useEnabledGroups();
 
     const options = getGroupsOptionsForSelect(groups);
-    useEffect(() => {
-        getAllGroupsItems();
-    }, []);
 
     useEffect(() => {
         if (disabled) {

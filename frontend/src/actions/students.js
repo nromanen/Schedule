@@ -19,9 +19,9 @@ export const deleteAllStudentSuccess = (students) => ({
     students,
 });
 
-export const selectStudentSuccess = (id) => ({
+export const selectStudentSuccess = (student) => ({
     type: actionTypes.SET_STUDENT,
-    id,
+    student,
 });
 
 export const updateStudentSuccess = (student) => ({

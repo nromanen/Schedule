@@ -1,110 +1,116 @@
-import Button from '@material-ui/core/Button';
-import React, {useEffect} from 'react';
-import {useTranslation} from 'react-i18next';
-import {Field} from 'redux-form';
+import React, { useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+
+import FormWrapper from '../../share/FormWrapper/FormWrapper';
+import { RHFTextField } from '../../share/rhf';
+import {
+    useCreateGroup,
+    useUpdateGroup,
+    ENABLED_GROUPS_QUERY_KEY,
+    DISABLED_GROUPS_QUERY_KEY,
+} from '../../hooks/useGroups';
 import {
     CREATE_TITLE,
     EDIT_TITLE,
     FORM_GROUP_LABEL_AFTER,
     GROUP_LABEL,
     GROUP_Y_LABEL,
-    SAVE_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
-import {getClearOrCancelTitle, setDisableButton} from '../../helper/disableComponent';
-import {renderAutocompleteField} from '../../helper/renderAutocompleteField';
-import renderTextField from '../../share/renderedFields/input';
-import {minLengthValue, required, uniqueGroup} from '../../validation/validateFields';
-import './AddGroupForms.scss';
+import { queryClient } from '../../queryClient';
+import { checkUniqueGroup } from '../../validation/storeValidation';
 
-export const AddGroup = (props) => {
-    const {
-        clearGroupStart,
-        submitGroupStart,
-        handleSubmit,
-        initialize,
-        submitting,
-        setGroup,
-        pristine,
-        invalid,
-        groups,
-        group,
-    } = props;
+const AddGroup = ({ group, setGroup }) => {
+    const createGroup = useCreateGroup();
+    const updateGroup = useUpdateGroup();
     const { t } = useTranslation('formElements');
 
-    const removeCurrentGroup = () => groups.filter((el) => el.id !== group.id);
-    const groupsForAutocomplete = group.id ? removeCurrentGroup() : groups;
-    useEffect(() => {
-        const groupIndex = groups.findIndex(({ id }) => id === group.id);
-        const afterId = groups.find((item, index) => index === groupIndex - 1);
-        if (group.id) {
-            initialize({
-                id: group.id,
-                title: group.title,
-                afterId,
-            });
-        } else {
-            initialize();
-        }
-    }, [group.id, group.title, groups, initialize]);
+    const enabledGroups = queryClient.getQueryData([ENABLED_GROUPS_QUERY_KEY]) || [];
+    const disabledGroups = queryClient.getQueryData([DISABLED_GROUPS_QUERY_KEY]) || [];
+    const groups = [...enabledGroups, ...disabledGroups];
 
-    const submitGroup = (data) => {
+    const groupsForAutocomplete = group?.id
+        ? groups.filter((el) => el.id !== group.id)
+        : groups;
+
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { isDirty, isSubmitting },
+    } = useForm({
+        mode: 'onChange',
+        defaultValues: {
+            title: '',
+            afterId: null,
+        },
+    });
+
+    useEffect(() => {
+        if (group?.id) {
+            const groupIndex = groups.findIndex(({ id }) => id === group.id);
+            const afterId = groups[groupIndex - 1] || null;
+            reset({ title: group.title, afterId });
+        } else {
+            reset({ title: '', afterId: null });
+        }
+    }, [group?.id, group?.title]);
+
+    const onFormSubmit = (data) => {
         const afterId = data.afterId ? data.afterId.id : null;
-        submitGroupStart({ ...data, disable: false, afterId });
+        const payload = { ...data, title: data.title.trim(), disable: false, afterId, id: group?.id };
+        group?.id ? updateGroup.mutate(payload) : createGroup.mutate(payload);
         setGroup({});
+        reset({ title: '', afterId: null });
     };
 
-    const onReset = () => {
+    const handleReset = () => {
         setGroup({});
-        clearGroupStart();
+        reset({ title: '', afterId: null });
     };
 
     return (
-        <div className="group-form">
-            <h3 className="group-form-title">
-                {group.id ? t(EDIT_TITLE) : t(CREATE_TITLE)}
-                {t(GROUP_Y_LABEL)}
-            </h3>
-            <form onSubmit={handleSubmit((data) => submitGroup(data))}>
-                <Field
-                    className="form-field"
-                    name="title"
-                    id="title"
-                    label={`${t(GROUP_LABEL)}:`}
-                    component={renderTextField}
-                    validate={[required, uniqueGroup, minLengthValue]}
-                />
-                <Field
-                    className="select-field"
-                    name="afterId"
-                    component={renderAutocompleteField}
-                    label={t(FORM_GROUP_LABEL_AFTER)}
-                    type="text"
-                    values={groupsForAutocomplete}
-                    getOptionLabel={(item) => (item ? item.title : '')}
-                ></Field>
-                <div className="form-buttons-container">
-                    <Button
-                        size="small"
-                        variant="contained"
-                        className="buttons-style "
-                        color="primary"
-                        disabled={invalid || pristine || submitting}
-                        type="submit"
-                    >
-                        {t(SAVE_BUTTON_LABEL)}
-                    </Button>
-                    <Button
-                        size="small"
-                        type="button"
-                        className="buttons-style"
-                        variant="contained"
-                        disabled={setDisableButton(pristine, submitting, group.id)}
-                        onClick={onReset}
-                    >
-                        {getClearOrCancelTitle(group.id, t)}
-                    </Button>
-                </div>
-            </form>
-        </div>
+        <FormWrapper
+            title={`${group?.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} ${t(GROUP_Y_LABEL)}`}
+            onSubmit={handleSubmit(onFormSubmit)}
+            onReset={handleReset}
+            isDirty={isDirty}
+            isSubmitting={isSubmitting}
+            entityId={group?.id}
+        >
+            <RHFTextField
+                control={control}
+                name="title"
+                label={`${t(GROUP_LABEL)}:`}
+                className="form-field"
+                rules={{
+                    required: t('required'),
+                    validate: (value) => checkUniqueGroup(value, groups, group?.id),
+                }}
+            />
+            <Controller
+                name="afterId"
+                control={control}
+                render={({ field }) => (
+                    <Autocomplete
+                        {...field}
+                        options={groupsForAutocomplete}
+                        getOptionLabel={(item) => item?.title || ''}
+                        onChange={(_, value) => field.onChange(value)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                className="form-field"
+                                label={t(FORM_GROUP_LABEL_AFTER)}
+                            />
+                        )}
+                    />
+                )}
+            />
+        </FormWrapper>
     );
 };
+
+export default AddGroup;
