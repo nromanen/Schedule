@@ -157,6 +157,7 @@ const TeachersTable = (props) => {
                                 <button
                                     type="button"
                                     className="email-link"
+                                    title={teacher.email}
                                     onClick={() => sendMail(teacher.email)}
                                 >
                                     {teacher.email}

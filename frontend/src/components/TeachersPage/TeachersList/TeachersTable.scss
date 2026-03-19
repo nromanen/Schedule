@@ -150,3 +150,35 @@
     cursor: not-allowed;
   }
 }
+
+.teachers-table td:nth-child(4),
+.teachers-table th:nth-child(4) {
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.teachers-table td:nth-child(5),
+.teachers-table th:nth-child(5) {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.teachers-table td:nth-child(6),
+.teachers-table th:nth-child(6) {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.email-link {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
