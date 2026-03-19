@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaEdit, FaSort, FaSortUp, FaSortDown, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaEdit, FaSort, FaSortUp, FaSortDown, FaChevronLeft, FaChevronRight, FaCalendarAlt } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { GiSightDisabled, IoMdEye } from 'react-icons/all';
 import { isEmpty } from 'lodash';
@@ -22,6 +22,8 @@ import {
     COMMON_SET_ENABLED,
 } from '../../../constants/translationLabels/common';
 import NotFound from '../../../share/NotFound/NotFound';
+import { Link } from 'react-router-dom';
+import { SCHEDULE_FOR_LINK } from '../../../constants/links';
 import './TeachersTable.scss';
 
 const ROWS_PER_PAGE_OPTIONS = [10, 25, 50];
@@ -46,7 +48,7 @@ const TeachersTable = (props) => {
             direction = 'desc';
         }
         setSortConfig({ key, direction });
-        setCurrentPage(1); // Повернутися на першу сторінку при сортуванні
+        setCurrentPage(1);
     };
 
     const getSortIcon = (key) => {
@@ -95,7 +97,6 @@ const TeachersTable = (props) => {
         return 0;
     });
 
-    // Пагінація
     const totalPages = Math.ceil(sortedItems.length / rowsPerPage);
     const startIndex = (currentPage - 1) * rowsPerPage;
     const paginatedItems = sortedItems.slice(startIndex, startIndex + rowsPerPage);
@@ -197,6 +198,12 @@ const TeachersTable = (props) => {
                                     dialogTypes.DELETE_CONFIRM
                                 )}
                             />
+                            <Link to={`${SCHEDULE_FOR_LINK}?teacher=${teacher.id}`}>
+                                <FaCalendarAlt
+                                    className="action-icon"
+                                    title={tCommon('teacher_full_schedule')}
+                                />
+                            </Link>
                         </td>
                     </tr>
                 ))}

@@ -61,6 +61,22 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                     "s.evenOdd, s.period.name, " +
                     "s.lesson.subjectForSite, s.lesson.teacher.surname, s.lesson.lessonType";
 
+    private static final String HQL_GET_SCHEDULE_FOR_TEACHER_ACTIVE_SEMESTERS =
+            "SELECT s FROM Schedule s " +
+                    "JOIN FETCH s.lesson l " +
+                    "JOIN FETCH l.semester sem " +
+                    "JOIN FETCH l.teacher t " +
+                    "JOIN FETCH l.subject " +
+                    "JOIN FETCH l.group " +
+                    "JOIN FETCH s.period p " +
+                    "JOIN FETCH s.room r " +
+                    "WHERE sem.disable = false " +
+                    "AND sem.startDay <= :weekEnd " +
+                    "AND sem.endDay >= :weekStart " +
+                    "AND t.id = :teacherId " +
+                    NOT_DISABLED_SQL +
+                    "ORDER BY sem.id, s.dayOfWeek, p.startTime";
+
     @Override
     public Long conflictForGroupInSchedule(Long semesterId, DayOfWeek dayOfWeek, EvenOdd evenOdd, Long classId, Long groupId) {
         log.info("In conflictForGroupInSchedule(semesterId = [{}], dayOfWeek = [{}], evenOdd = [{}], classId = [{}], groupId = [{}])",
@@ -495,6 +511,19 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                                 "AND subj.disable = false",
                         Schedule.class)
                 .setParameter(Constants.SEMESTER_ID, semesterId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Schedule> getScheduleForTeacherForActiveSemesters(Long teacherId) {
+        log.info("In getScheduleForTeacherForActiveSemesters(teacherId = [{}])", teacherId);
+        LocalDate weekStart = LocalDate.now().with(DayOfWeek.MONDAY);
+        LocalDate weekEnd = LocalDate.now().with(DayOfWeek.SUNDAY);
+        return sessionFactory.getCurrentSession()
+                .createQuery(HQL_GET_SCHEDULE_FOR_TEACHER_ACTIVE_SEMESTERS, Schedule.class)
+                .setParameter("weekStart", weekStart)
+                .setParameter("weekEnd", weekEnd)
+                .setParameter(Constants.TEACHER_ID, teacherId)
                 .getResultList();
     }
 }

@@ -244,11 +244,12 @@
     "today_schedule": "Сьогодні",
     "full_week_schedule": "Всі дні",
     "no_classes_today": "Сьогодні немає занять",
-    "my_lessons": "Посилання на мої заняття в семестрі",
-    "my_schedule": "Мій розклад",
+    "my_lessons": "Посилання на мої заняття",
+    "my_schedule": "Мій розклад (всі семестри)",
     "loading": "Завантаження",
     "link": "Посилання",
     "Unable to delete period": "Неможливо видалити пару",
     "Unable to delete department": "Неможливо видалити кафедру",
-    "semester_ended": "Семестр вже завершився"
+    "semester_ended": "Семестр вже завершився",
+    "teacher_full_schedule": "Повний розклад викладача"
 }

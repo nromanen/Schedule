@@ -30,6 +30,7 @@ const GroupSchedulePage = (props) => {
         getDefaultSemester,
         getGroupSchedule,
         getTeacherSchedule,
+        getTeacherActiveSemestersSchedule,
         getFullSchedule,
         getDepartmentSchedule,
         groupSchedule,
@@ -91,6 +92,11 @@ const GroupSchedulePage = (props) => {
         const semesterValue = semester ? { id: Number(semester) } : defaultSemester;
         const values = createSubmitValues(semesterValue, group, teacher, department);
         const typeOfSchedule = getScheduleType(values);
+
+        if (!semester && typeOfSchedule === 'teacher' && teacher) {
+            getTeacherActiveSemestersSchedule(Number(teacher));
+            return;
+        }
 
         if (!semester) {
             const groupPath = get(values.group, 'id') ? `&group=${values.group.id}` : '';

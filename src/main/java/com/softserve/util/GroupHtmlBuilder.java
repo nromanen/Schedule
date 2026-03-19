@@ -19,16 +19,6 @@ public class GroupHtmlBuilder {
             DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY
     );
 
-    private static final Map<DayOfWeek, String> DAY_KEYS = Map.of(
-            DayOfWeek.MONDAY, "schedule.monday",
-            DayOfWeek.TUESDAY, "schedule.tuesday",
-            DayOfWeek.WEDNESDAY, "schedule.wednesday",
-            DayOfWeek.THURSDAY, "schedule.thursday",
-            DayOfWeek.FRIDAY, "schedule.friday",
-            DayOfWeek.SATURDAY, "schedule.saturday",
-            DayOfWeek.SUNDAY, "schedule.sunday"
-    );
-
     /**
      * Builds a complete HTML document for a group schedule.
      *
@@ -53,16 +43,12 @@ public class GroupHtmlBuilder {
         html.append("<!DOCTYPE html>");
         html.append("<html lang=\"").append(language.getLanguage()).append("\">");
         html.append("<head><meta charset=\"UTF-8\"/>");
-        html.append("<style>").append(SchedulePdfStyles.get()).append("</style>");
+        html.append("<style>").append(SchedulePdfStyles.get(true)).append("</style>");
         html.append("</head><body>");
 
-        html.append("<div class=\"header__title\">")
-                .append(esc(bundle.getString("schedule.group.for")))
-                .append(" ")
-                .append(esc(schedule.getGroup().getTitle()))
-                .append("</div>");
-
-        html.append(SchedulePdfStyles.legendHtml(bundle));
+        String title = ScheduleHtmlUtils.esc(bundle.getString("schedule.group.for"))
+                + " " + ScheduleHtmlUtils.esc(schedule.getGroup().getTitle());
+        html.append(ScheduleHtmlUtils.buildHeader(title, bundle));
 
         html.append("<table class=\"schedule\">");
         html.append("<colgroup><col class=\"col-time\"/>");
@@ -72,18 +58,16 @@ public class GroupHtmlBuilder {
         html.append("</colgroup>");
 
         html.append("<thead><tr>");
-        html.append("<th>").append(esc(bundle.getString("schedule.pair"))).append("</th>");
+        html.append("<th>").append(ScheduleHtmlUtils.esc(bundle.getString("schedule.pair"))).append("</th>");
         for (DayOfWeek day : activeDays) {
-            html.append("<th>").append(esc(getDayName(day, bundle))).append("</th>");
+            html.append("<th>").append(ScheduleHtmlUtils.esc(ScheduleHtmlUtils.getDayName(day, bundle))).append("</th>");
         }
         html.append("</tr></thead><tbody>");
 
-        // Each period = 2 rows
         for (PeriodDTO period : periods) {
             // Row 1: even week
             html.append("<tr class=\"even\">");
             html.append(SchedulePdfStyles.timeCellHtml(period));
-
             for (DayOfWeek dayOfWeek : activeDays) {
                 html.append("<td>");
                 LessonsInScheduleDTO even = getLesson(dayMap.get(dayOfWeek), period, true);
@@ -107,10 +91,8 @@ public class GroupHtmlBuilder {
         return html.toString();
     }
 
-
     /**
      * Returns only days that have at least one lesson in either even or odd week.
-     * A day is excluded only if both even and odd weeks have no lessons at all.
      *
      * @param dayMap map of day data keyed by day of week
      * @return ordered list of active days
@@ -143,15 +125,12 @@ public class GroupHtmlBuilder {
         if (dayData == null || dayData.getClasses() == null) {
             return null;
         }
-
         ClassesInScheduleForGroupDTO cls = dayData.getClasses().stream()
                 .filter(c -> c.getPeriod() != null && c.getPeriod().getId().equals(period.getId()))
                 .findFirst().orElse(null);
-
         if (cls == null || cls.getWeeks() == null) {
             return null;
         }
-
         return even ? cls.getWeeks().getEven() : cls.getWeeks().getOdd();
     }
 
@@ -177,34 +156,5 @@ public class GroupHtmlBuilder {
         return map.values().stream()
                 .sorted(Comparator.comparing(PeriodDTO::getStartTime))
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Returns localized day name from resource bundle.
-     *
-     * @param day    the day of week
-     * @param bundle resource bundle with day name translations
-     * @return localized day name
-     */
-    private static String getDayName(DayOfWeek day, ResourceBundle bundle) {
-        String key = DAY_KEYS.get(day);
-        if (key != null) {
-            return bundle.getString(key);
-        }
-        return day.name();
-    }
-
-    /**
-     * Escapes HTML special characters.
-     *
-     * @param text the text to escape
-     * @return escaped text safe for HTML
-     */
-    private static String esc(String text) {
-        if (text == null) {
-            return "";
-        }
-        return text.replace("&", "&amp;").replace("<", "&lt;")
-                .replace(">", "&gt;").replace("\"", "&quot;");
     }
 }

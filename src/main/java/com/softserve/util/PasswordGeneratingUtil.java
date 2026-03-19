@@ -5,6 +5,8 @@ import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 
+import java.util.List;
+
 public final class PasswordGeneratingUtil {
 
     private static final CharacterData SPECIAL_CHARS = new CharacterData() {
@@ -26,12 +28,10 @@ public final class PasswordGeneratingUtil {
     }
 
     public static String generatePassword() {
-        return new PasswordGenerator().generatePassword(
-                PASSWORD_LENGTH,
+        return new PasswordGenerator().generatePassword(PASSWORD_LENGTH, List.of(
                 SPECIAL_CHARS_RULE,
                 LOWER_CASE_RULE,
                 UPPER_CASE_RULE,
-                DIGIT_RULE
-        );
+                DIGIT_RULE));
     }
 }

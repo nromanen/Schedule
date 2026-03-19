@@ -3,13 +3,16 @@ import {isEmpty} from 'lodash';
 import DownloadLink from '../components/DownloadLink/DownloadLink';
 import {renderFullSchedule, renderGroupTable, renderWeekTable, ScheduleLegend} from './renderScheduleTable';
 import DepartmentSchedule from '../components/DepartmentSchedule/DepartmentSchedule';
-import {getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTitle} from '../utils/titlesUtil';
+import { getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTitle } from '../utils/titlesUtil';
 import SchedulePublishBanner from "../components/GroupSchedulePage/SchedulePublishBanner/SchedulePublishBanner";
 import DepartmentDownloadLink from '../components/DownloadLink/DepartmentDownloadLink';
 import { matchDayNumberSysytemToDayName } from './renderScheduleTable';
 import CalendarSchedule, {isShortSemester} from "../components/CalendarSchedule/CalendarSchedule";
 import CalendarGroupSchedule from "../components/CalendarSchedule/CalendarGroupSchedule";
 import {getWeekParity} from "../utils/weekUtils";
+import {getTeacherWithPosition} from "./renderTeacher";
+import { buildMergedTeacherSchedule } from '../helper/mergeTeacherSchedules';
+import { SEMESTER_COLORS } from '../constants/semesterColors';
 
 // ─── Shared components ────────────────────────────────────────────────────────
 
@@ -126,35 +129,66 @@ const renderSchedule = (props) => {
         }
 
         case 'teacher': {
-            const {semester, teacher, odd, even} = teacherSchedule;
-            if (isEmpty(odd?.classes) && isEmpty(even?.classes)) return emptySchedule(t);
+            const schedules = Array.isArray(teacherSchedule)
+                ? teacherSchedule
+                : [teacherSchedule];
 
-            const currentWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
+            const hasAnyClasses = schedules.some(
+                ({ odd, even }) => !isEmpty(odd?.classes) || !isEmpty(even?.classes)
+            );
+            if (!hasAnyClasses) return emptySchedule(t);
+
+            const { odd: mergedOdd, even: mergedEven, referenceSemester } = buildMergedTeacherSchedule(schedules);
+            const currentWeekIsOdd = getWeekParity(referenceSemester.semester.startDay) % 2 === 1;
+
+            const semesterLegend = schedules.length > 1 && (
+                <div className="semester-legend">
+                    {schedules.map(({ semester: sem }, index) => (
+                        <span
+                            key={sem.id}
+                            className="semester-legend__item"
+                            style={{
+                                backgroundColor: SEMESTER_COLORS[index % SEMESTER_COLORS.length],
+                                color: 'white',
+                            }}
+                        >
+                    {sem.description}
+                </span>
+                    ))}
+                </div>
+            );
 
             return (
                 <>
                     {titleSuffix}
                     <h1>
-                        {getTeacherScheduleTitle(semester, teacher)}
-                        <DownloadLink
-                            entity="teacher"
-                            semesterId={semesterData.id}
-                            entityId={teacherData.id}
-                        />
+                        {getTeacherWithPosition(schedules[0].teacher)}
+                        {schedules.map(({ semester: sem }) => (
+                            <DownloadLink
+                                key={sem.id}
+                                entity="teacher"
+                                semesterId={sem.id}
+                                entityId={schedules[0].teacher.id}
+                                label={schedules.length > 1 ? sem.description : null}
+                            />
+                        ))}
                     </h1>
-                    <ScheduleLegend />
+                    <div className="schedule-legends-row">
+                        <ScheduleLegend />
+                        {semesterLegend}
+                    </div>
                     <h2>
-                        <span className={currentWeekIsOdd ? 'currentDay' : ''}>
-                            {t('common:odd_week')}
-                        </span>
+                <span className={currentWeekIsOdd ? 'currentDay' : ''}>
+                    {t('common:odd_week')}
+                </span>
                     </h2>
-                    {renderWeekTable(odd)}
+                    {isEmpty(mergedOdd.classes) ? emptySchedule(t) : renderWeekTable(mergedOdd)}
                     <h2>
-                        <span className={!currentWeekIsOdd ? 'currentDay' : ''}>
-                            {t('common:even_week')}
-                        </span>
+                <span className={!currentWeekIsOdd ? 'currentDay' : ''}>
+                    {t('common:even_week')}
+                </span>
                     </h2>
-                    {renderWeekTable(even)}
+                    {isEmpty(mergedEven.classes) ? emptySchedule(t) : renderWeekTable(mergedEven)}
                 </>
             );
         }

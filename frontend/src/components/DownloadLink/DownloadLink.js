@@ -11,29 +11,26 @@ const getDownloadLink = (entityId, semesterId, languageToRequest) => ({
     teacher: `${BASE_URL}${PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL}?teacherId=${entityId}&semesterId=${semesterId}${languageToRequest}`,
 });
 
-const DownloadLink = ({ entity, semesterId, entityId }) => {
-    if (!semesterId || !entityId) {
-        return null;
-    }
+const DownloadLink = ({ entity, semesterId, entityId, label }) => {
+    if (!semesterId || !entityId) return null;
 
     const { language } = i18n;
     const languageToRequest = `&language=${language}`;
     const downloadLink = getDownloadLink(entityId, semesterId, languageToRequest)[entity];
 
     return (
-        <a
-            href={downloadLink || ''}
-            target="_blank"
-            rel="noreferrer noopener"
-            variant="contained"
-            color="primary"
-            className="pdf_link"
-            download
-        >
-            <MdPictureAsPdf className="svg-btn" />
-            {i18n.t(COMMON_DOWNLOAD_PDF)}
-        </a>
-    );
+    <a
+        href={downloadLink || ''}
+    target="_blank"
+    rel="noreferrer noopener"
+    className="pdf_link"
+    download
+    >
+    <MdPictureAsPdf className="svg-btn" />
+        {i18n.t(COMMON_DOWNLOAD_PDF)}
+    {label && ` (${label})`}
+    </a>
+);
 };
 
 export default DownloadLink;

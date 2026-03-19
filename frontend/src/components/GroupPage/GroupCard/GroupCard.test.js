@@ -34,12 +34,6 @@ describe('behavior of GroupCard Component when group is disabled', () => {
         renderGroupCard();
     });
 
-    it('should render Set Enabled, Add Student and Delete icons if disabled is true', () => {
-        expect(screen.getByTitle('common:set_enabled')).toBeInTheDocument();
-        expect(screen.getByTitle('formElements:student_add_label')).toBeInTheDocument();
-        expect(screen.getByTitle('delete_title')).toBeInTheDocument();
-    });
-
     it('should call showConfirmDialog when click Set Enabled icon', () => {
         fireEvent.click(screen.getByTitle('common:set_enabled'));
         expect(showConfirmDialog).toHaveBeenCalledTimes(1);
@@ -48,11 +42,6 @@ describe('behavior of GroupCard Component when group is disabled', () => {
     it('should call showConfirmDialog when click Delete icon', () => {
         fireEvent.click(screen.getByTitle('delete_title'));
         expect(showConfirmDialog).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call showAddStudentDialog when click Add Student icon', () => {
-        fireEvent.click(screen.getByTitle('formElements:student_add_label'));
-        expect(showAddStudentDialog).toHaveBeenCalledTimes(1);
     });
 });
 

@@ -65,21 +65,21 @@ const mapTeacherSchedule = (days) => {
     return { parsedOdd, parsedEven };
 };
 
-export const makeTeacherSchedule = (teacherSchedule) => {
-    const { semester, days, teacher } = teacherSchedule;
-    let odd = {};
-    let even = {};
+export const makeTeacherSchedule = (teacherScheduleData) => {
+    const schedules = Array.isArray(teacherScheduleData)
+        ? teacherScheduleData
+        : [teacherScheduleData];
 
-    if (!isEmpty(days)) {
-        const { parsedEven, parsedOdd } = mapTeacherSchedule(days);
-        odd = parsedOdd;
-        even = parsedEven;
-    }
+    return schedules.map(({ semester, days, teacher }) => {
+        let odd = {};
+        let even = {};
 
-    return {
-        teacher,
-        semester,
-        odd,
-        even,
-    };
+        if (!isEmpty(days)) {
+            const { parsedEven, parsedOdd } = mapTeacherSchedule(days);
+            odd = parsedOdd;
+            even = parsedEven;
+        }
+
+        return { teacher, semester, odd, even };
+    });
 };

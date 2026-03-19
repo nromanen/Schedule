@@ -56,20 +56,14 @@ const TeacherTemporaryCardCell = (props) => {
         const roomStr = place !== places.ONLINE && card.room ? `, ${card.room}` : '';
 
         return (
-            <div className="lesson-cell-wrapper">
-                <div
-                    className="lesson-type-bar"
-                    style={{ backgroundColor: barColor }}
-                />
-                <p className="lesson-subject">
-                    {card.subjectForSite}
-                </p>
-                <p className="lesson-details">
-                    ({lessonTypeLabel}{roomStr})
-                </p>
-                <p className="lesson-teacher">
-                    {card.group?.title}
-                </p>
+            <div
+                className="lesson-cell-wrapper"
+                style={{ borderLeft: `4px solid ${card.semesterColor ?? 'transparent'}` }}
+            >
+                <div className="lesson-type-bar" style={{ backgroundColor: barColor }} />
+                <p className="lesson-subject">{card.subjectForSite}</p>
+                <p className="lesson-details">({lessonTypeLabel}{roomStr})</p>
+                <p className="lesson-teacher">{card.group?.title}</p>
                 {meetingLink}
             </div>
         );
@@ -113,20 +107,14 @@ const TeacherTemporaryCardCell = (props) => {
     const meetingLink = card.linkToMeeting && setLink(card, place);
 
     return (
-        <div className="lesson-cell-wrapper grouped-lesson">
-            <div
-                className="lesson-type-bar"
-                style={{ backgroundColor: barColor }}
-            />
-            <p className="lesson-subject">
-                {card.subjectForSite}
-            </p>
-            <p className="lesson-details">
-                ({lessonTypeLabel}{roomStr})
-            </p>
-            <p className="lesson-teacher">
-                {groupTitles.join(', ')}
-            </p>
+        <div
+            className="lesson-cell-wrapper grouped-lesson"
+            style={{ borderLeft: `4px solid ${card.semesterColor ?? 'transparent'}` }}
+        >
+            <div className="lesson-type-bar" style={{ backgroundColor: barColor }} />
+            <p className="lesson-subject">{card.subjectForSite}</p>
+            <p className="lesson-details">({lessonTypeLabel}{roomStr})</p>
+            <p className="lesson-teacher">{groupTitles.join(', ')}</p>
             {meetingLink}
         </div>
     );

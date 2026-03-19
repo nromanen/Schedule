@@ -184,6 +184,13 @@ export const getTeacherScheduleSuccess = (schedule) => {
     };
 };
 
+export const selectTeacherActiveSemestersScheduleStart = (teacherId) => {
+    return {
+        type: actionTypes.GET_TEACHER_ACTIVE_SEMESTERS_SCHEDULE_START,
+        teacherId,
+    };
+};
+
 export const setScheduleType = (newType) => {
     return {
         type: actionTypes.SET_SCHEDULE_TYPE,

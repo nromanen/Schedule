@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,15 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
 
     private static final String HQL_SET_DEFAULT_SEMESTER =
             "UPDATE Semester s SET s.defaultSemester = true WHERE s.id = :semesterId";
+
+    private static final String HQL_GET_SEMESTERS_ACTIVE_THIS_WEEK =
+            "SELECT DISTINCT s FROM Semester s " +
+                    "LEFT JOIN FETCH s.periods " +
+                    "LEFT JOIN FETCH s.groups " +
+                    "LEFT JOIN FETCH s.daysOfWeek " +
+                    "WHERE s.disable = false " +
+                    "AND s.startDay <= :weekEnd " +
+                    "AND s.endDay >= :weekStart";
 
     private static final String PARAM_DESCRIPTION = "description";
     private static final String PARAM_YEAR = "year";
@@ -167,6 +177,18 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
         return sessionFactory.getCurrentSession()
                 .createQuery(HQL_SELECT_PERIODS_WITH_LESSONS, Period.class)
                 .setParameter(Constants.SEMESTER_ID, semesterId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Semester> getSemestersActiveThisWeek() {
+        log.info("In getSemestersActiveThisWeek()");
+        LocalDate weekStart = LocalDate.now().with(DayOfWeek.MONDAY);
+        LocalDate weekEnd = LocalDate.now().with(DayOfWeek.SUNDAY);
+        return sessionFactory.getCurrentSession()
+                .createQuery(HQL_GET_SEMESTERS_ACTIVE_THIS_WEEK, Semester.class)
+                .setParameter("weekStart", weekStart)
+                .setParameter("weekEnd", weekEnd)
                 .getResultList();
     }
 }

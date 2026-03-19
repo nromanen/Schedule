@@ -246,9 +246,10 @@
     "today_schedule": "Today",
     "full_week_schedule": "All days",
     "no_classes_today": "No classes today",
-    "my_lessons": "Links for my lessons in semester",
-    "my_schedule": "My schedule",
+    "my_lessons": "Links for my lessons",
+    "my_schedule": "My schedule (all semesters)",
     "loading": "Loading",
     "link": "link",
-    "semester_ended": "Semester ended"
+    "semester_ended": "Semester ended",
+    "teacher_full_schedule": "Full teacher schedule"
 }

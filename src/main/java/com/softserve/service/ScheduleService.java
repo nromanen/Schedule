@@ -200,5 +200,7 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
 
     @Transactional
     List<Long> deleteScheduleById(Long id);
+
+    List<ScheduleForTeacherDTO> getScheduleForTeacherForActiveSemesters(Long teacherId);
 }
 

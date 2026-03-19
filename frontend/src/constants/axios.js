@@ -17,6 +17,7 @@ export const TEACHER_URL = 'teachers';
 export const DISABLED_TEACHERS_URL = 'teachers/disabled';
 export const TEACHERS_WITH_EMAIL_URL = 'teachers/with-email';
 export const TEACHER_SCHEDULE_URL = 'schedules/full/teachers?semesterId=';
+export const TEACHER_ACTIVE_SEMESTERS_SCHEDULE_URL = 'schedules/full/teachers/active?teacherId=';
 export const TEACHER_TEMPORARY_SCHEDULE = 'schedules/full/teachers/date-range';
 export const FOR_TEACHER_SCHEDULE_URL = 'schedules/teacher';
 export const LESSON_BY_TEACHER_URL = '/lessons/teacher';

@@ -57,9 +57,13 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleMapper scheduleMapper;
     private final RoomRepository roomRepository;
     private final PeriodRepository periodRepository;
+    private final SemesterMapper semesterMapper;
+    private final TeacherMapper teacherMapper;
 
     @PersistenceContext
     private EntityManager entityManager;
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -793,5 +797,83 @@ public class ScheduleServiceImpl implements ScheduleService {
         }
 
         return deletedIds;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "scheduleForTeacherActiveSemesters", key = "#teacherId")
+    public List<ScheduleForTeacherDTO> getScheduleForTeacherForActiveSemesters(Long teacherId) {
+        log.info("In getScheduleForTeacherForActiveSemesters(teacherId = [{}])", teacherId);
+
+        List<Schedule> schedules = scheduleRepository.getScheduleForTeacherForActiveSemesters(teacherId);
+
+        if (schedules.isEmpty()) {
+            return List.of();
+        }
+
+        TeacherDTO teacherDTO = teacherMapper.teacherToTeacherDTO(
+                schedules.get(0).getLesson().getTeacher());
+
+        Map<Semester, List<Schedule>> bySemester = schedules.stream()
+                .collect(Collectors.groupingBy(s -> s.getLesson().getSemester()));
+
+        return bySemester.entrySet().stream()
+                .map(entry -> {
+                    ScheduleForTeacherDTO dto = new ScheduleForTeacherDTO();
+                    dto.setSemester(semesterMapper.semesterToSemesterDTO(entry.getKey()));
+                    dto.setTeacher(teacherDTO);
+
+                    Map<DayOfWeek, List<Schedule>> byDay = entry.getValue().stream()
+                            .collect(Collectors.groupingBy(Schedule::getDayOfWeek));
+
+                    List<DaysOfWeekWithClassesForTeacherDTO> days = byDay.entrySet().stream()
+                            .sorted(Map.Entry.comparingByKey(
+                                    Comparator.comparingInt(DayOfWeek::getValue)))
+                            .map(dayEntry -> {
+                                DaysOfWeekWithClassesForTeacherDTO dayDto =
+                                        new DaysOfWeekWithClassesForTeacherDTO();
+                                dayDto.setDay(dayEntry.getKey());
+                                dayDto.setEvenWeek(buildClassesForWeek(dayEntry.getValue(), EvenOdd.EVEN));
+                                dayDto.setOddWeek(buildClassesForWeek(dayEntry.getValue(), EvenOdd.ODD));
+                                return dayDto;
+                            })
+                            .toList();
+
+                    dto.setDays(days);
+                    return dto;
+                })
+                .toList();
+    }
+
+    private ClassesInScheduleForTeacherDTO buildClassesForWeek(List<Schedule> schedules, EvenOdd evenOdd) {
+        ClassesInScheduleForTeacherDTO dto = new ClassesInScheduleForTeacherDTO();
+
+        List<ClassForTeacherScheduleDTO> classes = schedules.stream()
+                .filter(s -> s.getEvenOdd() == evenOdd || s.getEvenOdd() == EvenOdd.WEEKLY)
+                .collect(Collectors.groupingBy(Schedule::getPeriod))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByKey(
+                        Comparator.comparing(Period::getStartTime)))
+                .map(entry -> {
+                    ClassForTeacherScheduleDTO classDto = new ClassForTeacherScheduleDTO();
+                    classDto.setPeriod(periodMapper.convertToDto(entry.getKey()));
+
+                    List<LessonForTeacherScheduleDTO> lessons = entry.getValue().stream()
+                            .map(s -> {
+                                LessonForTeacherScheduleDTO lessonDto =
+                                        lessonForTeacherScheduleMapper
+                                                .lessonToLessonForTeacherScheduleDTO(s.getLesson());
+                                lessonDto.setRoom(s.getRoom().getName());
+                                return lessonDto;
+                            })
+                            .toList();
+
+                    classDto.setLessons(lessons);
+                    return classDto;
+                })
+                .toList();
+
+        dto.setPeriods(classes);
+        return dto;
     }
 }

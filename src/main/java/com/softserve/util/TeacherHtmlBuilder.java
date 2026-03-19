@@ -22,16 +22,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TeacherHtmlBuilder {
 
-    private static final Map<DayOfWeek, String> DAY_KEYS = Map.of(
-            DayOfWeek.MONDAY, "schedule.monday",
-            DayOfWeek.TUESDAY, "schedule.tuesday",
-            DayOfWeek.WEDNESDAY, "schedule.wednesday",
-            DayOfWeek.THURSDAY, "schedule.thursday",
-            DayOfWeek.FRIDAY, "schedule.friday",
-            DayOfWeek.SATURDAY, "schedule.saturday",
-            DayOfWeek.SUNDAY, "schedule.sunday"
-    );
-
     /**
      * Builds a complete HTML document for a teacher schedule.
      *
@@ -49,10 +39,7 @@ public class TeacherHtmlBuilder {
             }
         }
 
-        // Only days that have at least one lesson
         List<DayOfWeek> activeDays = getActiveDays(dayMap);
-
-        // All periods, then trim to min-max occupied range
         List<PeriodDTO> allPeriods = collectSortedPeriods(schedule);
         List<PeriodDTO> periods = trimPeriodsToOccupied(allPeriods, dayMap);
 
@@ -62,27 +49,23 @@ public class TeacherHtmlBuilder {
         html.append("<!DOCTYPE html>");
         html.append("<html lang=\"").append(language.getLanguage()).append("\">");
         html.append("<head><meta charset=\"UTF-8\"/>");
-        html.append("<style>").append(SchedulePdfStyles.get()).append("</style>");
+        html.append("<style>").append(SchedulePdfStyles.get(false)).append("</style>");
         html.append("</head><body>");
 
-        // Header: "Розклад для ПІБ, посада (семестр)"
-        html.append("<div class=\"header__title\">");
-        html.append(esc(bundle.getString("schedule.group.for")))
+        // Build title: "Розклад для ПІБ, посада (семестр)"
+        StringBuilder title = new StringBuilder();
+        title.append(ScheduleHtmlUtils.esc(bundle.getString("schedule.group.for")))
                 .append(" ")
-                .append(esc(formatTeacherFull(teacher)));
+                .append(ScheduleHtmlUtils.esc(ScheduleHtmlUtils.formatTeacherFull(teacher)));
         if (teacher != null && teacher.getPosition() != null && !teacher.getPosition().isBlank()) {
-            html.append(", ").append(esc(teacher.getPosition()));
+            title.append(", ").append(ScheduleHtmlUtils.esc(teacher.getPosition()));
         }
         if (schedule.getSemester() != null && schedule.getSemester().getDescription() != null
                 && !schedule.getSemester().getDescription().isBlank()) {
-            html.append(" (").append(esc(schedule.getSemester().getDescription())).append(")");
+            title.append(" (").append(ScheduleHtmlUtils.esc(schedule.getSemester().getDescription())).append(")");
         }
-        html.append("</div>");
+        html.append(ScheduleHtmlUtils.buildHeader(title.toString(), bundle));
 
-        // Legend
-        html.append(SchedulePdfStyles.legendHtml(bundle));
-
-        // Table
         html.append("<table class=\"schedule\">");
         html.append("<colgroup><col class=\"col-time\"/>");
         for (int i = 0; i < activeDays.size(); i++) {
@@ -91,18 +74,16 @@ public class TeacherHtmlBuilder {
         html.append("</colgroup>");
 
         html.append("<thead><tr>");
-        html.append("<th>").append(esc(bundle.getString("schedule.pair"))).append("</th>");
+        html.append("<th>").append(ScheduleHtmlUtils.esc(bundle.getString("schedule.pair"))).append("</th>");
         for (DayOfWeek day : activeDays) {
-            html.append("<th>").append(esc(getDayName(day, bundle))).append("</th>");
+            html.append("<th>").append(ScheduleHtmlUtils.esc(ScheduleHtmlUtils.getDayName(day, bundle))).append("</th>");
         }
         html.append("</tr></thead><tbody>");
 
-        // Each period = 2 rows (even + odd)
         for (PeriodDTO period : periods) {
             // Row 1: even week
             html.append("<tr class=\"even\">");
             html.append(SchedulePdfStyles.timeCellHtml(period));
-
             for (DayOfWeek dayOfWeek : activeDays) {
                 html.append("<td>");
                 DaysOfWeekWithClassesForTeacherDTO dayData = dayMap.get(dayOfWeek);
@@ -159,7 +140,7 @@ public class TeacherHtmlBuilder {
                 .map(Map.Entry::getKey)
                 .orElse("");
 
-        // Pick lessonType from first lesson with the chosen subject, or just first
+        // Pick representative lesson: first with chosen subject, or just first
         LessonForTeacherScheduleDTO representative = lessons.stream()
                 .filter(l -> subject.equals(l.getSubjectForSite()))
                 .findFirst()
@@ -173,37 +154,38 @@ public class TeacherHtmlBuilder {
                 .sorted()
                 .collect(Collectors.joining(", "));
 
-        // Room from representative
         String room = representative.getRoom();
+        String link = representative.getLinkToMeeting();
+        boolean hasRoom = room != null && !room.isBlank();
+        boolean hasLink = link != null && !link.isBlank();
 
         String cssType = SchedulePdfStyles.mapLessonTypeToCss(
                 representative.getLessonType() != null ? representative.getLessonType().name() : null);
-        String typeName = SchedulePdfStyles.mapLessonTypeToDisplay(
-                representative.getLessonType() != null ? representative.getLessonType().name() : null, bundle);
 
         StringBuilder sb = new StringBuilder();
         sb.append("<div class=\"card card--").append(cssType).append("\">");
-        sb.append("<div class=\"card__type\">").append(esc(typeName)).append("</div>");
-        sb.append("<div class=\"card__subject\">").append(esc(subject)).append("</div>");
+        sb.append("<div class=\"card__subject\">").append(ScheduleHtmlUtils.esc(subject)).append("</div>");
         if (!groups.isEmpty()) {
-            sb.append("<div class=\"card__info\">").append(esc(groups)).append("</div>");
+            sb.append("<div class=\"card__info\">").append(ScheduleHtmlUtils.esc(groups)).append("</div>");
         }
-        if (room != null && !room.isBlank()) {
-            sb.append("<div><span class=\"card__room\">").append(esc(room)).append("</span></div>");
-        }
-        // Link from representative lesson
-        String link = representative.getLinkToMeeting();
-        if (link != null && !link.isBlank()) {
-            sb.append("<div class=\"card__link\"><a href=\"")
-                    .append(esc(link))
-                    .append("\">").append(esc(bundle.getString("schedule.link")))
-                    .append("</a></div>");
+        if (hasRoom || hasLink) {
+            sb.append("<div class=\"card__footer\">");
+            if (hasRoom) {
+                sb.append("<span class=\"card__room\">").append(ScheduleHtmlUtils.esc(room)).append("</span>");
+            }
+            if (hasLink) {
+                sb.append(" <a class=\"card__link\" href=\"")
+                        .append(ScheduleHtmlUtils.esc(link))
+                        .append("\">").append(ScheduleHtmlUtils.esc(bundle.getString("schedule.link")))
+                        .append("</a>");
+            }
+            sb.append("</div>");
         }
         sb.append("</div>");
         return sb.toString();
     }
 
-    // ==================== Active days (only with lessons) ====================
+    // ==================== Active days ====================
 
     /**
      * Returns only days of the week that have at least one lesson.
@@ -242,7 +224,7 @@ public class TeacherHtmlBuilder {
                         .anyMatch(l -> l.getSubjectForSite() != null && !l.getSubjectForSite().isBlank()));
     }
 
-    // ==================== Period range (min to max occupied) ====================
+    // ==================== Period range ====================
 
     /**
      * Trims the full list of periods to only those from the earliest occupied
@@ -264,7 +246,6 @@ public class TeacherHtmlBuilder {
             collectOccupiedPeriodIds(day.getOddWeek(), occupiedPeriodIds);
         }
 
-        // Find first and last occupied index
         int first = -1;
         int last = -1;
         for (int i = 0; i < allPeriods.size(); i++) {
@@ -358,57 +339,5 @@ public class TeacherHtmlBuilder {
                 map.putIfAbsent(cls.getPeriod().getId(), cls.getPeriod());
             }
         }
-    }
-
-    /**
-     * Formats a teacher's full name: Surname Name Patronymic.
-     *
-     * @param t the teacher DTO
-     * @return formatted full name
-     */
-    private String formatTeacherFull(TeacherDTO t) {
-        if (t == null) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder();
-        if (t.getSurname() != null) {
-            sb.append(t.getSurname());
-        }
-        if (t.getName() != null) {
-            sb.append(" ").append(t.getName());
-        }
-        if (t.getPatronymic() != null) {
-            sb.append(" ").append(t.getPatronymic());
-        }
-        return sb.toString().trim();
-    }
-
-    /**
-     * Returns localized day name from resource bundle.
-     *
-     * @param day    the day of week
-     * @param bundle resource bundle with day name translations
-     * @return localized day name
-     */
-    private static String getDayName(DayOfWeek day, ResourceBundle bundle) {
-        String key = DAY_KEYS.get(day);
-        if (key != null) {
-            return bundle.getString(key);
-        }
-        return day.name();
-    }
-
-    /**
-     * Escapes HTML special characters.
-     *
-     * @param text the text to escape
-     * @return escaped text safe for HTML
-     */
-    private static String esc(String text) {
-        if (text == null) {
-            return "";
-        }
-        return text.replace("&", "&amp;").replace("<", "&lt;")
-                .replace(">", "&gt;").replace("\"", "&quot;");
     }
 }

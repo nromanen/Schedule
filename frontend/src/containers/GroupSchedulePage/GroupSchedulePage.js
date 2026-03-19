@@ -5,6 +5,7 @@ import {
     selectGroupSchedule,
     selectTeacherSchedule,
     selectDepartmentSchedule,
+    selectTeacherActiveSemestersScheduleStart,
 } from '../../actions/schedule';
 import GroupSchedulePage from '../../components/GroupSchedulePage/GroupSchedulePage';
 
@@ -31,6 +32,7 @@ const mapDispatchToProps = (dispatch) => ({
     getTeacherSchedule: (semester, teacher) => dispatch(selectTeacherSchedule(semester, teacher)),
     getFullSchedule: (semester) => dispatch(selectFullSchedule(semester)),
     getDepartmentSchedule: (semester, department) => dispatch(selectDepartmentSchedule(semester, department)),
+    getTeacherActiveSemestersSchedule: (teacherId) => dispatch(selectTeacherActiveSemestersScheduleStart(teacherId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GroupSchedulePage);

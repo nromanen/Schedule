@@ -91,4 +91,16 @@ public interface SemesterRepository extends BasicRepository<Semester, Long> {
      * @return the list of periods
      */
     List<Period> getPeriodsWithLessonsBySemesterId(Long semesterId);
+
+    /**
+     * Retrieves all semesters that are active during the current week (Monday to Sunday).
+     * A semester is considered active if it has already started (startDay is not after
+     * the end of the current week) and has not yet ended (endDay is not before
+     * the start of the current week).
+     * Only non-disabled semesters are returned.
+     *
+     * @return a list of {@link Semester} objects active during the current week,
+     *         or an empty list if none are found
+     */
+    List<Semester> getSemestersActiveThisWeek();
 }

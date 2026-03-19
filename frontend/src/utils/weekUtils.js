@@ -35,3 +35,24 @@ export const getWeekParity = (startDate, currentDate = new Date()) => {
 
     return additionalWeeks + 1;
 };
+
+// Returns the reference semester — the one that started earliest
+export const getReferenceSemester = (schedules) => {
+    return schedules.reduce((earliest, s) =>
+            transformSemesterDate(s.semester.startDay) < transformSemesterDate(earliest.semester.startDay)
+                ? s
+                : earliest
+        , schedules[0]);
+};
+
+// Returns a function that maps a week key (odd/even) for a given semester
+// relative to the reference semester's parity.
+// If parities match — returns the original key unchanged.
+// If parities differ — swaps odd↔even.
+export const getWeekKeyForSemester = (semester, referenceSemester) => (originalKey) => {
+    const semesterWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
+    const referenceWeekIsOdd = getWeekParity(referenceSemester.semester.startDay) % 2 === 1;
+    const isSynced = semesterWeekIsOdd === referenceWeekIsOdd;
+    if (isSynced) return originalKey;
+    return originalKey === 'odd' ? 'even' : 'odd';
+};

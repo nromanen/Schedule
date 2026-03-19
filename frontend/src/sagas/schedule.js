@@ -17,7 +17,7 @@ import {
     SCHEDULE_ITEMS_URL,
     SCHEDULE_SEMESTER_ITEMS_URL,
     SEND_PDF_TO_EMAIL,
-    TEACHER_SCHEDULE_URL,
+    TEACHER_SCHEDULE_URL, TEACHER_ACTIVE_SEMESTERS_SCHEDULE_URL,
 } from '../constants/axios';
 import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
 import {COMMON_SCHEDULE_TITLE, NO_CURRENT_SEMESTER_ERROR,} from '../constants/translationLabels/common';
@@ -296,6 +296,39 @@ export function* getTeacherSchedule({ teacherId, semesterId }) {
     }
 }
 
+export function* selectTeacherActiveSemestersSchedule({ teacherId }) {
+    // Load teachers if not yet loaded
+    const teachers = yield select((state) => state.teachers.teachers);
+    if (isEmpty(teachers)) yield call(getAllPublicTeachers);
+
+    // Set schedule type and teacher
+    yield put(setScheduleType(TEACHER));
+    const allTeachers = yield select((state) => state.teachers.teachers);
+    const teacher = allTeachers.find((item) => item.id === Number(teacherId));
+    yield put(setScheduleTeacher(teacher));
+
+    yield call(getTeacherActiveSemestersSchedule, { teacherId });
+}
+
+export function* getTeacherActiveSemestersSchedule({ teacherId }) {
+    const requestUrl = `${TEACHER_ACTIVE_SEMESTERS_SCHEDULE_URL}${teacherId}`;
+    try {
+        yield put(setMainScheduleLoading(true));
+        const { data } = yield call(axiosCall, requestUrl);
+
+        if (data.published === false) {
+            yield put(setScheduleNotPublished(data.message));
+            return;
+        }
+
+        yield put(getTeacherScheduleSuccess(data));
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setMainScheduleLoading(false));
+    }
+}
+
 export function* sendTeacherSchedule({ data }) {
     try {
         const teachersId = data.teachersId.map((teacherId) => `teachersId=${teacherId}`).join('&');
@@ -389,6 +422,7 @@ export default function* watchSchedule() {
     );
     yield takeLatest(actionTypes.GET_ALL_PUBLIC_SEMESTERS_START, getAllPublicSemesters);
     yield takeLatest(actionTypes.SEND_TEACHER_SCHEDULE_START, sendTeacherSchedule);
+    yield takeLatest(actionTypes.GET_TEACHER_ACTIVE_SEMESTERS_SCHEDULE_START, selectTeacherActiveSemestersSchedule);
     yield takeLatest(actionTypes.GET_TEACHER_RANGE_SCHEDULE_START, getTeacherRangeSchedule);
     yield takeLatest(actionTypes.GET_ALL_SCHEDULE_ITEMS_START, getScheduleItems);
     yield takeEvery(actionTypes.ADD_ITEM_TO_SCHEDULE_START, addItemsToSchedule);

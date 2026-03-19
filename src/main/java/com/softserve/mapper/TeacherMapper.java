@@ -35,6 +35,8 @@ public abstract class TeacherMapper {
     public abstract TeacherImportDTO teacherToTeacherImportDTO(Teacher teacher);
 
     @Named("userIdToEmail")
+    // TODO: Move email resolution out of mapper to avoid DB call during mapping.
+//  Consider fetching email via JOIN in the repository layer instead.
     public String userIdToEmail(Long userId) {
         if (userId != null) {
             return userService.getById(userId).getEmail();
