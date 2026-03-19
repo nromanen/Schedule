@@ -52,7 +52,6 @@ public class TeacherHtmlBuilder {
         html.append("<style>").append(SchedulePdfStyles.get(false)).append("</style>");
         html.append("</head><body>");
 
-        // Build title: "Розклад для ПІБ, посада (семестр)"
         StringBuilder title = new StringBuilder();
         title.append(ScheduleHtmlUtils.esc(bundle.getString("schedule.group.for")))
                 .append(" ")
@@ -65,6 +64,13 @@ public class TeacherHtmlBuilder {
             title.append(" (").append(ScheduleHtmlUtils.esc(schedule.getSemester().getDescription())).append(")");
         }
         html.append(ScheduleHtmlUtils.buildHeader(title.toString(), bundle));
+        if (periods.isEmpty()) {
+            html.append("<p class=\"empty-schedule\">")
+                    .append(ScheduleHtmlUtils.esc(bundle.getString("schedule.empty")))
+                    .append("</p>");
+            html.append("</body></html>");
+            return html.toString();
+        }
 
         html.append("<table class=\"schedule\">");
         html.append("<colgroup><col class=\"col-time\"/>");

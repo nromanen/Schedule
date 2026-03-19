@@ -49,6 +49,13 @@ public class GroupHtmlBuilder {
         String title = ScheduleHtmlUtils.esc(bundle.getString("schedule.group.for"))
                 + " " + ScheduleHtmlUtils.esc(schedule.getGroup().getTitle());
         html.append(ScheduleHtmlUtils.buildHeader(title, bundle));
+        if (periods.isEmpty()) {
+            html.append("<p class=\"empty-schedule\">")
+                    .append(ScheduleHtmlUtils.esc(bundle.getString("schedule.empty")))
+                    .append("</p>");
+            html.append("</body></html>");
+            return html.toString();
+        }
 
         html.append("<table class=\"schedule\">");
         html.append("<colgroup><col class=\"col-time\"/>");

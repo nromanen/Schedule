@@ -117,7 +117,7 @@ const TeachersPage = (props) => {
         const teachersId = selected.map((item) => {
             return item.id;
         });
-        const semesterId = selectedSemester === '' && id;
+        const semesterId = selectedSemester !== '' ? selectedSemester.value : id;
         const { language } = i18n;
         const data = { semesterId, teachersId, language };
         sendTeacherSchedule(data);
