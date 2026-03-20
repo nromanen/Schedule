@@ -9,7 +9,7 @@ import DepartmentDownloadLink from '../components/DownloadLink/DepartmentDownloa
 import { matchDayNumberSysytemToDayName } from './renderScheduleTable';
 import CalendarSchedule, {isShortSemester} from "../components/CalendarSchedule/CalendarSchedule";
 import CalendarGroupSchedule from "../components/CalendarSchedule/CalendarGroupSchedule";
-import {getWeekParity} from "../utils/weekUtils";
+import {getWeekParity, transformSemesterDate} from "../utils/weekUtils";
 import {getTeacherWithPosition} from "./renderTeacher";
 import { buildMergedTeacherSchedule } from '../helper/mergeTeacherSchedules';
 import { SEMESTER_COLORS } from '../constants/semesterColors';
@@ -129,9 +129,12 @@ const renderSchedule = (props) => {
         }
 
         case 'teacher': {
-            const schedules = Array.isArray(teacherSchedule)
+            const schedules = (Array.isArray(teacherSchedule)
                 ? teacherSchedule
-                : [teacherSchedule];
+                : [teacherSchedule])
+                .sort((a, b) =>
+                    transformSemesterDate(a.semester.startDay) - transformSemesterDate(b.semester.startDay)
+                );
 
             const hasAnyClasses = schedules.some(
                 ({ odd, even }) => !isEmpty(odd?.classes) || !isEmpty(even?.classes)
