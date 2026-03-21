@@ -1,13 +1,16 @@
 import { SEMESTER_COLORS } from '../constants/semesterColors';
 import { getReferenceSemester, getWeekKeyForSemester } from '../utils/weekUtils';
 
-// Collects all unique day names across all semesters
+
+const DAY_ORDER = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+
+// Collects all unique day names across all semesters, sorted by day of week
 export const getAllDays = (schedules) => [
     ...new Set(schedules.flatMap(s => [
         ...(s.odd?.days ?? []),
         ...(s.even?.days ?? []),
     ]))
-];
+].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
 
 // Collects all unique classes across all semesters, sorted by start time
 export const getAllClasses = (schedules) => Object.values(

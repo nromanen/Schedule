@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/schedule}
     username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
 
     hikari:
@@ -15,9 +15,6 @@ spring:
         prepareThreshold: 1
         preparedStatementCacheQueries: 256
         preparedStatementCacheSizeMiB: 5
-
-openapi:
-  server-url: localhost:3000/
 
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
@@ -42,7 +39,7 @@ openapi:
   mail:
     host: ${MAIL_HOST:smtp-relay.brevo.com}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:a}
+    username: ${MAIL_USERNAME:m}
     password: ${MAIL_PASSWORD:}
     properties:
       mail:
@@ -51,18 +48,8 @@ openapi:
           starttls:
             enable: true
 
-#  mail:
-#    host: ${MAIL_HOST:smtp-relay.brevo.com}
-#    port: ${MAIL_PORT:587}
-#    username: ${MAIL_USERNAME:a335c2001@smtp-brevo.com}
-#    password: ${MAIL_PASSWORD:xsmtpsib-fbcd5f641956f72952457a80fce80b2ecd4b581aa3251a441fdf2cdb626d6d97-JQ4QkLdftfHXmpZG}
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
-
+openapi:
+  server-url: localhost:8080/
 
 # Hibernate
 hibernate:
@@ -80,7 +67,7 @@ app:
       secret: ${JWT_SECRET:jwttoken}
       expired: ${JWT_EXPIRED:24h}
   frontend:
-    url: ${FRONTEND_URL:http://localhost:3000/}
+    url: ${FRONTEND_URL:http://localhost:8080/}
   backend:
     url: ${BACKEND_URL:http://localhost:8080/}
   cors:

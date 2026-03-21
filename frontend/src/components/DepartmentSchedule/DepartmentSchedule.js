@@ -11,7 +11,6 @@ import {
     matchDayNumberSysytemToDayName,
 } from '../../helper/renderScheduleTable';
 
-import { lessonTypeColors } from '../GroupSchedulePage/LessonTemporaryCardCell';
 import i18n from '../../i18n';
 import './DepartmentSchedule.scss';
 import {getWeekParity, isWeekOdd} from "../../utils/weekUtils";
@@ -28,14 +27,10 @@ const renderClassCell = (classItem) => {
 
 const renderLessonCell = (lesson, groupTitles) => {
     if (!lesson) return <span className="empty-cell">-</span>;
-    const color = lessonTypeColors[lesson.lessonType?.toLowerCase()] || '#757575';
 
     return (
         <div className="lesson-cell">
-            <div className="subject">
-                <span className="lesson-type-dot" style={{ backgroundColor: color }} />
-                {lesson.subjectForSite}
-            </div>
+            <div className="subject">{lesson.subjectForSite}</div>
             <div className="group">{groupTitles.join(', ')}</div>
             <div className="room">
                 {lesson.room?.name}
@@ -55,12 +50,28 @@ const renderLessonCell = (lesson, groupTitles) => {
     );
 };
 
+const getLessonTypeClass = (lesson) =>
+    `type-${lesson?.lessonType?.toLowerCase() || 'default'}`;
+
 const isRowEmpty = (cards, teachers) => {
     if (!cards || cards.length === 0) return true;
     return teachers.every(teacher => {
         const lesson = cards.find(c => c.card?.teacher?.id === teacher.id)?.card;
         return !lesson;
     });
+};
+
+const getMaxUsedClassIndexForDay = (dayData, teachers) => {
+    let maxIndex = -1;
+    dayData.classes.forEach((classData, classIndex) => {
+        const hasLesson =
+            [...(classData.cards.odd || []), ...(classData.cards.even || [])]
+                .some(c => teachers.some(t => t.id === c.card?.teacher?.id));
+        if (hasLesson && classIndex > maxIndex) {
+            maxIndex = classIndex;
+        }
+    });
+    return maxIndex;
 };
 
 const DepartmentSchedule = ({fullSchedule, departmentId}) => {
@@ -96,14 +107,21 @@ const DepartmentSchedule = ({fullSchedule, departmentId}) => {
         return <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>;
     }
 
+    const maxClassIndex = Math.max(
+        ...resultArray.map(dayData => getMaxUsedClassIndexForDay(dayData, teachers))
+    );
+
+    if (maxClassIndex === -1) {
+        return <p className="empty_schedule">{i18n.t('common:empty_schedule')}</p>;
+    }
+
     return (
         <TableContainer className="department-schedule">
             <Table size="small">
                 <TableHead>
                     <TableRow>
-                        <TableCell className="header-cell day-header">{i18n.t('common:day_label')}</TableCell>
-                        <TableCell className="header-cell class-header">{i18n.t('common:class_label')}</TableCell>
-                        <TableCell className="header-cell week-header">{i18n.t('common:week_label')}</TableCell>
+                        <TableCell className="header-cell day-header"></TableCell>
+                        <TableCell className="header-cell class-header" colSpan={2}>{i18n.t('classweek_label')}</TableCell>
                         {teachers.map(teacher => (
                             <TableCell key={teacher.id} className="header-cell teacher-header">
                                 {`${teacher.surname} ${teacher.name?.charAt(0) || ''}.${teacher.patronymic?.charAt(0) || ''}.`}
@@ -113,21 +131,22 @@ const DepartmentSchedule = ({fullSchedule, departmentId}) => {
                 </TableHead>
                 <TableBody>
                     {resultArray.map((dayData, dayIndex) => {
-                        const classCount = dayData.classes.length;
+                        // const maxClassIndex = getMaxUsedClassIndexForDay(dayData, teachers);
 
-                        return dayData.classes.map((classData, classIndex) => (
+                        // if (maxClassIndex === -1) return null;
+
+                        const filteredClasses = dayData.classes.filter((_, i) => i <= maxClassIndex);
+                        const classCount = filteredClasses.length;
+
+                        return filteredClasses.map((classData, classIndex) => (
                             <React.Fragment key={`${dayData.day}_${classData.class.id}`}>
-                                {/* Odd week row */}
                                 <TableRow
                                     className={`${dayIndex % 2 === 0 ? 'day-even' : 'day-odd'} week-odd ${
                                         isRowEmpty(classData.cards.odd, teachers) ? 'all-free' : ''
                                     } ${dayData.day === currentDay && currentWeekType ? 'currentDay' : ''}`}
                                 >
                                     {classIndex === 0 && (
-                                        <TableCell
-                                            rowSpan={classCount * 2}
-                                            className="day-cell"
-                                        >
+                                        <TableCell rowSpan={classCount * 2} className="day-cell">
                                             {i18n.t(`common:day_of_week_${dayData.day}`)}
                                         </TableCell>
                                     )}
@@ -141,15 +160,16 @@ const DepartmentSchedule = ({fullSchedule, departmentId}) => {
                                         const lesson = matchedCards[0]?.card;
                                         const groupTitles = matchedCards.map(c => c.group?.title).filter(Boolean);
                                         return (
-                                            <TableCell key={`${teacher.id}_odd`} className="lesson-cell-wrapper">
+                                            <TableCell key={`${teacher.id}_odd`} className={`lesson-cell-wrapper ${getLessonTypeClass(lesson)}`}>
                                                 {renderLessonCell(lesson, groupTitles)}
                                             </TableCell>
                                         );
                                     })}
                                 </TableRow>
-                                {/* Even week row */}
                                 <TableRow
-                                    className={`${dayIndex % 2 === 0 ? 'day-even' : 'day-odd'} week-even ${classIndex === classCount - 1 ? 'day-last' : 'class-last'} ${
+                                    className={`${dayIndex % 2 === 0 ? 'day-even' : 'day-odd'} week-even ${
+                                        classIndex === classCount - 1 ? 'day-last' : 'class-last'
+                                    } ${
                                         isRowEmpty(classData.cards.even, teachers) ? 'all-free' : ''
                                     } ${dayData.day === currentDay && !currentWeekType ? 'currentDay' : ''}`}
                                 >
@@ -160,7 +180,7 @@ const DepartmentSchedule = ({fullSchedule, departmentId}) => {
                                         const lesson = matchedCards[0]?.card;
                                         const groupTitles = matchedCards.map(c => c.group?.title).filter(Boolean);
                                         return (
-                                            <TableCell key={`${teacher.id}_even`} className="lesson-cell-wrapper">
+                                            <TableCell key={`${teacher.id}_even`} className={`lesson-cell-wrapper ${getLessonTypeClass(lesson)}`}>
                                                 {renderLessonCell(lesson, groupTitles)}
                                             </TableCell>
                                         );

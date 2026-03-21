@@ -43,7 +43,7 @@ public class GroupHtmlBuilder {
         html.append("<!DOCTYPE html>");
         html.append("<html lang=\"").append(language.getLanguage()).append("\">");
         html.append("<head><meta charset=\"UTF-8\"/>");
-        html.append("<style>").append(SchedulePdfStyles.get(true)).append("</style>");
+        html.append("<style>").append(SchedulePdfStyles.get(true, activeDays.size())).append("</style>");
         html.append("</head><body>");
 
         String title = ScheduleHtmlUtils.esc(bundle.getString("schedule.group.for"))
@@ -59,10 +59,6 @@ public class GroupHtmlBuilder {
 
         html.append("<table class=\"schedule\">");
         html.append("<colgroup><col class=\"col-time\"/>");
-        for (int i = 0; i < activeDays.size(); i++) {
-            html.append("<col/>");
-        }
-        html.append("</colgroup>");
 
         html.append("<thead><tr>");
         html.append("<th>").append(ScheduleHtmlUtils.esc(bundle.getString("schedule.pair"))).append("</th>");

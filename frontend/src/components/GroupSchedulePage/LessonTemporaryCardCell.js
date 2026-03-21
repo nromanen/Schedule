@@ -7,13 +7,7 @@ import i18n from '../../i18n';
 import { prepareLessonCardCell, prepareLessonSubCardCell } from '../../helper/prepareLessonCell';
 import { places } from '../../constants/places';
 import './GroupSchedulePage.scss';
-
-export const lessonTypeColors = {
-    seminar: '#8E24AA',
-    lecture: '#4a6cf7',
-    laboratory: '#e08830',
-    practical: '#0fa968'
-};
+import { getLessonTypeColor } from '../../constants/lessonTypeColors';
 
 const LessonTemporaryCardCell = (props) => {
     const { card, place, day } = props;
@@ -30,7 +24,7 @@ const LessonTemporaryCardCell = (props) => {
 
     const { temporary_schedule: tempSchedule, linkToMeeting } = card;
     const meetingLink = linkToMeeting && setLink(card, place);
-    const triangleColor = lessonTypeColors[card.lessonType?.toLowerCase()] || '#757575';
+    const triangleColor = getLessonTypeColor(card.lessonType, 'main');
 
     if (tempSchedule) {
         const { vacation, date, subjectForSite, room } = tempSchedule;

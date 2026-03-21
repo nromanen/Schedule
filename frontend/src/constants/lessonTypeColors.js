@@ -1,13 +1,11 @@
 // synchronize with styles/colors.scss
-const lessonTypeColors = {
-    lecture: '#689F38',
-    laboratory: '#1976D2',
-    practical: '#F9A825',
-    seminar: '#8E24AA',
+export const lessonTypeColors = {
+    lecture:    { main: '#4a6cf7', light: '#eef1fe' },
+    laboratory: { main: '#e08830', light: '#fef6ed' },
+    practical:  { main: '#0fa968', light: '#edfcf5' },
+    seminar:    { main: '#8E24AA', light: '#F3E5F5' },
+    default:    { main: '#6b7280', light: '#F5F5F5' },
 };
 
-const getLessonTypeColor = (lessonType) => {
-    return lessonTypeColors[lessonType?.toLowerCase()] || lessonTypeColors.default;
-};
-
-export { lessonTypeColors, getLessonTypeColor };
+export const getLessonTypeColor = (lessonType, variant = 'main') =>
+    (lessonTypeColors[lessonType?.toLowerCase()] || lessonTypeColors.default)[variant];

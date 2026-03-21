@@ -251,5 +251,6 @@
     "Unable to delete period": "Неможливо видалити пару",
     "Unable to delete department": "Неможливо видалити кафедру",
     "semester_ended": "Семестр вже завершився",
-    "teacher_full_schedule": "Повний розклад викладача"
+    "teacher_full_schedule": "Повний розклад викладача",
+    "classweek_label": "Пара/тиж."
 }

@@ -251,5 +251,6 @@
     "loading": "Loading",
     "link": "link",
     "semester_ended": "Semester ended",
-    "teacher_full_schedule": "Full teacher schedule"
+    "teacher_full_schedule": "Full teacher schedule",
+    "classweek_label": "Class/week"
 }

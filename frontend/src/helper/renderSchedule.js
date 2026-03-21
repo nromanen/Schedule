@@ -112,6 +112,7 @@ const renderSchedule = (props) => {
                         {getGroupScheduleTitle(semester, group)}
                         {downloadLink}
                     </h1>
+                    <ScheduleLegend />
                     <h2>
                         <span className={currentWeekIsOdd ? 'currentDay' : ''}>
                             {t('common:odd_week')}
@@ -155,8 +156,8 @@ const renderSchedule = (props) => {
                                 color: 'white',
                             }}
                         >
-                    {sem.description}
-                </span>
+                {sem.description} ({sem.startDay?.slice(0, 5)}-{sem.endDay?.slice(0, 5)})
+            </span>
                     ))}
                 </div>
             );
@@ -165,7 +166,10 @@ const renderSchedule = (props) => {
                 <>
                     {titleSuffix}
                     <h1>
-                        {getTeacherWithPosition(schedules[0].teacher)}
+                        {schedules.length === 1
+                            ? getTeacherScheduleTitle(schedules[0].semester, schedules[0].teacher)
+                            : getTeacherWithPosition(schedules[0].teacher)
+                        }
                         {schedules.map(({ semester: sem }) => (
                             <DownloadLink
                                 key={sem.id}
@@ -211,6 +215,7 @@ const renderSchedule = (props) => {
                             semesterEndDay={semester?.endDay}
                         />
                     </h1>
+                    <ScheduleLegend />
                     <DepartmentSchedule fullSchedule={fullSchedule} departmentId={departmentData?.id} />
                 </>
             );

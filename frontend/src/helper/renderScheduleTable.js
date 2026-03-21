@@ -17,7 +17,7 @@ import {EMPTY_SCHEDULE} from '../constants/translationLabels/common';
 import LessonTemporaryCardCell from '../containers/GroupSchedulePage/LessonTemporaryCardCell';
 import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTemporaryCardCell';
 import { places } from '../constants/places';
-import { lessonTypeColors } from '../components/GroupSchedulePage/LessonTemporaryCardCell';
+import { lessonTypeColors, getLessonTypeColor } from '../constants/lessonTypeColors';
 import {getWeekParity, isWeekOdd, transformSemesterDate} from "../utils/weekUtils";
 import './renderScheduleTable.scss';
 
@@ -25,7 +25,6 @@ const shortid = require('shortid');
 
 export const checkSemesterEnd = (semesterEndDate) => {
     const today = new Date();
-
     const endDate = transformSemesterDate(semesterEndDate);
     return today - endDate > 0;
 };
@@ -39,8 +38,6 @@ const printWeekNumber = (startScheduleDate) => {
     const date = new Date();
     return getWeekParity(startScheduleDate, date);
 };
-
-
 
 const renderClassCell = (classItem) => {
     return `${classItem.class_name}\n\r\n\r${classItem.startTime} - ${classItem.endTime}`;
@@ -208,11 +205,8 @@ export const renderFirstDayFirstClassFirstCardLine = (
         dayClassName += ' minHeightDouble';
     }
 
-    // Today mode - show only current week
     if (todayWeekIsOdd !== null) {
         const weekGroups = todayWeekIsOdd ? groups.odd : groups.even;
-        const weekLabel = todayWeekIsOdd ? 1 : 2;
-        const weekClass = '';
         dayClassName = 'dayNameCell';
 
         return (
@@ -277,11 +271,8 @@ export const renderFirstDayOtherClassFirstCardLine = (
         }
     }
 
-    // Today mode - show only current week
     if (todayWeekIsOdd !== null) {
         const weekGroups = todayWeekIsOdd ? groups.odd : groups.even;
-        const weekLabel = todayWeekIsOdd ? 1 : 2;
-        const weekClass = '';
 
         return (
             <React.Fragment key={shortid.generate()}>
@@ -376,9 +367,9 @@ const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, curre
 
 export const ScheduleLegend = () => {
     const legendItems = [
-        { type: 'lecture', label: i18n.t('lesson_type_lecture', 'Лекція') },
-        { type: 'practical', label: i18n.t('lesson_type_practical', 'Практична') },
-        { type: 'laboratory', label: i18n.t('lesson_type_lab', 'Лабораторна') },
+        { type: 'lecture',    label: i18n.t('lesson_type_lecture',    'Лекція') },
+        { type: 'practical',  label: i18n.t('lesson_type_practical',  'Практична') },
+        { type: 'laboratory', label: i18n.t('lesson_type_lab',        'Лабораторна') },
     ];
 
     return (
@@ -387,7 +378,7 @@ export const ScheduleLegend = () => {
                 <span key={type} className="schedule-legend__item">
                     <span
                         className="schedule-legend__dot"
-                        style={{ backgroundColor: lessonTypeColors[type] }}
+                        style={{ backgroundColor: getLessonTypeColor(type, 'main') }}
                     />
                     {label}
                 </span>
@@ -444,10 +435,8 @@ const renderClassRow = (classItem, days, scheduleRow) => (
     <TableRow key={shortid.generate()}>
         <TableCell className="lesson groupLabelCell">{renderClassCell(classItem)}</TableCell>
         {days.map((dayName) => {
-            if (scheduleRow) {
-                return renderTeacherClassCell(scheduleRow.find((item) => item.day === dayName));
-            }
-            return null;
+            const cell = scheduleRow?.find((item) => item.day === dayName);
+            return renderTeacherClassCell(cell);
         })}
     </TableRow>
 );

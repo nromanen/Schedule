@@ -9,6 +9,10 @@ const HomePage = (props) => {
     const { getPublicClassScheduleList } = props;
     const { t } = useTranslation('common');
 
+    useEffect(() => {
+        document.title = t(HOME_TITLE);
+    }, [t]);
+
     return (
         <Fragment>
             <h1>{t(HOME_TITLE)}</h1>
