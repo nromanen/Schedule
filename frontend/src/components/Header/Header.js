@@ -1,13 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import {isNil} from 'lodash';
-import {Link} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { isNil } from 'lodash';
+import { Link } from 'react-router-dom';
 import {
     FaCaretDown,
     FaClipboardList,
     FaClock,
     FaEye,
-    FaEyeSlash, FaFileExcel,
+    FaEyeSlash,
+    FaFileExcel,
     FaHome,
     FaRunning,
     FaSignOutAlt,
@@ -16,9 +17,9 @@ import {
 } from 'react-icons/fa';
 import Menu from '@material-ui/core/Menu';
 import Button from '@material-ui/core/Button';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import MenuItem from '@material-ui/core/MenuItem';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -38,14 +39,13 @@ import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
 
 import FreeRooms from '../../containers/Dialogs/FreeRoomsDialog';
-import {setSemesterLoadingService} from '../../services/loadingService';
+import { setSemesterLoadingService } from '../../services/loadingService';
 import {
     ADMIN_TITLE,
     CLEAR_CACHE_BUTTON,
     CLEAR_CACHE_CONFIRM,
     CLEAR_CACHE_ERROR,
     CLEAR_CACHE_SUCCESS,
-    CLEAR_CACHE_TITLE,
     CLEARING_CACHE,
     CANCEL_BUTTON_LABEL,
     COMMON_YES_BUTTON_TITLE,
@@ -56,12 +56,15 @@ import {
     MY_PROFILE,
     SCHEDULE_TITLE,
     SEMESTER_LABEL,
+    CLEAR_CACHE_TITLE,
 } from '../../constants/translationLabels/common';
-import {axiosCall} from "../../services/axios";
-import {DELETE, POST} from "../../constants/methods";
-import CustomDialog from "../../containers/Dialogs/CustomDialog";
-import {EXPORT_SCHEDULE_XLSX_URL} from "../../constants/axios";
-import {getCurrentSemesterRequsted, setSchedulePublished} from '../../actions/schedule';
+import { axiosCall } from '../../services/axios';
+import { DELETE, POST } from '../../constants/methods';
+import CustomDialog from '../../containers/Dialogs/CustomDialog';
+import { EXPORT_SCHEDULE_XLSX_URL } from '../../constants/axios';
+import { getCurrentSemesterRequsted, setSchedulePublished } from '../../actions/schedule';
+
+// ─── Styled MUI components ────────────────────────────────────────────────────
 
 const StyledMenu = withStyles({
     paper: {
@@ -71,14 +74,8 @@ const StyledMenu = withStyles({
     <Menu
         elevation={0}
         getContentAnchorEl={null}
-        anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-        }}
-        transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         {...props}
     />
 ));
@@ -92,28 +89,244 @@ const StyledMenuItem = withStyles((theme) => ({
     },
 }))(MenuItem);
 
-const Header = (props) => {
-    const {roles, userRole, loading, currentSemester, getCurrentSemester, schedulePublished, setSchedulePublished} = props;
+// ─── Hooks ────────────────────────────────────────────────────────────────────
+
+const useMenu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
-    const handleClick = (event) => setAnchorEl(event.currentTarget);
-    const handleClose = () => setAnchorEl(null);
+    return {
+        anchorEl,
+        open: Boolean(anchorEl),
+        handleOpen: (e) => setAnchorEl(e.currentTarget),
+        handleClose: () => setAnchorEl(null),
+    };
+};
 
-    const [anchorElUser, setAnchorElUser] = useState(null);
-    const handleClickUserMenu = (event) => setAnchorElUser(event.currentTarget);
-    const handleCloseUserMenu = () => setAnchorElUser(null);
+const useCacheClearing = () => {
+    const [clearing, setClearing] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [resultDialog, setResultDialog] = useState({ open: false, success: true });
 
-    const [cacheClearing, setCacheClearing] = useState(false);
-    const [cacheDialogOpen, setCacheDialogOpen] = useState(false);
-    const [cacheResultDialog, setCacheResultDialog] = useState({open: false, success: true});
+    const handleClick = () => setDialogOpen(true);
+    const handleCancel = () => setDialogOpen(false);
+    const handleResultClose = () => setResultDialog({ open: false, success: true });
 
-    const {t} = useTranslation('common');
+    const handleConfirm = () => {
+        setDialogOpen(false);
+        setClearing(true);
+        axiosCall('admin/cache/all', DELETE)
+            .then(() => setResultDialog({ open: true, success: true }))
+            .catch(() => setResultDialog({ open: true, success: false }))
+            .finally(() => setClearing(false));
+    };
+
+    return {
+        clearing,
+        dialogOpen,
+        resultDialog,
+        handleClick,
+        handleCancel,
+        handleConfirm,
+        handleResultClose,
+    };
+};
+
+// ─── Shared components ────────────────────────────────────────────────────────
+
+const NavMenuItem = ({ to, icon: Icon, label, onClick }) => (
+    <Link to={to} className="navLinks" style={{ textDecoration: 'none' }} onClick={onClick}>
+        <StyledMenuItem>
+            <ListItemIcon>
+                <Icon fontSize="normal" />
+            </ListItemIcon>
+            {label}
+        </StyledMenuItem>
+    </Link>
+);
+
+// ─── Role-based menus ─────────────────────────────────────────────────────────
+
+const ManagerHamburgerMenu = ({ menu, currentSemester, classScheduler, t }) => (
+    <>
+        <span className="navLinks menu-semester">{currentSemester.description}</span>
+        <NavMenuItem to={HOME_PAGE_LINK}     icon={FaHome}      label={t(HOME_TITLE)}     onClick={menu.handleClose} />
+        <NavMenuItem to={SCHEDULE_PAGE_LINK} icon={FaClock}     label={t(SCHEDULE_TITLE)} onClick={menu.handleClose} />
+        <NavMenuItem to={ADMIN_PAGE_LINK}    icon={FaUser}      label={t(ADMIN_TITLE)}    onClick={menu.handleClose} />
+        <span
+            className="navLinks"
+            style={{ textDecoration: 'none' }}
+            onClick={menu.handleClose}
+            role="button"
+            tabIndex="0"
+        >
+            <StyledMenuItem>
+                <FreeRooms classScheduler={classScheduler} />
+            </StyledMenuItem>
+        </span>
+        <NavMenuItem to={LOGOUT_LINK} icon={FaSignOutAlt} label={t(LOGOUT_TITLE)} onClick={menu.handleClose} />
+    </>
+);
+
+const TeacherHamburgerMenu = ({ menu, teacherId, t }) => (
+    <>
+        <NavMenuItem to={HOME_PAGE_LINK}                                          icon={FaHome}          label={t(HOME_TITLE)}    onClick={menu.handleClose} />
+        <NavMenuItem to={MY_LESSONS_LINK}                                         icon={FaClipboardList} label={t('my_lessons')}  onClick={menu.handleClose} />
+        <NavMenuItem to={`${SCHEDULE_FOR_LINK}?teacher=${teacherId || ''}`}       icon={FaClock}         label={t('my_schedule')} onClick={menu.handleClose} />
+        <NavMenuItem to={LOGOUT_LINK}                                             icon={FaSignOutAlt}    label={t(LOGOUT_TITLE)}  onClick={menu.handleClose} />
+    </>
+);
+
+const GuestHamburgerMenu = ({ menu, t }) => (
+    <>
+        <NavMenuItem to={HOME_PAGE_LINK} icon={FaHome}    label={t(HOME_TITLE)}  onClick={menu.handleClose} />
+        <NavMenuItem to={LOGIN_LINK}     icon={FaRunning} label={t(LOGIN_TITLE)} onClick={menu.handleClose} />
+    </>
+);
+
+const ManagerUserMenu = ({ menu, currentSemester, classScheduler, schedulePublished, onTogglePublish, onExportXlsx, onClearCache, cacheClearing, loading, t }) => {
+    const email = localStorage.getItem('email');
+    return (
+        <div className="user-menu">
+            <Button
+                aria-controls="customized-menu"
+                aria-haspopup="true"
+                variant="outlined"
+                onClick={menu.handleOpen}
+            >
+                {email}
+                <ListItemIcon>
+                    <FaCaretDown fontSize="normal" />
+                </ListItemIcon>
+            </Button>
+            <StyledMenu
+                id="customized-menu"
+                anchorEl={menu.anchorEl}
+                keepMounted
+                open={menu.open}
+                onClose={menu.handleClose}
+            >
+                <NavMenuItem to={ADMIN_PAGE_LINK}    icon={FaUser}      label={t(ADMIN_TITLE)}    onClick={menu.handleClose} />
+                <NavMenuItem to={SCHEDULE_PAGE_LINK} icon={FaClock}     label={t(SCHEDULE_TITLE)} onClick={menu.handleClose} />
+                <span
+                    className="navLinks"
+                    style={{ textDecoration: 'none' }}
+                    onClick={menu.handleClose}
+                    role="button"
+                    tabIndex="0"
+                >
+                    <StyledMenuItem>
+                        <FreeRooms classScheduler={classScheduler} />
+                    </StyledMenuItem>
+                </span>
+                <StyledMenuItem onClick={onTogglePublish}>
+                    <ListItemIcon>
+                        {schedulePublished ? <FaEyeSlash fontSize="normal" /> : <FaEye fontSize="normal" />}
+                    </ListItemIcon>
+                    {schedulePublished ? t('unpublish_schedule') : t('publish_schedule')}
+                </StyledMenuItem>
+                <StyledMenuItem onClick={onExportXlsx} disabled={!currentSemester?.id || loading}>
+                    <ListItemIcon>
+                        <FaFileExcel fontSize="normal" />
+                    </ListItemIcon>
+                    {t('export_schedule_xlsx')}
+                </StyledMenuItem>
+                <StyledMenuItem onClick={onClearCache} disabled={cacheClearing}>
+                    <ListItemIcon>
+                        <FaTrash fontSize="normal" />
+                    </ListItemIcon>
+                    {cacheClearing ? t(CLEARING_CACHE) : t(CLEAR_CACHE_BUTTON)}
+                </StyledMenuItem>
+                <NavMenuItem to={MY_PROFILE_LINK} icon={FaUser}      label={t(MY_PROFILE)}    onClick={menu.handleClose} />
+                <NavMenuItem to={LOGOUT_LINK}     icon={FaSignOutAlt} label={t(LOGOUT_TITLE)} onClick={menu.handleClose} />
+            </StyledMenu>
+        </div>
+    );
+};
+
+const TeacherUserMenu = ({ menu, teacherId, t }) => {
+    const email = localStorage.getItem('email');
+    return (
+        <div className="user-menu">
+            <Button
+                aria-controls="customized-menu"
+                aria-haspopup="true"
+                variant="contained"
+                color="primary"
+                onClick={menu.handleOpen}
+            >
+                {email}
+                <ListItemIcon>
+                    <FaCaretDown fontSize="normal" />
+                </ListItemIcon>
+            </Button>
+            <StyledMenu
+                id="customized-menu"
+                anchorEl={menu.anchorEl}
+                keepMounted
+                open={menu.open}
+                onClose={menu.handleClose}
+            >
+                <NavMenuItem to={`${SCHEDULE_FOR_LINK}?teacher=${teacherId || ''}`} icon={FaClock}         label={t('my_schedule')} onClick={menu.handleClose} />
+                <NavMenuItem to={MY_LESSONS_LINK}                                   icon={FaClipboardList} label={t('my_lessons')}  onClick={menu.handleClose} />
+                <NavMenuItem to={MY_PROFILE_LINK}                                   icon={FaUser}          label={t(MY_PROFILE)}    onClick={menu.handleClose} />
+                <NavMenuItem to={LOGOUT_LINK}                                       icon={FaSignOutAlt}    label={t(LOGOUT_TITLE)}  onClick={menu.handleClose} />
+            </StyledMenu>
+        </div>
+    );
+};
+
+const DefaultUserMenu = ({ menu, t }) => {
+    const email = localStorage.getItem('email');
+    return (
+        <div className="user-menu">
+            <Button
+                aria-controls="customized-menu"
+                aria-haspopup="true"
+                variant="contained"
+                color="primary"
+                onClick={menu.handleOpen}
+            >
+                {email}
+            </Button>
+            <StyledMenu
+                id="customized-menu"
+                anchorEl={menu.anchorEl}
+                keepMounted
+                open={menu.open}
+                onClose={menu.handleClose}
+            >
+                <NavMenuItem to={LOGOUT_LINK} icon={FaSignOutAlt} label={t(LOGOUT_TITLE)} onClick={menu.handleClose} />
+            </StyledMenu>
+        </div>
+    );
+};
+
+// ─── Main component ───────────────────────────────────────────────────────────
+
+const Header = (props) => {
+    const {
+        roles,
+        userRole,
+        loading,
+        currentSemester,
+        getCurrentSemester,
+        schedulePublished,
+        setSchedulePublished,
+        classScheduler,
+        teacher,
+        defaultSemester,
+    } = props;
+
+    const { t } = useTranslation('common');
+    const hamburgerMenu = useMenu();
+    const userMenu = useMenu();
+    const cache = useCacheClearing();
 
     useEffect(() => {
         if (userRole === roles.MANAGER && !currentSemester?.id) {
             setSemesterLoadingService(true);
             getCurrentSemester();
             axiosCall('schedules/public/status')
-                .then(({data}) => setSchedulePublished(data.published))
+                .then(({ data }) => setSchedulePublished(data.published))
                 .catch(console.error);
         }
     }, [userRole, roles.MANAGER, getCurrentSemester]);
@@ -128,43 +341,13 @@ const Header = (props) => {
                 .then(() => setSchedulePublished(true))
                 .catch(console.error);
         }
-        handleCloseUserMenu();
-    };
-
-    const handleClearCacheClick = () => {
-        handleCloseUserMenu();
-        setCacheDialogOpen(true);
-    };
-
-    const handleClearCacheConfirm = () => {
-        setCacheDialogOpen(false);
-        setCacheClearing(true);
-        axiosCall('admin/cache/all', DELETE)
-            .then(() => {
-                setCacheResultDialog({open: true, success: true});
-            })
-            .catch(() => {
-                setCacheResultDialog({open: true, success: false});
-            })
-            .finally(() => {
-                setCacheClearing(false);
-            });
-    };
-
-    const handleClearCacheCancel = () => {
-        setCacheDialogOpen(false);
-    };
-
-    const handleResultDialogClose = () => {
-        setCacheResultDialog({open: false, success: true});
+        userMenu.handleClose();
     };
 
     const handleExportXlsx = () => {
-        handleCloseUserMenu();
+        userMenu.handleClose();
         if (!currentSemester?.id) return;
-        axiosCall(`${EXPORT_SCHEDULE_XLSX_URL}${currentSemester.id}`, 'GET', null, {
-            responseType: 'blob',
-        })
+        axiosCall(`${EXPORT_SCHEDULE_XLSX_URL}${currentSemester.id}`, 'GET', null, { responseType: 'blob' })
             .then((response) => {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const a = document.createElement('a');
@@ -178,478 +361,87 @@ const Header = (props) => {
             .catch(console.error);
     };
 
-    const getUserMenu = (role) => {
-        let userMenu = null;
-        if (isNil(role)) {
-            return (
-                <Button
-                    component={Link}
-                    to={LOGIN_LINK}
-                    variant="outlined"
-                    color="default"
-                >
-                    <FaSignOutAlt style={{marginRight: '6px'}}/>
-                    {t(LOGIN_TITLE)}
-                </Button>
-            );
-        }
-        switch (role) {
-            case roles.MANAGER:
-                userMenu = (
-                    <div className="user-menu">
-                        <Button
-                            aria-controls="customized-menu"
-                            aria-haspopup="true"
-                            variant="outlined"
-                            onClick={handleClickUserMenu}
-                        >
-                            {localStorage.getItem('email')}
-                            <ListItemIcon>
-                                <FaCaretDown fontSize="normall"/>
-                            </ListItemIcon>
-                        </Button>
-                        <StyledMenu
-                            id="customized-menu"
-                            anchorEl={anchorElUser}
-                            keepMounted
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            <Link
-                                to={ADMIN_PAGE_LINK}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaUser fontSize="normall"/>
-                                    </ListItemIcon>
-                                    {t(ADMIN_TITLE)}
-                                </StyledMenuItem>
-                            </Link>
-                            <Link
-                                to={SCHEDULE_PAGE_LINK}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaClock fontSize="normal"/>
-                                    </ListItemIcon>
-                                    {t(SCHEDULE_TITLE)}
-                                </StyledMenuItem>
-                            </Link>
-                            <span
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                                role="button"
-                                tabIndex="0"
-                            >
-                                <StyledMenuItem>
-                                    <FreeRooms classScheduler={props.classScheduler}/>
-                                </StyledMenuItem>
-                            </span>
-                            <StyledMenuItem onClick={handleTogglePublish}>
-                                <ListItemIcon>
-                                    {schedulePublished ? <FaEyeSlash fontSize="normal"/> : <FaEye fontSize="normal"/>}
-                                </ListItemIcon>
-                                {schedulePublished ? t('unpublish_schedule') : t('publish_schedule')}
-                            </StyledMenuItem>
-                            <StyledMenuItem onClick={handleExportXlsx} disabled={!currentSemester?.id || loading}>
-                                <ListItemIcon>
-                                    <FaFileExcel fontSize="normal"/>
-                                </ListItemIcon>
-                                {t('export_schedule_xlsx')}
-                            </StyledMenuItem>
-                            <StyledMenuItem onClick={handleClearCacheClick} disabled={cacheClearing}>
-                                <ListItemIcon>
-                                    <FaTrash fontSize="normal"/>
-                                </ListItemIcon>
-                                {cacheClearing ? t(CLEARING_CACHE) : t(CLEAR_CACHE_BUTTON)}
-                            </StyledMenuItem>
-                            <Link
-                                to={MY_PROFILE_LINK}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaUser fontSize="normal"/>
-                                    </ListItemIcon>
-                                    {t(MY_PROFILE)}
-                                </StyledMenuItem>
-                            </Link>
-                            <Link
-                                to={LOGOUT_LINK}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normal"/>
-                                    </ListItemIcon>
-                                    {t(LOGOUT_TITLE)}
-                                </StyledMenuItem>
-                            </Link>
-                        </StyledMenu>
-                    </div>
-                );
-                break;
-            case roles.TEACHER:
-                userMenu = (
-                    <div className="user-menu">
-                        <Button
-                            aria-controls="customized-menu"
-                            aria-haspopup="true"
-                            variant="contained"
-                            color="primary"
-                            onClick={handleClickUserMenu}
-                        >
-                            {localStorage.getItem('email')}
-                            <ListItemIcon>
-                                <FaCaretDown fontSize="normal"/>
-                            </ListItemIcon>
-                        </Button>
-                        <StyledMenu
-                            id="customized-menu"
-                            anchorEl={anchorElUser}
-                            keepMounted
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            <Link
-                                to={`${SCHEDULE_FOR_LINK}?teacher=${props.teacher?.id || ''}`}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaClock fontSize="normal"/>
-                                    </ListItemIcon>
-                                    {t('my_schedule') || 'Мій розклад'}
-                                </StyledMenuItem>
-                            </Link>
-                            <Link
-                                to={MY_LESSONS_LINK}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaClipboardList fontSize="normal"/>
-                                    </ListItemIcon>
-                                    {t('my_lessons') || 'Мої пари'}
-                                </StyledMenuItem>
-                            </Link>
-                            <Link
-                                to={MY_PROFILE_LINK}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaUser fontSize="normal"/>
-                                    </ListItemIcon>
-                                    {t(MY_PROFILE)}
-                                </StyledMenuItem>
-                            </Link>
-                            <Link
-                                to={LOGOUT_LINK}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normal"/>
-                                    </ListItemIcon>
-                                    {t(LOGOUT_TITLE)}
-                                </StyledMenuItem>
-                            </Link>
-                        </StyledMenu>
-                    </div>
-                );
-                break;
-            default:
-                userMenu = (
-                    <div className="user-menu">
-                        <Button
-                            aria-controls="customized-menu"
-                            aria-haspopup="true"
-                            variant="contained"
-                            color="primary"
-                            onClick={handleClickUserMenu}
-                        >
-                            {localStorage.getItem('email')}
-                        </Button>
-                        <StyledMenu
-                            id="customized-menu"
-                            anchorEl={anchorElUser}
-                            keepMounted
-                            open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
-                        >
-                            <Link
-                                to={LOGOUT_LINK}
-                                className="navLinks"
-                                style={{textDecoration: 'none'}}
-                                onClick={handleCloseUserMenu}
-                            >
-                                <StyledMenuItem>
-                                    <ListItemIcon>
-                                        <FaSignOutAlt fontSize="normal"/>
-                                    </ListItemIcon>
-                                    {t(LOGOUT_TITLE)}
-                                </StyledMenuItem>
-                            </Link>
-                        </StyledMenu>
-                    </div>
-                );
-        }
-        return userMenu;
+    const handleClearCache = () => {
+        userMenu.handleClose();
+        cache.handleClick();
     };
 
-    let leftLinks = null;
+    // ── Hamburger menu ──
     let menu = null;
-    const userMenu = getUserMenu(userRole);
+    let leftLinks = null;
+
     if (userRole === roles.MANAGER) {
         leftLinks = (
-            <>
-                {loading ? (
-                    <span className="navLinks nav-semester">
-                        <CircularProgress size={20}/>
-                    </span>
-                ) : (
-                    <span className="navLinks nav-semester">
-                    <strong>{t(SEMESTER_LABEL)}</strong>: {currentSemester.description}
-                    </span>
-                )}
-            </>
+            <span className="navLinks nav-semester">
+                {loading
+                    ? <CircularProgress size={20} />
+                    : <><strong>{t(SEMESTER_LABEL)}</strong>: {currentSemester.description}</>
+                }
+            </span>
         );
         menu = (
             <div className="menu">
-                <Button
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClick}
-                >
+                <Button aria-controls="customized-menu" aria-haspopup="true" variant="contained" color="primary" onClick={hamburgerMenu.handleOpen}>
                     {t(MENU_BUTTON)}
                 </Button>
-
-                <StyledMenu
-                    id="customized-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <span className="navLinks menu-semester">{currentSemester.description}</span>
-                    <Link
-                        to={HOME_PAGE_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaHome fontSize="normall"/>
-                            </ListItemIcon>
-                            {t(HOME_TITLE)}
-                        </StyledMenuItem>
-                    </Link>
-
-                    <Link
-                        to={SCHEDULE_PAGE_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaClock fontSize="normall"/>
-                            </ListItemIcon>
-                            {t(SCHEDULE_TITLE)}
-                        </StyledMenuItem>
-                    </Link>
-
-                    <Link
-                        to={ADMIN_PAGE_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaUser fontSize="normall"/>
-                            </ListItemIcon>
-                            {t(ADMIN_TITLE)}
-                        </StyledMenuItem>
-                    </Link>
-
-                    <span
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                        role="button"
-                        tabIndex="0"
-                    >
-                        <StyledMenuItem>
-                            <FreeRooms classScheduler={props.classScheduler}/>
-                        </StyledMenuItem>
-                    </span>
-
-                    <Link
-                        to={LOGOUT_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaSignOutAlt fontSize="normall"/>
-                            </ListItemIcon>
-                            {t(LOGOUT_TITLE)}
-                        </StyledMenuItem>
-                    </Link>
+                <StyledMenu id="customized-menu" anchorEl={hamburgerMenu.anchorEl} keepMounted open={hamburgerMenu.open} onClose={hamburgerMenu.handleClose}>
+                    <ManagerHamburgerMenu menu={hamburgerMenu} currentSemester={currentSemester} classScheduler={classScheduler} t={t} />
                 </StyledMenu>
             </div>
         );
     } else if (userRole === roles.TEACHER) {
         menu = (
             <div className="menu">
-                <Button
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClick}
-                >
+                <Button aria-controls="customized-menu" aria-haspopup="true" variant="contained" color="primary" onClick={hamburgerMenu.handleOpen}>
                     {t(MENU_BUTTON)}
                 </Button>
-
-                <StyledMenu
-                    id="customized-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <Link
-                        to={HOME_PAGE_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaHome fontSize="normall"/>
-                            </ListItemIcon>
-                            {t(HOME_TITLE)}
-                        </StyledMenuItem>
-                    </Link>
-
-                    <Link
-                        to={MY_LESSONS_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaClipboardList fontSize="normall"/>
-                            </ListItemIcon>
-                            {t('my_lessons') || 'Мої пари'}
-                        </StyledMenuItem>
-                    </Link>
-
-                    <Link
-                        to={`${SCHEDULE_FOR_LINK}?teacher=${props.teacher?.id || ''}`}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaClock fontSize="normall"/>
-                            </ListItemIcon>
-                            {t('my_schedule') || 'Мій розклад'}
-                        </StyledMenuItem>
-                    </Link>
-
-                    <Link
-                        to={LOGOUT_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaSignOutAlt fontSize="normall"/>
-                            </ListItemIcon>
-                            {t(LOGOUT_TITLE)}
-                        </StyledMenuItem>
-                    </Link>
+                <StyledMenu id="customized-menu" anchorEl={hamburgerMenu.anchorEl} keepMounted open={hamburgerMenu.open} onClose={hamburgerMenu.handleClose}>
+                    <TeacherHamburgerMenu menu={hamburgerMenu} teacherId={teacher?.id} t={t} />
                 </StyledMenu>
             </div>
         );
     } else if (isNil(userRole)) {
         menu = (
             <div className="menu">
-                <Button
-                    aria-controls="customized-menu"
-                    aria-haspopup="true"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClick}
-                >
+                <Button aria-controls="customized-menu" aria-haspopup="true" variant="contained" color="primary" onClick={hamburgerMenu.handleOpen}>
                     {t(MENU_BUTTON)}
                 </Button>
-                <StyledMenu
-                    id="customized-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <Link
-                        to={HOME_PAGE_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaHome fontSize="normall"/>
-                            </ListItemIcon>
-                            {t(HOME_TITLE)}
-                        </StyledMenuItem>
-                    </Link>
-                    <Link
-                        to={LOGIN_LINK}
-                        className="navLinks"
-                        style={{textDecoration: 'none'}}
-                        onClick={handleClose}
-                    >
-                        <StyledMenuItem>
-                            <ListItemIcon>
-                                <FaRunning fontSize="normall"/>
-                            </ListItemIcon>
-                            {t(LOGIN_TITLE)}
-                        </StyledMenuItem>
-                    </Link>
+                <StyledMenu id="customized-menu" anchorEl={hamburgerMenu.anchorEl} keepMounted open={hamburgerMenu.open} onClose={hamburgerMenu.handleClose}>
+                    <GuestHamburgerMenu menu={hamburgerMenu} t={t} />
                 </StyledMenu>
             </div>
         );
+    }
+
+    // ── User dropdown ──
+    let userMenuEl = null;
+
+    if (isNil(userRole)) {
+        userMenuEl = (
+            <Button component={Link} to={LOGIN_LINK} variant="outlined" color="default">
+                <FaSignOutAlt style={{ marginRight: '6px' }} />
+                {t(LOGIN_TITLE)}
+            </Button>
+        );
+    } else if (userRole === roles.MANAGER) {
+        userMenuEl = (
+            <ManagerUserMenu
+                menu={userMenu}
+                currentSemester={currentSemester}
+                classScheduler={classScheduler}
+                schedulePublished={schedulePublished}
+                onTogglePublish={handleTogglePublish}
+                onExportXlsx={handleExportXlsx}
+                onClearCache={handleClearCache}
+                cacheClearing={cache.clearing}
+                loading={loading}
+                t={t}
+            />
+        );
+    } else if (userRole === roles.TEACHER) {
+        userMenuEl = <TeacherUserMenu menu={userMenu} teacherId={teacher?.id} t={t} />;
+    } else {
+        userMenuEl = <DefaultUserMenu menu={userMenu} t={t} />;
     }
 
     return (
@@ -663,60 +455,50 @@ const Header = (props) => {
                     {leftLinks}
                 </nav>
                 <nav className="header-blocks header-blocks_right">
-                    <LanguageSelector/>
-                    {userMenu}
+                    <LanguageSelector />
+                    {userMenuEl}
                 </nav>
             </header>
 
             {userRole === roles.MANAGER &&
                 currentSemester?.id &&
-                props.defaultSemester?.id &&
-                currentSemester.id !== props.defaultSemester.id && (
+                defaultSemester?.id &&
+                currentSemester.id !== defaultSemester.id && (
                     <div className="schedule-warning-banner">
                         {t('schedule_not_default_warning', {
                             current: currentSemester.description,
-                            default: props.defaultSemester.description,
+                            default: defaultSemester.description,
                         })}
                     </div>
                 )}
 
             <CustomDialog
-                open={cacheDialogOpen}
-                onClose={handleClearCacheCancel}
+                open={cache.dialogOpen}
+                onClose={cache.handleCancel}
                 title={t(CLEAR_CACHE_TITLE)}
                 buttons={[
-                    {
-                        label: t(CANCEL_BUTTON_LABEL),
-                        handleClick: handleClearCacheCancel,
-                        additionClassName: 'close-button',
-                    },
-                    {
-                        label: t(COMMON_YES_BUTTON_TITLE),
-                        handleClick: handleClearCacheConfirm,
-                        color: 'primary',
-                    },
+                    { label: t(CANCEL_BUTTON_LABEL), handleClick: cache.handleCancel, additionClassName: 'close-button' },
+                    { label: t(COMMON_YES_BUTTON_TITLE), handleClick: cache.handleConfirm, color: 'primary' },
                 ]}
             >
                 {t(CLEAR_CACHE_CONFIRM)}
             </CustomDialog>
 
             <CustomDialog
-                open={cacheResultDialog.open}
-                onClose={handleResultDialogClose}
+                open={cache.resultDialog.open}
+                onClose={cache.handleResultClose}
                 title={t(CLEAR_CACHE_TITLE)}
                 buttons={[
-                    {
-                        label: 'OK',
-                        handleClick: handleResultDialogClose,
-                        color: 'primary',
-                    },
+                    { label: 'OK', handleClick: cache.handleResultClose, color: 'primary' },
                 ]}
             >
-                {cacheResultDialog.success ? t(CLEAR_CACHE_SUCCESS) : t(CLEAR_CACHE_ERROR)}
+                {cache.resultDialog.success ? t(CLEAR_CACHE_SUCCESS) : t(CLEAR_CACHE_ERROR)}
             </CustomDialog>
         </>
     );
 };
+
+// ─── Redux ────────────────────────────────────────────────────────────────────
 
 const mapStateToProps = (state) => ({
     classScheduler: state.classActions.classScheduler,

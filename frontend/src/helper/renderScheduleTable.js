@@ -29,7 +29,7 @@ export const checkSemesterEnd = (semesterEndDate) => {
     return today - endDate > 0;
 };
 
-export const matchDayNumberSysytemToDayName = () => {
+export const matchDayNumberSystemToDayName = () => {
     const now = new Date();
     return daysUppercase[now.getDay() - 1];
 };
@@ -85,7 +85,7 @@ export const renderScheduleGroupHeader = (days) => (
 
 export const renderGroupTable = (classes, isOdd, semester) => {
     const currentWeekType = isWeekOdd(printWeekNumber(semester.startDay));
-    const currentDay = checkSemesterEnd(semester.endDay) ? '' : matchDayNumberSysytemToDayName();
+    const currentDay = checkSemesterEnd(semester.endDay) ? '' : matchDayNumberSystemToDayName();
     return (
         <TableContainer>
             <Table aria-label="sticky table">
@@ -390,7 +390,7 @@ export const ScheduleLegend = () => {
 export const renderFullSchedule = (fullResultSchedule, todayWeekIsOdd = null) => {
     const { semester, groupList, semesterClasses, resultArray } = fullResultSchedule;
     const currentWeekType = isWeekOdd(printWeekNumber(semester.startDay));
-    const currentDay = checkSemesterEnd(semester.endDay) ? '' : matchDayNumberSysytemToDayName();
+    const currentDay = checkSemesterEnd(semester.endDay) ? '' : matchDayNumberSystemToDayName();
     const isSemesterEnded = checkSemesterEnd(semester.endDay);
 
     return (

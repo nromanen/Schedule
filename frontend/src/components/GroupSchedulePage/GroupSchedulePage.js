@@ -7,7 +7,7 @@ import { get } from 'lodash';
 import { getDataFromParams } from '../../utils/urlUtils';
 import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';
 import { SCHEDULE_FOR_LINK } from '../../constants/links';
-import { renderSchedule } from '../../helper/renderSchedule';
+import { ScheduleView } from '../../helper/ScheduleView';
 import { getScheduleType } from '../../helper/getScheduleType';
 import { getAllDepartmentsService } from '../../services/departmentService';
 
@@ -81,10 +81,13 @@ const GroupSchedulePage = (props) => {
 
     const handleSubmit = (values) => {
         const { semester, group, teacher, department } = values;
-        const groupPath = get(group, 'id') ? `&group=${group.id}` : '';
-        const teacherPath = get(teacher, 'id') ? `&teacher=${teacher.id}` : '';
+
+        const semesterPath   = semester?.id ? `?semester=${semester.id}` : '?';
+        const groupPath      = get(group,      'id') ? `&group=${group.id}`           : '';
+        const teacherPath    = get(teacher,    'id') ? `&teacher=${teacher.id}`       : '';
         const departmentPath = get(department, 'id') ? `&department=${department.id}` : '';
-        history.push(`${SCHEDULE_FOR_LINK}?semester=${semester.id}${groupPath}${teacherPath}${departmentPath}`);
+
+        history.push(`${SCHEDULE_FOR_LINK}${semesterPath}${groupPath}${teacherPath}${departmentPath}`);
     };
 
     const getSchedule = () => {
@@ -133,7 +136,7 @@ const GroupSchedulePage = (props) => {
                     <CircularProgress />
                 </section>
             ) : (
-                renderSchedule({ ...props, t, viewMode, setViewMode })
+                ScheduleView({ ...props, t, viewMode, setViewMode })
             )}
         </div>
     );

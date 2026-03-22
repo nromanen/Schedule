@@ -2,7 +2,7 @@ import {
     getWeekParity,
     isWeekOdd,
     checkSemesterEnd,
-    matchDayNumberSysytemToDayName,
+    matchDayNumberSystemToDayName,
 } from './renderScheduleTable';
 
 
@@ -16,9 +16,9 @@ describe('checkSemesterEnd', () => {
     });
 });
 
-describe('matchDayNumberSysytemToDayName', () => {
+describe('matchDayNumberSystemToDayName', () => {
     it('should return a string', () => {
-        const result = matchDayNumberSysytemToDayName();
+        const result = matchDayNumberSystemToDayName();
         // On Sunday getDay()=0, daysUppercase[-1] = undefined
         if (new Date().getDay() !== 0) {
             expect(typeof result).toBe('string');

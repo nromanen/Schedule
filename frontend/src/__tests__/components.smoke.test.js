@@ -164,7 +164,7 @@ describe('Smoke tests: components render without crashing', () => {
 
     describe('ViewModeToggle', () => {
         it('renders with all mode active', () => {
-            const { ViewModeToggle } = require('../helper/renderSchedule');
+            const { ViewModeToggle } = require('../helper/ScheduleView');
             const { container } = renderWithProviders(
                 <ViewModeToggle
                     viewMode="all"
@@ -176,7 +176,7 @@ describe('Smoke tests: components render without crashing', () => {
         });
 
         it('renders with today mode active', () => {
-            const { ViewModeToggle } = require('../helper/renderSchedule');
+            const { ViewModeToggle } = require('../helper/ScheduleView');
             const { container } = renderWithProviders(
                 <ViewModeToggle
                     viewMode="today"

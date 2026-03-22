@@ -49,9 +49,9 @@ export const getReferenceSemester = (schedules) => {
 // relative to the reference semester's parity.
 // If parities match — returns the original key unchanged.
 // If parities differ — swaps odd↔even.
-export const getWeekKeyForSemester = (semester, referenceSemester) => (originalKey) => {
-    const semesterWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
-    const referenceWeekIsOdd = getWeekParity(referenceSemester.semester.startDay) % 2 === 1;
+export const getWeekKeyForSemester = (semester, referenceSemester, currentDate = new Date()) => (originalKey) => {
+    const semesterWeekIsOdd = getWeekParity(semester.startDay, currentDate) % 2 === 1;
+    const referenceWeekIsOdd = getWeekParity(referenceSemester.semester.startDay, currentDate) % 2 === 1;
     const isSynced = semesterWeekIsOdd === referenceWeekIsOdd;
     if (isSynced) return originalKey;
     return originalKey === 'odd' ? 'even' : 'odd';

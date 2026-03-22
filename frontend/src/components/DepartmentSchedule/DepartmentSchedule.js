@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import {
     checkSemesterEnd,
-    matchDayNumberSysytemToDayName,
+    matchDayNumberSystemToDayName,
 } from '../../helper/renderScheduleTable';
 
 import i18n from '../../i18n';
@@ -77,7 +77,7 @@ const getMaxUsedClassIndexForDay = (dayData, teachers) => {
 const DepartmentSchedule = ({fullSchedule, departmentId}) => {
     const {resultArray, semester} = fullSchedule;
     const currentDay = semester?.endDay && !checkSemesterEnd(semester.endDay)
-        ? matchDayNumberSysytemToDayName()
+        ? matchDayNumberSystemToDayName()
         : '';
     const currentWeekType = semester?.startDay ? isWeekOdd(getWeekParity(semester.startDay)) : true;
 

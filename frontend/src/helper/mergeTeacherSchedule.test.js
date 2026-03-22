@@ -1,4 +1,4 @@
-import { getReferenceSemester, getWeekKeyForSemester, transformSemesterDate } from '../utils/weekUtils';
+import {getReferenceSemester, getWeekKeyForSemester, getWeekParity, transformSemesterDate} from '../utils/weekUtils';
 import { getAllDays, getAllClasses, buildMergedTeacherSchedule, mergeCards } from './mergeTeacherSchedules';
 
 // ─── Date helpers ───────────────────────────────────────────────
@@ -108,7 +108,29 @@ describe('getWeekKeyForSemester', () => {
         const s1 = makeSchedule(1, referenceStart, ['MONDAY'], ['TUESDAY']);
         const s2 = makeSchedule(2, shortStartSaturday, ['MONDAY'], ['TUESDAY']);
         const reference = { semester: s1.semester };
-        const getKey = getWeekKeyForSemester(s2.semester, reference);
+        const today = addDays(lastMonday, 2); // Wednesday
+
+        console.log('referenceStart:', referenceStart);
+        console.log('shortStartSaturday:', shortStartSaturday);
+        console.log('today:', toDateStr(today));
+        console.log('parity reference:', getWeekParity(s1.semester.startDay, today));
+        console.log('parity saturday:', getWeekParity(s2.semester.startDay, today));
+
+        const getKey = getWeekKeyForSemester(s2.semester, reference, today);
+        expect(getKey('odd')).toBe('even');
+        expect(getKey('even')).toBe('odd');
+    });
+
+    it('swaps odd↔even when short semester starts on Thursday of current week', () => {
+        const longStart  = '11/03/2026';
+        const shortStart = '19/03/2026';
+        const today      = new Date('2026-03-21');
+
+        const s1 = makeSchedule(1, longStart,  ['MONDAY'], ['TUESDAY']);
+        const s2 = makeSchedule(2, shortStart, ['MONDAY'], ['TUESDAY']);
+        const reference = { semester: s1.semester };
+
+        const getKey = getWeekKeyForSemester(s2.semester, reference, today);
         expect(getKey('odd')).toBe('even');
         expect(getKey('even')).toBe('odd');
     });
