@@ -8,6 +8,7 @@ const initialState = {
     oneRoom: {},
     oneType: {},
     freeRooms: [],
+    combinedBusyRooms: null,
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -91,11 +92,11 @@ const reducer = (state = initialState, action) => {
         case actionTypes.GET_FREE_ROOMS_SUCCESS: {
             return { ...state, freeRooms: action.freeRooms };
         }
-        case actionTypes.GET_BUSY_ROOMS_SUCCESS: {
-            return { ...state, rooms: action.busyRooms };
-        }
         case actionTypes.CLEAR_FREE_ROOMS: {
             return { ...state, freeRooms: [] };
+        }
+        case actionTypes.GET_COMBINED_BUSY_ROOMS_SUCCESS: {
+            return { ...state, combinedBusyRooms: action.data };
         }
         default:
             return state;

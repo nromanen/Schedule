@@ -60,6 +60,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final SemesterMapper semesterMapper;
     private final TeacherMapper teacherMapper;
 
+    private final ConverterToSchedulesInRoom converterToSchedulesInRoom;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -614,6 +616,37 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         scheduleFullDTO.setSchedule(scheduleForGroupDTOList);
         return scheduleFullDTO;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value = "combinedRoomSchedule")
+    //TODO: add @CacheEvict(value = "combinedRoomSchedule", allEntries = true) to save(),
+    // update() and delete() methods in ScheduleService to invalidate this cache
+    // when a schedule entry is created, updated or removed.
+    public CombinedRoomScheduleDTO getCombinedRoomScheduleForActiveWeek() {
+        log.info("In getCombinedRoomScheduleForActiveWeek()");
+
+        List<SemesterWithGroupsDTO> activeSemesters = semesterService.getSemestersActiveThisWeek();
+        if (activeSemesters.isEmpty()) {
+            return new CombinedRoomScheduleDTO(Collections.emptyList(), Collections.emptyMap());
+        }
+
+        List<RoomDTO> rooms = roomService.getAllOrdered();
+        Map<Long, List<ScheduleForRoomDTO>> roomsBySemesterId = new LinkedHashMap<>();
+
+        for (SemesterWithGroupsDTO semester : activeSemesters) {
+            roomsBySemesterId.put(
+                    semester.getId(),
+                    converterToSchedulesInRoom.getBySemester(
+                            rooms,
+                            semester,
+                            getAllOrdered(semester.getId())
+                    )
+            );
+        }
+
+        return new CombinedRoomScheduleDTO(activeSemesters, roomsBySemesterId);
     }
 
     private List<DaysOfWeekWithClassesForGroupDTO> buildDaysFromMemory(

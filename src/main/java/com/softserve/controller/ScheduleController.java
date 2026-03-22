@@ -16,7 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @Tag(name = "Schedule API")
@@ -27,15 +27,6 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
     private final SemesterService semesterService;
-    private final SemesterMapper semesterMapper;
-    private final ScheduleMapper scheduleMapper;
-    private final ScheduleSaveMapper scheduleSaveMapper;
-    private final ScheduleWithoutSemesterMapper scheduleWithoutSemesterMapper;
-    private final TeacherService teacherService;
-    private final PeriodMapper periodMapper;
-    private final RoomForScheduleMapper roomForScheduleMapper;
-    private final LessonsInScheduleMapper lessonsInScheduleMapper;
-    private final LessonService lessonService;
     private final RoomService roomService;
     private final ConverterToSchedulesInRoom converterToSchedulesInRoom;
     private final SchedulePublishService publishService;
@@ -186,6 +177,14 @@ public class ScheduleController {
                 converterToSchedulesInRoom.getBySemester(rooms, semester,
                         scheduleService.getAllOrdered(semesterId));
         return ResponseEntity.status(HttpStatus.OK).body(scheduleForRoomDTOS);
+    }
+
+    @GetMapping("/full/rooms/active")
+    @Operation(summary = "Get combined busy rooms schedule for all semesters active this week")
+    public ResponseEntity<CombinedRoomScheduleDTO> getFullScheduleForRoomActive() {
+        log.info("In getFullScheduleForRoomActive()");
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(scheduleService.getCombinedRoomScheduleForActiveWeek());
     }
 
     @PostMapping

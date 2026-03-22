@@ -202,5 +202,18 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
     List<Long> deleteScheduleById(Long id);
 
     List<ScheduleForTeacherDTO> getScheduleForTeacherForActiveSemesters(Long teacherId);
-}
 
+    /**
+     * Returns a combined busy rooms schedule for all semesters active during the current week.
+     * <p>
+     * Fetches all semesters whose date range overlaps with the current Monday–Sunday interval,
+     * then builds a room schedule for each semester and groups the results by semester ID.
+     * The result is cached to avoid redundant heavy queries on repeated calls.
+     * </p>
+     *
+     * @return {@link CombinedRoomScheduleDTO} containing the list of active semesters
+     *         and a map of room schedules keyed by semester ID,
+     *         or empty collections if no active semesters are found
+     */
+    CombinedRoomScheduleDTO getCombinedRoomScheduleForActiveWeek();
+}

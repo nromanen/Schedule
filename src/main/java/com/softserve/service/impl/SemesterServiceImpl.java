@@ -217,6 +217,22 @@ public class SemesterServiceImpl implements SemesterService {
         return semesterMapper.semesterToSemesterWithGroupsDTO(updated);
     }
 
+    /**
+     * Returns all semesters that are active during the current week.
+     * A semester is considered active if its date range overlaps with
+     * the current Monday–Sunday interval.
+     *
+     * @return list of {@link SemesterWithGroupsDTO} active this week,
+     *         or an empty list if none found
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<SemesterWithGroupsDTO> getSemestersActiveThisWeek() {
+        log.info("In getSemestersActiveThisWeek()");
+        List<Semester> semesters = semesterRepository.getSemestersActiveThisWeek();
+        return semesterMapper.semestersToSemesterWithGroupsDTOs(semesters);
+    }
+
     // ==================== Private methods ====================
 
     private Semester findByIdOrThrow(Long id) {
@@ -333,5 +349,7 @@ public class SemesterServiceImpl implements SemesterService {
             scheduleRepository.save(newSchedule);
         }
     }
+
+
 }
 

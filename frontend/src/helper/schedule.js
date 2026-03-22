@@ -58,3 +58,41 @@ export const getColorByFullness = (array = []) => {
     });
     return color;
 };
+
+export const getColorByFullnessMultiSemester = (lessons = []) => {
+    if (isEmpty(lessons)) return 'available';
+
+    const semesterIndices = [...new Set(lessons.map(l => l._semesterIndex))];
+    const isMultiSemester = semesterIndices.length > 1;
+    const isSecondSemester = !isMultiSemester && semesterIndices[0] > 0;
+
+    let color;
+    if (isMultiSemester) color = 'mixed';
+    else if (isSecondSemester) color = 'allow-multi';
+    else color = 'allow';
+
+    let prevLesson = {
+        teacherName: lessons[0]?.teacher_for_site,
+        lessonName: lessons[0]?.subject_for_site,
+    };
+
+    lessons.forEach((lesson) => {
+        const isTeacherNameTheSame = lesson.teacher_for_site === prevLesson.teacherName;
+        const isLessonNotTheSame = lesson.subject_for_site !== prevLesson.lessonName;
+
+        if (isLessonNotTheSame && isTeacherNameTheSame &&
+            (color === 'allow' || color === 'allow-multi' || color === 'mixed')) {
+            color = isMultiSemester || isSecondSemester ? 'possible-multi' : 'possible';
+        }
+        if (!isTeacherNameTheSame) {
+            color = 'not-allow';
+        }
+
+        prevLesson = {
+            teacherName: lesson.teacher_for_site,
+            lessonName: lesson.subject_for_site,
+        };
+    });
+
+    return color;
+};

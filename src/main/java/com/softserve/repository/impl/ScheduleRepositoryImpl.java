@@ -47,8 +47,14 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
 
     private static final String GET_ALL_ORDERED_BY_ROOMS_DAYS_PERIODS =
             "SELECT s FROM Schedule s " +
-                    "WHERE s.lesson.semester.id = :semesterId " +
-                    "ORDER BY s.room.name, " +
+                    "JOIN FETCH s.room r " +
+                    "JOIN FETCH s.period p " +
+                    "JOIN FETCH s.lesson l " +
+                    "JOIN FETCH l.teacher t " +
+                    "JOIN FETCH l.group g " +
+                    "JOIN FETCH l.semester sem " +
+                    "WHERE sem.id = :semesterId " +
+                    "ORDER BY r.name, " +
                     "CASE " +
                     "WHEN s.dayOfWeek = 'MONDAY' THEN 1 " +
                     "WHEN s.dayOfWeek = 'TUESDAY' THEN 2 " +
@@ -58,8 +64,8 @@ public class ScheduleRepositoryImpl extends BasicRepositoryImpl<Schedule, Long> 
                     "WHEN s.dayOfWeek = 'SATURDAY' THEN 6 " +
                     "WHEN s.dayOfWeek = 'SUNDAY' THEN 7 " +
                     "END, " +
-                    "s.evenOdd, s.period.name, " +
-                    "s.lesson.subjectForSite, s.lesson.teacher.surname, s.lesson.lessonType";
+                    "s.evenOdd, p.name, " +
+                    "l.subjectForSite, t.surname, l.lessonType";
 
     private static final String HQL_GET_SCHEDULE_FOR_TEACHER_ACTIVE_SEMESTERS =
             "SELECT s FROM Schedule s " +

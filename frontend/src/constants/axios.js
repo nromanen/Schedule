@@ -45,6 +45,7 @@ export const FREE_ROOMS_URL = 'rooms/free';
 export const DISABLED_ROOMS_URL = 'rooms/disabled';
 export const ROOMS_AVAILABILITY = 'rooms/available';
 export const BUSY_ROOMS = 'schedules/full/rooms';
+export const COMBINED_BUSY_ROOMS_URL = 'schedules/full/rooms/active';
 
 // Lessons
 export const LESSON_URL = 'lessons';

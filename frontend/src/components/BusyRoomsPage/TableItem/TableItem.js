@@ -2,7 +2,7 @@ import React from 'react';
 import {isEmpty} from 'lodash';
 import Card from '@material-ui/core/Card';
 import './TableItem.scss';
-import {addClassDayBoard, getColorByFullness, removeClassDayBoard,} from '../../../helper/schedule';
+import {addClassDayBoard, getColorByFullnessMultiSemester, removeClassDayBoard,} from '../../../helper/schedule';
 import {GroupTitle} from './GroupTitle';
 
 const TableItem = (props) => {
@@ -16,6 +16,7 @@ const TableItem = (props) => {
         const classOdd = findItemInArray(schedule.classes[0].odd, scheduleClass.id);
         const classEven = findItemInArray(schedule.classes[0].even, scheduleClass.id);
 
+
         return (
             // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
             <section
@@ -26,7 +27,7 @@ const TableItem = (props) => {
             >
                 <div className="class-info-container">
                     <Card
-                        className={`schedule-card class-info-data ${getColorByFullness(
+                        className={`schedule-card class-info-data ${getColorByFullnessMultiSemester(
                             classOdd?.lessons,
                         )}`}
                     >
@@ -42,7 +43,7 @@ const TableItem = (props) => {
 
                 <div className="class-info-container">
                     <Card
-                        className={`schedule-card class-info-data ${getColorByFullness(
+                        className={`schedule-card class-info-data ${getColorByFullnessMultiSemester(
                             classEven?.lessons,
                         )}`}
                     >

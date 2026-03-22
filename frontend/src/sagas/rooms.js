@@ -8,14 +8,12 @@ import {setLoading, setRoomsLoading} from '../actions/loadingIndicator';
 import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
 import {axiosCall} from '../services/axios';
 import {
-    BUSY_ROOMS,
-    CURRENT_SEMESTER_URL,
     DISABLED_ROOMS_URL,
     FREE_ROOMS_URL,
     ROOM_ORDERED_URL,
     ROOM_TYPES_URL,
     ROOM_URL,
-    ROOM_AFTER_URL,
+    ROOM_AFTER_URL, COMBINED_BUSY_ROOMS_URL,
 } from '../constants/axios';
 import {ROOM_FORM, ROOM_FORM_TYPE} from '../constants/reduxForms';
 import {createErrorMessage, createMessage} from '../utils/sagaUtils';
@@ -25,13 +23,12 @@ import {
     deleteRoomSuccess,
     deleteRoomTypeSuccess,
     getAllRoomTypesSuccess,
-    getBusyRoomsSuccess,
     getFreeRoomsSuccess,
     getListOfDisabledRoomsSuccess,
     getListOfRoomsSuccess,
     updateRoomSuccess,
     updateRoomTypeSuccess,
-    updateRoomOrderSuccess,
+    updateRoomOrderSuccess, getCombinedBusyRoomsSuccess,
 } from '../actions/rooms';
 import {
     BACK_END_SUCCESS_OPERATION,
@@ -222,12 +219,10 @@ export function* getFreeRoomsByParams({ params }) {
     }
 }
 
-export function* getBusyRooms() {
+export function* getCombinedBusyRooms() {
     try {
-        const semesterResponse = yield call(axiosCall, CURRENT_SEMESTER_URL);
-        const { id } = semesterResponse.data;
-        const { data } = yield call(axiosCall, `${BUSY_ROOMS}?semesterId=${id}`);
-        yield put(getBusyRoomsSuccess(data));
+        const { data } = yield call(axiosCall, COMBINED_BUSY_ROOMS_URL);
+        yield put(getCombinedBusyRoomsSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
     } finally {
@@ -248,7 +243,7 @@ function* watchRooms() {
     yield takeEvery(actionTypes.HANDLE_ROOM_FORM_SUBMIT_START, handleRoomFormSubmit);
     yield takeEvery(actionTypes.HANDLE_ROOM_TYPE_FORM_SUBMIT_START, handleRoomTypeFormSubmit);
     yield takeEvery(actionTypes.TOGGLE_ROOM_VISIBILITY_START, toggleRoomsVisibility);
-    yield takeLatest(actionTypes.GET_BUSY_ROOMS_START, getBusyRooms);
+    yield takeLatest(actionTypes.GET_COMBINED_BUSY_ROOMS_START, getCombinedBusyRooms);
 }
 
 export default watchRooms;

@@ -111,7 +111,9 @@
   // Color coding based on room availability
   .possible,
   .available,
-  .allow {
+  .allow,
+  .allow-multi,
+  .possible-multi{
     p {
       color: $black;
     }
@@ -124,3 +126,6 @@
     p { color: $white; }
   }
 }
+.allow-multi { background-color: $allow-multi-color !important; }
+.possible-multi { background-color: $possible-multi-color !important; }
+.mixed { background-color: $mixed-color !important; }

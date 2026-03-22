@@ -82,15 +82,15 @@ export const clearFreeRooms = () => ({
     type: actionsType.CLEAR_FREE_ROOMS,
 });
 
-export const getBusyRoomsStart = (semesterId) => ({
-    type: actionsType.GET_BUSY_ROOMS_START,
-    semesterId,
+export const getCombinedBusyRoomsStart = () => ({
+    type: actionsType.GET_COMBINED_BUSY_ROOMS_START,
 });
 
-export const getBusyRoomsSuccess = (busyRooms) => ({
-    type: actionsType.GET_BUSY_ROOMS_SUCCESS,
-    busyRooms,
+export const getCombinedBusyRoomsSuccess = (data) => ({
+    type: actionsType.GET_COMBINED_BUSY_ROOMS_SUCCESS,
+    data,
 });
+
 export const clearRoomSuccess = () => ({
     type: actionsType.CLEAR_ROOM,
 });
