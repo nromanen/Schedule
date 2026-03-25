@@ -63,8 +63,9 @@ const LessonTemporaryCardCell = (props) => {
             </p>
             <p className="lesson-details">
                 {prepareLessonSubCardCell(card, place)}
+                {place === places.TOGETHER && meetingLink && <span>{meetingLink}</span>}
             </p>
-            {meetingLink}
+            {place !== places.TOGETHER && meetingLink}
         </div>
     );
 };

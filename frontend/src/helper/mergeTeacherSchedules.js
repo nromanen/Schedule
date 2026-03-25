@@ -1,5 +1,5 @@
 import { SEMESTER_COLORS } from '../constants/semesterColors';
-import { getReferenceSemester, getWeekKeyForSemester } from '../utils/weekUtils';
+import {getReferenceSemester, getWeekKeyForSemester} from "../utils/dateUtils";
 
 
 const DAY_ORDER = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];

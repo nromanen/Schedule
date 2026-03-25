@@ -2,10 +2,13 @@
 @import '../../../styles/variables.scss';
 @import '../../../styles/mixins.scss';
 
-p.empty_schedule {
+.empty_schedule {
     text-align: center;
-    font-weight: bold;
-    margin: 50px auto;
+    color: $black;
+    opacity: 0.7;
+    font-style: normal;
+    font-size: 1.2em;
+    padding: 4px 0 40px;
 }
 
 h1 {

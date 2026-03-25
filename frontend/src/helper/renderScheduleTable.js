@@ -10,34 +10,22 @@ import TableRow from '@material-ui/core/TableRow';
 import Card from '../share/Card/Card';
 
 import i18n from '../i18n';
-
-import {daysUppercase,} from '../constants/schedule/days';
 import {FORM_GROUP_LABEL, GROUP_Y_LABEL} from '../constants/translationLabels/formElements';
 import {EMPTY_SCHEDULE} from '../constants/translationLabels/common';
 import LessonTemporaryCardCell from '../containers/GroupSchedulePage/LessonTemporaryCardCell';
 import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTemporaryCardCell';
-import { places } from '../constants/places';
-import { lessonTypeColors, getLessonTypeColor } from '../constants/lessonTypeColors';
-import {getWeekParity, isWeekOdd, transformSemesterDate} from "../utils/weekUtils";
+import {places} from '../constants/places';
+import {getLessonTypeColor} from '../constants/lessonTypeColors';
 import './renderScheduleTable.scss';
+import {
+    checkSemesterEnd,
+    isWeekOdd,
+    matchDayNumberSystemToDayName,
+    printWeekNumber,
+    transformSemesterDate
+} from "../utils/dateUtils";
 
 const shortid = require('shortid');
-
-export const checkSemesterEnd = (semesterEndDate) => {
-    const today = new Date();
-    const endDate = transformSemesterDate(semesterEndDate);
-    return today - endDate > 0;
-};
-
-export const matchDayNumberSystemToDayName = () => {
-    const now = new Date();
-    return daysUppercase[now.getDay() - 1];
-};
-
-const printWeekNumber = (startScheduleDate) => {
-    const date = new Date();
-    return getWeekParity(startScheduleDate, date);
-};
 
 const renderClassCell = (classItem) => {
     return `${classItem.class_name}\n\r\n\r${classItem.startTime} - ${classItem.endTime}`;

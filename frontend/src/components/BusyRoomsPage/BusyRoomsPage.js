@@ -11,8 +11,8 @@ import BusyRoomsTable from './BustRoomsTable/BusyRoomsTable';
 import SemesterLegend from '../SemesterLegend/SemesterLegend';
 import { COMMON_TABLE_COLUMNS_SIZE } from '../../constants/translationLabels/common';
 import { columnSizeArray } from '../../constants/schedule/schedule';
-import { getWeekKeyForSemester, getWeekParity } from '../../utils/weekUtils';
 import BusyRoomsLegend from "./BusyRoomsLegend/BusyRoomsLegend";
+import {getWeekKeyForSemester, getWeekParity} from "../../utils/dateUtils";
 
 const BusyRoomsPage = (props) => {
     const {

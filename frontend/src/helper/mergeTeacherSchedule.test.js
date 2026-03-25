@@ -1,5 +1,5 @@
-import {getReferenceSemester, getWeekKeyForSemester, getWeekParity, transformSemesterDate} from '../utils/weekUtils';
 import { getAllDays, getAllClasses, buildMergedTeacherSchedule, mergeCards } from './mergeTeacherSchedules';
+import {getReferenceSemester, getWeekKeyForSemester, getWeekParity, transformSemesterDate} from "../utils/dateUtils";
 
 // ─── Date helpers ───────────────────────────────────────────────
 
@@ -109,13 +109,6 @@ describe('getWeekKeyForSemester', () => {
         const s2 = makeSchedule(2, shortStartSaturday, ['MONDAY'], ['TUESDAY']);
         const reference = { semester: s1.semester };
         const today = addDays(lastMonday, 2); // Wednesday
-
-        console.log('referenceStart:', referenceStart);
-        console.log('shortStartSaturday:', shortStartSaturday);
-        console.log('today:', toDateStr(today));
-        console.log('parity reference:', getWeekParity(s1.semester.startDay, today));
-        console.log('parity saturday:', getWeekParity(s2.semester.startDay, today));
-
         const getKey = getWeekKeyForSemester(s2.semester, reference, today);
         expect(getKey('odd')).toBe('even');
         expect(getKey('even')).toBe('odd');

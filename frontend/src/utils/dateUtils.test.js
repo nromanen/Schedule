@@ -1,4 +1,4 @@
-import {getWeekParity, transformSemesterDate} from './weekUtils';
+import {getWeekParity, transformSemesterDate} from "./dateUtils";
 
 describe('getWeekParity function', () => {
     describe('before semester start', () => {

@@ -1,3 +1,5 @@
+import {AUTH_USER_INITIATE_LOGOUT} from "./actionsType";
+
 export {
     createLessonSuccess,
     getLessonsByGroupStart,
@@ -39,6 +41,7 @@ export {
     setAuthError,
     authSuccess,
 } from './auth';
+export const initiateLogout = () => ({ type: AUTH_USER_INITIATE_LOGOUT });
 export {
     getClassScheduleListSuccess,
     getPublicClassScheduleSuccess,

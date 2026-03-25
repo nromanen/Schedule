@@ -6,14 +6,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import {
-    checkSemesterEnd,
-    matchDayNumberSystemToDayName,
-} from '../../helper/renderScheduleTable';
-
 import i18n from '../../i18n';
 import './DepartmentSchedule.scss';
-import {getWeekParity, isWeekOdd} from "../../utils/weekUtils";
+import {checkSemesterEnd, getWeekParity, isWeekOdd, matchDayNumberSystemToDayName} from "../../utils/dateUtils";
 
 
 const renderClassCell = (classItem) => {

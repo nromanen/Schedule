@@ -1,3 +1,5 @@
+import {daysUppercase} from "../constants/schedule/days";
+
 export const transformSemesterDate = (date) => {
     const [day, month, year] = date.split('/');
     const endDateString = `${month}/${day}/${year}`;
@@ -35,14 +37,18 @@ export const getWeekParity = (startDate, currentDate = new Date()) => {
 
     return additionalWeeks + 1;
 };
-
-// Returns the reference semester — the one that started earliest
-export const getReferenceSemester = (schedules) => {
-    return schedules.reduce((earliest, s) =>
-            transformSemesterDate(s.semester.startDay) < transformSemesterDate(earliest.semester.startDay)
-                ? s
-                : earliest
-        , schedules[0]);
+export const checkSemesterEnd = (semesterEndDate) => {
+    const today = new Date();
+    const endDate = transformSemesterDate(semesterEndDate);
+    return today - endDate > 0;
+};
+export const matchDayNumberSystemToDayName = () => {
+    const now = new Date();
+    return daysUppercase[now.getDay() - 1];
+};
+export const printWeekNumber = (startScheduleDate) => {
+    const date = new Date();
+    return getWeekParity(startScheduleDate, date);
 };
 
 // Returns a function that maps a week key (odd/even) for a given semester
@@ -55,4 +61,13 @@ export const getWeekKeyForSemester = (semester, referenceSemester, currentDate =
     const isSynced = semesterWeekIsOdd === referenceWeekIsOdd;
     if (isSynced) return originalKey;
     return originalKey === 'odd' ? 'even' : 'odd';
+};
+
+// Returns the reference semester — the one that started earliest
+export const getReferenceSemester = (schedules) => {
+    return schedules.reduce((earliest, s) =>
+            transformSemesterDate(s.semester.startDay) < transformSemesterDate(earliest.semester.startDay)
+                ? s
+                : earliest
+        , schedules[0]);
 };

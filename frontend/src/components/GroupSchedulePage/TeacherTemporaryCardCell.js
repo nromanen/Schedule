@@ -17,6 +17,11 @@ const TeacherTemporaryCardCell = (props) => {
         return '';
     }
 
+    const getLessonTypeLabel = (lessonType) =>
+        i18n.t(`formElements:lesson_type_${lessonType?.toLowerCase()}_label`);
+    const getRoomStr = (room, place) =>
+        place !== places.ONLINE && room ? (room.name || room) : '';
+
     if (cards.length === 1) {
         if (isNil(cards[0])) {
             return '';
@@ -52,19 +57,18 @@ const TeacherTemporaryCardCell = (props) => {
         }
 
         // Regular single lesson
-        const lessonTypeLabel = i18n.t(`formElements:lesson_type_${card.lessonType?.toLowerCase()}_label`);
-        const roomStr = place !== places.ONLINE && card.room ? `, ${card.room}` : '';
-
         return (
             <div
                 className="lesson-cell-wrapper"
-                style={{ borderLeft: `4px solid ${card.semesterColor ?? 'transparent'}` }}
+                style={{ borderLeft: `4px dashed ${card.semesterColor ?? 'transparent'}` }}
             >
                 <div className="lesson-type-bar" style={{ backgroundColor: barColor }} />
                 <p className="lesson-subject">{card.subjectForSite}</p>
-                <p className="lesson-details">({lessonTypeLabel}{roomStr})</p>
+                <p className="lesson-details">
+                    {getRoomStr(card.room, place)}
+                    <span>{meetingLink}</span>
+                </p>
                 <p className="lesson-teacher">{card.group?.title}</p>
-                {meetingLink}
             </div>
         );
     }
@@ -101,21 +105,22 @@ const TeacherTemporaryCardCell = (props) => {
     }
 
     // Regular grouped lesson - structured JSX
-    const lessonTypeLabel = i18n.t(`formElements:lesson_type_${card.lessonType?.toLowerCase()}_label`);
-    const roomStr = place !== places.ONLINE && card.room ? `, ${card.room}` : '';
     const groupTitles = cards.map(c => c.group?.title).filter(Boolean);
     const meetingLink = card.linkToMeeting && setLink(card, place);
 
     return (
         <div
             className="lesson-cell-wrapper grouped-lesson"
-            style={{ borderLeft: `4px solid ${card.semesterColor ?? 'transparent'}` }}
+            style={{ borderLeft: `4px dashed ${card.semesterColor ?? 'transparent'}` }}
         >
             <div className="lesson-type-bar" style={{ backgroundColor: barColor }} />
             <p className="lesson-subject">{card.subjectForSite}</p>
-            <p className="lesson-details">({lessonTypeLabel}{roomStr})</p>
+            <p className="lesson-details">
+                {/*{lessonTypeLabel}{roomStr && `, ${roomStr}`}*/}
+                {getRoomStr(card.room, place)}
+                <span>{meetingLink}</span>
+            </p>
             <p className="lesson-teacher">{groupTitles.join(', ')}</p>
-            {meetingLink}
         </div>
     );
 };

@@ -1,6 +1,7 @@
 import {call, delay, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 import jwtDecode from 'jwt-decode';
 import * as actionTypes from '../actions/actionsType';
+import history from '../helper/history';
 
 import {ACTIVATE_ACCOUNT_URL, LOGIN_URL, LOGOUT_URL, REGISTRATION_URL, RESET_PASSWORD_URL, USER_PROFILE,} from '../constants/axios';
 import {
@@ -100,16 +101,15 @@ function* registerAccount({ payload }) {
     }
 }
 
-function* logoutOfAccount(payload) {
+function* logoutOfAccount({ payload } = {}) {
     try {
         yield call(axiosCall, LOGOUT_URL, POST, payload);
         yield put(logout());
+        history.push(HOME_PAGE_LINK);
     } catch (error) {
-        yield put(
-            setAuthError({
-                login: createErrorMessage({ response: error.response }),
-            }),
-        );
+        yield put(setAuthError({
+            login: createErrorMessage({ response: error.response }),
+        }));
     }
 }
 

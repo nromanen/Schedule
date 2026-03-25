@@ -17,7 +17,8 @@ export const prepareLessonSubCardCell = (card, place) => {
         const room = place !== places.ONLINE ? card.room : '';
         inner = i18n.t(`formElements:lesson_type_${card.lessonType.toLowerCase()}_label`);
         if (room !== '') {
-            inner = `(${inner}, ${card.room.name})`;
+            // inner = `${inner}, ${card.room.name}`;
+            inner = `${card.room.name}`;
         }
     }
     return inner;

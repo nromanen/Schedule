@@ -37,6 +37,12 @@ h2 {
   border-top: 2px solid $gray1;
 }
 
+.week-section + .week-section {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 2px solid $gray1;
+}
+
 .MuiTableContainer-root {
   max-height: 40em;
   max-width: 100%;
@@ -158,9 +164,9 @@ h2 {
 
         // Lesson type and room - italic, smaller
         p.lesson-details {
-          font-size: 0.85em;
-          color: $black;
-          font-style: italic;
+          font-size: 0.90em;
+          color: $blue6;
+          font-style: normal;
         }
 
         &.intersection-on-schedule {

@@ -21,6 +21,7 @@ const LinkToMeeting = (props) => {
     return (
         <>
             <IoMdLink
+                size={20}
                 color="blue"
                 className="svg-btn copy-btn link"
                 onClick={() => {

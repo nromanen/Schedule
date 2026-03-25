@@ -1,9 +1,10 @@
 import {
     getWeekParity,
     isWeekOdd,
-    checkSemesterEnd,
-    matchDayNumberSystemToDayName,
+
+
 } from './renderScheduleTable';
+import {checkSemesterEnd, matchDayNumberSystemToDayName} from "../utils/dateUtils";
 
 
 describe('checkSemesterEnd', () => {

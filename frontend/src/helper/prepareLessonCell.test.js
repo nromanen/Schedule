@@ -47,7 +47,7 @@ describe('prepareLessonSubCardCell function', () => {
     describe('should return string with data', () => {
         it('if card is not null and place not equal ONLINE', () => {
             expect(prepareLessonSubCardCell(cardData, places.AUDITORY)).toEqual(
-                `(lesson_type_${cardData.lessonType.toLowerCase()}_label, ${cardData.room.name})`,
+                `${cardData.room.name}`,
             );
         });
         it('if card is not null and place equal ONLINE', () => {

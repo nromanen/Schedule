@@ -1,18 +1,27 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
 import DownloadLink from '../components/DownloadLink/DownloadLink';
-import { renderFullSchedule, renderGroupTable, renderWeekTable, ScheduleLegend } from './renderScheduleTable';
+import {
+    renderFullSchedule,
+    renderGroupTable,
+    renderWeekTable,
+    ScheduleLegend
+} from './renderScheduleTable';
 import DepartmentSchedule from '../components/DepartmentSchedule/DepartmentSchedule';
 import { getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTitle } from '../utils/titlesUtil';
 import SchedulePublishBanner from '../components/GroupSchedulePage/SchedulePublishBanner/SchedulePublishBanner';
 import DepartmentDownloadLink from '../components/DownloadLink/DepartmentDownloadLink';
-import { matchDayNumberSystemToDayName } from './renderScheduleTable';
 import CalendarSchedule, { isShortSemester } from '../components/CalendarSchedule/CalendarSchedule';
 import CalendarGroupSchedule from '../components/CalendarSchedule/CalendarGroupSchedule';
-import { getWeekParity, transformSemesterDate } from '../utils/weekUtils';
 import { getTeacherWithPosition } from './renderTeacher';
 import { buildMergedTeacherSchedule } from './mergeTeacherSchedules';
 import { SEMESTER_COLORS } from '../constants/semesterColors';
+import {
+    checkSemesterEnd,
+    getWeekParity,
+    matchDayNumberSystemToDayName,
+    transformSemesterDate
+} from "../utils/dateUtils";
 
 // ─── Shared components ────────────────────────────────────────────────────────
 
@@ -48,14 +57,14 @@ const ScheduleHeader = ({ semester, t, toggle }) => (
 );
 
 const WeekSection = ({ label, isCurrentWeek, children }) => (
-    <>
+    <div className="week-section">
         <h2>
             <span className={isCurrentWeek ? 'currentDay' : ''}>
                 {label}
             </span>
         </h2>
         {children}
-    </>
+    </div>
 );
 
 const TitleSuffix = ({ isManager }) =>
@@ -64,6 +73,11 @@ const TitleSuffix = ({ isManager }) =>
             <SchedulePublishBanner />
         </div>
     ) : null;
+
+const SemesterEndedNotice = ({ endDay, t }) =>
+    checkSemesterEnd(endDay)
+        ? <p className="semester-ended-notice">{t('common:semester_ended', 'Семестр вже завершився')}</p>
+        : null;
 
 // ─── Schedule views ───────────────────────────────────────────────────────────
 
@@ -86,6 +100,7 @@ const GroupScheduleView = ({ groupSchedule, groupData, semesterData, isManager, 
                     {downloadLink}
                 </h1>
                 <ScheduleLegend />
+                <SemesterEndedNotice endDay={semester.endDay} t={t} />
                 <CalendarGroupSchedule groupSchedule={groupSchedule} viewMode={viewMode} t={t} />
             </>
         );
@@ -101,6 +116,7 @@ const GroupScheduleView = ({ groupSchedule, groupData, semesterData, isManager, 
                 {downloadLink}
             </h1>
             <ScheduleLegend />
+            <SemesterEndedNotice endDay={semester.endDay} t={t} />
             <WeekSection label={t('common:odd_week')} isCurrentWeek={currentWeekIsOdd}>
                 {renderGroupTable(oddArray, true, semester)}
             </WeekSection>
@@ -110,6 +126,8 @@ const GroupScheduleView = ({ groupSchedule, groupData, semesterData, isManager, 
         </>
     );
 };
+
+export const isCardsEmpty = (cards) => Object.keys(cards).length === 0;
 
 const TeacherScheduleView = ({ teacherSchedule, isManager, t }) => {
     const schedules = (Array.isArray(teacherSchedule) ? teacherSchedule : [teacherSchedule])
@@ -164,11 +182,12 @@ const TeacherScheduleView = ({ teacherSchedule, isManager, t }) => {
                 <ScheduleLegend />
                 {semesterLegend}
             </div>
+            <SemesterEndedNotice endDay={referenceSemester.semester.endDay} t={t} />
             <WeekSection label={t('common:odd_week')} isCurrentWeek={currentWeekIsOdd}>
-                {isEmpty(mergedOdd.classes) ? <EmptySchedule t={t} /> : renderWeekTable(mergedOdd)}
+                {isCardsEmpty(mergedOdd.cards) ? <EmptySchedule t={t} /> : renderWeekTable(mergedOdd)}
             </WeekSection>
             <WeekSection label={t('common:even_week')} isCurrentWeek={!currentWeekIsOdd}>
-                {isEmpty(mergedEven.classes) ? <EmptySchedule t={t} /> : renderWeekTable(mergedEven)}
+                {isCardsEmpty(mergedEven.cards) ? <EmptySchedule t={t} /> : renderWeekTable(mergedEven)}
             </WeekSection>
         </>
     );
@@ -191,6 +210,7 @@ const DepartmentScheduleView = ({ fullSchedule, departmentData, isManager, t }) 
                 />
             </h1>
             <ScheduleLegend />
+            <SemesterEndedNotice endDay={semester.endDay} t={t} />
             <DepartmentSchedule fullSchedule={fullSchedule} departmentId={departmentData?.id} />
         </>
     );
@@ -208,6 +228,7 @@ const FullScheduleView = ({ fullSchedule, isManager, t, viewMode, setViewMode })
                 <TitleSuffix isManager={isManager} />
                 <ScheduleHeader semester={semester} t={t} toggle={toggle} />
                 <ScheduleLegend />
+                <SemesterEndedNotice endDay={semester.endDay} t={t} />
                 <CalendarSchedule fullSchedule={fullSchedule} viewMode={viewMode} t={t} />
             </>
         );
@@ -226,6 +247,7 @@ const FullScheduleView = ({ fullSchedule, isManager, t, viewMode, setViewMode })
         <>
             <TitleSuffix isManager={isManager} />
             <ScheduleHeader semester={semester} t={t} toggle={toggle} />
+            <SemesterEndedNotice endDay={semester.endDay} t={t} />
             {viewMode === 'today' && !hasClassesToday
                 ? <p className="empty_schedule">{t('common:no_classes_today', 'Сьогодні немає занять')}</p>
                 : renderFullSchedule(displaySchedule, viewMode === 'today' ? currentWeekIsOdd : null)

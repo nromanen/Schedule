@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import moment from 'moment';
 import {
     checkUniqClassName,
     checkUniqSemester,
@@ -51,7 +51,7 @@ const maxLength = (max) => (value) =>
 
 export const maxLengthValue = maxLength(200);
 
-export const lessThanTime = (value, previousValue, allValues) => {
+export const lessThanTime = (value, _, allValues) => {
     const otherField = 'endTime';
     if (allValues.values[otherField] === undefined) return undefined;
     return moment(value, 'HH:mm').toDate() <=
@@ -63,7 +63,7 @@ export const lessThanTime = (value, previousValue, allValues) => {
           });
 };
 
-export const greaterThanTime = (value, previousValue, allValues) => {
+export const greaterThanTime = (value, _, allValues) => {
     const otherField = 'startTime';
     if (allValues.values[otherField] === undefined) return undefined;
     return moment(value, 'HH:mm').toDate() >= moment(allValues.values[otherField], 'HH:mm').toDate()

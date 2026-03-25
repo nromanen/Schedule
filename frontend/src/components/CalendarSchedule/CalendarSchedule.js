@@ -13,7 +13,7 @@ import { daysUppercase } from '../../constants/schedule/days';
 import { FORM_GROUP_LABEL } from '../../constants/translationLabels/formElements';
 
 import './CalendarSchedule.scss';
-import {getWeekParity, isWeekOdd} from "../../utils/weekUtils";
+import {getWeekParity, isWeekOdd} from "../../utils/dateUtils";
 
 const shortid = require('shortid');
 

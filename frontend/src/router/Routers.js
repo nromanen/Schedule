@@ -1,6 +1,7 @@
 import React from 'react';
-import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {Router, Redirect, Route, Switch} from 'react-router-dom';
 import {connect} from 'react-redux';
+import history from '../helper/history';
 
 import Header from '../components/Header/Header';
 
@@ -38,7 +39,7 @@ import AdminRouter from './AdminRouter';
 const Routers = (props) => {
     const { userRole } = props;
     return (
-        <Router basename={process.env.REACT_APP_BASE_PATH || "/"}>
+        <Router history={history} basename={process.env.REACT_APP_BASE_PATH || "/"}>
             <Header userRole={userRole} roles={userRoles} />
             <Switch>
                 <Route exact path={HOME_PAGE_LINK} component={HomePage} />
