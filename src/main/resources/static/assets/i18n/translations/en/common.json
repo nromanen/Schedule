@@ -252,5 +252,6 @@
     "link": "link",
     "semester_ended": "Semester ended",
     "teacher_full_schedule": "Full teacher schedule",
-    "classweek_label": "Class/week"
+    "classweek_label": "Class/week",
+    "link_applies_to_all_groups": "Link applies to all groups"
 }

@@ -252,5 +252,6 @@
     "Unable to delete department": "Неможливо видалити кафедру",
     "semester_ended": "Семестр вже завершився",
     "teacher_full_schedule": "Повний розклад викладача",
-    "classweek_label": "Пара/тиж."
+    "classweek_label": "Пара/тиж.",
+    "link_applies_to_all_groups": "Посилання застосується до всіх груп"
 }

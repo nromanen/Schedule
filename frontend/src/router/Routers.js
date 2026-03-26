@@ -33,7 +33,7 @@ import {ResetPassword} from '../components/ResetPassword/ResetPassword';
 import {Login} from '../components/Login/Login';
 import MyLessonsPage from '../components/MyLessonsPage/MyLessonsPage';
 import { MY_LESSONS_LINK } from '../constants/links';
-import {AdminRoute, UserRoute} from './routes';
+import {AdminRoute, UserRoute, TeacherRoute} from './routes';
 import AdminRouter from './AdminRouter';
 
 const Routers = (props) => {
@@ -43,7 +43,8 @@ const Routers = (props) => {
             <Header userRole={userRole} roles={userRoles} />
             <Switch>
                 <Route exact path={HOME_PAGE_LINK} component={HomePage} />
-                <Route path={SCHEDULE_FOR_LINK} component={GroupSchedulePage} />
+                {/*<Route path={SCHEDULE_FOR_LINK} component={GroupSchedulePage} />*/}
+                <TeacherRoute path={SCHEDULE_FOR_LINK} component={GroupSchedulePage} />
                 <Route path={ACTIVATION_PAGE_LINK} component={ActivationPage} />
                 <Route path={SET_PASSWORD_LINK} component={SetPasswordForm} />
                 <Route path={RESET_PASSWORD_LINK} component={ResetPassword} />

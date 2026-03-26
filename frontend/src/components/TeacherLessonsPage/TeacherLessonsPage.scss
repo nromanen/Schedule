@@ -5,45 +5,15 @@
 
 .teacher-lessons-wrapper {
     margin-bottom: 50px;
-    @include displayFlex(start, flex-start);
-
-    @media (max-width: $md-m) {
-        @include displayFlex(stretch, center);
-        flex-wrap: wrap;
-    }
+    @include displayFlex(start, flex-start, column);
 }
 
-.teacher-lessons-sidebar {
-    position: sticky;
-    top: 16px;
-    margin-bottom: 100px;
+.teacher-lessons-header {
+    padding: 16px;
+    width: 100%;
 
-    .sidebar-card {
-        width: 320px;
-        text-align: center;
-        padding: 16px;
-        border-radius: 5px;
-        box-shadow: 0 2px 8px $shadow-box;
-
-        .sidebar-title {
-            margin: 0 0 16px 0;
-            font-size: $font-l;
-            font-weight: 500;
-            color: $black;
-        }
-
-        .teacher-dropdown {
-            width: $full-size;
-
-            .MuiFormControl-root {
-                width: $full-size;
-            }
-        }
-    }
-
-    @media (max-width: $md-m) {
-        position: unset;
-        margin-bottom: 20px;
+    .teacher-autocomplete {
+        max-width: 400px;
     }
 }
 

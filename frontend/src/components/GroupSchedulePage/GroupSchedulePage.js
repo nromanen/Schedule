@@ -120,7 +120,7 @@ const GroupSchedulePage = (props) => {
     }, [defaultSemester, location.search]);
 
     const getTop = () =>
-        scheduleType !== 'archived' && (
+        scheduleType !== 'archived' && !props.isTeacher && (
             <GroupSchedulePageTop
                 scheduleType={scheduleType}
                 handleSubmit={handleSubmit}

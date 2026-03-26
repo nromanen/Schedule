@@ -24,6 +24,7 @@ const mapStateToProps = (state) => ({
     notPublished: state.schedule.notPublished,
     notPublishedMessage: state.schedule.notPublishedMessage,
     isManager: state.auth.role === 'ROLE_MANAGER' || state.auth.role === 'ROLE_ADMIN',
+    isTeacher: state.auth.role === 'ROLE_TEACHER',
 });
 
 const mapDispatchToProps = (dispatch) => ({

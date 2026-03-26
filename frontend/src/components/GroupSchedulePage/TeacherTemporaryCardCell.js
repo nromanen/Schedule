@@ -117,7 +117,8 @@ const TeacherTemporaryCardCell = (props) => {
             <p className="lesson-subject">{card.subjectForSite}</p>
             <p className="lesson-details">
                 {/*{lessonTypeLabel}{roomStr && `, ${roomStr}`}*/}
-                {getRoomStr(card.room, place)}
+                {/*{getRoomStr(card.room, place)}*/}
+                {[...new Set(cards.map(c => getRoomStr(c.room, place)).filter(Boolean))].join(', ')}
                 <span>{meetingLink}</span>
             </p>
             <p className="lesson-teacher">{groupTitles.join(', ')}</p>

@@ -6,7 +6,6 @@ import {
     ACTIVATION_PAGE_LINK,
     ADMIN_PAGE_LINK,
     BUST_ROOMS_LINK,
-    CHANGES_LINK,
     CLASS_SCHEDULE_TITLE_LINK,
     DEPARTMENTS_LINK,
     GROUP_LIST_PARAM_LINK,
@@ -25,7 +24,6 @@ import RoomPage from '../containers/RoomsPage/RoomsPage';
 import SubjectPage from '../containers/SubjectPage/SubjectPage';
 import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';
-import TemporarySchedule from '../containers/TemporarySchedule/TemporarySchedule';
 import {AdminRoute} from './routes';
 import NavigationPanel from '../components/Navigation/NavigationPanel';
 import TeacherLessonsPage from '../components/TeacherLessonsPage/TeacherLessonsPage';
@@ -45,8 +43,6 @@ export default function Routers() {
                 <AdminRoute path={SUBJECT_PAGE_LINK} component={SubjectPage} />
                 <AdminRoute path={BUST_ROOMS_LINK} component={BusyRoomsPage} />
                 <AdminRoute path={SEMESTER_PAGE_LINK} component={SemesterPage} />
-                <AdminRoute path={CHANGES_LINK} component={TemporarySchedule} />
-
                 <AdminRoute path={TEACHER_LESSONS_LINK} component={TeacherLessonsPage} />
 
                 <AdminRoute path={ACTIVATION_PAGE_LINK}>

@@ -66,7 +66,7 @@ const LessonGroupRow = React.memo((props) => {
         </TableCell>
     );
 
-    const renderEditCell = (showDelete = true) => (
+    const renderEditCell = (showDelete = true, showHint = false) => (
         <TableCell className="new-link-cell">
             <div className="new-link-wrapper">
                 <TextField
@@ -97,6 +97,11 @@ const LessonGroupRow = React.memo((props) => {
                     </IconButton>
                 )}
             </div>
+            {showHint && (
+                <span className="link-hint">
+                {t('link_applies_to_all_groups') || '⚠ Застосується до всіх груп'}
+            </span>
+            )}
         </TableCell>
     );
 
@@ -115,7 +120,7 @@ const LessonGroupRow = React.memo((props) => {
         </TableCell>
     );
 
-    const renderCommonCells = (lesson, showEdit = false) => (
+    const renderCommonCells = (lesson, showEdit = false, showHint = false) => (
         <>
             <TableCell>{subjectDisplay}</TableCell>
             <TableCell>{getLessonTypeLabel(group.lessonType)}</TableCell>
@@ -123,7 +128,7 @@ const LessonGroupRow = React.memo((props) => {
                 {lesson?.grouped && <CheckCircleIcon className="grouped-icon" />}
             </TableCell>
             {renderLinkCell(lesson)}
-            {showEdit ? renderEditCell() : <TableCell />}
+            {showEdit ? renderEditCell(true, showHint) : <TableCell />}
         </>
     );
 
@@ -142,7 +147,7 @@ const LessonGroupRow = React.memo((props) => {
             <>
                 <TableRow className={`lesson-group-row expanded-header ${totalLessons === 1 ? 'type-last-row' : ''}`}>
                     {renderGroupsCell(lessons[0]?.group?.title || '-', true, () => setIsExpanded(false))}
-                    {renderCommonCells(lessons[0], true)}
+                    {renderCommonCells(lessons[0], true, canExpand)}
                 </TableRow>
 
                 {lessons.slice(1).map((lesson, index) => (

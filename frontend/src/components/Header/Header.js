@@ -132,8 +132,8 @@ const useCacheClearing = () => {
 
 // ─── Shared components ────────────────────────────────────────────────────────
 
-const NavMenuItem = ({ to, icon: Icon, label, onClick }) => (
-    <Link to={to} className="navLinks" style={{ textDecoration: 'none' }} onClick={onClick}>
+const NavMenuItem = React.forwardRef(({ to, icon: Icon, label, onClick }, ref) => (
+    <Link to={to} ref={ref} className="navLinks" style={{ textDecoration: 'none' }} onClick={onClick}>
         <StyledMenuItem>
             <ListItemIcon>
                 <Icon fontSize="normal" />
@@ -141,7 +141,9 @@ const NavMenuItem = ({ to, icon: Icon, label, onClick }) => (
             {label}
         </StyledMenuItem>
     </Link>
-);
+));
+
+NavMenuItem.displayName = 'NavMenuItem';
 
 // ─── Role-based menus ─────────────────────────────────────────────────────────
 
@@ -249,8 +251,7 @@ const TeacherUserMenu = ({ menu, teacherId, t }) => {
             <Button
                 aria-controls="customized-menu"
                 aria-haspopup="true"
-                variant="contained"
-                color="primary"
+                variant="outlined"
                 onClick={menu.handleOpen}
             >
                 {email}

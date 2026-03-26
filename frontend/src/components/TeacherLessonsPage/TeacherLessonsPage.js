@@ -84,30 +84,26 @@ const TeacherLessonsPage = (props) => {
 
     return (
         <div className="teacher-lessons-wrapper">
-            <div className="teacher-lessons-sidebar">
-                <div className="sidebar-card">
-                    <Autocomplete
-                        id="teacher"
-                        value={selectedTeacher}
-                        options={teachers}
-                        className="teacher-autocomplete"
-                        clearOnEscape
-                        openOnFocus
-                        getOptionLabel={(option) => getTeacherFullName(option)}
-                        getOptionSelected={(option, value) => option.id === value?.id}
-                        onChange={(_, newValue) => {
-                            handleTeacherSelect(newValue);
-                        }}
-                        renderInput={(params) => (
-                            <TextField
-                                className="textField"
-                                {...params}
-                                label={t(FORM_TEACHER_LABEL)}
-                                margin="normal"
-                            />
-                        )}
-                    />
-                </div>
+            <div className="teacher-lessons-header">
+                <Autocomplete
+                    id="teacher"
+                    value={selectedTeacher}
+                    options={teachers}
+                    className="teacher-autocomplete"
+                    clearOnEscape
+                    openOnFocus
+                    getOptionLabel={(option) => getTeacherFullName(option)}
+                    getOptionSelected={(option, value) => option.id === value?.id}
+                    onChange={(_, newValue) => handleTeacherSelect(newValue)}
+                    renderInput={(params) => (
+                        <TextField
+                            className="textField"
+                            {...params}
+                            label={t(FORM_TEACHER_LABEL)}
+                            margin="normal"
+                        />
+                    )}
+                />
             </div>
 
             <div className="teacher-lessons-list">

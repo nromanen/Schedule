@@ -220,7 +220,7 @@ const LessonForm = (props) => {
                                     <Typography>{t(COPY_FOR_BUTTON_LABEL)}</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <Typography>
+                                    <Typography component="div">
                                         <>
                                             <p className="group-label">
                                                 <label htmlFor="groups">

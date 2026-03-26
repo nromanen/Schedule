@@ -15,14 +15,6 @@ export {
     setUniqueError,
 } from './lesson';
 
-export {
-    selectTeacherId,
-    selectTemporarySchedule,
-    selectVacation,
-    setTemporarySchedules,
-    setSchedulesAndTemporarySchedules,
-} from './temporarySchedule';
-
 export { setOpenSnackbar } from './snackbar';
 
 export { setUsers, setUser } from './users';
@@ -50,9 +42,7 @@ export {
 export {
     selectGroupSuccess,
     getGroupsForCurrentSemesterStart,
-    // clearGroupStart,
     showAllGroupsSuccess,
-    // submitGroupStart,
     setScheduleGroups
 } from './groups';
 

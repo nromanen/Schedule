@@ -3,7 +3,6 @@ import {reducer as formReducer} from 'redux-form';
 
 import teachers from './teachers';
 import lesson from './lesson';
-import temporarySchedule from './temporarySchedule';
 import snackbar from './snackbar';
 import auth from './auth';
 import loadingIndicator from './loadingIndicator';
@@ -21,7 +20,6 @@ import teacherLessons from './teacherLessons';
 
 const rootReducer = combineReducers({
     lesson,
-    temporarySchedule,
     auth,
     snackbar,
     schedule,
