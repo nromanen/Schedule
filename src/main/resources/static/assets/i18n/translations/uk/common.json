@@ -86,6 +86,7 @@
     "delete_lesson": "Видалити пару",
     "edit_lesson": "Редагувати пару",
     "copy_lesson": "Скопіювати пару",
+    "move_lesson": "Перемістити пару",
     "copy_to_same_group_error": "Ви не можете скопіювати в ту саму групу",
     "delete_lesson_changes": "Видалити зміни",
     "edit_lesson_lesson": "Редагувати зміни",
@@ -253,5 +254,8 @@
     "semester_ended": "Семестр вже завершився",
     "teacher_full_schedule": "Повний розклад викладача",
     "classweek_label": "Пара/тиж.",
-    "link_applies_to_all_groups": "Посилання застосується до всіх груп"
+    "link_applies_to_all_groups": "Посилання застосується до всіх груп",
+    "current_room_label": "Зараз",
+    "clear_schedule_confirm": "Очистити розклад?",
+    "clear_schedule_warning": "Ця дія незворотня. Всі пари будуть видалені."
 }

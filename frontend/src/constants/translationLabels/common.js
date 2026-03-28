@@ -170,3 +170,4 @@ export const CLEAR_CACHE_SUCCESS = 'clear_cache_success';
 export const CLEAR_CACHE_ERROR = 'clear_cache_error';
 export const CLEAR_CACHE_BUTTON = 'clear_cache';
 export const CLEARING_CACHE = 'clearing_cache';
+export const COMMON_MOVE = "common:move"

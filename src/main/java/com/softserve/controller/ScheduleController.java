@@ -222,4 +222,19 @@ public class ScheduleController {
         List<ScheduleDTO> updated = scheduleService.changeRoom(scheduleId, roomId);
         return ResponseEntity.ok(updated);
     }
+
+    @PutMapping("/move")
+    @Operation(summary = "Move schedule item to another slot and room")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ResponseEntity<List<ScheduleDTO>> moveScheduleItem(
+            @RequestParam Long scheduleId,
+            @RequestParam Long roomId,
+            @RequestParam String dayOfWeek,
+            @RequestParam Long periodId,
+            @RequestParam String evenOdd) {
+        log.info("In moveScheduleItem with scheduleId = {}, roomId = {}, dayOfWeek = {}, periodId = {}, evenOdd = {}",
+                scheduleId, roomId, dayOfWeek, periodId, evenOdd);
+        List<ScheduleDTO> updated = scheduleService.moveSchedule(scheduleId, roomId, dayOfWeek, periodId, evenOdd);
+        return ResponseEntity.ok(updated);
+    }
 }

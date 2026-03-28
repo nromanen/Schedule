@@ -909,4 +909,57 @@ public class ScheduleServiceImpl implements ScheduleService {
         dto.setPeriods(classes);
         return dto;
     }
+
+    @Transactional
+    public List<ScheduleDTO> moveSchedule(Long scheduleId, Long roomId,
+                                          String dayOfWeek, Long periodId, String evenOdd) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new EntityNotFoundException(Schedule.class, "id", scheduleId.toString()));
+
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new EntityNotFoundException(Room.class, "id", roomId.toString()));
+
+        Period period = periodRepository.findById(periodId)
+                .orElseThrow(() -> new EntityNotFoundException(Period.class, "id", periodId.toString()));
+
+        List<Schedule> schedulesToUpdate = schedule.getLesson().isGrouped()
+                ? getSchedulesForGroupedLessons(schedule)
+                : List.of(schedule);
+
+        for (Schedule s : schedulesToUpdate) {
+            if (isConflictForGroup(
+                    s.getLesson().getSemester().getId(),
+                    DayOfWeek.valueOf(dayOfWeek),
+                    EvenOdd.valueOf(evenOdd),
+                    periodId,
+                    s.getLesson().getGroup().getId())) {
+                throw new ScheduleConflictException(
+                        "Group " + s.getLesson().getGroup().getTitle() + " already has a lesson at this time"
+                );
+            }
+        }
+
+        List<Schedule> updatedSchedules = new ArrayList<>();
+        for (Schedule s : schedulesToUpdate) {
+            s.setRoom(room);
+            s.setPeriod(period);
+            s.setDayOfWeek(DayOfWeek.valueOf(dayOfWeek));
+            s.setEvenOdd(EvenOdd.valueOf(evenOdd));
+            updatedSchedules.add(scheduleRepository.update(s));
+        }
+
+        Long semesterId = schedule.getLesson().getSemester().getId();
+        for (Schedule s : updatedSchedules) {
+            Lesson lesson = s.getLesson();
+            cacheService.evictCachesForSchedule(
+                    semesterId,
+                    lesson.getGroup().getId(),
+                    lesson.getTeacher().getId()
+            );
+        }
+
+        return updatedSchedules.stream()
+                .map(scheduleMapper::scheduleToScheduleDTO)
+                .toList();
+    }
 }

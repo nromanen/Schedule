@@ -122,14 +122,20 @@
 .action-menu {
     .MuiPaper-root {
         .edit-item,
+        .move-item,
         .delete-item {
             font-size: $font-xs;
         }
         .delete-item {
             color: $red;
         }
-        .edit-item {
+        .edit-item,
+        .move-item {
             color: $blue;
         }
     }
+}
+
+.room-name {
+    color: $gray;
 }

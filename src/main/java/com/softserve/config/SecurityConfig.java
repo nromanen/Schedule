@@ -93,7 +93,7 @@ public class SecurityConfig {
                                 "/managers/**", "/classes/**", "/groups/**",
                                 "/lessons/**", "/rooms/**", "/subjects/**",
                                 "/teachers/**", "/semesters/**", "/room-types/**",
-                                "/departments/**"
+                                "/departments/**", "/schedules/**"
                         ).hasRole("MANAGER")
 
                         .anyRequest().authenticated()

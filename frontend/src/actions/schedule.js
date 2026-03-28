@@ -286,3 +286,8 @@ export const updateScheduleItemSuccess = (item) => {
         payload: item,
     };
 };
+
+export const moveScheduleItemStart = (item) => ({
+    type: actionTypes.MOVE_SCHEDULE_ITEM_START,
+    item,
+});

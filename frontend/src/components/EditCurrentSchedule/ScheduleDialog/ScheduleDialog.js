@@ -27,9 +27,11 @@ const ScheduleDialog = (props) => {
         t,
         availability,
         isOpenConfirmDialog,
+        initialRoom,
+        currentRoom
     } = props;
 
-    const [room, setRoom] = useState('');
+    const [room, setRoom] = useState(initialRoom || '');
     const [warnings, setWarnings] = useState([]);
 
     useEffect(() => {
@@ -39,6 +41,15 @@ const ScheduleDialog = (props) => {
             setWarnings([]);
         }
     }, [availability]);
+
+    useEffect(() => {
+        if (initialRoom && availability.rooms) {
+            const roomWithAvailability = availability.rooms.find(r => r.id === initialRoom.id);
+            setRoom(roomWithAvailability || initialRoom);
+        } else {
+            setRoom(initialRoom || '');
+        }
+    }, [initialRoom, availability.rooms]);
 
     const updateWarnings = () => {
         const isRoomAvailableWarning = warnings.includes(i18n.t(COMMON_ROOM_IS_UNAVAILABLE));
@@ -71,6 +82,11 @@ const ScheduleDialog = (props) => {
                 onClose={onClose}
                 buttons={[dialogChooseButton(chooseClickHandle), dialogCloseButton(onClose)]}
             >
+                {currentRoom && (
+                    <p className="current-room-info">
+                        {t('current_room_label')}: {currentRoom.name}
+                    </p>
+                )}
                 <div className="availability-info">
                     <p className="availability-warning">{warnings[0]}</p>
                 </div>
@@ -81,6 +97,7 @@ const ScheduleDialog = (props) => {
                         clearOnEscape
                         openOnFocus
                         className="form-input"
+                        value={room || null}
                         getOptionSelected={(option, value) => option.id === value.id}
                         onChange={(_, newValue) => {
                             setRoom(newValue);

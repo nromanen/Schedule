@@ -85,3 +85,11 @@
         width: 350px;
     }
 }
+
+.dialog-button-delete {
+    background-color: $delete-color !important;
+
+    &:hover {
+        background-color: darken($delete-color, 10%) !important;
+    }
+}

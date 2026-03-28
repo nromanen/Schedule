@@ -411,6 +411,22 @@ export function* selectFullSchedule({ semesterId }) {
     }
 }
 
+export function* moveScheduleItem({ item }) {
+    try {
+        yield put(setScheduleOperationLoading(true));
+        const { scheduleId, roomId, dayOfWeek, periodId, evenOdd } = item;
+        const requestUrl = `${SCHEDULE_ITEMS_URL}/move?scheduleId=${scheduleId}&roomId=${roomId}&dayOfWeek=${dayOfWeek}&periodId=${periodId}&evenOdd=${evenOdd}`;
+        const { data } = yield call(axiosCall, requestUrl, PUT);
+        for (const schedule of data) {
+            yield put(updateScheduleItemSuccess(schedule));
+        }
+    } catch (error) {
+        yield put(setOpenErrorSnackbar(createErrorMessage(error)));
+    } finally {
+        yield put(setScheduleOperationLoading(false));
+    }
+}
+
 export default function* watchSchedule() {
     yield takeLatest(actionTypes.GET_CURRENT_SEMESTER_START, getCurrentSemester);
     yield takeLatest(actionTypes.GET_DEFAULT_SEMESTER_START, getDefaultSemester);
@@ -435,5 +451,6 @@ export default function* watchSchedule() {
     yield takeLatest(actionTypes.SELECT_TEACHER_SCHEDULE_START, selectTeacherSchedule);
     yield takeLatest(actionTypes.SELECT_FULL_SCHEDULE_START, selectFullSchedule);
     yield takeLatest(actionTypes.SELECT_DEPARTMENT_SCHEDULE_START, selectDepartmentSchedule);
+    yield takeEvery(actionTypes.MOVE_SCHEDULE_ITEM_START, moveScheduleItem);
 }
 

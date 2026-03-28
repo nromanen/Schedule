@@ -76,6 +76,7 @@
     "delete_lesson": "Delete lesson",
     "edit_lesson": "Edit lesson",
     "copy_lesson": "Copy lesson",
+    "move_lesson": "Move lesson",
     "copy_to_same_group_error": "You cannot copy to the same group",
     "delete_lesson_changes": "Delete changes",
     "edit_lesson_lesson": "Edit changes",
@@ -253,5 +254,8 @@
     "semester_ended": "Semester ended",
     "teacher_full_schedule": "Full teacher schedule",
     "classweek_label": "Class/week",
-    "link_applies_to_all_groups": "Link applies to all groups"
+    "link_applies_to_all_groups": "Link applies to all groups",
+    "current_room_label": "Current room",
+    "clear_schedule_confirm": "Clear schedule?",
+    "clear_schedule_warning": "This action is irreversible. All lessons will be deleted."
 }

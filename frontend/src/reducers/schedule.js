@@ -192,7 +192,6 @@ const reducer = (state = initialState, action) => {
         case actionTypes.SET_SCHEDULE_PUBLISHED:
             return { ...state, schedulePublished: action.payload };
 
-
         default:
             return state;
     }

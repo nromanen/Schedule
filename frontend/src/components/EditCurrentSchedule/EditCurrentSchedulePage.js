@@ -6,6 +6,7 @@ import ScheduleLessonsList from '../../containers/EditCurrentSchedule/ScheduleLe
 import Schedule from '../../containers/EditCurrentSchedule/Schedule';
 import {SCHEDULE_TITLE, USE_PC} from '../../constants/translationLabels/common';
 import {EDIT_SCHEDULE_MIN_WINDOW_SIZE} from '../../constants/windowSizes';
+import CustomDialog from '../../share/DialogWindows/CustomDialog';
 
 const SchedulePage = (props) => {
     const {
@@ -29,6 +30,8 @@ const SchedulePage = (props) => {
     const days = currentSemester.semester_days || [];
     const classes = currentSemester.semester_classes || [];
     const allLessons = [];
+    const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
 
     const handleResize = () => {
         if (window.innerWidth < EDIT_SCHEDULE_MIN_WINDOW_SIZE) {
@@ -82,6 +85,11 @@ const SchedulePage = (props) => {
     }, [groupId]);
 
     const handleClearSchedule = () => {
+        setOpenConfirmDialog(true);
+    };
+
+    const handleConfirmClear = () => {
+        setOpenConfirmDialog(false);
         if (currentSemester.id) {
             clearScheduleItems(currentSemester.id);
             if (groupId) {
@@ -117,6 +125,25 @@ const SchedulePage = (props) => {
                         </>
                     )}
                 </section>
+                <CustomDialog
+                    open={openConfirmDialog}
+                    onClose={() => setOpenConfirmDialog(false)}
+                    title={t('clear_schedule_confirm') || 'Очистити розклад?'}
+                    buttons={[
+                        {
+                            label: t('cancel') || 'Скасувати',
+                            handleClick: () => setOpenConfirmDialog(false),
+                        },
+                        {
+                            label: t('confirm') || 'Очистити',
+                            handleClick: handleConfirmClear,
+                            color: 'secondary',
+                            additionClassName: 'dialog-button-delete',
+                        },
+                    ]}
+                >
+                    {t('clear_schedule_warning') || 'Ця дія незворотня. Всі пари будуть видалені.'}
+                </CustomDialog>
                 <aside className="schedule-card lesson-list">
                     <ScheduleLessonsList
                         setDragItemData={setDragItemData}

@@ -9,10 +9,11 @@ import './Schedule.scss';
 import { COMMON_GROUP_TITLE, NO_CURRENT_SEMESTER } from '../../../constants/translationLabels/common';
 import { actionType } from '../../../constants/actionTypes';
 import { addClassDayBoard, removeClassDayBoard } from '../../../helper/schedule';
-import {setScheduleOperationLoading} from "../../../actions/loadingIndicator";
 
 // Width of a single group column in pixels
 const COLUMN_WIDTH = 150;
+const BOARD_CONTAINER_HEIGHT = 114; // Must match .board-container height in ScheduleBoard.scss
+const GROUP_TITLE_HEIGHT = 50;
 
 const Schedule = (props) => {
     const {
@@ -67,13 +68,13 @@ const Schedule = (props) => {
         }
     }, [groupId, groups]);
 
-    const openScheduleDialogWithData = (data) => {
+    const openScheduleDialogWithData = useCallback((data) => {
         setDialogScheduleData(data);
         setIsOpenScheduleDialog(true);
-    };
+    }, []);
 
     // Handle schedule item update or creation
-    const handleChangeSchedule = (roomId, actionData) => {
+    const handleChangeSchedule = useCallback((roomId, actionData) => {
         const { item, type } = actionData;
         setIsOpenScheduleDialog(false);
         if (type === actionType.UPDATED) {
@@ -83,11 +84,11 @@ const Schedule = (props) => {
         }
         selectedGroupById(actionData.groupId);
         getLessonsByGroupId(actionData.groupId);
-    };
+    }, [editRoomItemToSchedule, addItemsToSchedule, selectedGroupById, getLessonsByGroupId]);
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         setIsOpenScheduleDialog(false);
-    };
+    }, []);
 
     // Memoized column renderer for virtualized list
     const GroupColumn = useCallback(({ index, style }) => {
@@ -133,8 +134,6 @@ const Schedule = (props) => {
         );
     }, [groups, groupId, allLessons, currentSemester, dragItemData, t, scheduleOperationLoading]);
 
-    const BOARD_CONTAINER_HEIGHT = 114; // Must match .board-container height in ScheduleBoard.scss
-    const GROUP_TITLE_HEIGHT = 50;
     const listHeight = allLessons.length * BOARD_CONTAINER_HEIGHT + GROUP_TITLE_HEIGHT;
 
     return (
@@ -146,6 +145,7 @@ const Schedule = (props) => {
                     t={t}
                     handleChangeSchedule={handleChangeSchedule}
                     onClose={handleClose}
+                    currentRoom={dialogScheduleData?.currentRoom}
                 />
             )}
             {currentSemester.id ? (

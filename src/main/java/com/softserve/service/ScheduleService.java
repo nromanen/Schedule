@@ -216,4 +216,8 @@ public interface ScheduleService extends BasicService<Schedule, Long> {
      *         or empty collections if no active semesters are found
      */
     CombinedRoomScheduleDTO getCombinedRoomScheduleForActiveWeek();
+
+    @Transactional
+    List<ScheduleDTO> moveSchedule(Long scheduleId, Long roomId,
+                                   String dayOfWeek, Long periodId, String evenOdd);
 }
