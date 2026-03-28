@@ -35,20 +35,23 @@ export function* updateLessonsLink({ linkData }) {
         const requestUrl = `${LESSON_URL}/link`;
         yield call(axiosCall, requestUrl, PUT, linkData);
 
+        const state = yield select();
+        const isTeacher = state.auth.role === 'ROLE_TEACHER';
+
+        if (isTeacher) {
+            yield put({ type: actionTypes.GET_MY_LESSONS_START });
+        } else {
+            const teacherId = state.teacherLessons.selectedTeacher?.id;
+            if (teacherId) {
+                yield put({ type: actionTypes.GET_LESSONS_BY_TEACHER_START, teacherId });
+            }
+        }
+
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
             FORM_LESSON_LABEL || 'Посилання',
             UPDATED_LABEL,
         );
-
-        const state = yield select();
-        const teacherId = state.teacherLessons.selectedTeacher?.id;
-        if (teacherId) {
-            const lessonsUrl = `${LESSON_URL}/teacher?teacherId=${teacherId}`;
-            const { data } = yield call(axiosCall, lessonsUrl, GET);
-            yield put(updateLessonsLinkSuccess(data));
-        }
-
         yield put(setOpenSuccessSnackbar(message));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
