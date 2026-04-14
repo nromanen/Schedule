@@ -16,12 +16,14 @@ import {buildMergedTeacherSchedule} from '../../helper/mergeTeacherSchedules';
 import {SEMESTER_COLORS} from '../../constants/semesterColors';
 import {
     checkSemesterEnd,
-    getWeekParity,
+    getWeekParity, isWeekOdd,
     matchDayNumberSystemToDayName,
     transformSemesterDate
 } from "../../utils/dateUtils";
 import FullScheduleTable from "../FullScheduleTable/FullScheduleTable";
 import SemesterTitle from "./SemesterTitle";
+
+const currentWeekIsOdd = (semester) => isWeekOdd(getWeekParity(semester.startDay));
 
 // ─── Shared components ────────────────────────────────────────────────────────
 
@@ -44,6 +46,26 @@ export const ViewModeToggle = ({viewMode, setViewMode, t}) => (
             {t('common:full_week_schedule', 'Весь тиждень')}
         </button>
     </div>
+);
+
+const ScheduleTitleHeader = ({semester, subtitle, multiline = false, children}) => (
+    <h1>
+        <SemesterTitle semester={semester}/>
+        {subtitle && (
+            multiline ? (
+                <>
+                    <br/>
+                    <span className="schedule-subtitle">{subtitle}</span>
+                </>
+            ) : (
+                <>
+                    <span className="schedule-title-divider"> | </span>
+                    <span className="schedule-group-title">{subtitle}</span>
+                </>
+            )
+        )}
+        {children}
+    </h1>
 );
 
 const ScheduleHeader = ({semester, t, toggle}) => (
@@ -94,15 +116,10 @@ const GroupScheduleView = ({groupSchedule, groupData, semesterData, isManager, t
         return (
             <>
                 <TitleSuffix isManager={isManager}/>
-                <h1>
-                    <SemesterTitle semester={semester}/>
-                    {group && <>
-                        <span className="schedule-title-divider"> | </span>
-                        <span className="schedule-group-title">{group.title}</span>
-                    </>}
+                <ScheduleTitleHeader semester={semester} subtitle={group?.title}>
                     <ViewModeToggle viewMode={viewMode} setViewMode={setViewMode} t={t}/>
                     {downloadLink}
-                </h1>
+                </ScheduleTitleHeader>
                 <ScheduleLegend/>
                 <SemesterEndedNotice endDay={semester.endDay} t={t}/>
                 <CalendarGroupSchedule groupSchedule={groupSchedule} viewMode={viewMode} t={t}/>
@@ -110,25 +127,18 @@ const GroupScheduleView = ({groupSchedule, groupData, semesterData, isManager, t
         );
     }
 
-    const currentWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
-
     return (
         <>
             <TitleSuffix isManager={isManager}/>
-            <h1>
-                <SemesterTitle semester={semester}/>
-                {group && <>
-                    <span className="schedule-title-divider"> | </span>
-                    <span className="schedule-group-title">{group.title}</span>
-                </>}
+            <ScheduleTitleHeader semester={semester} subtitle={group?.title}>
                 {downloadLink}
-            </h1>
+            </ScheduleTitleHeader>
             <ScheduleLegend variant="basic"/>
             <SemesterEndedNotice endDay={semester.endDay} t={t}/>
-            <WeekSection label={t('common:odd_week')} isCurrentWeek={currentWeekIsOdd}>
+            <WeekSection label={t('common:odd_week')} isCurrentWeek={currentWeekIsOdd(semester)}>
                 {renderGroupTable(oddArray, true, semester)}
             </WeekSection>
-            <WeekSection label={t('common:even_week')} isCurrentWeek={!currentWeekIsOdd}>
+            <WeekSection label={t('common:even_week')} isCurrentWeek={!currentWeekIsOdd(semester)}>
                 {renderGroupTable(evenArray, false, semester)}
             </WeekSection>
         </>
@@ -149,8 +159,6 @@ const TeacherScheduleView = ({teacherSchedule, isManager, t}) => {
     if (!hasAnyClasses) return <EmptySchedule t={t}/>;
 
     const {odd: mergedOdd, even: mergedEven, referenceSemester} = buildMergedTeacherSchedule(schedules);
-    const currentWeekIsOdd = getWeekParity(referenceSemester.semester.startDay) % 2 === 1;
-
     const semesterLegend = schedules.length > 1 && (
         <div className="semester-legend">
             {schedules.map(({semester: sem}, index) => (
@@ -168,38 +176,42 @@ const TeacherScheduleView = ({teacherSchedule, isManager, t}) => {
         </div>
     );
 
+    const downloadLinks = schedules.map(({semester: sem}) => (
+        <DownloadLink
+            key={sem.id}
+            entity="teacher"
+            semesterId={sem.id}
+            entityId={schedules[0].teacher.id}
+            label={schedules.length > 1 ? sem.description : null}
+        />
+    ));
+
     return (
         <>
             <TitleSuffix isManager={isManager}/>
-            <h1>
-                {schedules.length === 1 ? (
-                    <>
-                        <SemesterTitle semester={schedules[0].semester}/>
-                        <br/>
-                        <span className="schedule-teacher-title">
-                        {getTeacherWithPosition(schedules[0].teacher)}
-                        </span>
-                    </>
-                ) : getTeacherWithPosition(schedules[0].teacher)}
-                {schedules.map(({semester: sem}) => (
-                    <DownloadLink
-                        key={sem.id}
-                        entity="teacher"
-                        semesterId={sem.id}
-                        entityId={schedules[0].teacher.id}
-                        label={schedules.length > 1 ? sem.description : null}
-                    />
-                ))}
-            </h1>
+            {schedules.length === 1 ? (
+                <ScheduleTitleHeader
+                    semester={schedules[0].semester}
+                    subtitle={getTeacherWithPosition(schedules[0].teacher)}
+                    multiline
+                >
+                    {downloadLinks}
+                </ScheduleTitleHeader>
+            ) : (
+                <h1>
+                    {getTeacherWithPosition(schedules[0].teacher)}
+                    {downloadLinks}
+                </h1>
+            )}
             <div className="schedule-legends-row">
                 <ScheduleLegend variant="basic"/>
                 {semesterLegend}
             </div>
             <SemesterEndedNotice endDay={referenceSemester.semester.endDay} t={t}/>
-            <WeekSection label={t('common:odd_week')} isCurrentWeek={currentWeekIsOdd}>
+            <WeekSection label={t('common:odd_week')} isCurrentWeek={currentWeekIsOdd(referenceSemester.semester)}>
                 {isCardsEmpty(mergedOdd.cards) ? <EmptySchedule t={t}/> : renderWeekTable(mergedOdd)}
             </WeekSection>
-            <WeekSection label={t('common:even_week')} isCurrentWeek={!currentWeekIsOdd}>
+            <WeekSection label={t('common:even_week')} isCurrentWeek={!currentWeekIsOdd(referenceSemester.semester)}>
                 {isCardsEmpty(mergedEven.cards) ? <EmptySchedule t={t}/> : renderWeekTable(mergedEven)}
             </WeekSection>
         </>
@@ -210,22 +222,19 @@ const DepartmentScheduleView = ({fullSchedule, departmentData, isManager, t}) =>
     const {resultArray, semester} = fullSchedule;
     if (isEmpty(resultArray)) return <EmptySchedule t={t}/>;
 
+    const subtitle = departmentData && `${t('department_label')} ${departmentData.name}`;
+
     return (
         <>
             <TitleSuffix isManager={isManager}/>
-            <h1>
-                <SemesterTitle semester={semester} />
-                {departmentData && <>
-                    <span className="schedule-title-divider"> | </span>
-                    <span className="schedule-group-title"> {t('department_label')} {departmentData.name}</span>
-                </>}
+            <ScheduleTitleHeader semester={semester} subtitle={subtitle}>
                 <DepartmentDownloadLink
                     departmentName={departmentData?.name}
                     semesterDescription={semester?.description}
                     semesterStartDay={semester?.startDay}
                     semesterEndDay={semester?.endDay}
                 />
-            </h1>
+            </ScheduleTitleHeader>
             <ScheduleLegend/>
             <SemesterEndedNotice endDay={semester.endDay} t={t}/>
             <DepartmentSchedule fullSchedule={fullSchedule} departmentId={departmentData?.id}/>
@@ -252,8 +261,6 @@ const FullScheduleView = ({fullSchedule, isManager, t, viewMode, setViewMode}) =
     }
 
     const currentDay = matchDayNumberSystemToDayName();
-    const currentWeekIsOdd = getWeekParity(semester.startDay) % 2 === 1;
-
     const displaySchedule = viewMode === 'today'
         ? {...fullSchedule, resultArray: resultArray.filter(d => d.day === currentDay)}
         : fullSchedule;
@@ -270,7 +277,7 @@ const FullScheduleView = ({fullSchedule, isManager, t, viewMode, setViewMode}) =
                 :
                 <FullScheduleTable
                     fullResultSchedule={displaySchedule}
-                    todayWeekIsOdd={viewMode === 'today' ? currentWeekIsOdd : null}
+                    todayWeekIsOdd={viewMode === 'today' ? currentWeekIsOdd(semester) : null}
                 />
             }
         </>

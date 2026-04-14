@@ -23,6 +23,23 @@ const TeacherTemporaryCardCell = (props) => {
     const getRoomStr = (room, place) =>
         place !== places.ONLINE && room ? (room.name || room) : '';
 
+    const renderLeftBar = (card) => {
+        const hasSemesterColor = !!card.semesterColor;
+        if (hasSemesterColor) return null;
+        return (
+            <div
+                className="lesson-type-bar"
+                style={{ backgroundColor: getLessonTypeColor(card.lessonType) }}
+            />
+        );
+    };
+
+    const getBorderLeft = (card) => {
+        return card.semesterColor
+            ? `4px solid ${card.semesterColor}`
+            : '4px dashed transparent';
+    };
+
     if (cards.length === 1) {
         if (isNil(cards[0])) {
             return '';
@@ -57,13 +74,12 @@ const TeacherTemporaryCardCell = (props) => {
             );
         }
 
-        // Regular single lesson
         return (
             <div
                 className="lesson-cell-wrapper"
-                style={{ borderLeft: `4px dashed ${card.semesterColor ?? 'transparent'}` }}
+                style={{ borderLeft: getBorderLeft(card) }}
             >
-                <div className="lesson-type-bar" style={{ backgroundColor: barColor }} />
+                {renderLeftBar(card)}
                 <p className="lesson-subject">{card.subjectForSite}</p>
                 <LessonTypeBadge lessonType={card.lessonType} showIcon={false} size="small" />
                 <p className="lesson-details">
@@ -75,12 +91,10 @@ const TeacherTemporaryCardCell = (props) => {
         );
     }
 
-    // Multiple cards (grouped lesson for multiple groups)
     const card = cards[0];
     const barColor = getLessonTypeColor(card.lessonType);
     const hasTemp = cards.some(c => c.temporary_schedule);
 
-    // If any card has temporary schedule, use old text-based rendering
     if (hasTemp) {
         let inner = '';
         let title = '';
@@ -106,21 +120,18 @@ const TeacherTemporaryCardCell = (props) => {
         );
     }
 
-    // Regular grouped lesson - structured JSX
     const groupTitles = cards.map(c => c.group?.title).filter(Boolean);
     const meetingLink = card.linkToMeeting && setLink(card, place);
 
     return (
         <div
             className="lesson-cell-wrapper grouped-lesson"
-            style={{ borderLeft: `4px dashed ${card.semesterColor ?? 'transparent'}` }}
+            style={{ borderLeft: getBorderLeft(card) }}
         >
-            <div className="lesson-type-bar" style={{ backgroundColor: barColor }} />
+            {renderLeftBar(card)}
             <p className="lesson-subject">{card.subjectForSite}</p>
             <LessonTypeBadge lessonType={card.lessonType} showIcon={false} size="small" />
             <p className="lesson-details">
-                {/*{lessonTypeLabel}{roomStr && `, ${roomStr}`}*/}
-                {/*{getRoomStr(card.room, place)}*/}
                 {[...new Set(cards.map(c => getRoomStr(c.room, place)).filter(Boolean))].join(', ')}
                 <span>{meetingLink}</span>
             </p>

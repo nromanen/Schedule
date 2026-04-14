@@ -14,7 +14,6 @@ import {clearDepartment, getAllDepartmentsService} from '../../services/departme
 import AddTeacherForm from './AddTeacherForm/AddTeacherForm';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import TeachersTable from './TeachersList/TeachersTable';
-// import './TeachersList/TeachersList.scss';
 import {setDepartmentOptions, setOptions, setSemesterOptions} from '../../utils/selectUtils';
 
 const TeachersPage = (props) => {

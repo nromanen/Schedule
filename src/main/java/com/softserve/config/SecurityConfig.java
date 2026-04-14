@@ -83,9 +83,9 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Teacher-specific endpoints
-                        .requestMatchers("/lessons/teacher/my-lessons", "/schedules/full/teachers/**")
+                        .requestMatchers("/lessons/teacher/my-lessons")
                         .hasRole("TEACHER")
-                        .requestMatchers("/lessons/link").hasAnyRole("MANAGER", "TEACHER")
+                        .requestMatchers("/lessons/link", "/schedules/full/teachers/**").hasAnyRole("MANAGER", "TEACHER")
 
                         // Role-based access
                         .requestMatchers("/groups/teacher/**", "/groups/*/with-students")
