@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {isEmpty} from 'lodash';
 import DownloadLink from '../DownloadLink/DownloadLink';
 import {
@@ -153,26 +153,42 @@ const TeacherScheduleView = ({teacherSchedule, isManager, t}) => {
             transformSemesterDate(a.semester.startDay) - transformSemesterDate(b.semester.startDay)
         );
 
+    const [selectedColor, setSelectedColor] = useState(null);
     const hasAnyClasses = schedules.some(
         ({odd, even}) => !isEmpty(odd?.classes) || !isEmpty(even?.classes)
     );
     if (!hasAnyClasses) return <EmptySchedule t={t}/>;
-
     const {odd: mergedOdd, even: mergedEven, referenceSemester} = buildMergedTeacherSchedule(schedules);
+    const handleSemesterClick = (color) => {
+        setSelectedColor(prev => prev === color ? null : color);
+    };
+
     const semesterLegend = schedules.length > 1 && (
         <div className="semester-legend">
-            {schedules.map(({semester: sem}, index) => (
-                <span
-                    key={sem.id}
-                    className="semester-legend__item"
-                    style={{
-                        backgroundColor: SEMESTER_COLORS[index % SEMESTER_COLORS.length],
-                        color: 'white',
-                    }}
-                >
-                    {sem.description} ({sem.startDay?.slice(0, 5)}-{sem.endDay?.slice(0, 5)})
-                </span>
-            ))}
+            {schedules.map(({semester: sem}, index) => {
+                const color = SEMESTER_COLORS[index % SEMESTER_COLORS.length];
+                const isSelected = selectedColor === color;
+                const isActive = selectedColor === null || isSelected;
+                return (
+                    <span
+                        key={sem.id}
+                        className="semester-legend__item"
+                        style={{
+                            backgroundColor: color,
+                            color: 'white',
+                            opacity: isActive ? 1 : 0.4,
+                            cursor: 'pointer',
+                            outline: 'none',
+                            boxShadow: isSelected ? '0 0 0 3px #000000aa' : 'none',
+                            transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+                            transition: 'transform 0.15s',
+                        }}
+                        onClick={() => handleSemesterClick(color)}
+                    >
+                        {sem.description} ({sem.startDay?.slice(0, 5)}-{sem.endDay?.slice(0, 5)})
+                    </span>
+                );
+            })}
         </div>
     );
 
@@ -209,10 +225,10 @@ const TeacherScheduleView = ({teacherSchedule, isManager, t}) => {
             </div>
             <SemesterEndedNotice endDay={referenceSemester.semester.endDay} t={t}/>
             <WeekSection label={t('common:odd_week')} isCurrentWeek={currentWeekIsOdd(referenceSemester.semester)}>
-                {isCardsEmpty(mergedOdd.cards) ? <EmptySchedule t={t}/> : renderWeekTable(mergedOdd)}
+                {isCardsEmpty(mergedOdd.cards) ? <EmptySchedule t={t}/> : renderWeekTable(mergedOdd, selectedColor)}
             </WeekSection>
             <WeekSection label={t('common:even_week')} isCurrentWeek={!currentWeekIsOdd(referenceSemester.semester)}>
-                {isCardsEmpty(mergedEven.cards) ? <EmptySchedule t={t}/> : renderWeekTable(mergedEven)}
+                {isCardsEmpty(mergedEven.cards) ? <EmptySchedule t={t}/> : renderWeekTable(mergedEven, selectedColor)}
             </WeekSection>
         </>
     );

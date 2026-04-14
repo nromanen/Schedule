@@ -167,7 +167,7 @@ export const ScheduleLegend = ({ variant = 'all' }) => {
     );
 };
 
-const renderTeacherClassCell = (cards, dayName) => {
+const renderTeacherClassCell = (cards, dayName, selectedColor) => {
     let teacherLessonAddCellClass = '';
     if (cards !== undefined && cards.cards.length > 1) {
         cards.cards.forEach((card, cardIndex) => {
@@ -178,22 +178,22 @@ const renderTeacherClassCell = (cards, dayName) => {
     }
     return (
         <TableCell key={dayName} className={`lesson ${teacherLessonAddCellClass}`}>
-            <TeacherTemporaryCardCell cards={cards?.cards} />
+            <TeacherTemporaryCardCell cards={cards?.cards} day={dayName} selectedColor={selectedColor} />
         </TableCell>
     );
 };
 
-const renderClassRow = (classItem, days, scheduleRow) => (
+const renderClassRow = (classItem, days, scheduleRow, selectedColor) => (
     <TableRow key={classItem.id}>
         <TableCell className="lesson groupLabelCell">{renderClassCell(classItem)}</TableCell>
         {days.map((dayName) => {
             const cell = scheduleRow?.find((item) => item.day === dayName);
-            return renderTeacherClassCell(cell, dayName);
+            return renderTeacherClassCell(cell, dayName, selectedColor);
         })}
     </TableRow>
 );
 
-export const renderWeekTable = (schedule) => {
+export const renderWeekTable = (schedule, selectedColor = null) => {
     const { days, classes, cards } = schedule;
     return (
         <TableContainer>
@@ -201,7 +201,7 @@ export const renderWeekTable = (schedule) => {
                 {renderScheduleGroupHeader(days)}
                 <TableBody>
                     {classes.map((classItem) =>
-                        renderClassRow(classItem, days, cards[classItem.id])
+                        renderClassRow(classItem, days, cards[classItem.id], selectedColor)
                     )}
                 </TableBody>
             </Table>

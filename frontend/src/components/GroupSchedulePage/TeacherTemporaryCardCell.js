@@ -13,10 +13,17 @@ import { places } from '../../constants/places';
 import LessonTypeBadge from "../LessonTypeBadge/LessonTypeBadge";
 
 const TeacherTemporaryCardCell = (props) => {
-    const { cards, place } = props;
+    const { cards, place, day, selectedColor } = props;
     if (!cards) {
         return '';
     }
+
+    const isFiltered = (card) => {
+        if (!selectedColor) return false;
+        return card.semesterColor !== selectedColor;
+    };
+
+    const getOpacity = (card) => isFiltered(card) ? 0.2 : 1;
 
     const getLessonTypeLabel = (lessonType) =>
         i18n.t(`formElements:lesson_type_${lessonType?.toLowerCase()}_label`);
@@ -77,7 +84,7 @@ const TeacherTemporaryCardCell = (props) => {
         return (
             <div
                 className="lesson-cell-wrapper"
-                style={{ borderLeft: getBorderLeft(card) }}
+                style={{ borderLeft: getBorderLeft(card), opacity: getOpacity(card), }}
             >
                 {renderLeftBar(card)}
                 <p className="lesson-subject">{card.subjectForSite}</p>
@@ -126,7 +133,7 @@ const TeacherTemporaryCardCell = (props) => {
     return (
         <div
             className="lesson-cell-wrapper grouped-lesson"
-            style={{ borderLeft: getBorderLeft(card) }}
+            style={{ borderLeft: getBorderLeft(card), opacity: getOpacity(card), }}
         >
             {renderLeftBar(card)}
             <p className="lesson-subject">{card.subjectForSite}</p>
