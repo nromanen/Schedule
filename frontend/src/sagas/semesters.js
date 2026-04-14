@@ -1,9 +1,9 @@
 import {call, put, select, takeEvery, takeLatest} from 'redux-saga/effects';
 import {reset} from 'redux-form';
 import * as actionTypes from '../actions/actionsType';
-import {setLoading} from '../actions/loadingIndicator';
 import {setOpenErrorSnackbar, setOpenSuccessSnackbar} from '../actions/snackbar';
 import {
+    setLoading,
     addSemesterSuccess,
     deleteSemesterSuccess,
     getAllSemestersSuccess,
@@ -11,7 +11,7 @@ import {
     moveToArchivedSemesterSuccess,
     selectSemesterSuccess,
     updateSemesterSuccess,
-} from '../actions/semesters';
+} from '../actions';
 import {getFullScheduleSuccess, setScheduleType} from '../actions/schedule';
 import {axiosCall} from '../services/axios';
 import i18n from '../i18n';

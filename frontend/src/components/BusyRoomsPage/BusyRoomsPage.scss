@@ -2,72 +2,122 @@
 @import "../../styles/colors.scss";
 @import "../../styles/mixins.scss";
 
+// ─── Page wrapper ─────────────────────────────────────────────────────────────
 .busy-rooms-control-panel.schedule-card {
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
     height: 85vh;
-    padding: {
-        top: 10px;
-        bottom: 5px;
-    }
+    padding: 10px 0 5px;
     margin: 15px 5px;
-    .day-classes-aside {
-        padding-top: 0;
-        padding-left: 5px;
-        .day-sidebar-title {
-            height: 50px;
+    // Без overflow:hidden тут — інакше sticky не працює всередині
+}
+
+// ─── Expand/collapse button row ───────────────────────────────────────────────
+.filters-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 10px;
+    flex-shrink: 0;
+
+    .MuiIconButton-root { padding: 4px; }
+}
+
+// ─── Filter panel ─────────────────────────────────────────────────────────────
+.table-size-container {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 0 10px 8px;
+    flex-shrink: 0;
+
+    .control-block {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+
+        &:nth-child(1) {
+            flex-shrink: 1;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        &:nth-child(2) {
+            flex: 1;
+            min-width: 0;
+            flex-wrap: nowrap;
+            align-items: flex-start;
+            padding: 0 12px;
+            border-left:  1px solid $gray;
+            border-right: 1px solid $gray3;
+
+            .radio-control:last-child { flex-shrink: 0; }
+            .radio-group { flex-wrap: wrap; }
+        }
+
+        &:nth-child(3) {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 1;
         }
     }
-}
-.busy-rooms-table-container {
-    display: flex;
-    width: $full-size;
-    height: 95%;
-    margin-top: 5px;
-    padding: 0px;
-    padding-top: 2px;
-    align-items: start;
-    justify-content: stretch;
-    overflow: auto;
-}
-.table-size-container {
-    @include displayFlex(stretch, flex-start);
+
     .radio-control {
-        @include displayFlex(center, flex-start);
+        display: flex;
+        flex-direction: column;
         padding-left: 10px;
+
         .MuiFormLabel-root {
             font-size: $font-xs;
-        }
-        .MuiFormLabel-root.Mui-focused {
-            color: $blue;
+            white-space: nowrap;
+            margin-bottom: 4px;
+            &.Mui-focused { color: $blue; }
         }
     }
+
     .radio-group {
         margin-left: 20px;
+        display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+
         .MuiFormControlLabel-root {
-            .MuiRadio-colorSecondary.Mui-checked {
-                color: $blue;
-            }
-            .MuiTypography-root {
-                font-size: $font-xs;
-            }
+            .MuiRadio-colorSecondary.Mui-checked,
+            .MuiCheckbox-colorSecondary.Mui-checked { color: $blue; }
+            .MuiTypography-root { font-size: $font-xs; }
             .MuiButtonBase-root {
                 padding: 4px;
-                &:hover {
-                    background-color: $selected-hover-color;
-                }
+                &:hover { background-color: $selected-hover-color; }
             }
         }
     }
+
+    @media (max-width: $md-m) { flex-direction: column; }
 }
 
-// allow-multi
-.allow-multi {
-    background-color: #2196f3;
+.busy-rooms-grid-wrapper {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    margin-top: 5px;
+    width: 100%;
 }
 
-// possible-multi
-.possible-multi {
-    background-color: #7c3aed;
+.busy-rooms-grid-wrapper .schedule-card {
+    display: revert;
+    margin: 0;
+    padding: 0;
+}
+
+@media print {
+    .filters-header,
+    .table-size-container { display: none; }
+    .busy-rooms-grid-wrapper { overflow: visible; }
+    .busy-rooms-control-panel { height: auto; }
+
+    [data-day] {
+        page-break-before: always;
+    }
 }

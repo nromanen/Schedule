@@ -1,131 +1,93 @@
 @import '../../../styles/colors.scss';
 @import '../../../styles/variables.scss';
+@import '../../../styles/mixins';
 
-// Main container for each period (contains ODD and EVEN weeks)
+$cell-height: 114px;
+
+// ─── Period container (odd + even slots stacked) ──────────────────────────────
 .class-container {
   position: relative;
-  margin: 0;
   display: flex;
   flex-direction: column;
-  height: 228px; // Fixed height for entire period (ODD + EVEN)
+  // Height = exactly 2 slots; table row drives actual height via .grid-class-label
+  min-height: $cell-height * 2;
+  margin: 0;
 
-  // Column width variants based on user selection
-  &.responsive-table-column-sm {
-    width: 100px;
-  }
-  &.responsive-table-column-base {
-    width: 130px;
-  }
-  &.responsive-table-column-lg {
-    width: 160px;
-  }
+  &.responsive-table-column-sm   { @include col-width($room-col-width-sm); }
+  &.responsive-table-column-base { @include col-width($room-col-width-md); }
+  &.responsive-table-column-lg   { @include col-width($room-col-width-lg); }
+}
 
-  // Container for single week (ODD or EVEN)
-  // flex: 1 ensures each takes exactly 50% of parent height
-  .class-info-container {
-    position: relative;
-    width: $full-size;
-    flex: 1;
-    padding: 5px;
-    box-sizing: border-box;
+// ─── Single week slot (odd OR even) ──────────────────────────────────────────
+.class-info-container {
+  position: relative;
+  width: 100%;
+  height: $cell-height;
+  flex: none;
+  padding: 3px;
+  box-sizing: border-box;
+}
 
-    // Card with lesson data
-    .class-info-data {
-      position: relative;
-      width: $full-size;
-      height: 100%;
-      padding: 15px;
-      margin: 0;
-      z-index: 1;
+// ─── Lesson card ──────────────────────────────────────────────────────────────
+.class-info-data {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  z-index: 1;
+  background-color: $white;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px $shadow-box;
+  overflow: hidden;
 
-      // Expanded state on hover - shows full content
-      &:hover {
-        position: absolute;
-        z-index: 20;
-        height: unset;
-        margin: -5px;
-        min-height: 114px;
-        box-shadow: 0 0 8px 4px $blue-shadow-box;
-
-        .group-list-container {
-          display: block;
-          overflow: visible;
-          -webkit-line-clamp: unset;
-          white-space: normal;
-          word-wrap: break-word;
-        }
-      }
-    }
-  }
-
-  // Card styling (background, shadow, etc.)
-  .schedule-card {
-    background-color: $white;
-    margin: 5px;
-    border-radius: 5px;
-    box-shadow: 0 2px 8px $shadow-box;
-  }
-
-  // Container for group names list
-  // Uses line-clamp to truncate long lists
-  .group-list-container {
-    display: -webkit-box;
-    text-align: center;
-    overflow: hidden;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    white-space: normal;
-    word-wrap: break-word;
-  }
-
-  // Individual group name styling
-  .group-list {
-    display: initial;
-    margin: 2px;
-    font-size: $font-xs;
-    font-weight: bold;
-
-    // Add comma after each group name
-    &:after {
-      content: ', ';
-    }
-    // Remove comma after last group
-    &:last-of-type::after {
-      display: none;
-    }
-  }
-
-  // Week type label (ODD/EVEN indicator)
-  .week-type {
+  &:hover {
+    // Expand in place — stays within the column thanks to overflow: visible on .grid-cell
     position: absolute;
-    left: 10px;
-    top: -4px;
-    color: $gray1;
-    font-size: $font-2xs;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    width: auto;
+    height: auto;
+    min-height: $cell-height - 6px;
+    z-index: 50;
+    overflow: visible;
+    box-shadow: 0 0 8px 4px $blue-shadow-box;
 
-    &::first-letter {
-      text-transform: uppercase;
+    .group-list-container {
+      -webkit-line-clamp: unset;
+      overflow: visible;
+      white-space: normal;
+      display: block;
     }
-  }
-
-  // Color coding based on room availability
-  .possible,
-  .available,
-  .allow,
-  .allow-multi,
-  .possible-multi{
-    p {
-      color: $black;
-    }
-  }
-  .possible { background-color: $warning-color; } // Partially available
-  //.available { background-color: $green1; }       // Fully available
-  .allow { background-color: $green2; }           // Allowed
-  .not-allow {                                    // Not available
-    background-color: $red2;
-    p { color: $white; }
   }
 }
-.allow-multi { background-color: $allow-multi-color !important; }
+
+// ─── Group names block ────────────────────────────────────────────────────────
+.group-list-container {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.group-list {
+  display: inline;
+  margin: 2px;
+  font-size: $font-xs;
+  font-weight: bold;
+
+  &::after          { content: ', '; }
+  &:last-of-type::after { display: none; }
+}
+
+// ─── Color coding ─────────────────────────────────────────────────────────────
+.allow          { background-color: $green2 !important; }
+.possible       { background-color: $warning-color !important; }
+.not-allow      { background-color: $red2 !important; p { color: $white; } }
+.allow-multi    { background-color: $allow-multi-color !important; }
 .possible-multi { background-color: $possible-multi-color !important; }
-.mixed { background-color: $mixed-color !important; }
+.mixed          { background-color: $mixed-color !important; }

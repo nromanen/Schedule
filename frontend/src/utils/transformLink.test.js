@@ -1,10 +1,10 @@
-import {trasformLink} from './trasformLink';
+import {trasformLink} from './transformLink';
 
 describe('trasformLink function', () => {
-    it('should add http for url', () => {
+    it('should add https for url', () => {
         const urlWithoutHttp = 'youtube.com';
 
-        expect(trasformLink(urlWithoutHttp)).toBe(`http://${urlWithoutHttp}`);
+        expect(trasformLink(urlWithoutHttp)).toBe(`https://${urlWithoutHttp}`);
     });
 
     it('should return same https link', () => {

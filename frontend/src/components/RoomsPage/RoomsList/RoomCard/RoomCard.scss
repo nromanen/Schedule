@@ -1,17 +1,14 @@
-@import '../../../../styles/variables.scss';
+@import '../../../../styles/cards.scss';
+
 .room-card {
-    height: 150px;
-    width: 235px;
+  align-items: center;
+  width: 160px;
 
-    &-name {
-        margin: 5px 0 15px;
-        font-size: $font-l;
-    }
-    &-title {
-        margin: 5px 0 15px;
-    }
-}
-
-.room-card.drag-border-card {
-    box-shadow: 10px 0 5px -2px $blue3;
+  &__type {
+    font-size: $font-2xs;
+    color: $gray;
+    text-align: center;
+    margin: 0 0 4px;
+    padding: 0 6px;
+  }
 }

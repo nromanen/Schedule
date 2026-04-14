@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FaChalkboardTeacher, FaFlask, FaPencilAlt, FaUsers } from 'react-icons/fa';
+import {FaChalkboardTeacher, FaClipboardCheck, FaFlask, FaGraduationCap, FaPencilAlt, FaUsers} from 'react-icons/fa';
 import './LessonTypeBadge.scss';
 
 const lessonTypeConfig = {
@@ -8,6 +8,8 @@ const lessonTypeConfig = {
     laboratory: { icon: FaFlask, colorClass: 'laboratory' },
     practical: { icon: FaPencilAlt, colorClass: 'practical' },
     seminar: { icon: FaUsers, colorClass: 'seminar' },
+    exam:       { icon: FaGraduationCap, colorClass: 'exam' },
+    credit:     { icon: FaClipboardCheck, colorClass: 'credit' },
 };
 
 const LessonTypeBadge = ({ lessonType, showIcon = true, size = 'normal' }) => {

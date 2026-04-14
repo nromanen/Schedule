@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Builds styled HTML for a group schedule using rowspan-based layout.
@@ -19,6 +18,8 @@ public class GroupHtmlBuilder {
             DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY
     );
 
+    private ResourceBundle bundle;
+
     /**
      * Builds a complete HTML document for a group schedule.
      *
@@ -27,7 +28,7 @@ public class GroupHtmlBuilder {
      * @return HTML string ready for PDF rendering
      */
     public String buildHtml(ScheduleForGroupDTO schedule, Locale language) {
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", language);
+        bundle = ResourceBundle.getBundle("messages", language);
 
         Map<DayOfWeek, DaysOfWeekWithClassesForGroupDTO> dayMap = new LinkedHashMap<>();
         if (schedule.getDays() != null) {
@@ -49,6 +50,7 @@ public class GroupHtmlBuilder {
         String title = ScheduleHtmlUtils.esc(bundle.getString("schedule.group.for"))
                 + " " + ScheduleHtmlUtils.esc(schedule.getGroup().getTitle());
         html.append(ScheduleHtmlUtils.buildHeader(title, bundle));
+
         if (periods.isEmpty()) {
             html.append("<p class=\"empty-schedule\">")
                     .append(ScheduleHtmlUtils.esc(bundle.getString("schedule.empty")))
@@ -59,7 +61,6 @@ public class GroupHtmlBuilder {
 
         html.append("<table class=\"schedule\">");
         html.append("<colgroup><col class=\"col-time\"/>");
-
         html.append("<thead><tr>");
         html.append("<th>").append(ScheduleHtmlUtils.esc(bundle.getString("schedule.pair"))).append("</th>");
         for (DayOfWeek day : activeDays) {
@@ -68,30 +69,41 @@ public class GroupHtmlBuilder {
         html.append("</tr></thead><tbody>");
 
         for (PeriodDTO period : periods) {
-            // Row 1: even week
-            html.append("<tr class=\"even\">");
-            html.append(SchedulePdfStyles.timeCellHtml(period));
-            for (DayOfWeek dayOfWeek : activeDays) {
-                html.append("<td>");
-                LessonsInScheduleDTO even = getLesson(dayMap.get(dayOfWeek), period, true);
-                html.append(SchedulePdfStyles.lessonCardHtml(even, bundle));
-                html.append("</td>");
-            }
-            html.append("</tr>");
-
-            // Row 2: odd week (no time cell - covered by rowspan)
-            html.append("<tr class=\"odd\">");
-            for (DayOfWeek dayOfWeek : activeDays) {
-                html.append("<td>");
-                LessonsInScheduleDTO odd = getLesson(dayMap.get(dayOfWeek), period, false);
-                html.append(SchedulePdfStyles.lessonCardHtml(odd, bundle));
-                html.append("</td>");
-            }
-            html.append("</tr>");
+            html.append("<tbody style=\"page-break-inside: avoid;\">");
+            appendWeekRow(html, "even", true, activeDays, dayMap, period);
+            appendWeekRow(html, "odd", false, activeDays, dayMap, period);
+            html.append("</tbody>");
         }
 
         html.append("</tbody></table></body></html>");
         return html.toString();
+    }
+
+    /**
+     * Appends a single week row (even or odd) to the HTML.
+     *
+     * @param html      the string builder to append to
+     * @param weekClass CSS class for the row ("even" or "odd")
+     * @param even      true for even week, false for odd week
+     * @param activeDays list of active days
+     * @param dayMap    map of day data
+     * @param period    the period to render
+     */
+    private void appendWeekRow(StringBuilder html, String weekClass, boolean even,
+                               List<DayOfWeek> activeDays,
+                               Map<DayOfWeek, DaysOfWeekWithClassesForGroupDTO> dayMap,
+                               PeriodDTO period) {
+        html.append("<tr class=\"").append(weekClass).append("\">");
+        if (even) {
+            html.append(SchedulePdfStyles.timeCellHtml(period));
+        }
+        for (DayOfWeek dayOfWeek : activeDays) {
+            LessonsInScheduleDTO lesson = getLesson(dayMap.get(dayOfWeek), period, even);
+            html.append("<td>")
+                    .append(SchedulePdfStyles.lessonCardHtml(lesson, bundle))
+                    .append("</td>");
+        }
+        html.append("</tr>");
     }
 
     /**
@@ -112,7 +124,7 @@ public class GroupHtmlBuilder {
                                     && (cls.getWeeks().getEven() != null
                                     || cls.getWeeks().getOdd() != null));
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -158,6 +170,6 @@ public class GroupHtmlBuilder {
         }
         return map.values().stream()
                 .sorted(Comparator.comparing(PeriodDTO::getStartTime))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

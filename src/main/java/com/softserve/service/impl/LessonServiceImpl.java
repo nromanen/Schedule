@@ -182,16 +182,21 @@ public class LessonServiceImpl implements LessonService {
     @CacheEvict(value = "lessons", allEntries = true)
     public List<LessonInfoDTO> copyLessonForGroups(Long lessonId, List<Long> groupIds) {
         log.info("In copyLessonForGroups(lessonId = [{}], groupIds = [{}])", lessonId, groupIds);
-        Lesson lesson = findLessonById(lessonId);
-        List<Lesson> savedLessons = new ArrayList<>();
 
+        Lesson lesson = findLessonById(lessonId);
+
+        List<LessonInfoDTO> savedLessons = new ArrayList<>();
         for (Long groupId : groupIds) {
-            if (groupService.isExistsById(groupId)) {
-                lesson.setGroup(groupService.getGroupEntityById(groupId));
-                savedLessons.add(lessonRepository.save(lesson));
+            LessonInfoDTO lessonInfoDTO = lessonInfoMapper.lessonToLessonInfoDTO(lesson);
+            lessonInfoDTO.setId(null);
+            lessonInfoDTO.getGroup().setId(groupId);
+            try {
+                savedLessons.add(save(lessonInfoDTO));
+            } catch (EntityAlreadyExistsException exception) {
+                log.warn("Lesson for groupId = {} already exists", groupId);
             }
         }
-        return lessonInfoMapper.lessonsToLessonInfoDTOs(savedLessons);
+        return savedLessons;
     }
 
     @Override

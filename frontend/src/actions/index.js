@@ -53,18 +53,7 @@ export {
     setAuthLoading,
 } from './loadingIndicator';
 export {
-    addRoomSuccess,
-    clearRoomSuccess,
-    deleteRoomSuccess,
-    setSelectRoomSuccess,
-    getListOfDisabledRoomsSuccess,
     getListOfRoomsSuccess,
-    updateRoomSuccess,
-    deleteRoomTypeSuccess,
-    getAllRoomTypesSuccess,
-    selectRoomType,
-    addRoomTypeSuccess,
-    updateRoomTypeSuccess,
 } from './rooms';
 
 export {

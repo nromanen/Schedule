@@ -201,6 +201,8 @@
     "lesson_type_lecture": "Лекція",
     "lesson_type_lab": "Лабораторна",
     "lesson_type_practical": "Практична",
+    "lesson_type_exam": "Екзамен",
+    "lesson_type_credit": "Залік",
     "no_link": "Немає",
     "enter_link": "Введіть посилання",
     "apply": "Застосувати",
@@ -257,5 +259,8 @@
     "link_applies_to_all_groups": "Посилання застосується до всіх груп",
     "current_room_label": "Зараз",
     "clear_schedule_confirm": "Очистити розклад?",
-    "clear_schedule_warning": "Ця дія незворотня. Всі пари будуть видалені."
+    "clear_schedule_warning": "Ця дія незворотня. Всі пари будуть видалені.",
+    "all_rooms_label": "Всі аудиторії",
+    "choose_rooms_label": "Фільтр аудиторій",
+    "room_type_label": "Тип аудиторії"
 }

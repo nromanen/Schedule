@@ -142,7 +142,9 @@ const DepartmentSchedule = ({fullSchedule, departmentId}) => {
                                 >
                                     {classIndex === 0 && (
                                         <TableCell rowSpan={classCount * 2} className="day-cell">
-                                            {i18n.t(`common:day_of_week_${dayData.day}`)}
+                                            <span className="day-cell-text">
+        {i18n.t(`common:day_of_week_${dayData.day}`)}
+    </span>
                                         </TableCell>
                                     )}
                                     <TableCell rowSpan={2} className="class-cell-wrapper">

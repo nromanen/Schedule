@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import * as actionTypes from '../actions/actionsType';
-import { setLoading } from '../actions/loadingIndicator';
+import { setLoading, showAllGroupsSuccess, setScheduleGroups } from '../actions';
 import { createErrorMessage, createMessage } from '../utils/sagaUtils';
 import { setOpenErrorSnackbar, setOpenInfoSnackbar } from '../actions/snackbar';
 import { GROUPS_URL, SEMESTERS_URL, GROUPS_FOR_CURRENT_SCHEDULE } from '../constants/axios';
@@ -10,7 +10,6 @@ import {
     CHOSEN_SEMESTER_HAS_NOT_GROUPS,
     SERVICE_MESSAGE_GROUP_LABEL,
 } from '../constants/translationLabels/serviceMessages';
-import { showAllGroupsSuccess, setScheduleGroups } from '../actions';
 
 function* getGroupsForCurrentSemester() {
     try {

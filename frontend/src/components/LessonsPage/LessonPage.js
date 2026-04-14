@@ -24,7 +24,7 @@ import './LessonForm/LessonForm.scss';
 import {showAllSubjectsService} from '../../services/subjectService';
 
 import {FORM_GROUP_LABEL} from '../../constants/translationLabels/formElements';
-import {trasformLink} from '../../utils/trasformLink';
+import {transformLink} from '../../utils/transformLink';
 import {GROUPED} from '../../constants/common';
 
 const LessonPage = (props) => {
@@ -83,7 +83,7 @@ const LessonPage = (props) => {
     }, []);
 
     const submitLessonForm = (card) => {
-        const link = trasformLink(card.linkToMeeting);
+        const link = transformLink(card.linkToMeeting);
         const values = cardObjectHandler(card, currentSemester, link);
 
         if (!checkUniqLesson(lessons, values)) {

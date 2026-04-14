@@ -1,0 +1,15 @@
+@import "../../styles/colors.scss";
+@import "../../styles/variables.scss";
+
+.schedule-date-badge {
+  display: inline-block;
+  vertical-align: middle;
+  background: $gray2;
+  color: $gray;
+  font-size: $font-s;
+  font-weight: 500;
+  padding: 5px 10px;
+  border-radius: 7px;
+  margin-left: 10px;
+  letter-spacing: 0.02em;
+}

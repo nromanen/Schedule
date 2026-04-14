@@ -111,24 +111,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    protected ResponseEntity<Object> handlePersistenceException(final DataIntegrityViolationException ex) {
-        ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR);
-        apiError.setMessage(ex.getLocalizedMessage());
-        apiError.setDebugMessage(ex.getLocalizedMessage());
-        log.error(ex.getMessage());
+    protected ResponseEntity<Object> handleDataIntegrityViolation(final DataIntegrityViolationException ex) {
+        log.error("Data integrity violation: {}", ex.getMessage());
+        ApiError apiError = new ApiError(CONFLICT);
+        if (ex.getCause() instanceof ConstraintViolationException) {
+            apiError.setMessage("Cannot perform operation: record is referenced by other entities");
+        } else {
+            apiError.setMessage("Data integrity violation");
+        }
+        apiError.setDebugMessage(ex.getMostSpecificCause().getMessage());
         return buildResponseEntity(apiError);
     }
 
     @ExceptionHandler(DeleteDisabledException.class)
-    protected ResponseEntity<Object> handleDeleteDisabledException(
-            DeleteDisabledException ex) {
-        ApiError apiError = new ApiError(BAD_REQUEST);
+    protected ResponseEntity<Object> handleDeleteDisabledException(final DeleteDisabledException ex) {
+        log.error("Delete disabled: {}", ex.getMessage());
+        ApiError apiError = new ApiError(CONFLICT);
         apiError.setMessage(ex.getMessage());
         apiError.setDebugMessage(ex.getMessage());
-        log.error(ex.getMessage());
         return buildResponseEntity(apiError);
     }
-
     @ExceptionHandler(MessageNotSendException.class)
     protected ResponseEntity<Object> handleMessageNotSendException(MessageNotSendException ex) {
         ApiError apiError = new ApiError(BAD_REQUEST);

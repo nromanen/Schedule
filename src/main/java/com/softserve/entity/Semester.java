@@ -1,5 +1,6 @@
 package com.softserve.entity;
 
+import jakarta.persistence.ForeignKey;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -65,7 +66,13 @@ public class Semester implements Serializable {
     private Set<Period> periods;
 
     @ManyToMany
-    @JoinTable(name = "semester_group", joinColumns = {@JoinColumn(name = "semester_id")}, inverseJoinColumns = {@JoinColumn(name = "group_id")})
+    @JoinTable(
+            name = "semester_group",
+            joinColumns = {@JoinColumn(name = "semester_id")},
+            inverseJoinColumns = {@JoinColumn(name = "group_id",
+                    foreignKey = @ForeignKey(name = "fk_semester_group_group_id"))
+            }
+    )
     @OrderBy("sortOrder")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Group> groups = new LinkedHashSet<>();

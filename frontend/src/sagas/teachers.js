@@ -55,8 +55,7 @@ export function* getDisabledTeachers() {
 
 export function* removeTeacher({ id }) {
     try {
-        const requestUrl = `${TEACHER_URL}/${id}`;
-        yield call(axiosCall, requestUrl, DELETE);
+        yield call(axiosCall, `${TEACHER_URL}/${id}`, DELETE);
 
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
@@ -80,7 +79,6 @@ export function* createTeacher({ teacher }) {
 
     try {
         const { data } = yield call(axiosCall, TEACHER_URL, POST, results);
-
         const message = createMessage(
             BACK_END_SUCCESS_OPERATION,
             FORM_TEACHER_A_LABEL,

@@ -28,3 +28,26 @@ databaseChangeLog:
             tableName: teachers
             columnNames: name, surname, patronymic
             constraintName: uk_teacher_full_name
+
+  - changeSet:
+      id: add-cascade-delete-semester-group
+      author: d.plantus
+      changes:
+        - dropForeignKeyConstraint:
+            baseTableName: semester_group
+            constraintName: fkpf19s66cmi8qpqc0iaeigbrhh
+        - addForeignKeyConstraint:
+            baseTableName: semester_group
+            baseColumnNames: group_id
+            referencedTableName: groups
+            referencedColumnNames: id
+            constraintName: fk_semester_group_group_id
+            onDelete: CASCADE
+
+  - changeSet:
+      id: delete-temporary_schedule
+      author: nromanen
+      changes:
+        - dropTable:
+            tableName: temporary_schedule
+            cascadeConstraints: true

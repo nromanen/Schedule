@@ -34,3 +34,9 @@
     justify-content: $justify;
     flex-direction: $direction;
 }
+
+@mixin col-width($w) {
+    width: $w;
+    max-width: $w;
+    min-width: $w;
+}

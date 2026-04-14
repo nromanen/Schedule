@@ -36,7 +36,7 @@ describe('behavior of RoomCard Component when room is disabled', () => {
     });
 
     it('should call showConfirmDialog when click Delete icon', () => {
-        fireEvent.click(document.querySelector('.delete-icon-btn'));
+        fireEvent.click(document.querySelector('.delete-btn'));
         expect(showConfirmDialog).toHaveBeenCalledTimes(1);
     });
 });
@@ -49,8 +49,8 @@ describe('behavior of RoomCard Component when room is not disabled', () => {
 
     it('should render Set Disabled, Edit and Delete icons if disabled is false', () => {
         expect(screen.getByTitle('common:set_disabled')).toBeInTheDocument();
-        expect(document.querySelector('.edit-icon-btn')).toBeInTheDocument();
-        expect(document.querySelector('.delete-icon-btn')).toBeInTheDocument();
+        expect(document.querySelector('.edit-btn')).toBeInTheDocument();
+        expect(document.querySelector('.delete-btn')).toBeInTheDocument();
     });
 
     it('should call showConfirmDialog when click Set Disabled icon', () => {
@@ -59,7 +59,7 @@ describe('behavior of RoomCard Component when room is not disabled', () => {
     });
 
     it('should call setSelectRoom when click Edit icon', () => {
-        fireEvent.click(document.querySelector('.edit-icon-btn'));
+        fireEvent.click(document.querySelector('.edit-btn'));
         expect(setSelectRoom).toHaveBeenCalledTimes(1);
     });
 });

@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 
 jest.mock('../TableItem/TableItem', () => (props) => <div data-testid="table-item" />);
-jest.mock('../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar', () => (props) => <div data-testid="schedule-sidebar" />);
 
 import BusyRoomsTable from './BusyRoomsTable';
 
@@ -67,12 +66,12 @@ const getProps = () => ({
 describe('<BusyRoomsTable />', () => {
     it('should render BusyRoomsTable with props', () => {
         const { container } = render(<BusyRoomsTable {...getProps()} />);
-        expect(container.querySelector('.view-rooms')).toBeInTheDocument();
+        expect(container.querySelector('.busy-rooms-grid')).toBeInTheDocument();
     });
 
     it('should render correct room name and title', () => {
         render(<BusyRoomsTable {...getProps()} />);
-        const roomTitle = screen.getByTitle('практична');
+        const roomTitle = screen.getByTitle('1 к. 11 ауд (практична)');
         expect(roomTitle).toBeInTheDocument();
         expect(roomTitle).toHaveTextContent('1 к. 11 ауд');
     });
@@ -91,10 +90,12 @@ describe('<BusyRoomsTable />', () => {
         });
     });
 
-    it('should render empty view-rooms when no busyRooms', () => {
+    it('should render empty table body when no busyRooms', () => {
         const props = getProps();
         props.busyRooms = [];
         const { container } = render(<BusyRoomsTable {...props} />);
-        expect(container.querySelector('.view-rooms').children.length).toBe(0);
+        const rows = container.querySelectorAll('tbody tr');
+        expect(rows.length).toBe(props.classes.length * props.days.length);
+        expect(screen.queryByTestId('table-item')).not.toBeInTheDocument();
     });
 });

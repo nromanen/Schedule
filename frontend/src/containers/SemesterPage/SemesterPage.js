@@ -7,6 +7,7 @@ import {
     handleSemesterFormSubmitStart,
 } from '../../actions/semesters';
 import {setOpenErrorSnackbar} from '../../actions/snackbar';
+import { getClassScheduleListStart } from '../../actions/classes';
 
 const mapStateToProps = (state) => ({
     archivedSemesters: state.semesters.archivedSemesters,
@@ -24,6 +25,7 @@ const mapDispatchToProps = (dispatch) => ({
     getArchivedSemestersItems: () => dispatch(getArchivedSemestersStart()),
     handleSemesterFormSubmit: (values) => dispatch(handleSemesterFormSubmitStart(values)),
     setOpenErrorSnackbar: (message) => dispatch(setOpenErrorSnackbar(message)),
+    getClassSchedulerItems: () => dispatch(getClassScheduleListStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SemesterPage);

@@ -80,6 +80,8 @@
     "lesson_type_lecture_label": "Lecture",
     "lesson_type_laboratory_label": "Laboratory",
     "lesson_type_practical_label": "Practical",
+    "lesson_type_exam_label": "Exam",
+    "lesson_type_credit_label": "Credit",
     "class_from_label": "From",
     "class_to_label": "To",
     "type_to_search": "Search...",

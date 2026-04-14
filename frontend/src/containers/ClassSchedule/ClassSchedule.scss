@@ -1,13 +1,7 @@
 @import '../../styles/cards.scss';
 
 .class-card {
-  @include card-base-style;
   gap: 8px;
-
-  &__name {
-    @include card-name-style;
-    -webkit-line-clamp: 1;
-  }
 
   &__time {
     text-align: center;

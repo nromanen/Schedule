@@ -8,15 +8,6 @@ import {errorHandler, successHandler} from '../helper/handlerAxios';
 import {BACK_END_SUCCESS_OPERATION,} from '../constants/translationLabels/serviceMessages';
 import {FORM_TEACHER_LABEL, FORM_USER_LABEL} from '../constants/translationLabels/formElements';
 
-export const getUsersService = () => {
-    axios
-        .get(USERS_URL)
-        .then((response) => {
-            store.dispatch(setUsers(response.data));
-        })
-        .catch((error) => errorHandler(error));
-};
-
 export const getUserProfile = () => {
     axios
         .get(USER_PROFILE)
@@ -56,32 +47,4 @@ export const updateUserPassword = (values) => {
         .catch((error) => errorHandler(error));
 };
 
-export const updateUserTeacher = (values) => {
-    axios
-        .put(UPDATE_USER_PROFILE, {
-            teacher_name: values.name,
-            teacher_surname: values.surname,
-            teacher_patronymic: values.patronymic,
-            teacher_position: values.position,
-        })
-        .then((response) => {
-            store.dispatch(setUser(response.data));
-            store.dispatch(
-                setTeacher({
-                    id: 15,
-                    name: response.data.teacher_name,
-                    surname: response.data.teacher_surname,
-                    patronymic: response.data.teacher_patronymic,
-                    position: response.data.teacher_position,
-                }),
-            );
-            successHandler(
-                i18n.t(BACK_END_SUCCESS_OPERATION, {
-                    cardType: i18n.t(FORM_USER_LABEL),
-                    actionType: i18n.t('serviceMessages:updated'),
-                }),
-            );
-        })
-        .catch((error) => errorHandler(error));
-};
 

@@ -7,7 +7,7 @@ import { get } from 'lodash';
 import { getDataFromParams } from '../../utils/urlUtils';
 import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';
 import { SCHEDULE_FOR_LINK } from '../../constants/links';
-import { ScheduleView } from '../../helper/ScheduleView';
+import { ScheduleView } from '../ScheduleView/ScheduleView';
 import { getScheduleType } from '../../helper/getScheduleType';
 import { getAllDepartmentsService } from '../../services/departmentService';
 

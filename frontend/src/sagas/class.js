@@ -6,7 +6,7 @@ import {CLASS_URL, PUBLIC_CLASSES_URL} from '../constants/axios';
 import {
     getClassScheduleListSuccess,
     getPublicClassScheduleSuccess,
-} from '../actions/classes';
+} from '../actions';
 
 import {setLoading} from '../actions';
 

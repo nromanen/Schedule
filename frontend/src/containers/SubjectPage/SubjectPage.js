@@ -32,8 +32,8 @@ import {
 
 // ── Subject Card ──────────────────────────────────────────────
 const SubjectCard = ({ subject, isDisabled, onEdit, onDelete, onEnable, onDisable, t }) => (
-    <Card additionClassName="subject-card">
-        <h2 className="subject-card__name">{subject.name}</h2>
+    <Card additionClassName="subject-card" variant="entity">
+        <h2 className="card-entity__title">{subject.name}</h2>
         <div className="cards-btns">
             {isDisabled ? (
                 <IoMdEye

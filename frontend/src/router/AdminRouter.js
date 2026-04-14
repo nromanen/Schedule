@@ -17,10 +17,10 @@ import {
     TEACHER_LIST_LINK,
 } from '../constants/links';
 import TeachersPage from '../containers/TeachersPage/TeachersPage';
-import BusyRoomsPage from '../containers/Rooms/BusyRoomsPage';
+import BusyRoomsPage from '../components/BusyRoomsPage/BusyRoomsPage';
 import GroupList from '../components/GroupPage/GroupPage';
 import ClassSchedule from '../containers/ClassSchedule/ClassSchedule';
-import RoomPage from '../containers/RoomsPage/RoomsPage';
+import RoomPage from '../components/RoomsPage/RoomsPage';
 import SubjectPage from '../containers/SubjectPage/SubjectPage';
 import SemesterPage from '../containers/SemesterPage/SemesterPage';
 import DepartmentPage from '../containers/DepartmentPage/DepartmentPage';

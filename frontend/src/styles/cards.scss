@@ -2,46 +2,7 @@
 @import './variables.scss';
 @import './fonts.scss';
 
-// ── Card Base Mixin ───────────────────────────────────────────
-@mixin card-base-style($width: 200px) {
-  width: $width;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: all 0.3s ease;
-  position: relative;
-  border-radius: 10px !important;
-  border: 1px solid $gray1 !important;
-  box-shadow: 0 1px 4px $shadow-box !important;
-  padding-bottom: 4px;
-  background: $white;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: $blue;
-    opacity: 1;
-    border-radius: 10px 10px 0 0;
-  }
-
-  &:hover {
-    z-index: 10;
-    box-shadow: 0 6px 20px $blue-shadow-box !important;
-    border-color: $blue3 !important;
-    transform: translateY(-2px);
-
-    &::before {
-      background: linear-gradient(90deg, $blue, $blue3);
-    }
-  }
-}
-
-// ── Card Name Mixin ───────────────────────────────────────────
-@mixin card-name-style {
+.card-entity__title {
   text-align: center;
   margin: 0;
   font-size: $font-s;
@@ -55,6 +16,19 @@
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+
+  &--clamp-1 {
+    -webkit-line-clamp: 1;
+  }
+
+  &--uppercase {
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  &--expandable {
+    transition: all 0.2s ease;
+  }
 }
 
 // ── Card Action Buttons ───────────────────────────────────────
@@ -102,25 +76,17 @@
   }
 }
 
-// ── Form Card ─────────────────────────────────────────────────
-.form-card {
-  border-radius: 10px !important;
-  border: 1px solid $gray1 !important;
-  box-shadow: 0 1px 4px $shadow-box !important;
-
-  h2 {
-    font-size: $font-m !important;
-    font-weight: 700 !important;
-    color: $black !important;
-    text-align: center !important;
-    margin-bottom: 16px !important;
-  }
-
-  .form-field {
-    width: 100%;
-    margin-bottom: 16px !important;
-  }
+.subject-card:hover .card-entity__title,
+.department-card:hover .card-entity__title {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
 }
+
+.drag-border-card {
+  box-shadow: 10px 0 5px -2px $blue3 !important;
+}
+
 
 // ── Form Buttons ──────────────────────────────────────────────
 .form-btns {

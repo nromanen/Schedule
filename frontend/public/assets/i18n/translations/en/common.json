@@ -203,6 +203,8 @@
     "lesson_type_lecture": "Lecture",
     "lesson_type_lab": "Laboratory",
     "lesson_type_practical": "Practical",
+    "lesson_type_exam": "Exam",
+    "lesson_type_credit": "Credit",
     "no_link": "None",
     "enter_link": "Enter link",
     "apply": "Apply",
@@ -257,5 +259,8 @@
     "link_applies_to_all_groups": "Link applies to all groups",
     "current_room_label": "Current room",
     "clear_schedule_confirm": "Clear schedule?",
-    "clear_schedule_warning": "This action is irreversible. All lessons will be deleted."
+    "clear_schedule_warning": "This action is irreversible. All lessons will be deleted.",
+    "all_rooms_label": "All rooms",
+    "choose_rooms_label": "Filter rooms",
+    "room_type_label": "Room type"
 }

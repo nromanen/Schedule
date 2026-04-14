@@ -128,11 +128,12 @@ describe('getWeekKeyForSemester', () => {
         expect(getKey('even')).toBe('odd');
     });
 
-    it('swaps odd↔even when zaochny starts on Sunday of current week', () => {
+    it('swaps odd ↔ even when zaochny starts on Sunday of current week', () => {
         const s1 = makeSchedule(1, referenceStart, ['MONDAY'], ['TUESDAY']);
         const s2 = makeSchedule(2, shortStartSunday, ['MONDAY'], ['TUESDAY']);
         const reference = { semester: s1.semester };
-        const getKey = getWeekKeyForSemester(s2.semester, reference);
+        const today = addDays(lastMonday, 2); // Wednesday
+        const getKey = getWeekKeyForSemester(s2.semester, reference, today);
         expect(getKey('odd')).toBe('even');
         expect(getKey('even')).toBe('odd');
     });

@@ -80,8 +80,8 @@ const ClassSchedule = () => {
 
             <section className="container-flex-wrap">
                 {classes.map((schedule) => (
-                    <Card additionClassName="class-card" key={schedule.id}>
-                        <h2 className="class-card__name">{schedule.class_name}</h2>
+                    <Card additionClassName="class-card" variant="entity" key={schedule.id}>
+                        <h2 className="card-entity__title card-entity__title--clamp-1">{schedule.class_name}</h2>
                         <p className="class-card__label">{t(CLASS_FROM_LABEL)} — {t(CLASS_TO_LABEL)}</p>
                         <p className="class-card__time">{schedule.startTime} — {schedule.endTime}</p>
                         <div className="cards-btns">

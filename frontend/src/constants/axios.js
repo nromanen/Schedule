@@ -18,7 +18,6 @@ export const DISABLED_TEACHERS_URL = 'teachers/disabled';
 export const TEACHERS_WITH_EMAIL_URL = 'teachers/with-email';
 export const TEACHER_SCHEDULE_URL = 'schedules/full/teachers?semesterId=';
 export const TEACHER_ACTIVE_SEMESTERS_SCHEDULE_URL = 'schedules/full/teachers/active?teacherId=';
-export const TEACHER_TEMPORARY_SCHEDULE = 'schedules/full/teachers/date-range';
 export const FOR_TEACHER_SCHEDULE_URL = 'schedules/teacher';
 export const LESSON_BY_TEACHER_URL = '/lessons/teacher';
 export const MY_LESSONS_URL = 'lessons/teacher/my-lessons';
@@ -41,7 +40,6 @@ export const ROOM_URL = 'rooms';
 export const ROOM_AFTER_URL = 'rooms/after';
 export const ROOM_ORDERED_URL = 'rooms/ordered';
 export const ROOM_TYPES_URL = 'room-types';
-export const FREE_ROOMS_URL = 'rooms/free';
 export const DISABLED_ROOMS_URL = 'rooms/disabled';
 export const ROOMS_AVAILABILITY = 'rooms/available';
 export const BUSY_ROOMS = 'schedules/full/rooms';
@@ -91,7 +89,3 @@ export const PUBLIC_SEMESTERS_URL = 'public/semesters';
 export const SEND_PDF_TO_EMAIL = 'send-pdf-to-email';
 export const PUBLIC_DOWNLOAD_GROUP_SCHEDULE_URL = 'download/schedule-for-group-in-pdf';
 export const PUBLIC_DOWNLOAD_TEACHER_SCHEDULE_URL = 'download/schedule-for-teacher-in-pdf';
-
-// Temporary Schedules
-export const TEMPORARY_SCHEDULE_URL = 'temporary-schedules';
-export const TEMPORARY_SCHEDULE_RANGE_URL = 'temporary-schedules/add-range';

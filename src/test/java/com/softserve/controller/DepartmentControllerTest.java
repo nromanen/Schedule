@@ -110,7 +110,7 @@ class DepartmentControllerTest {
     void returnBadRequestIfReferencesOnDepartmentExist() throws Exception {
         mockMvc.perform(delete("/departments/{id}", 4)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict());
     }
 
     @Test

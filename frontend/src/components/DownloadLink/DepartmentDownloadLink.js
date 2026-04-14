@@ -135,6 +135,8 @@ const DepartmentDownloadLink = ({departmentName, semesterDescription, semesterSt
                     td.type-practical  { background-color: ${lessonTypeColors.practical.light} !important; }
                     td.type-laboratory { background-color: ${lessonTypeColors.laboratory.light} !important; }
                     td.type-seminar    { background-color: ${lessonTypeColors.seminar.light} !important; }
+                    td.type-exam        { background-color: ${lessonTypeColors.exam.light} !important; }
+                    td.type-credit      { background-color: ${lessonTypeColors.credit.light} !important; }
                     .empty-cell {
                         color: #ccc;
                     }

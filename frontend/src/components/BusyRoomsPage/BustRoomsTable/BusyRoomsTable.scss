@@ -2,45 +2,144 @@
 @import '../../../styles/colors';
 @import '../../../styles/mixins';
 
-.busy-rooms-table-container {
-    --column-width-sm: 100px;
-    --column-width-base: 130px;
-    --column-width-lg: 160px;
-    --period-height: 114px;
-    --room-title-height: 50px;
-    --cell-margin: 2px;
+$cell-height:   114px;
+$header-height:  30px;
+$day-label-w:    32px;
+$class-label-w:  36px;
 
-    display: flex;
+.busy-rooms-grid-wrapper {
+    --cell-height:   #{$cell-height};
+    --header-height: #{$header-height};
 }
 
-.view-rooms {
-    margin: 0;
-    display: flex;
+.busy-rooms-grid {
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    min-width: max-content;
 
-    .busy-room-section {
-        display: flex;
-        flex-direction: column;
-
-        &:hover {
-            outline: 2px solid $blue3;
-            color: $blue;
-        }
+    th, td {
+        padding: 0;
+        vertical-align: top;
     }
+}
 
-    .busy-room-title {
-        @include displayFlex(center, center);
-        height: var(--room-title-height);
-        padding: 10px 7px;
-        margin: var(--cell-margin);
-        font-size: $font-xs;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+// ─── Top-left corner ──────────────────────────────────────────────────────────
+.grid-corner {
+    position: sticky;
+    top:  0;
+    left: 0;
+    z-index: 30;
+    width: #{$day-label-w + $class-label-w};
+    height: $header-height;
+    background: $white;
+    font-size: $font-xs;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px $shadow-box;
+    padding: 6px 4px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+// ─── Room name headers (sticky top) ──────────────────────────────────────────
+.grid-room-header {
+    //max-width: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: $header-height;
+    vertical-align: middle;
+    text-align: center;
+    font-size: $font-xs;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 6px 7px;
+    background: $white;
+    box-sizing: border-box;
+
+    &.responsive-table-column-sm   { @include col-width($room-col-width-sm); }
+    &.responsive-table-column-base { @include col-width($room-col-width-md); }
+    &.responsive-table-column-lg   { @include col-width($room-col-width-lg); }
+}
+
+// ─── Day label (sticky left) ──────────────────────────────────────────────────
+.grid-day-label {
+    position: sticky;
+    left: 0;
+    z-index: 15;
+    width: $day-label-w;
+    text-align: center;
+    font-size: 17px;
+
+
+    letter-spacing: 1px;
+    padding: 4px 2px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 2px 0 8px $shadow-box;
+
+
+    &.dark-blue-day { background-color: $blue3; color: $white; }
+    &.blue-day      { background-color: $blue;  color: $white; }
+}
+
+// ─── Period number label ──────────────────────────────────────────────────────
+.grid-class-label {
+    position: sticky;
+    left: $day-label-w + 4px;
+    z-index: 15;
+    width: $class-label-w;
+    background: $white;
+    text-align: center;
+    vertical-align: middle !important;
+    font-size: $font-s;
+    font-weight: 600;
+    padding: 0 4px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 2px 0 8px $shadow-box;
+}
+
+// ─── Data cell ────────────────────────────────────────────────────────────────
+.grid-cell {
+    padding: 0;
+    vertical-align: top;
+    overflow: visible;
+
+    &.responsive-table-column-sm   { @include col-width($room-col-width-sm); }
+    &.responsive-table-column-base { @include col-width($room-col-width-md); }
+    &.responsive-table-column-lg   { @include col-width($room-col-width-lg); }
+}
+
+.grid-cell-empty {
+    height: $cell-height * 2;
+}
+
+// ─── Row hover highlight ──────────────────────────────────────────────────────
+.busy-rooms-grid tbody tr:hover {
+    td.grid-class-label {
+        background-color: $blue3;
+        color: $white;
     }
+    .grid-cell .class-info-data {
+        box-shadow: 0 0 0 1px $blue3;
+    }
+}
 
-    .responsive-table-column {
-        &-sm { width: var(--column-width-sm); }
-        &-base { width: var(--column-width-base); }
-        &-lg { width: var(--column-width-lg); }
+// ─── Column highlight on room hover ───────────────────────────────────────────
+.grid-room-header.col-highlighted {
+    background-color: $blue3;
+    color: $white;
+}
+
+.grid-cell.col-highlighted {
+    background-color: rgba($blue3, 0.08);
+
+    .class-info-data {
+        box-shadow: 0 0 0 1px $blue3;
     }
 }

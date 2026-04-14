@@ -47,8 +47,8 @@
             font-size: $font-s;
             writing-mode: vertical-rl;
             text-orientation: upright;
-            margin-bottom: 0.8px;
-            margin: 0 5px;
+            margin: 0;
+            box-sizing: border-box;
         }
     }
     .dark-blue-day {

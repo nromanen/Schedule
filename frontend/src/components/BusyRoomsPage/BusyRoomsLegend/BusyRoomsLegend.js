@@ -1,4 +1,3 @@
-// components/BusyRoomsPage/BusyRoomsLegend/BusyRoomsLegend.jsx
 import React, { useState } from 'react';
 import './BusyRoomsLegend.scss';
 

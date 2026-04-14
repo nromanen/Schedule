@@ -8,6 +8,7 @@ import { prepareLessonCardCell, prepareLessonSubCardCell } from '../../helper/pr
 import { places } from '../../constants/places';
 import './GroupSchedulePage.scss';
 import { getLessonTypeColor } from '../../constants/lessonTypeColors';
+import LessonTypeBadge from "../LessonTypeBadge/LessonTypeBadge";
 
 const LessonTemporaryCardCell = (props) => {
     const { card, place, day } = props;
@@ -61,6 +62,7 @@ const LessonTemporaryCardCell = (props) => {
             <p className="lesson-subject">
                 {card.subjectForSite}
             </p>
+            <LessonTypeBadge lessonType={card.lessonType} showIcon={false} size="small" />
             <p className="lesson-details">
                 {prepareLessonSubCardCell(card, place)}
                 {place === places.TOGETHER && meetingLink && <span>{meetingLink}</span>}

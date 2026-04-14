@@ -20,9 +20,11 @@ const GroupCard = ({ group, disabled, setGroup, showConfirmDialog, showStudentsB
     const { t } = useTranslation('formElements');
 
     return (
-        <Card additionClassName="group-card">
-            <p className="group-card__label">{t(GROUP_LABEL)}:</p>
-            <h3 className="group-card__title">{group.title}</h3>
+        // <Card additionClassName="group-card" variant={"entity"}>
+        //     <p className="group-card__label">{t(GROUP_LABEL)}:</p>
+        //     <h3 className="group-card__title">{group.title}</h3>
+        <Card additionClassName="group-card" variant="entity">
+            <h3 className="card-entity__title card-entity__title--uppercase">{group.title}</h3>
             <div className="cards-btns">
                 {!disabled ? (
                     <>

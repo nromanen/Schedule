@@ -10,7 +10,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Card from '../share/Card/Card';
 
 import i18n from '../i18n';
-import {FORM_GROUP_LABEL, GROUP_Y_LABEL} from '../constants/translationLabels/formElements';
 import {EMPTY_SCHEDULE} from '../constants/translationLabels/common';
 import LessonTemporaryCardCell from '../containers/GroupSchedulePage/LessonTemporaryCardCell';
 import TeacherTemporaryCardCell from '../containers/GroupSchedulePage/TeacherTemporaryCardCell';
@@ -24,8 +23,6 @@ import {
     printWeekNumber,
     transformSemesterDate
 } from "../utils/dateUtils";
-
-// ─── helpers ────────────────────────────────────────────────────────────────
 
 const renderClassCell = (classItem) =>
     `${classItem.class_name}\n\r\n\r${classItem.startTime} - ${classItem.endTime}`;
@@ -138,221 +135,22 @@ export const renderGroupTable = (classes, isOdd, semester) => {
     );
 };
 
-// ─── full schedule (groups as columns) ───────────────────────────────────────
-
-export const renderGroupCells = (groups, isOdd, weekType, isCurrentDay, dayName) => {
-    const prepared = prepareGroups(groups, weekType, isOdd, isCurrentDay);
-
-    return prepared.map((group, i) => {
-        if (!group) return null;
-        const { card, colspan, rowspan, classname } = group;
-        return (
-            <TableCell
-                key={`${dayName}-${i}`}
-                colSpan={colspan}
-                rowSpan={rowspan}
-                className={classname}
-            >
-                <LessonTemporaryCardCell card={card} day={dayName} place={places.TOGETHER} />
-            </TableCell>
-        );
-    });
-};
-
-export const renderScheduleHeader = (groups) => (
-    <TableHead>
-        <TableRow>
-            <TableCell className="groupLabelCell" colSpan={3}>
-                {i18n.t(GROUP_Y_LABEL)}
-            </TableCell>
-            {groups.map((group, i) => (
-                <TableCell key={`group-${i}`}>{group}</TableCell>
-            ))}
-        </TableRow>
-    </TableHead>
-);
-
-export const renderFirstDayFirstClassFirstCardLine = (
-    dayName,
-    classItem,
-    groups,
-    classesCount,
-    currentWeekType,
-    currentDay,
-    todayWeekIsOdd = null,
-) => {
-    let dayClassName = 'dayNameCell ';
-    const classClassName = 'classNameCell ';
-    const isCurrentDay = dayName === currentDay;
-
-    let oddWeekClass = '';
-    let evenWeekClass = '';
-    if (isCurrentDay) {
-        dayClassName += ' currentDay';
-        if (currentWeekType) {
-            oddWeekClass = ' currentDay';
-        } else {
-            evenWeekClass = ' currentDay';
-        }
-    }
-
-    if (groups.even.length <= 2 || groups.odd.length <= 2) {
-        dayClassName += ' minHeightDouble';
-    }
-
-    if (todayWeekIsOdd !== null) {
-        const weekGroups = todayWeekIsOdd ? groups.odd : groups.even;
-        dayClassName = 'dayNameCell';
-
-        return (
-            <React.Fragment key={`${dayName}-first`}>
-                <TableRow className="day-first-row">
-                    <TableCell rowSpan={classesCount} className={dayClassName}>
-                        <span className="dayName">
-                            <b>{i18n.t(`common:day_of_week_${dayName}`)}</b>
-                        </span>
-                    </TableCell>
-                    <TableCell className={classClassName}>
-                        {renderClassCell(classItem)}
-                    </TableCell>
-                    {renderGroupCells(weekGroups, todayWeekIsOdd, currentWeekType, false, dayName)}
-                </TableRow>
-            </React.Fragment>
-        );
-    }
-
-    return (
-        <React.Fragment key={`${dayName}-first`}>
-            <TableRow className="day-first-row">
-                <TableCell rowSpan={classesCount * 2} className={dayClassName}>
-                    <span className="dayName">
-                        <b>{i18n.t(`common:day_of_week_${dayName}`)}</b>
-                    </span>
-                </TableCell>
-                <TableCell className={classClassName} rowSpan={2}>
-                    {renderClassCell(classItem)}
-                </TableCell>
-                <TableCell className={`${classClassName + oddWeekClass} subClassName`}>1</TableCell>
-                {renderGroupCells(groups.odd, true, currentWeekType, isCurrentDay, dayName)}
-            </TableRow>
-            <TableRow>
-                <TableCell className={`${classClassName + evenWeekClass} subClassName`}>2</TableCell>
-                {renderGroupCells(groups.even, false, currentWeekType, isCurrentDay, dayName)}
-            </TableRow>
-        </React.Fragment>
-    );
-};
-
-export const renderFirstDayOtherClassFirstCardLine = (
-    dayName,
-    classItem,
-    groups,
-    currentWeekType,
-    currentDay,
-    todayWeekIsOdd = null,
-) => {
-    const classClassName = 'classNameCell ';
-    const isCurrentDay = dayName === currentDay;
-    let oddWeekClass = '';
-    let evenWeekClass = '';
-
-    if (isCurrentDay) {
-        if (currentWeekType) {
-            oddWeekClass = ' currentDay';
-        } else {
-            evenWeekClass = ' currentDay';
-        }
-    }
-
-    if (todayWeekIsOdd !== null) {
-        const weekGroups = todayWeekIsOdd ? groups.odd : groups.even;
-
-        return (
-            <React.Fragment key={`${dayName}-${classItem.id}`}>
-                <TableRow>
-                    <TableCell className={classClassName}>
-                        {renderClassCell(classItem)}
-                    </TableCell>
-                    {renderGroupCells(weekGroups, todayWeekIsOdd, currentWeekType, false, dayName)}
-                </TableRow>
-            </React.Fragment>
-        );
-    }
-
-    return (
-        <React.Fragment key={`${dayName}-${classItem.id}`}>
-            <TableRow>
-                <TableCell className={classClassName} rowSpan={2}>
-                    {renderClassCell(classItem)}
-                </TableCell>
-                <TableCell className={`${classClassName + oddWeekClass} subClassName`}>1</TableCell>
-                {renderGroupCells(groups.odd, true, currentWeekType, isCurrentDay, dayName)}
-            </TableRow>
-            <TableRow>
-                <TableCell className={`${classClassName + evenWeekClass} subClassName`}>2</TableCell>
-                {renderGroupCells(groups.even, false, currentWeekType, isCurrentDay, dayName)}
-            </TableRow>
-        </React.Fragment>
-    );
-};
-
-export const renderDay = (dayName, dayItem, semesterClassesCount, currentWeekType, currentDay, todayWeekIsOdd = null) => {
-    let lastNonEmptyIndex = dayItem.length - 1;
-    while (lastNonEmptyIndex >= 0 && isClassEmpty(dayItem[lastNonEmptyIndex])) {
-        lastNonEmptyIndex--;
-    }
-    const trimmedDayItem = dayItem.slice(0, lastNonEmptyIndex + 1);
-    if (trimmedDayItem.length === 0) return null;
-
-    const actualClassesCount = trimmedDayItem.length;
-
-    return trimmedDayItem.map((classItem, classIndex) => {
-        if (classIndex === 0) {
-            return renderFirstDayFirstClassFirstCardLine(
-                dayName,
-                classItem.class,
-                classItem.cards,
-                actualClassesCount,
-                currentWeekType,
-                currentDay,
-                todayWeekIsOdd,
-            );
-        }
-        return renderFirstDayOtherClassFirstCardLine(
-            dayName,
-            classItem.class,
-            classItem.cards,
-            currentWeekType,
-            currentDay,
-            todayWeekIsOdd,
-        );
-    });
-};
-
-export const renderScheduleFullHeader = (groupList) => (
-    <TableHead>
-        <TableRow>
-            <TableCell colSpan={3}>{i18n.t(FORM_GROUP_LABEL)}</TableCell>
-            {groupList.map(({ title }) => (
-                <TableCell key={title} className="groupLabelCell">
-                    {title}
-                </TableCell>
-            ))}
-        </TableRow>
-    </TableHead>
-);
-
-const renderScheduleDays = (resultArray, semesterClasses, currentWeekType, currentDay, todayWeekIsOdd = null) =>
-    resultArray.map(({ day, classes }) =>
-        renderDay(day, classes, semesterClasses.length || 0, currentWeekType, currentDay, todayWeekIsOdd)
-    );
-
-export const ScheduleLegend = () => {
-    const legendItems = [
+const LESSON_TYPES = {
+    basic: [
         { type: 'lecture',    label: i18n.t('lesson_type_lecture',    'Лекція') },
         { type: 'practical',  label: i18n.t('lesson_type_practical',  'Практична') },
         { type: 'laboratory', label: i18n.t('lesson_type_lab',        'Лабораторна') },
-    ];
+   ],
+    exams: [
+        { type: 'exam',   label: i18n.t('lesson_type_exam',   'Екзамен') },
+        { type: 'credit', label: i18n.t('lesson_type_credit', 'Залік') },
+    ],
+};
+
+export const ScheduleLegend = ({ variant = 'all' }) => {
+    const legendItems = variant === 'all'
+        ? [...LESSON_TYPES.basic, ...LESSON_TYPES.exams]
+        : LESSON_TYPES[variant] ?? [];
 
     return (
         <div className="schedule-legend">
@@ -368,32 +166,6 @@ export const ScheduleLegend = () => {
         </div>
     );
 };
-
-export const renderFullSchedule = (fullResultSchedule, todayWeekIsOdd = null) => {
-    const { semester, groupList, semesterClasses, resultArray } = fullResultSchedule;
-    const currentWeekType = isWeekOdd(printWeekNumber(semester.startDay));
-    const currentDay = checkSemesterEnd(semester.endDay) ? '' : matchDayNumberSystemToDayName();
-    const isSemesterEnded = checkSemesterEnd(semester.endDay);
-
-    return (
-        <>
-            {isSemesterEnded && (
-                <p className="semester-ended-notice">{i18n.t('semester_ended')}</p>
-            )}
-            <ScheduleLegend />
-            <TableContainer>
-                <Table aria-label="sticky table">
-                    {renderScheduleFullHeader(groupList)}
-                    <TableBody>
-                        {renderScheduleDays(resultArray, semesterClasses, currentWeekType, currentDay, todayWeekIsOdd)}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </>
-    );
-};
-
-// ─── teacher schedule ────────────────────────────────────────────────────────
 
 const renderTeacherClassCell = (cards, dayName) => {
     let teacherLessonAddCellClass = '';

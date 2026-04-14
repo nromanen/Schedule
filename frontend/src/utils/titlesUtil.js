@@ -1,29 +1,20 @@
 import {get} from 'lodash';
 import {getTeacherWithPosition} from '../helper/renderTeacher';
+import { toShortLocalDate } from './dateUtils';
+
+export const formatDateRange = (startDate, endDate) => {
+    if (!startDate || !endDate) return '';
+    const sameYear = startDate?.slice(-4) === endDate?.slice(-4);
+    const start = toShortLocalDate(startDate, !sameYear);
+    const end = toShortLocalDate(endDate, true);
+    return `${start} – ${end}`;
+};
 
 const getSemesterTitle = (semester) => {
     if (!semester) return '';
     const { description, startDay, endDay } = semester;
-
-    return `${description} (${startDay}-${endDay}) : `;
+    return `${description} (${formatDateRange(startDay, endDay)}) : `;
 };
 
-const getGroupScheduleTitle = (semester, group) => {
-    const semesterTitle = getSemesterTitle(semester);
-
-    return group ? semesterTitle + get(group, 'title', '') : semesterTitle;
-};
-
-const getTeacherScheduleTitle = (semester, teacher) => {
-    const semesterTitle = getSemesterTitle(semester);
-
-    return teacher ? semesterTitle + getTeacherWithPosition(teacher) : semesterTitle;
-};
-
-const getDepartmentScheduleTitle = (semester, department) => {
-    const semesterTitle = getSemesterTitle(semester);
-    return department ? semesterTitle + department.name : semesterTitle;
-};
-
-export { getSemesterTitle, getGroupScheduleTitle, getTeacherScheduleTitle, getDepartmentScheduleTitle };
+export { getSemesterTitle };
 

@@ -1,125 +1,128 @@
 import React, { useEffect } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import Button from '@material-ui/core/Button';
+import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import MenuItem from '@material-ui/core/MenuItem';
-import renderTextField from '../../../share/renderedFields/input';
-import SelectField from '../../../share/renderedFields/select';
-import { ROOM_FORM } from '../../../constants/reduxForms';
-import { required, uniqueRoomName } from '../../../validation/validateFields';
-import Card from '../../../share/Card/Card';
-import './RoomForm.scss';
-import { getClearOrCancelTitle, setDisableButton } from '../../../helper/disableComponent';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import FormWrapper from '../../../share/FormWrapper/FormWrapper';
+import { RHFTextField } from '../../../share/rhf';
 import {
     CREATE_TITLE,
-    EDIT_TITLE, FORM_ROOM_LABEL_AFTER,
-    NUMBER_LABEL,
+    EDIT_TITLE,
     ROOM_LABEL,
     ROOM_Y_LABEL,
-    SAVE_BUTTON_LABEL,
+    FORM_ROOM_LABEL_AFTER,
+    FORM_TYPE_LABEL,
 } from '../../../constants/translationLabels/formElements';
-import { TYPE_LABEL } from '../../../constants/translationLabels/common';
-import { renderAutocompleteField } from '../../../helper/renderAutocompleteField';
+import './RoomForm.scss';
 
-
-const RoomForm = (props) => {
+const RoomForm = ({ oneRoom, roomTypes, rooms, onSubmit, clearRoomItem }) => {
     const { t } = useTranslation('formElements');
-    const {
-        handleSubmit,
-        pristine,
-        submitting,
-        reset,
-        oneRoom,
-        roomTypes,
-        rooms,
-        initialize,
-        clearRoomItem,
-    } = props;
 
-    const removeCurrentRoom = () => rooms.filter((el) => el.id !== oneRoom.id);
-    const roomsForAutocomplete = oneRoom.id ? removeCurrentRoom() : rooms;
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { isDirty, isSubmitting },
+    } = useForm({
+        defaultValues: {
+            name: '',
+            type: null,
+            afterId: null,
+        },
+    });
 
     useEffect(() => {
-        if (oneRoom.id) {
-            const { name, type, id } = oneRoom;
-            const roomIndex = rooms.findIndex((room) => room.id === id);
-            const afterId = rooms.find((item, index) => index === roomIndex - 1);
-            initialize({
-                id,
-                name,
-                type: type.id,
+        if (oneRoom?.id) {
+            const roomIndex = rooms.findIndex(({ id }) => id === oneRoom.id);
+            const afterId = rooms[roomIndex - 1] || null;
+            reset({
+                name: oneRoom.name,
+                type: roomTypes.find((rt) => rt.id === oneRoom.type?.id) || null,
                 afterId,
             });
         } else {
-            initialize();
+            reset({ name: '', type: null, afterId: null });
         }
-    }, [oneRoom, rooms, initialize]);
+    }, [oneRoom?.id]);
+
+    const onFormSubmit = (data) => {
+        onSubmit({
+            ...data,
+            type: data.type?.id,
+            afterId: data.afterId,
+            ...(oneRoom?.id && { id: oneRoom.id }),
+        });
+        reset({ name: '', type: null, afterId: null });
+    };
+
+    const handleReset = () => {
+        clearRoomItem();
+        reset({ name: '', type: null, afterId: null });
+    };
+
+    const roomsForAutocomplete = oneRoom?.id
+        ? rooms.filter((r) => r.id !== oneRoom.id)
+        : rooms;
 
     return (
-        <Card additionClassName="form-card room-form">
-            <form onSubmit={handleSubmit}>
-                <h2 className="form-title">
-                    {oneRoom.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} {t(ROOM_Y_LABEL)}
-                </h2>
-                <Field
-                    type="text"
-                    name="name"
-                    component={renderTextField}
-                    placeholder={t(NUMBER_LABEL)}
-                    className="form-field"
-                    label={t(ROOM_LABEL)}
-                    validate={[required, uniqueRoomName]}
-                />
-                <Field
-                    className="form-field"
-                    component={SelectField}
-                    name="type"
-                    label={t(TYPE_LABEL)}
-                    validate={[required]}
-                >
-                    <MenuItem value="" className="hidden" disabled />
-                    {roomTypes.map((roomType) => (
-                        <MenuItem key={roomType.id} value={roomType.id}>
-                            {roomType.description}
-                        </MenuItem>
-                    ))}
-                </Field>
-                <Field
-                    className="form-field"
-                    name="afterId"
-                    component={renderAutocompleteField}
-                    label={t(FORM_ROOM_LABEL_AFTER)}
-                    type="text"
-                    values={roomsForAutocomplete}
-                    getOptionLabel={(item) => (item ? item.name : '')}
-                />
-                <div className="form-buttons-container">
-                    <Button
-                        className="buttons-style"
-                        variant="contained"
-                        color="primary"
-                        disabled={pristine || submitting}
-                        type="submit"
-                    >
-                        {t(SAVE_BUTTON_LABEL)}
-                    </Button>
-                    <Button
-                        className="buttons-style"
-                        variant="contained"
-                        disabled={setDisableButton(pristine, submitting, oneRoom.id)}
-                        onClick={() => {
-                            clearRoomItem();
-                            reset(ROOM_FORM);
-                        }}
-                    >
-                        {getClearOrCancelTitle(oneRoom.id, t)}
-                    </Button>
-                </div>
-            </form>
-        </Card>
+        <FormWrapper
+            title={`${oneRoom?.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} ${t(ROOM_Y_LABEL)}`}
+            onSubmit={handleSubmit(onFormSubmit)}
+            onReset={handleReset}
+            isDirty={isDirty}
+            isSubmitting={isSubmitting}
+            entityId={oneRoom?.id}
+        >
+            <RHFTextField
+                control={control}
+                name="name"
+                label={`${t(ROOM_LABEL)}:`}
+                className="form-field"
+                rules={{ required: t('required') }}
+            />
+            <Controller
+                name="type"
+                control={control}
+                rules={{ required: t('required') }}
+                render={({ field, fieldState: { error } }) => (
+                    <Autocomplete
+                        {...field}
+                        options={roomTypes}
+                        getOptionLabel={(item) => item?.description || ''}
+                        onChange={(_, value) => field.onChange(value)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                className="form-field"
+                                label={t(FORM_TYPE_LABEL)}
+                                error={!!error}
+                                helperText={error?.message}
+                            />
+                        )}
+                    />
+                )}
+            />
+            <Controller
+                name="afterId"
+                control={control}
+                render={({ field }) => (
+                    <Autocomplete
+                        {...field}
+                        options={roomsForAutocomplete}
+                        getOptionLabel={(item) => item?.name || ''}
+                        onChange={(_, value) => field.onChange(value)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                className="form-field"
+                                label={t(FORM_ROOM_LABEL_AFTER)}
+                            />
+                        )}
+                    />
+                )}
+            />
+        </FormWrapper>
     );
 };
 
-export default reduxForm({
-    form: ROOM_FORM,
-})(RoomForm);
+export default RoomForm;

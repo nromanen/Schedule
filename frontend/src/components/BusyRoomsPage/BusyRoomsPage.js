@@ -1,47 +1,76 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import { components } from 'react-select';
+import ReactSelect from 'react-select';
 import { useTranslation } from 'react-i18next';
 import './BusyRoomsPage.scss';
 import BusyRoomsTable from './BustRoomsTable/BusyRoomsTable';
 import SemesterLegend from '../SemesterLegend/SemesterLegend';
 import { COMMON_TABLE_COLUMNS_SIZE } from '../../constants/translationLabels/common';
 import { columnSizeArray } from '../../constants/schedule/schedule';
-import BusyRoomsLegend from "./BusyRoomsLegend/BusyRoomsLegend";
-import {getWeekKeyForSemester, getWeekParity} from "../../utils/dateUtils";
+import BusyRoomsLegend from './BusyRoomsLegend/BusyRoomsLegend';
+import { useCombinedBusyRooms } from '../../hooks/useRooms';
+import { useMergedBusyRooms } from '../../hooks/useMergedBusyRooms';
+import { useRoomFilters } from '../../hooks/useRoomFilters';
+import { exportRoomPdf } from './exportRoomPdf';
+import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
 
-const BusyRoomsPage = (props) => {
-    const {
-        getAllScheduleItems,
-        getCombinedBusyRooms,
-        combinedBusyRooms,     // { semesters: [], rooms: { [semesterId]: [...] } }
-        getClassScheduleList,
-        setScheduleLoading,
-        scheduleLoading,
-    } = props;
+const ValueContainer = ({ children, getValue, ...props }) => {
+    const selected = getValue();
+    if (selected.length > 3) {
+        return (
+            <components.ValueContainer {...props}>
+                {`${selected.length} аудиторій`}
+            </components.ValueContainer>
+        );
+    }
+    return (
+        <components.ValueContainer {...props}>
+            {children}
+        </components.ValueContainer>
+    );
+};
 
+const BusyRoomsPage = () => {
     const { t } = useTranslation('common');
     const [columnsSize, setColumnsSize] = useState(
         localStorage.getItem('roomsTableColumnsSize') || 'base',
     );
     const [activeSemesterIds, setActiveSemesterIds] = useState([]);
+    const [filtersOpen, setFiltersOpen] = useState(true);
+
+    const { data: combinedBusyRooms, isLoading } = useCombinedBusyRooms();
+
+    const semesters = combinedBusyRooms?.semesters || [];
+    const semesterIds = semesters.map(s => s.id).join(',');
 
     useEffect(() => {
-        setScheduleLoading(true);
-        getCombinedBusyRooms();
-        getAllScheduleItems();
-        getClassScheduleList();
-    }, []);
-
-    useEffect(() => {
-        if (combinedBusyRooms?.semesters?.length) {
-            setActiveSemesterIds(combinedBusyRooms.semesters.map(s => s.id));
+        if (semesters.length) {
+            setActiveSemesterIds(semesters.map(s => s.id));
         }
-    }, [combinedBusyRooms?.semesters]);
+    }, [semesterIds]);
+
+    const mergedBusyRooms = useMergedBusyRooms(combinedBusyRooms, activeSemesterIds);
+
+    const {
+        roomTypes,
+        roomOptions,
+        selectedOptions,
+        filteredRooms,
+        activeRoomTypes,
+        selectedRoomIds,
+        handleRoomTypeToggle,
+        handleRoomSelect,
+    } = useRoomFilters(mergedBusyRooms);
 
     const handleChange = ({ target }) => {
         setColumnsSize(target.value);
@@ -56,97 +85,12 @@ const BusyRoomsPage = (props) => {
         );
     };
 
-    const mergedBusyRooms = useMemo(() => {
-        if (!combinedBusyRooms?.roomsBySemesterId || !combinedBusyRooms?.semesters) {
-            return [];
-        }
-
-        const { semesters, roomsBySemesterId } = combinedBusyRooms;
-        const activeSemesters = semesters.filter(s => activeSemesterIds.includes(s.id));
-        if (!activeSemesters.length) return [];
-
-        const referenceSemester = activeSemesters[0];
-        const baseRooms = roomsBySemesterId[String(referenceSemester.id)] || [];
-
-        if (activeSemesters.length === 1) return baseRooms;
-
-        const result = JSON.parse(JSON.stringify(baseRooms));
-
-        result.forEach(room => {
-            room.schedules.forEach(schedule => {
-                schedule.classes.forEach(cls => {
-                    cls.even.forEach(slot => {
-                        slot.lessons = slot.lessons.map(l => ({ ...l, _semesterIndex: 0 }));
-                    });
-                    cls.odd.forEach(slot => {
-                        slot.lessons = slot.lessons.map(l => ({ ...l, _semesterIndex: 0 }));
-                    });
-                });
-            });
-        });
-
-        const resultByRoomId = Object.fromEntries(result.map(r => [r.room_id, r]));
-
-        activeSemesters.slice(1).forEach((semester, extraIndex) => {
-            const getWeekKey = getWeekKeyForSemester(semester, { semester: referenceSemester });
-            const semesterRooms = roomsBySemesterId[String(semester.id)] || [];
-
-            semesterRooms.forEach(room => {
-                const baseRoom = resultByRoomId[room.room_id];
-                if (!baseRoom) return;
-
-                const baseDayMap = Object.fromEntries(
-                    baseRoom.schedules.map(d => [d.day, d])
-                );
-
-                room.schedules.forEach(schedule => {
-                    if (baseDayMap[schedule.day]) {
-                        const baseClasses = baseDayMap[schedule.day].classes[0];
-                        const extraClasses = schedule.classes[0];
-
-                        const evenKey = getWeekKey('even');
-                        const oddKey = getWeekKey('odd');
-
-                        const extraEven = extraClasses[evenKey] || [];
-                        const extraOdd = extraClasses[oddKey] || [];
-
-                        baseClasses.even.forEach(slot => {
-                            const match = extraEven.find(s => s.class_id === slot.class_id);
-                            if (match) {
-                                const tagged = match.lessons.map(l => ({ ...l, _semesterIndex: extraIndex + 1 }));
-                                slot.lessons.push(...tagged);
-                            }
-                        });
-
-                        baseClasses.odd.forEach(slot => {
-                            const match = extraOdd.find(s => s.class_id === slot.class_id);
-                            if (match) {
-                                const tagged = match.lessons.map(l => ({ ...l, _semesterIndex: extraIndex + 1 }));
-                                slot.lessons.push(...tagged);
-                            }
-                        });
-                    } else {
-                        baseRoom.schedules.push(schedule);
-                        baseRoom.schedules.sort((a, b) =>
-                            ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
-                                .indexOf(a.day) -
-                            ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY']
-                                .indexOf(b.day)
-                        );
-                    }
-                });
-            });
-        });
-
-        return result;
-    }, [combinedBusyRooms, activeSemesterIds]);
-
-    const semesters = combinedBusyRooms?.semesters || [];
-
     const days = semesters[0]?.semester_days || [];
     const classes = semesters[0]?.semester_classes || [];
 
-    const isLoading = scheduleLoading || !combinedBusyRooms?.semesters;
+    const handlePdfExport = () => exportRoomPdf(filteredRooms[0], days, classes, t);
+
+    const isSingleRoomSelected = filteredRooms.length === 1;
 
     return (
         <section className="schedule-card busy-rooms-control-panel">
@@ -154,38 +98,98 @@ const BusyRoomsPage = (props) => {
                 <CircularProgress className="loading-circle" />
             ) : (
                 <>
-                    <div className="table-size-container">
-                        <FormControl component="div" className="radio-control">
-                            <FormLabel component="legend">{`${t(COMMON_TABLE_COLUMNS_SIZE)}:`}</FormLabel>
-                            <RadioGroup
-                                aria-label="columns-size"
-                                className="radio-group"
-                                value={columnsSize}
-                                onChange={handleChange}
-                            >
-                                {columnSizeArray.map((item) => (
-                                    <FormControlLabel
-                                        key={item.value}
-                                        value={item.value}
-                                        control={<Radio />}
-                                        label={t(item.label)}
-                                    />
-                                ))}
-                            </RadioGroup>
-                        </FormControl>
-                        <SemesterLegend
-                            semesters={semesters}
-                            activeSemesterIds={activeSemesterIds}
-                            onToggle={handleSemesterToggle}
-                        />
-                        <BusyRoomsLegend />
+                    <div className="filters-header">
+                        <IconButton onClick={() => setFiltersOpen(prev => !prev)}>
+                            {filtersOpen ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="large" />}
+                        </IconButton>
                     </div>
+                    {filtersOpen && (
+                        <div className="table-size-container">
+                            <div className="control-block">
+                                <FormControl component="div" className="radio-control">
+                                    <FormLabel component="legend">{`${t(COMMON_TABLE_COLUMNS_SIZE)}:`}</FormLabel>
+                                    <RadioGroup
+                                        aria-label="columns-size"
+                                        className="radio-group"
+                                        value={columnsSize}
+                                        onChange={handleChange}
+                                    >
+                                        {columnSizeArray.map((item) => (
+                                            <FormControlLabel
+                                                key={item.value}
+                                                value={item.value}
+                                                control={<Radio />}
+                                                label={t(item.label)}
+                                            />
+                                        ))}
+                                    </RadioGroup>
+                                </FormControl>
+                            </div>
+
+                            <div className="control-block">
+                                <FormControl component="div" className="radio-control">
+                                    <FormLabel component="legend">{t('room_type_label')}:</FormLabel>
+                                    <div className="radio-group">
+                                        {roomTypes.map(type => (
+                                            <FormControlLabel
+                                                key={type}
+                                                control={
+                                                    <Checkbox
+                                                        checked={activeRoomTypes.includes(type)}
+                                                        onChange={() => handleRoomTypeToggle(type)}
+                                                    />
+                                                }
+                                                label={type}
+                                            />
+                                        ))}
+                                    </div>
+                                </FormControl>
+                                <FormControl component="div" className="radio-control">
+                                    <FormLabel component="legend">{t('choose_rooms_label')}:</FormLabel>
+                                    <ReactSelect
+                                        classNamePrefix="react-select"
+                                        options={roomOptions}
+                                        value={selectedRoomIds === null ? [] : selectedOptions}
+                                        onChange={handleRoomSelect}
+                                        isMulti
+                                        isClearable
+                                        hideSelectedOptions={false}
+                                        closeMenuOnSelect={false}
+                                        menuPlacement="auto"
+                                        placeholder={t('all_rooms_label')}
+                                        components={{ ValueContainer }}
+                                        styles={{
+                                            container: (base) => ({ ...base, minWidth: '200px', width: '200px' }),
+                                            menu: (base) => ({ ...base, zIndex: 9999 }),
+                                        }}
+                                    />
+                                </FormControl>
+                            </div>
+
+                            {semesters.length > 1 && (
+                                <div className="control-block">
+                                    <SemesterLegend
+                                        semesters={semesters}
+                                        activeSemesterIds={activeSemesterIds}
+                                        onToggle={handleSemesterToggle}
+                                    />
+                                    <BusyRoomsLegend />
+                                </div>
+                            )}
+
+                            {isSingleRoomSelected && (
+                                <IconButton onClick={handlePdfExport}>
+                                    <PictureAsPdfIcon />
+                                </IconButton>
+                            )}
+                        </div>
+                    )}
                     <BusyRoomsTable
                         days={days}
                         t={t}
                         columnsSize={columnsSize}
                         classes={classes}
-                        busyRooms={mergedBusyRooms}
+                        busyRooms={filteredRooms}
                         activeSemesterIds={activeSemesterIds}
                     />
                 </>

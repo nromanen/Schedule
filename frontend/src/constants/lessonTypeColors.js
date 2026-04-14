@@ -4,6 +4,8 @@ export const lessonTypeColors = {
     laboratory: { main: '#e08830', light: '#fef6ed' },
     practical:  { main: '#0fa968', light: '#edfcf5' },
     seminar:    { main: '#8E24AA', light: '#F3E5F5' },
+    exam:       {main: '#d32f2f', light: '#fff5f5'  },
+    credit:     {main: '#e91e8c', light: '#fce4f4'},
     default:    { main: '#6b7280', light: '#F5F5F5' },
 };
 

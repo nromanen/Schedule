@@ -24,11 +24,6 @@ export const setStudentsLoading = (payload) => ({
     payload,
 });
 
-export const setRoomsLoading = (payload) => ({
-    type: actionTypes.SET_ROOMS_LOADING_INDICATOR,
-    payload,
-});
-
 export const setAuthLoading = (payload) => ({
     type: actionTypes.SET_AUTH_LOADING_INDICATOR,
     payload,

@@ -1,6 +1,7 @@
 package com.softserve.repository.impl;
 
 import com.softserve.entity.Group;
+import com.softserve.exception.DeleteDisabledException;
 import com.softserve.repository.GroupRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -35,9 +36,8 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             + "WHERE lower(g.title) = lower(:title)";
 
     private static final String IS_EXISTS_BY_TITLE_IGNORING_ID_QUERY
-            = "SELECT CASE WHEN count(g.id) > 0 THEN true ELSE false END"
-            + FROM_GROUP
-            + "WHERE lower(g.title) = lower(:title) AND g.id <> :id";
+            = IS_EXISTS_BY_TITLE_QUERY
+            + " AND g.id <> :id";
 
     private static final String IS_EXISTS_BY_ID_QUERY
             = "SELECT CASE WHEN count(g.id) > 0 THEN true ELSE false END"
@@ -71,6 +71,11 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
             = "UPDATE StudentGroup g "
             + "SET g.sortOrder = g.sortOrder + 1 "
             + "WHERE g.sortOrder >= :lowerPosition AND g.sortOrder < :upperPosition";
+
+    private static final String IS_STUDENTS_EXIST_FOR_GROUP_ID_QUERY
+            = "SELECT CASE WHEN count(s.id) > 0 THEN true ELSE false END"
+            + " FROM Student s "
+            + "WHERE s.group.id = :groupId";
 
 
     @Override
@@ -153,12 +158,27 @@ public class GroupRepositoryImpl extends BasicRepositoryImpl<Group, Long> implem
     }
 
     @Override
-    protected boolean checkReference(Group group) {
-        log.info("In checkReference(group = [{}])", group);
-        return getSession()
+    public Group delete(Group group) {
+        log.info("In delete(group = [{}])", group);
+
+        boolean hasLessons = getSession()
                 .createQuery(IS_LESSONS_EXIST_FOR_GROUP_ID_QUERY, Boolean.class)
                 .setParameter("groupId", group.getId())
                 .getSingleResult();
+        if (hasLessons) {
+            throw new DeleteDisabledException("Cannot delete group: it has associated lessons");
+        }
+
+        boolean hasStudents = getSession()
+                .createQuery(IS_STUDENTS_EXIST_FOR_GROUP_ID_QUERY, Boolean.class)
+                .setParameter("groupId", group.getId())
+                .getSingleResult();
+        if (hasStudents) {
+            throw new DeleteDisabledException("Cannot delete group: it has associated students");
+        }
+
+        getSession().remove(group);
+        return group;
     }
 
     @Override

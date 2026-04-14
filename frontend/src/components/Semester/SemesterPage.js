@@ -12,6 +12,7 @@ const SemesterPage = (props) => {
         handleSemesterFormSubmit,
         setOpenErrorSnackbar,
         classScheduler,
+        getClassSchedulerItems,
         // it doesnt work, need to finish implement archived functionality
         // getArchivedSemestersItems,
         // archivedSemesters,
@@ -23,6 +24,10 @@ const SemesterPage = (props) => {
     const { data: groups = [] } = useEnabledGroups();
 
     const options = getGroupsOptionsForSelect(groups);
+
+    useEffect(() => {
+        getClassSchedulerItems();
+    }, []);
 
     useEffect(() => {
         if (disabled) {

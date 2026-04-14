@@ -6,7 +6,7 @@ import {LESSON_FORM} from '../../constants/reduxForms';
 
 const mapStateToProps = (state) => ({
     lesson: state.lesson.lesson,
-    groups: state.groups.groups,
+    groups: state.groups.scheduleGroups,
     group: state.groups.group,
     isUniqueError: state.lesson.uniqueError,
     groupId: state.lesson.groupId,

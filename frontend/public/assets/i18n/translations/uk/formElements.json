@@ -80,6 +80,8 @@
     "lesson_type_lecture_label": "Лекція",
     "lesson_type_laboratory_label": "Лабораторна",
     "lesson_type_practical_label": "Практична",
+    "lesson_type_exam_label": "Екзамен",
+    "lesson_type_credit_label": "Залік",
     "class_from_label": "З",
     "class_to_label": "До",
     "day_label": "День",

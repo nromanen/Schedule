@@ -38,7 +38,6 @@ import {
 import LanguageSelector from '../LanguageSelector/LanguageSelector';
 import * as colors from '../../constants/schedule/colors';
 
-import FreeRooms from '../../containers/Dialogs/FreeRoomsDialog';
 import { setSemesterLoadingService } from '../../services/loadingService';
 import {
     ADMIN_TITLE,
@@ -153,17 +152,6 @@ const ManagerHamburgerMenu = ({ menu, currentSemester, classScheduler, t }) => (
         <NavMenuItem to={HOME_PAGE_LINK}     icon={FaHome}      label={t(HOME_TITLE)}     onClick={menu.handleClose} />
         <NavMenuItem to={SCHEDULE_PAGE_LINK} icon={FaClock}     label={t(SCHEDULE_TITLE)} onClick={menu.handleClose} />
         <NavMenuItem to={ADMIN_PAGE_LINK}    icon={FaUser}      label={t(ADMIN_TITLE)}    onClick={menu.handleClose} />
-        <span
-            className="navLinks"
-            style={{ textDecoration: 'none' }}
-            onClick={menu.handleClose}
-            role="button"
-            tabIndex="0"
-        >
-            <StyledMenuItem>
-                <FreeRooms classScheduler={classScheduler} />
-            </StyledMenuItem>
-        </span>
         <NavMenuItem to={LOGOUT_LINK} icon={FaSignOutAlt} label={t(LOGOUT_TITLE)} onClick={menu.handleClose} />
     </>
 );
@@ -208,17 +196,6 @@ const ManagerUserMenu = ({ menu, currentSemester, classScheduler, schedulePublis
             >
                 <NavMenuItem to={ADMIN_PAGE_LINK}    icon={FaUser}      label={t(ADMIN_TITLE)}    onClick={menu.handleClose} />
                 <NavMenuItem to={SCHEDULE_PAGE_LINK} icon={FaClock}     label={t(SCHEDULE_TITLE)} onClick={menu.handleClose} />
-                <span
-                    className="navLinks"
-                    style={{ textDecoration: 'none' }}
-                    onClick={menu.handleClose}
-                    role="button"
-                    tabIndex="0"
-                >
-                    <StyledMenuItem>
-                        <FreeRooms classScheduler={classScheduler} />
-                    </StyledMenuItem>
-                </span>
                 <StyledMenuItem onClick={onTogglePublish}>
                     <ListItemIcon>
                         {schedulePublished ? <FaEyeSlash fontSize="normal" /> : <FaEye fontSize="normal" />}

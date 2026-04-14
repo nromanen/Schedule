@@ -7,7 +7,6 @@ const initialState = {
     semesterLoading: false,
     studentsLoading: false,
     mainScheduleLoading: false,
-    roomsLoading: false,
     scheduleOperationLoading: false,
 };
 
@@ -25,8 +24,6 @@ const reducer = (state = initialState, action) => {
             return { ...state, semesterLoading: action.payload };
         case actionTypes.SET_STUDENTS_LOADING_INDICATOR:
             return { ...state, studentsLoading: action.payload };
-        case actionTypes.SET_ROOMS_LOADING_INDICATOR:
-            return { ...state, roomsLoading: action.payload };
         case actionTypes.SET_SCHEDULE_OPERATION_LOADING:
             return { ...state, scheduleOperationLoading: action.payload };
         default:

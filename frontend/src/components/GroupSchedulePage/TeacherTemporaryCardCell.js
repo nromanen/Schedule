@@ -10,6 +10,7 @@ import { setLink } from '../../helper/setLInk';
 import i18n from '../../i18n';
 import { getLessonTypeColor } from '../../constants/lessonTypeColors';
 import { places } from '../../constants/places';
+import LessonTypeBadge from "../LessonTypeBadge/LessonTypeBadge";
 
 const TeacherTemporaryCardCell = (props) => {
     const { cards, place } = props;
@@ -64,6 +65,7 @@ const TeacherTemporaryCardCell = (props) => {
             >
                 <div className="lesson-type-bar" style={{ backgroundColor: barColor }} />
                 <p className="lesson-subject">{card.subjectForSite}</p>
+                <LessonTypeBadge lessonType={card.lessonType} showIcon={false} size="small" />
                 <p className="lesson-details">
                     {getRoomStr(card.room, place)}
                     <span>{meetingLink}</span>
@@ -115,6 +117,7 @@ const TeacherTemporaryCardCell = (props) => {
         >
             <div className="lesson-type-bar" style={{ backgroundColor: barColor }} />
             <p className="lesson-subject">{card.subjectForSite}</p>
+            <LessonTypeBadge lessonType={card.lessonType} showIcon={false} size="small" />
             <p className="lesson-details">
                 {/*{lessonTypeLabel}{roomStr && `, ${roomStr}`}*/}
                 {/*{getRoomStr(card.room, place)}*/}

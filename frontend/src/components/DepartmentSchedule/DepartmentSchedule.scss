@@ -62,6 +62,16 @@
     vertical-align: middle;
     background-color: $blue2;
     border-right: 2px solid $gray1;
+    min-width: 30px;
+    padding: 0 !important;
+    font-size: small;
+
+    .day-cell-text {
+      display: block;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      margin: 0 auto;
+    }
   }
 
   .class-cell-wrapper {
@@ -151,6 +161,8 @@
     &.type-lecture    { background-color: $lesson-type-lecture-light; }
     &.type-practical  { background-color: $lesson-type-practical-light; }
     &.type-laboratory { background-color: $lesson-type-laboratory-light; }
+    &.type-exam { background-color: $lesson-type-exam-light; }
+    &.type-credit { background-color: $lesson-type-credit-light; }
     &.type-seminar    { background-color: $lesson-type-seminar-light; }
   }
 

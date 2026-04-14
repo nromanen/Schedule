@@ -42,11 +42,6 @@ export const addSemesterSuccess = (item) => ({
     item,
 });
 
-export const addSemesterStart = (item) => ({
-    type: actionTypes.ADD_SEMESTER_START,
-    item,
-});
-
 export const deleteSemesterSuccess = (semesterId) => ({
     type: actionTypes.DELETE_SEMESTER_SUCCESS,
     semesterId,

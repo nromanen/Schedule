@@ -12,8 +12,10 @@ import './CopyLessonDialog.scss';
 
 const CopyLessonDialog = (props) => {
     const { onClose, lesson, translation, groups, groupId, open } = props;
-    const [group, setGroup] = useState('');
     const [error, setError] = useState('');
+    const currentGroup = groups.find(g => g.id === groupId);
+    const [group, setGroup] = useState(currentGroup ? [currentGroup] : []);
+
 
     const chooseClickHandle = () => {
         if (!group) {

@@ -1,16 +1,6 @@
+
 @import '../../styles/cards.scss';
 
 .subject-card {
-    @include card-base-style;
+    width: 140px;
 }
-
-.subject-card__name {
-    @include card-name-style;
-}
-
-.subject-card:hover .subject-card__name {
-    display: block;
-    -webkit-line-clamp: unset;
-    overflow: visible;
-}
-

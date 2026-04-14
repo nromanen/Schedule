@@ -183,11 +183,15 @@ h2 {
 
       // Grouped classes
       &.grouped {
-        background-color: $blue1;
+        background-color: $blue8;
       }
 
       &.currentDay {
         background-color: $blue2;
+      }
+
+      &.grouped.currentDay {
+        background-color: $blue9;
       }
 
       &.classNameCell,
@@ -276,11 +280,11 @@ h2 {
   border-radius: 2px;
   display: inline-block;
 }
-.grouped-lesson {
-  background-color: #fafafa;
-  border-radius: 4px;
-  padding: 4px;
-}
+//.grouped-lesson {
+//  background-color: #fafafa;
+//  border-radius: 4px;
+//  padding: 4px;
+//}
 
 .semester-ended-notice {
   text-align: center;
@@ -308,10 +312,10 @@ h2 {
   display: inline-flex;
   vertical-align: middle;
   margin-left: 20px;
-  background: $gray2;
+  background: $gray1;
   border-radius: 10px;
   padding: 3px;
-  border: 1px solid $gray1;
+  border: 1px solid $gray3;
 
   &__btn {
     padding: 6px 14px;
@@ -320,7 +324,7 @@ h2 {
     font-size: $font-2xs;
     font-weight: 600;
     cursor: pointer;
-    color: $gray3;
+    color: $gray;
     border-radius: 7px;
     transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 
@@ -329,8 +333,8 @@ h2 {
     }
 
     &.active {
-      background: $white;
-      color: $blue5;
+      background: $blue5;
+      color: $white;
       box-shadow: 0 1px 3px $shadow-box;
     }
   }
@@ -356,4 +360,20 @@ h2 {
   gap: 16px;
   flex-wrap: wrap;
   margin-bottom: 12px;
+}
+
+.schedule-title-divider {
+  color: $gray1;
+  margin: 0 8px;
+}
+
+.schedule-group-title {
+  font-size: 0.9em;
+  color: $gray;
+}
+
+.schedule-teacher-title {
+  font-size: 0.85em;
+  font-weight: 500;
+  color: $gray;
 }

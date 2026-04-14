@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/schedule}
     username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:roo_11_roo}
+    password: ${DB_PASSWORD:root}
     driver-class-name: org.postgresql.Driver
 
     hikari:
@@ -47,18 +47,6 @@ spring:
           auth: true
           starttls:
             enable: true
-
-#  mail:
-#    host: ${MAIL_HOST:smtp-relay.brevo.com}
-#    port: ${MAIL_PORT:587}
-#    username: ${MAIL_USERNAME:a335c2001@smtp-brevo.com}
-#    password: ${MAIL_PASSWORD:xsmtpsib-fbcd5f641956f72952457a80fce80b2ecd4b581aa3251a441fdf2cdb626d6d97-JQ4QkLdftfHXmpZG}
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          starttls:
-#            enable: true
 
 openapi:
   server-url: https://fmi-schedule.chnu.edu.ua

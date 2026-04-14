@@ -133,7 +133,6 @@ export function* clearSchedule({ semesterId }) {
         );
         yield put(setOpenSuccessSnackbar(message));
         yield call(getScheduleItems);
-        // yield call(forceRefreshScheduleItems);
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
         yield put(setLoading(false));
@@ -260,8 +259,6 @@ export function* getGroupSchedule({ groupId, semesterId }) {
     }
 }
 
-
-
 export function* getTeacherRangeSchedule({ values }) {
     try {
         const { startDay, endDay } = values;
@@ -287,7 +284,6 @@ export function* getTeacherSchedule({ teacherId, semesterId }) {
             yield put(setScheduleNotPublished(data.message));
             return;
         }
-
         yield put(getTeacherScheduleSuccess(data));
     } catch (error) {
         yield put(setOpenErrorSnackbar(createErrorMessage(error)));
@@ -297,11 +293,9 @@ export function* getTeacherSchedule({ teacherId, semesterId }) {
 }
 
 export function* selectTeacherActiveSemestersSchedule({ teacherId }) {
-    // Load teachers if not yet loaded
     const teachers = yield select((state) => state.teachers.teachers);
     if (isEmpty(teachers)) yield call(getAllPublicTeachers);
 
-    // Set schedule type and teacher
     yield put(setScheduleType(TEACHER));
     const allTeachers = yield select((state) => state.teachers.teachers);
     const teacher = allTeachers.find((item) => item.id === Number(teacherId));

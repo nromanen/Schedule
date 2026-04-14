@@ -1,6 +1,7 @@
 package com.softserve.util;
 
 import com.softserve.dto.*;
+import com.softserve.entity.enums.LessonType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TeacherHtmlBuilder {
 
+    private ResourceBundle bundle;
+
     /**
      * Builds a complete HTML document for a teacher schedule.
      *
@@ -30,7 +33,7 @@ public class TeacherHtmlBuilder {
      * @return HTML string ready for PDF rendering
      */
     public String buildHtml(ScheduleForTeacherDTO schedule, Locale language) {
-        ResourceBundle bundle = ResourceBundle.getBundle("messages", language);
+        bundle = ResourceBundle.getBundle("messages", language);
 
         Map<DayOfWeek, DaysOfWeekWithClassesForTeacherDTO> dayMap = new LinkedHashMap<>();
         if (schedule.getDays() != null) {
@@ -40,10 +43,7 @@ public class TeacherHtmlBuilder {
         }
 
         List<DayOfWeek> activeDays = getActiveDays(dayMap);
-        List<PeriodDTO> allPeriods = collectSortedPeriods(schedule);
-        List<PeriodDTO> periods = trimPeriodsToOccupied(allPeriods, dayMap);
-
-        TeacherDTO teacher = schedule.getTeacher();
+        List<PeriodDTO> periods = trimPeriodsToOccupied(collectSortedPeriods(schedule), dayMap);
 
         StringBuilder html = new StringBuilder();
         html.append("<!DOCTYPE html>");
@@ -52,18 +52,8 @@ public class TeacherHtmlBuilder {
         html.append("<style>").append(SchedulePdfStyles.get(false, activeDays.size())).append("</style>");
         html.append("</head><body>");
 
-        StringBuilder title = new StringBuilder();
-        title.append(ScheduleHtmlUtils.esc(bundle.getString("schedule.group.for")))
-                .append(" ")
-                .append(ScheduleHtmlUtils.esc(ScheduleHtmlUtils.formatTeacherFull(teacher)));
-        if (teacher != null && teacher.getPosition() != null && !teacher.getPosition().isBlank()) {
-            title.append(", ").append(ScheduleHtmlUtils.esc(teacher.getPosition()));
-        }
-        if (schedule.getSemester() != null && schedule.getSemester().getDescription() != null
-                && !schedule.getSemester().getDescription().isBlank()) {
-            title.append(" (").append(ScheduleHtmlUtils.esc(schedule.getSemester().getDescription())).append(")");
-        }
-        html.append(ScheduleHtmlUtils.buildHeader(title.toString(), bundle));
+        html.append(ScheduleHtmlUtils.buildHeader(buildTeacherTitle(schedule), bundle));
+
         if (periods.isEmpty()) {
             html.append("<p class=\"empty-schedule\">")
                     .append(ScheduleHtmlUtils.esc(bundle.getString("schedule.empty")))
@@ -85,34 +75,53 @@ public class TeacherHtmlBuilder {
         html.append("</tr></thead><tbody>");
 
         for (PeriodDTO period : periods) {
-            // Row 1: even week
-            html.append("<tr class=\"even\">");
-            html.append(SchedulePdfStyles.timeCellHtml(period));
-            for (DayOfWeek dayOfWeek : activeDays) {
-                html.append("<td>");
-                DaysOfWeekWithClassesForTeacherDTO dayData = dayMap.get(dayOfWeek);
-                List<LessonForTeacherScheduleDTO> lessons = findLessonsForPeriod(
-                        dayData != null ? dayData.getEvenWeek() : null, period);
-                html.append(renderLessons(lessons, bundle));
-                html.append("</td>");
-            }
-            html.append("</tr>");
-
-            // Row 2: odd week
-            html.append("<tr class=\"odd\">");
-            for (DayOfWeek dayOfWeek : activeDays) {
-                html.append("<td>");
-                DaysOfWeekWithClassesForTeacherDTO dayData = dayMap.get(dayOfWeek);
-                List<LessonForTeacherScheduleDTO> lessons = findLessonsForPeriod(
-                        dayData != null ? dayData.getOddWeek() : null, period);
-                html.append(renderLessons(lessons, bundle));
-                html.append("</td>");
-            }
-            html.append("</tr>");
+            appendWeekRow(html, "even", true, activeDays, dayMap, period);
+            appendWeekRow(html, "odd", false, activeDays, dayMap, period);
         }
 
         html.append("</tbody></table></body></html>");
         return html.toString();
+    }
+
+    private void appendWeekRow(StringBuilder html, String weekClass, boolean even,
+                               List<DayOfWeek> activeDays,
+                               Map<DayOfWeek, DaysOfWeekWithClassesForTeacherDTO> dayMap,
+                               PeriodDTO period) {
+        html.append("<tr class=\"").append(weekClass).append("\">");
+        if (even) {
+            html.append(SchedulePdfStyles.timeCellHtml(period));
+        }
+        for (DayOfWeek dayOfWeek : activeDays) {
+            DaysOfWeekWithClassesForTeacherDTO dayData = dayMap.get(dayOfWeek);
+            List<LessonForTeacherScheduleDTO> lessons = findLessonsForPeriod(
+                    dayData != null
+                            ? (even ? dayData.getEvenWeek() : dayData.getOddWeek())
+                            : null,
+                    period);
+            html.append("<td>").append(renderLessons(lessons)).append("</td>");
+        }
+        html.append("</tr>");
+    }
+
+    private String buildTeacherTitle(ScheduleForTeacherDTO schedule) {
+        TeacherDTO teacher = schedule.getTeacher();
+        StringBuilder title = new StringBuilder();
+        title.append(ScheduleHtmlUtils.esc(bundle.getString("schedule.group.for")))
+                .append(" ")
+                .append(ScheduleHtmlUtils.esc(ScheduleHtmlUtils.formatTeacherFull(teacher)));
+        if (teacher != null && teacher.getPosition() != null
+                && !teacher.getPosition().isBlank()) {
+            title.append(", ")
+                    .append(ScheduleHtmlUtils.esc(teacher.getPosition()));
+        }
+        if (schedule.getSemester() != null
+                && schedule.getSemester().getDescription() != null
+                && !schedule.getSemester().getDescription().isBlank()) {
+            title.append(" (")
+                    .append(ScheduleHtmlUtils.esc(schedule.getSemester().getDescription()))
+                    .append(")");
+        }
+        return title.toString();
     }
 
     // ==================== Rendering ====================
@@ -122,10 +131,9 @@ public class TeacherHtmlBuilder {
      * Groups are listed comma-separated. If subjects differ, the most frequent one is used.
      *
      * @param lessons list of lessons for a single period
-     * @param bundle  resource bundle for localized labels
      * @return HTML string for the merged card
      */
-    private String renderLessons(List<LessonForTeacherScheduleDTO> lessons, ResourceBundle bundle) {
+    private String renderLessons(List<LessonForTeacherScheduleDTO> lessons) {
         if (lessons.isEmpty()) {
             return SchedulePdfStyles.emptyHtml();
         }
@@ -163,8 +171,9 @@ public class TeacherHtmlBuilder {
         boolean hasRoom = room != null && !room.isBlank();
         boolean hasLink = link != null && !link.isBlank();
 
-        String cssType = SchedulePdfStyles.mapLessonTypeToCss(
-                representative.getLessonType() != null ? representative.getLessonType().name() : null);
+        String cssType = representative.getLessonType() != null
+                ? representative.getLessonType().getCssClass()
+                : LessonType.LECTURE.getCssClass();
 
         StringBuilder sb = new StringBuilder();
         sb.append("<div class=\"card card--").append(cssType).append("\">");
@@ -210,7 +219,7 @@ public class TeacherHtmlBuilder {
                     }
                     return hasLessons(data.getEvenWeek()) || hasLessons(data.getOddWeek());
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -306,7 +315,7 @@ public class TeacherHtmlBuilder {
                 .filter(c -> c.getPeriod() != null && c.getPeriod().getId().equals(period.getId()))
                 .flatMap(c -> c.getLessons() != null ? c.getLessons().stream() : java.util.stream.Stream.empty())
                 .filter(l -> l.getSubjectForSite() != null && !l.getSubjectForSite().isBlank())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -325,7 +334,7 @@ public class TeacherHtmlBuilder {
         }
         return map.values().stream()
                 .sorted(Comparator.comparing(PeriodDTO::getStartTime))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

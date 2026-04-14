@@ -6,7 +6,7 @@ configurations {
 }
 
 dependencies {
-    liquibase group: 'org.liquibase.ext', name: 'liquibase-hibernate5', version: '4.25.1'
+    liquibase group: 'org.liquibase.ext', name: 'liquibase-hibernate6', version: '4.29.0'
 }
 
 Properties hibernateProperties = new Properties()
@@ -21,7 +21,7 @@ def dbUrl = System.getenv('DB_URL') ?: hibernateProperties.getProperty('hibernat
 def dbUser = System.getenv('DB_USER') ?: hibernateProperties.getProperty('hibernate.connection.username', 'postgres')
 def dbPassword = System.getenv('DB_PASSWORD') ?: hibernateProperties.getProperty('hibernate.connection.password', 'root')
 def dbDriver = hibernateProperties.getProperty('hibernate.connection.driver_class', 'org.postgresql.Driver')
-def hibernateDialect = hibernateProperties.getProperty('hibernate.dialect', 'org.hibernate.dialect.PostgreSQL95Dialect')
+def hibernateDialect = hibernateProperties.getProperty('hibernate.dialect', 'org.hibernate.dialect.PostgreSQLDialect')
 def entityPackage = hibernateProperties.getProperty('hibernate.entity.package', 'com.softserve.entity')
 def changelogPath = hibernateProperties.getProperty('liquibase.changelog.file_path', 'src/main/resources/db/changelog/')
 

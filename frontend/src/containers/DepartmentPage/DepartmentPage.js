@@ -34,8 +34,6 @@ import {
 } from '../../hooks/useDepartments';
 import { usePublicTeachersByDepartment } from '../../hooks/useTeachers';
 
-import './DepartmentPage.scss';
-
 const DepartmentPage = () => {
     const { t } = useTranslation('formElements');
     const dispatch = useDispatch();
@@ -146,8 +144,8 @@ const DepartmentPage = () => {
                 <section className="container-flex-wrap wrapper">
                     {visibleDepartments.length === 0 && <NotFound name={t(DEPARTMENT_LABEL)} />}
                     {visibleDepartments.map((dept) => (
-                        <Card key={dept.id} additionClassName="department-card">
-                            <h2 className="department-card__name">{dept.name}</h2>
+                        <Card key={dept.id} additionClassName="department-card" variant="entity">
+                            <h2 className="card-entity__title">{dept.name}</h2>
                             <div className="cards-btns">
                                 {isDisabled ? (
                                     <IoMdEye

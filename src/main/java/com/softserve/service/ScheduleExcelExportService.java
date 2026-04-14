@@ -152,15 +152,15 @@ public class ScheduleExcelExportService {
         int midCol = (GC + lastCol) / 2;
 
         // Approval block
-        merge(ws, 0, 0, midCol, lastCol);
+        mergeSafe(ws, 0, 0, midCol, lastCol);
         setCellValue(ws, 0, midCol, "\"ЗАТВЕРДЖУЮ\":", smallBoldStyle);
 
-        merge(ws, 1, 1, midCol, lastCol);
+        mergeSafe(ws, 1, 1, midCol, lastCol);
         setCellValue(ws, 1, midCol,
                 "Ректор університету                                          " + rectorName,
                 smallFontStyle);
 
-        merge(ws, 2, 2, midCol, lastCol);
+        mergeSafe(ws, 2, 2, midCol, lastCol);
         String year;
         if (semester.getYear() != 0) {
             year = String.valueOf(semester.getYear());
@@ -171,7 +171,7 @@ public class ScheduleExcelExportService {
                 "\"______\"_______________ " + year + "р.", smallFontStyle);
 
         // Title
-        merge(ws, 4, 4, 0, lastCol);
+        mergeSafe(ws, 4, 4, 0, lastCol);
         setCellValue(ws, 4, 0, String.format("РОЗКЛАД ЗАНЯТЬ  %s  %s (%s-%s)",
                 facultyName, semester.getDescription(),
                 semester.getStartDay(), semester.getEndDay()), bigBoldStyle);
@@ -189,7 +189,7 @@ public class ScheduleExcelExportService {
      */
     private void writeSpecialtiesRow(Sheet ws, List<GroupDTO> groups, int ng) {
         int specRow = 5;
-        merge(ws, specRow, specRow, 0, GC - 1);
+        mergeSafe(ws, specRow, specRow, 0, GC - 1);
         setCellValue(ws, specRow, 0, "спеціаль-\nність", specStyle);
 
         int gi = 0;
@@ -202,7 +202,7 @@ public class ScheduleExcelExportService {
             int c1 = GC + gi;
             int c2 = GC + gj - 1;
             if (c2 > c1) {
-                merge(ws, specRow, specRow, c1, c2);
+                mergeSafe(ws, specRow, specRow, c1, c2);
             }
             setCellValue(ws, specRow, c1, specName, specStyle);
             applyBorderRange(ws, specRow, c1, specRow, c2);
@@ -326,15 +326,15 @@ public class ScheduleExcelExportService {
      * @param period the period
      */
     private void writePeriodAndWeekLabels(Sheet ws, int row, PeriodDTO period) {
-        merge(ws, row, row + 5, 1, 1);
+        mergeSafe(ws, row, row + 5, 1, 1);
         setCellValue(ws, row, 1, period.getName(), periodStyle);
         applyBorderRange(ws, row, 1, row + 5, 1);
 
-        merge(ws, row, row + 2, 2, 2);
+        mergeSafe(ws, row, row + 2, 2, 2);
         setCellValue(ws, row, 2, "1-й тижд.", weekStyle);
         applyBorderRange(ws, row, 2, row + 2, 2);
 
-        merge(ws, row + 3, row + 5, 2, 2);
+        mergeSafe(ws, row + 3, row + 5, 2, 2);
         setCellValue(ws, row + 3, 2, "2-й тижд.", weekStyle);
         applyBorderRange(ws, row + 3, 2, row + 5, 2);
     }
@@ -386,11 +386,11 @@ public class ScheduleExcelExportService {
             }
 
             applyFillRange(ws, row, c1, row + 5, c2, lt);
-            merge(ws, row, row + 1, c1, c2);
+            mergeSafe(ws, row, row + 1, c1, c2);
             setCellValue(ws, row, c1, subj, getSubjStyle(lt));
-            merge(ws, row + 2, row + 3, c1, c2);
+            mergeSafe(ws, row + 2, row + 3, c1, c2);
             setCellValue(ws, row + 2, c1, tch, getTeacherStyle(lt));
-            merge(ws, row + 4, row + 5, c1, c2);
+            mergeSafe(ws, row + 4, row + 5, c1, c2);
             setCellValue(ws, row + 4, c1, rm, getRoomStyle(lt));
 
             for (int g = gi; g < gj; g++) {
@@ -428,7 +428,7 @@ public class ScheduleExcelExportService {
      */
     private void writeDayColumn(Sheet ws, int dayStart, int dayEnd, DayOfWeek day) {
         if (dayEnd > dayStart) {
-            merge(ws, dayStart, dayEnd, 0, 0);
+            mergeSafe(ws, dayStart, dayEnd, 0, 0);
         }
         setCellValue(ws, dayStart, 0,
                 DAY_NAMES.getOrDefault(day.name(), day.name()), dayStyle);
@@ -542,9 +542,9 @@ public class ScheduleExcelExportService {
 
             applyFillRange(ws, baseRow, c1, baseRow + 2, c2, lt);
             if (c2 > c1) {
-                merge(ws, baseRow, baseRow, c1, c2);
-                merge(ws, baseRow + 1, baseRow + 1, c1, c2);
-                merge(ws, baseRow + 2, baseRow + 2, c1, c2);
+                mergeSafe(ws, baseRow, baseRow, c1, c2);
+                mergeSafe(ws, baseRow + 1, baseRow + 1, c1, c2);
+                mergeSafe(ws, baseRow + 2, baseRow + 2, c1, c2);
             }
             setCellValue(ws, baseRow, c1, subj, getSubjStyle(lt));
             setCellValue(ws, baseRow + 1, c1, tch, getTeacherStyle(lt));
@@ -613,7 +613,10 @@ public class ScheduleExcelExportService {
 
     // ========================= HELPERS =========================
 
-    private void merge(Sheet ws, int r1, int r2, int c1, int c2) {
+    private void mergeSafe(Sheet ws, int r1, int r2, int c1, int c2) {
+        if (r1 == r2 && c1 == c2) {
+            return;
+        }
         ws.addMergedRegion(new CellRangeAddress(r1, r2, c1, c2));
     }
 

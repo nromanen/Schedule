@@ -1,22 +1,26 @@
-// BusyRoomsLegend.scss
+@import "../../../styles/variables.scss";
+@import "../../../styles/colors.scss";
+
 .busy-rooms-legend {
   position: relative;
   margin-left: 12px;
+  display: inline-flex;
+  align-items: center;
 
   &__toggle {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    border: 2px solid #1976d2;
+    border: 2px solid $blue;
     background: transparent;
-    color: #1976d2;
+    color: $blue;
     font-weight: bold;
     cursor: pointer;
-    font-size: 14px;
+    font-size: $font-xs;
     line-height: 1;
 
     &:hover {
-      background: #e3f2fd;
+      background: $selected-hover-color;
     }
   }
 
@@ -25,12 +29,12 @@
     top: 30px;
     left: 0;
     z-index: 100;
-    background: white;
-    border: 1px solid #e0e0e0;
+    background: $white;
+    border: $regular-border;
     border-radius: 8px;
     padding: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    min-width: 320px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: $control-block-lg;
   }
 
   &__item {
@@ -48,7 +52,7 @@
   }
 
   &__label {
-    font-size: 13px;
-    color: #333;
+    font-size: $font-xs;
+    color: $black;
   }
 }

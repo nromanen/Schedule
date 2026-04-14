@@ -7,6 +7,8 @@ module.exports = {
     },
     moduleNameMapper: {
         '^.+\\.(css|less|scss|jpg|jpeg|png|svg)$': 'babel-jest',
+        '^jspdf$': '<rootDir>/src/__mocks__/jspdf.js',
+        '^jspdf-autotable$': '<rootDir>/src/__mocks__/jspdf-autotable.js',
     },
     transformIgnorePatterns: [`/node_modules/(?!${esModules})`],
     resetMocks: true,

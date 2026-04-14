@@ -13,11 +13,11 @@ const FormWrapper = ({
                          isSubmitting,
                          entityId,
                          children,
+                         noCard = false,
                      }) => {
     const { t } = useTranslation('formElements');
-
-    return (
-        <Card additionClassName="form-card">
+    const content = (
+        <>
             <h2 style={{ textAlign: 'center' }}>{title}</h2>
             <form onSubmit={onSubmit}>
                 {children}
@@ -42,8 +42,10 @@ const FormWrapper = ({
                     </Button>
                 </div>
             </form>
-        </Card>
+        </>
     );
+
+    return noCard ? content : <Card additionClassName="form-card">{content}</Card>;
 };
 
 export default FormWrapper;

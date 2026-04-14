@@ -913,6 +913,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     public List<ScheduleDTO> moveSchedule(Long scheduleId, Long roomId,
                                           String dayOfWeek, Long periodId, String evenOdd) {
+        log.info("In moveSchedule(scheduleId = [{}], roomId = [{}], dayOfWeek = [{}], periodId = [{}], evenOdd = [{}])",
+                scheduleId, roomId, dayOfWeek, periodId, evenOdd);
+
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new EntityNotFoundException(Schedule.class, "id", scheduleId.toString()));
 

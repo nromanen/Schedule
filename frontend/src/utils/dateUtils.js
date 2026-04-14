@@ -1,10 +1,21 @@
 import {daysUppercase} from "../constants/schedule/days";
+import i18n from '../i18n';
 
 export const transformSemesterDate = (date) => {
     const [day, month, year] = date.split('/');
     const endDateString = `${month}/${day}/${year}`;
 
     return new Date(endDateString);
+};
+
+export const toShortLocalDate = (dateStr, showYear = true) => {
+    if (!dateStr) return '';
+    const date = transformSemesterDate(dateStr);
+    return date.toLocaleDateString(i18n.language, {
+        day: 'numeric',
+        month: 'short',
+        ...(showYear && { year: 'numeric' }),
+    });
 };
 
 export function isWeekOdd(num) {

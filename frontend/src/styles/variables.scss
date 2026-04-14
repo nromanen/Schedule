@@ -39,3 +39,12 @@ $md-medium: 650px;
 $md-small: 500px;
 $md-smaller: 400px;
 $sm-width: 640px;
+
+// control panel block sizes
+$control-block-sm: 200px;
+$control-block-lg: 300px;
+
+// Room schedule table column widths (controlled via UI: small / base / large)
+$room-col-width-sm:   100px;
+$room-col-width-md:   130px;
+$room-col-width-lg:   160px;

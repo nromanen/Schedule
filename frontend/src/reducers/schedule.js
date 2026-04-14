@@ -84,7 +84,6 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 scheduleType: action.newType,
                 groupSchedule: {},
-                // fullSchedule: []
             };
 
         case actionTypes.GET_FULL_SCHEDULE_SUCCESS: {

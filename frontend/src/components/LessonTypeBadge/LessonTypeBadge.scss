@@ -42,6 +42,16 @@
     color: $lesson-type-seminar;
   }
 
+  &.exam {
+    background-color: $lesson-type-exam-light;
+    color: $lesson-type-exam;
+  }
+
+  &.credit {
+    background-color: $lesson-type-credit-light;
+    color: $lesson-type-credit;
+  }
+
   &.default {
     background-color: #F5F5F5;
     color: #757575;

@@ -43,7 +43,6 @@ const Routers = (props) => {
             <Header userRole={userRole} roles={userRoles} />
             <Switch>
                 <Route exact path={HOME_PAGE_LINK} component={HomePage} />
-                {/*<Route path={SCHEDULE_FOR_LINK} component={GroupSchedulePage} />*/}
                 <TeacherRoute path={SCHEDULE_FOR_LINK} component={GroupSchedulePage} />
                 <Route path={ACTIVATION_PAGE_LINK} component={ActivationPage} />
                 <Route path={SET_PASSWORD_LINK} component={SetPasswordForm} />

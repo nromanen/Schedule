@@ -10,7 +10,6 @@ import * as actionTypes from '../actions/actionsType';
 import {
     getLessonsByTeacherSuccess,
     setTeacherLessonsLoading,
-    updateLessonsLinkSuccess,
 } from '../actions/teacherLessons';
 
 export function* getLessonsByTeacher({ teacherId }) {
@@ -19,7 +18,6 @@ export function* getLessonsByTeacher({ teacherId }) {
 
         const state = yield select();
         const teacher = state.teachers.teachers.find((t) => t.id === teacherId);
-
         const requestUrl = `${LESSON_URL}/teacher?teacherId=${teacherId}`;
         const { data } = yield call(axiosCall, requestUrl, GET);
 
@@ -63,7 +61,6 @@ export function* getMyLessons() {
         yield put(setTeacherLessonsLoading(true));
 
         const { data } = yield call(axiosCall, MY_LESSONS_URL, GET);
-
         const state = yield select();
         const teacher = state.teachers.teacher;
 

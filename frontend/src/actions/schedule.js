@@ -1,11 +1,5 @@
 import * as actionTypes from './actionsType';
 
-export const getScheduleItemsStart = (semesterId) => {
-    return {
-        type: actionTypes.GET_SCHEDULE_ITEMS_START,
-        semesterId,
-    };
-};
 export const getScheduleItemsSuccess = (items) => {
     return {
         type: actionTypes.GET_SCHEDULE_ITEMS_SUCCESS,
@@ -155,25 +149,11 @@ export const setItemGroupId = (payload) => {
         payload,
     };
 };
-export const getGroupScheduleStart = (groupId, semesterId) => {
-    return {
-        type: actionTypes.GET_GROUP_SCHEDULE_START,
-        groupId,
-        semesterId,
-    };
-};
 
 export const getGroupScheduleSuccess = (schedule) => {
     return {
         type: actionTypes.GET_GROUP_SCHEDULE_SUCCESS,
         schedule,
-    };
-};
-export const getTeacherScheduleStart = (teacherId, semesterId) => {
-    return {
-        type: actionTypes.GET_TEACHER_SCHEDULE_START,
-        teacherId,
-        semesterId,
     };
 };
 
