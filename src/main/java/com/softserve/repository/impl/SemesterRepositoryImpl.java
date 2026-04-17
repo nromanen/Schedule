@@ -56,8 +56,10 @@ public class SemesterRepositoryImpl extends BasicRepositoryImpl<Semester, Long> 
                     "LEFT JOIN FETCH s.groups " +
                     "LEFT JOIN FETCH s.daysOfWeek " +
                     "WHERE s.disable = false " +
-                    "AND s.startDay <= :weekEnd " +
-                    "AND s.endDay >= :weekStart";
+                    "AND (" +
+                    "  (s.startDay <= :weekEnd AND s.endDay >= :weekStart) " +
+                    "  OR s.currentSemester = true" +
+                    ")";
 
     private static final String PARAM_DESCRIPTION = "description";
     private static final String PARAM_YEAR = "year";

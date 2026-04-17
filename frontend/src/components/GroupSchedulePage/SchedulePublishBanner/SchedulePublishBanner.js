@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Switch, FormControlLabel } from '@material-ui/core';
+import { Switch, FormControlLabel } from '@mui/material';
 import './SchedulePublishBanner.scss';
 import { DELETE, POST } from "../../../constants/methods";
 import { axiosCall } from "../../../services/axios";

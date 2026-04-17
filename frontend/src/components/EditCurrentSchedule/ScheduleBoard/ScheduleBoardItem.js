@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import { MdGroup } from 'react-icons/md';
 import { IoMdMore } from 'react-icons/all';
-import Card from '@material-ui/core/Card';
+import Card from '@mui/material/Card';
 import { FORM_GROUPED_LABEL } from '../../../constants/translationLabels/formElements';
 import {
     COMMON_DELETE_HOVER_TITLE,

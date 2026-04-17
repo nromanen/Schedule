@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import {useTranslation} from 'react-i18next';
 import i18n from 'i18next';
 import {isEmpty} from 'lodash';

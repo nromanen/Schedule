@@ -1,7 +1,8 @@
 import React from 'react';
-import MuiAlert from '@material-ui/lab/Alert';
+import MuiAlert from '@mui/material/Alert';
 
-const Alert = (props) => {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} variant="filled" ref={ref} {...props} />;
+});
+
 export default Alert;

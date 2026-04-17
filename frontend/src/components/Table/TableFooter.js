@@ -1,9 +1,9 @@
 import React from 'react';
 import './tableFooter.scss';
-import Table from '@material-ui/core/Table';
-import TableRow from '@material-ui/core/TableRow';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
+import Table from '@mui/material/Table';
+import TableRow from '@mui/material/TableRow';
+import TableFooter from '@mui/material/TableFooter';
+import TablePagination from '@mui/material/TablePagination';
 import {useTranslation} from 'react-i18next';
 
 import {ALL_PAGE, ROWS_PER_PAGE} from '../../constants/translationLabels/formElements';

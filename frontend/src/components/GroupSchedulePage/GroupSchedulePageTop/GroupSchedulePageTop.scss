@@ -176,7 +176,8 @@ h1 {
         // Clear and popup icons
         .MuiAutocomplete-endAdornment {
             right: 8px;
-            top: calc(#{$medium-size} - 12px);
+            top: 50%;
+            transform: translateY(-50%);
 
             .MuiIconButton-root {
                 color: $gray;

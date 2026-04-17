@@ -5,9 +5,9 @@ import '../../styles/forms.scss';
 
 import {Field, reduxForm} from 'redux-form';
 
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Card from '@material-ui/core/Card';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Card from '@mui/material/Card';
 
 import renderTextField from '../../share/renderedFields/input';
 

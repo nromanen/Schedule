@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {CircularProgress} from '@material-ui/core';
+import {CircularProgress} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import './EditCurrentSchedule.scss';
 import ScheduleLessonsList from '../../containers/EditCurrentSchedule/ScheduleLessonsList';

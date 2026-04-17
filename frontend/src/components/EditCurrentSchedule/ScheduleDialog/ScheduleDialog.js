@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 import {dialogChooseButton, dialogCloseButton, dialogTypes} from '../../../constants/dialogs';
 import {
     COMMON_ROOM_IS_UNAVAILABLE,
@@ -97,7 +97,7 @@ const ScheduleDialog = (props) => {
                         openOnFocus
                         className="form-input"
                         value={room || null}
-                        getOptionSelected={(option, value) => option.id === value.id}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
                         onChange={(_, newValue) => {
                             setRoom(newValue);
                         }}
@@ -107,7 +107,6 @@ const ScheduleDialog = (props) => {
                     />
                 </div>
             </CustomDialog>
-
             <CustomDialog
                 type={dialogTypes.CONFIRM_WITH_WARNING}
                 open={isOpenConfirmDialog}

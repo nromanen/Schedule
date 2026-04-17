@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {isEmpty} from 'lodash';
-import {CircularProgress} from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import {CircularProgress} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import DragDropCard from '../DragDropCard';
 import {divideLessonsByOneHourLesson} from '../../../helper/schedule';
 import {FORM_GROUP_LABEL} from '../../../constants/translationLabels/formElements';
@@ -61,7 +61,6 @@ const ScheduleLessonsList = (props) => {
                     {t(CLEAR_SCHEDULE_LABEL)}
                 </Button>
             </div>
-
             <>
                 <p className="helper-text">{t(COMMON_SELECT_GROUP_SCHEDULE)}</p>
                 <div className="autocomplete-container">
@@ -74,7 +73,7 @@ const ScheduleLessonsList = (props) => {
                             handleGroupSelect(newValue);
                         }}
                         getOptionLabel={(option) => (option ? option.title : '')}
-                        getOptionSelected={(option, value) => option.id === value.id}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
                         renderInput={(params) => (
                             <TextField
                                 {...params}

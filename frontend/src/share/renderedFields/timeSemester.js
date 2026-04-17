@@ -1,29 +1,36 @@
 import React from 'react';
-import MomentUtils from '@date-io/moment';
-import * as moment from 'moment';
-import {DatePicker, MuiPickersUtilsProvider} from '@material-ui/pickers';
-import {dateFormat} from '../../constants/formats';
+import moment from 'moment';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { dateFormat } from '../../constants/formats';
 
 const renderMonthPicker = ({
-    label,
-    input: { value, ...inputProps },
-    meta: { touched, invalid, error },
-    ...custom
-}) => {
+                               label,
+                               input: { value, onChange, ...inputProps },
+                               meta: { touched, invalid, error },
+                               ...custom
+                           }) => {
     return (
-        <MuiPickersUtilsProvider utils={MomentUtils}>
-            <DatePicker
-                minDate={new Date()}
-                placeholder="11/11/2021"
-                clearable
-                value={value ? moment(value, dateFormat).toDate() : null}
-                format="DD/MM/YYYY"
-                error={touched && invalid}
-                helperText={touched && error ? touched && error : label}
-                {...inputProps}
-                {...custom}
-            />
-        </MuiPickersUtilsProvider>
+        <DatePicker
+            minDate={moment()}
+            value={value ? moment(value, dateFormat) : null}
+            onChange={(val) => {
+                onChange(val && val.isValid() ? val.format(dateFormat) : null);
+            }}
+            format="DD/MM/YYYY"
+            slotProps={{
+                textField: {
+                    placeholder: '11/11/2021',
+                    error: touched && invalid,
+                    helperText: touched && error ? error : label,
+                },
+                actionBar: {
+                    actions: ['clear', 'cancel', 'accept'],
+                },
+            }}
+            {...inputProps}
+            {...custom}
+        />
     );
 };
+
 export default renderMonthPicker;

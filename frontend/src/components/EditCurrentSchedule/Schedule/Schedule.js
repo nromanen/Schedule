@@ -3,7 +3,7 @@ import { FixedSizeList as List } from 'react-window';
 import ScheduleBoard from '../../../containers/EditCurrentSchedule/ScheduleBoard';
 import ScheduleDialog from '../../../containers/Dialogs/ScheduleDialog';
 import ScheduleDaySidebar from '../../ScheduleTable/ScheduleDaySidebar/ScheduleDaySidebar';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import './Schedule.scss';
 
 import { COMMON_GROUP_TITLE, NO_CURRENT_SEMESTER } from '../../../constants/translationLabels/common';

@@ -2,7 +2,7 @@ import React from 'react';
 import {Field} from 'redux-form';
 import {isEmpty} from 'lodash';
 import {useTranslation} from 'react-i18next';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import SelectField from '../../../../share/renderedFields/select';
 import './SemesterCopyForm.scss';
 import {required} from '../../../../validation/validateFields';

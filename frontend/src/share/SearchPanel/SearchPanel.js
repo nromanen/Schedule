@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {FaSearch} from 'react-icons/fa';
-import {TextField} from '@material-ui/core';
+import {TextField} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import {SHOW_ARCHIVED, SHOW_REGULAR, TYPE_TO_SEARCH,} from '../../constants/translationLabels/formElements';
 import Card from '../Card/Card';
 import {COMMON_SHOW_DISABLED, COMMON_SHOW_ENABLED,} from '../../constants/translationLabels/common';

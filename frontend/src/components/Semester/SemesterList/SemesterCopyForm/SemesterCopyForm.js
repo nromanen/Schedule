@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import {MdPlayArrow} from 'react-icons/md';
 import './SemesterCopyForm.scss';
 import {

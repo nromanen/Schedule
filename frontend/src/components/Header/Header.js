@@ -15,13 +15,13 @@ import {
     FaTrash,
     FaUser,
 } from 'react-icons/fa';
-import Menu from '@material-ui/core/Menu';
-import Button from '@material-ui/core/Button';
+import Menu from '@mui/material/Menu';
+import Button from '@mui/material/Button';
 import { useTranslation } from 'react-i18next';
-import MenuItem from '@material-ui/core/MenuItem';
-import { withStyles } from '@material-ui/core/styles';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import MenuItem from '@mui/material/MenuItem';
+import withStyles from '@mui/styles/withStyles';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import './Header.scss';
 import {
@@ -396,7 +396,7 @@ const Header = (props) => {
 
     if (isNil(userRole)) {
         userMenuEl = (
-            <Button component={Link} to={LOGIN_LINK} variant="outlined" color="default">
+            <Button component={Link} to={LOGIN_LINK} variant="outlined">
                 <FaSignOutAlt style={{ marginRight: '6px' }} />
                 {t(LOGIN_TITLE)}
             </Button>

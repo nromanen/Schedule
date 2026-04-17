@@ -1,8 +1,8 @@
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Field} from 'redux-form';
-import MenuItem from '@material-ui/core/MenuItem';
+import MenuItem from '@mui/material/MenuItem';
 import './AddStudentForm.scss';
 import {required} from '../../validation/validateFields';
 import renderTextField from '../../share/renderedFields/input';

@@ -4,7 +4,7 @@ import {Redirect} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import {get} from 'lodash';
 
-import {CircularProgress} from '@material-ui/core';
+import {CircularProgress} from '@mui/material';
 import {activateUser} from '../../actions';
 
 import {LOGIN_LINK} from '../../constants/links';

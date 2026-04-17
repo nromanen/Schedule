@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import Table from '@material-ui/core/Table';
-import TableContainer from '@material-ui/core/TableContainer';
+import Table from '@mui/material/Table';
+import TableContainer from '@mui/material/TableContainer';
 import './StudentTable.scss';
 
 import {TableFooterComponent} from '../Table/TableFooter';

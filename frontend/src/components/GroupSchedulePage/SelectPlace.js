@@ -1,8 +1,8 @@
-import {MenuItem, Select} from '@material-ui/core';
+import { MenuItem, TextField } from '@mui/material';
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {places} from '../../constants/places';
-import {PLACE_FOR_CLASS_LABEL} from '../../constants/translationLabels/common';
+import { useTranslation } from 'react-i18next';
+import { places } from '../../constants/places';
+import { PLACE_FOR_CLASS_LABEL } from '../../constants/translationLabels/common';
 
 const SelectPlace = (props) => {
     const { place, changePlace } = props;
@@ -17,11 +17,11 @@ const SelectPlace = (props) => {
 
     return (
         <div id="select-place">
-            <label htmlFor="demo-controlled-open-select">{t(PLACE_FOR_CLASS_LABEL)}</label>
-            <Select
+            <TextField
+                select
                 className="place"
-                labelId="demo-controlled-open-select-label"
                 id="demo-controlled-open-select"
+                label={t(PLACE_FOR_CLASS_LABEL)}
                 value={place}
                 onChange={setPlace}
             >
@@ -30,7 +30,7 @@ const SelectPlace = (props) => {
                         {t(`${value}_label`)}
                     </MenuItem>
                 ))}
-            </Select>
+            </TextField>
         </div>
     );
 };

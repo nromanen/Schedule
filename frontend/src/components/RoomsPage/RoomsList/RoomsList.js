@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { isEmpty } from 'lodash';
 import NotFound from '../../../share/NotFound/NotFound';
 import { ROOM_Y_LABEL } from '../../../constants/translationLabels/formElements';

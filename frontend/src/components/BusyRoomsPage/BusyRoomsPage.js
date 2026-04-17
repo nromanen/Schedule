@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { CircularProgress } from '@material-ui/core';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import { CircularProgress } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { components } from 'react-select';
 import ReactSelect from 'react-select';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,7 @@ import { useCombinedBusyRooms } from '../../hooks/useRooms';
 import { useMergedBusyRooms } from '../../hooks/useMergedBusyRooms';
 import { useRoomFilters } from '../../hooks/useRoomFilters';
 import { exportRoomPdf } from './exportRoomPdf';
-import PictureAsPdfIcon from '@material-ui/icons/PictureAsPdf';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 const ValueContainer = ({ children, getValue, ...props }) => {
     const selected = getValue();
@@ -99,7 +99,7 @@ const BusyRoomsPage = () => {
             ) : (
                 <>
                     <div className="filters-header">
-                        <IconButton onClick={() => setFiltersOpen(prev => !prev)}>
+                        <IconButton onClick={() => setFiltersOpen(prev => !prev)} size="large">
                             {filtersOpen ? <ExpandLessIcon /> : <ExpandMoreIcon fontSize="large" />}
                         </IconButton>
                     </div>
@@ -178,7 +178,7 @@ const BusyRoomsPage = () => {
                             )}
 
                             {isSingleRoomSelected && (
-                                <IconButton onClick={handlePdfExport}>
+                                <IconButton onClick={handlePdfExport} size="large">
                                     <PictureAsPdfIcon />
                                 </IconButton>
                             )}

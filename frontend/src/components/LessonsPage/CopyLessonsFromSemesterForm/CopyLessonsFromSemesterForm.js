@@ -2,9 +2,9 @@ import React from 'react';
 import {Field} from 'redux-form';
 
 import {useTranslation} from 'react-i18next';
-import {MenuItem} from '@material-ui/core';
+import {MenuItem} from '@mui/material';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import SelectField from '../../../share/renderedFields/select';
 
 import './CopyLessonsFromSemesterForm.scss';

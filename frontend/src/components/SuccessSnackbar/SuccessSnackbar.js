@@ -1,9 +1,10 @@
-import {useDispatch, useSelector} from 'react-redux';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import {Icon} from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import Snackbar from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import Fade from '@mui/material/Fade';
+import { Icon } from '@mui/material';
 import React from 'react';
-import {clearSnackbar} from '../../actions/snackBarReducer';
+import { clearSnackbar } from '../../actions/snackBarReducer';
 
 export default function SuccessSnackbar() {
     const dispatch = useDispatch();
@@ -18,11 +19,13 @@ export default function SuccessSnackbar() {
         <Snackbar
             anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'left',
+                horizontal: 'center',
             }}
             open={successSnackbarOpen}
             autoHideDuration={4000}
-            onClose={() => handleClose()}
+            onClose={handleClose}
+            TransitionComponent={Fade}
+            TransitionProps={{ timeout: 200 }}
             aria-describedby="client-snackbar"
             message={
                 <span id="client-snackbar">
@@ -35,7 +38,8 @@ export default function SuccessSnackbar() {
                     key="close"
                     aria-label="close"
                     color="inherit"
-                    onClick={() => handleClose()}
+                    onClick={handleClose}
+                    size="large"
                 >
                     <Icon>close</Icon>
                 </IconButton>,

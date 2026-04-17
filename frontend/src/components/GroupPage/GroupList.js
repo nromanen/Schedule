@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { isEmpty } from 'lodash';
 import { useTranslation } from 'react-i18next';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { goToGroupPage } from '../../helper/pageRedirection';
 import { dialogTypes } from '../../constants/dialogs';
 import {GROUP_VIEW_COURSES, GROUP_VIEW_GRID, GROUP_Y_LABEL} from '../../constants/translationLabels/formElements';

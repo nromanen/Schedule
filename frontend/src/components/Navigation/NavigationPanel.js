@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import Paper from '@material-ui/core/Paper';
+import Paper from '@mui/material/Paper';
 import {useTranslation} from 'react-i18next';
 import {useHistory} from 'react-router-dom';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 import './NavigationPanel.scss';
 import {general, tabsComponents} from '../../constants/navigationComponents';
 import {ADMIN_PAGE_LINK} from '../../constants/links';

@@ -1,10 +1,10 @@
 import React from 'react';
 import './StudentTable.scss';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import TableHead from '@mui/material/TableHead';
 import {useTranslation} from 'react-i18next';
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from '@mui/material/Checkbox';
 import {
     EMAIL_LABEL,
     SELECT_ALL,

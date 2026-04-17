@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './GroupSchedulePage.scss';
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from '@mui/material';
 import { get } from 'lodash';
 import { getDataFromParams } from '../../utils/urlUtils';
 import GroupSchedulePageTop from './GroupSchedulePageTop/GroupSchedulePageTop';

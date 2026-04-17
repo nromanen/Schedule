@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
+import Card from '@mui/material/Card';
 import {MdGroup} from 'react-icons/md';
 import {FORM_GROUPED_LABEL, FORM_HOURS_LABEL} from '../../constants/translationLabels/formElements';
 import {getTeacherName} from '../../helper/renderTeacher';

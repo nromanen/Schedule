@@ -1,6 +1,6 @@
 import React from 'react';
 import { isEmpty } from 'lodash';
-import Card from '@material-ui/core/Card';
+import Card from '@mui/material/Card';
 import './TableItem.scss';
 import { getColorByFullnessMultiSemester } from '../../../helper/schedule';
 import { GroupTitle } from './GroupTitle';

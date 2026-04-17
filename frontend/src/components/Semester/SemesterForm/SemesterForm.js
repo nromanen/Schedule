@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Field} from 'redux-form';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import {isEmpty} from 'lodash';
 import './SemesterForm.scss';
 import renderCheckboxField from '../../../share/renderedFields/checkbox';

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {isEmpty, isEqual} from 'lodash';
-import {CircularProgress} from '@material-ui/core';
+import {CircularProgress} from '@mui/material';
 import NotFound from '../../../share/NotFound/NotFound';
 import {dialogCloseButton, dialogTypes} from '../../../constants/dialogs';
 import {COPY_LABEL, SEMESTER_COPY_LABEL, SEMESTERY_LABEL,} from '../../../constants/translationLabels/formElements';

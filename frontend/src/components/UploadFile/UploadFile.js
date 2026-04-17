@@ -1,8 +1,8 @@
 import './UploadFile.scss';
 import React, {useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import BackupIcon from '@material-ui/icons/Backup';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import BackupIcon from '@mui/icons-material/Backup';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import {dialogCloseButton, dialogUploadButton} from '../../constants/dialogs';
 import {

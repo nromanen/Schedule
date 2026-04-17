@@ -1,14 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import {useTranslation} from 'react-i18next';
-import TextField from '@material-ui/core/TextField';
-import {Autocomplete} from '@material-ui/lab';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
+import TextField from '@mui/material/TextField';
+import { Autocomplete } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 import './TeacherLessonsPage.scss';
 import LessonsTable from './LessonsTable/LessonsTable';
 import {showAllTeachersStart} from '../../actions/teachers';
@@ -93,7 +93,7 @@ const TeacherLessonsPage = (props) => {
                     clearOnEscape
                     openOnFocus
                     getOptionLabel={(option) => getTeacherFullName(option)}
-                    getOptionSelected={(option, value) => option.id === value?.id}
+                    isOptionEqualToValue={(option, value) => option.id === value?.id}
                     onChange={(_, newValue) => handleTeacherSelect(newValue)}
                     renderInput={(params) => (
                         <TextField
@@ -105,7 +105,6 @@ const TeacherLessonsPage = (props) => {
                     )}
                 />
             </div>
-
             <div className="teacher-lessons-list">
                 {loading && (
                     <div className="loading-container">
@@ -135,7 +134,6 @@ const TeacherLessonsPage = (props) => {
                     </div>
                 )}
             </div>
-
             <Dialog
                 open={showConfirmDialog}
                 onClose={handleCancelChange}

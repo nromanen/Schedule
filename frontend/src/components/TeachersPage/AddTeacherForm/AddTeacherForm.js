@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import {Field, reduxForm} from 'redux-form';
 
-import {MenuItem} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import {MenuItem} from '@mui/material';
+import Button from '@mui/material/Button';
 import {useTranslation} from 'react-i18next';
 import renderTextField from '../../../share/renderedFields/input';
 import {required} from '../../../validation/validateFields';

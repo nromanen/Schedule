@@ -3,8 +3,8 @@ import {useTranslation} from 'react-i18next';
 
 import {isNil} from 'lodash';
 
-import TextField from '@material-ui/core/TextField';
-import {Autocomplete} from '@material-ui/lab';
+import TextField from '@mui/material/TextField';
+import { Autocomplete } from '@mui/material';
 import CustomDialog from '../../containers/Dialogs/CustomDialog';
 import {dialogTypes} from '../../constants/dialogs';
 import {cardType} from '../../constants/cardType';

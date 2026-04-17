@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FormHelperText from '@material-ui/core/FormHelperText';
+import FormHelperText from '@mui/material/FormHelperText';
 
 export const renderFromHelper = ({ touched, error }) => {
     if (touched && error) {
