@@ -11,14 +11,18 @@ import * as serviceWorker from './serviceWorker';
 import i18n from './i18n';
 import './index.scss';
 
+import ErrorBoundary from './components/ErrorBoundary'
+
 ReactDOM.render(
-    <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-            <I18nextProvider i18n={i18n}>
-                <App />
-            </I18nextProvider>
-        </Provider>
-    </QueryClientProvider>,
+    <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+            <Provider store={store}>
+                <I18nextProvider i18n={i18n}>
+                    <App />
+                </I18nextProvider>
+            </Provider>
+        </QueryClientProvider>
+    </ErrorBoundary>,
     document.getElementById('root'),
 );
 
