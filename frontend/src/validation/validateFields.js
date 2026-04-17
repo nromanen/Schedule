@@ -1,11 +1,5 @@
 import moment from 'moment';
 import {
-    checkUniqClassName,
-    checkUniqSemester,
-    checkUniqueDepartment,
-    checkUniqueGroup,
-    checkUniqueRoomName,
-    checkUniqueSubject,
     timeIntersectService,
 } from './storeValidation';
 import i18n from '../i18n';
@@ -40,8 +34,6 @@ export const lessThanZero = (value) => (value > 0 ? undefined : i18n.t(BIGGER_TH
 const minLength = (min) => (value) =>
     value && value.length < min ? i18n.t(BIGGER_THAN_CHAR_MESSAGE, { min }) : undefined;
 
-export const minLengthValue = minLength(3);
-
 const maxLength = (max) => (value) =>
     value && value.length > max
         ? i18n.t(LESS_THAN_CHAR_MESSAGE, {
@@ -73,28 +65,8 @@ export const greaterThanTime = (value, _, allValues) => {
           });
 };
 
-export const uniqueClassName = (value) => {
-    return checkUniqClassName(value);
-};
-
-export const uniqueGroup = (value) => {
-    return checkUniqueGroup(value);
-};
-
-export const uniqueSubject = (value) => {
-    return checkUniqueSubject(value);
-};
-
-export const uniqueDepartment = (value) => {
-    return checkUniqueDepartment(value);
-};
-
 export const timeIntersect = (value, previousValue, allValues) => {
     return timeIntersectService(allValues.values.startTime, allValues.values.endTime);
-};
-
-export const uniqueRoomName = (value) => {
-    return checkUniqueRoomName(value);
 };
 
 export const email = (value) =>
@@ -137,4 +109,3 @@ export const greaterThanDate = (value, previousValue, allValues) => {
           });
 };
 
-export const uniquesSemesterName = (value) => checkUniqSemester(value);

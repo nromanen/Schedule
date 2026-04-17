@@ -91,6 +91,7 @@ const RoomPage = () => {
                 handelConfirm={handleConfirm}
                 whatDelete={deleteLabel}
                 open={isOpenConfirmDialog}
+                onClose={() => setIsOpenConfirmDialog(false)}
             />
 
             <div className="cards-container">
@@ -107,6 +108,7 @@ const RoomPage = () => {
                                 oneRoom={oneRoom}
                                 roomTypes={roomTypes}
                                 rooms={rooms}
+                                disabledRooms={disabledRooms}
                             />
                             <RoomTypeForm
                                 onSubmit={submitRoomTypeForm}

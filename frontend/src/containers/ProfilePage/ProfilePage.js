@@ -1,12 +1,10 @@
 import './ProfilePage.scss';
-import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
-import {useTranslation} from 'react-i18next';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import Card from '../../share/Card/Card';
-import {resetFormHandler} from '../../helper/formHelper';
-import {PROFILE_FORM} from '../../constants/reduxForms';
 import ChangePasswordForm from '../../components/ChangePasswordForm/ChangePasswordForm';
-import {getUserProfile, updateUserPassword} from '../../services/userService';
+import { getUserProfile, updateUserPassword } from '../../services/userService';
 import {
     DEPARTMENT_TEACHER_LABEL,
     EMAIL_LABEL,
@@ -15,22 +13,14 @@ import {
     TEACHER_POSITION,
     TEACHER_SURNAME,
 } from '../../constants/translationLabels/formElements';
-import {COMMON_MY_PROFILE, DIFFERENT_PASSWORDS} from '../../constants/translationLabels/common';
+import { COMMON_MY_PROFILE } from '../../constants/translationLabels/common';
 
 const ProfilePage = (props) => {
     const { t } = useTranslation('formElements');
     const { teacher } = props;
 
-    const handlePasswordFormReset = () => resetFormHandler(PROFILE_FORM);
     const submitPasswordChange = (values) => {
-        if (values.new_password !== values.confirm_password) {
-            props.setError({
-                registration: { passwords: t(DIFFERENT_PASSWORDS) },
-            });
-            return;
-        }
         updateUserPassword(values);
-        handlePasswordFormReset();
     };
 
     useEffect(() => {
@@ -78,10 +68,7 @@ const ProfilePage = (props) => {
                     <span>{localStorage.getItem('email')}</span>
                 </section>
                 {renderTeacherData()}
-                <ChangePasswordForm
-                    onSubmit={submitPasswordChange}
-                    onReset={handlePasswordFormReset}
-                />
+                <ChangePasswordForm onSubmit={submitPasswordChange} />
             </Card>
         </div>
     );

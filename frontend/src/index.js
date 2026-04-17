@@ -19,6 +19,10 @@ import ErrorBoundary from './components/ErrorBoundary'
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {CssBaseline} from "@mui/material";
 
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+
+
 const theme = createTheme({
     components: {
         MuiTextField: {
@@ -42,6 +46,7 @@ ReactDOM.render(
                     <Provider store={store}>
                         <I18nextProvider i18n={i18n}>
                             <App />
+                            <ReactQueryDevtools initialIsOpen={false} />
                         </I18nextProvider>
                     </Provider>
                 </QueryClientProvider>

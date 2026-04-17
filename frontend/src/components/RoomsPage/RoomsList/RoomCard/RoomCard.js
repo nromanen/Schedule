@@ -41,7 +41,7 @@ const RoomCard = ({ room, isDisabled, showConfirmDialog, setSelectRoom }) => {
                         <FaEdit
                             className="svg-btn edit-btn"
                             title={t(COMMON_EDIT)}
-                            onClick={() => setSelectRoom(room.id)}
+                            onClick={() => setSelectRoom(room)}
                         />
                     </>
                 ) : (

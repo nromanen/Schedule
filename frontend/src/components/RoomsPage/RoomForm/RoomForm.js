@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -13,9 +13,17 @@ import {
     FORM_ROOM_LABEL_AFTER,
     FORM_TYPE_LABEL,
 } from '../../../constants/translationLabels/formElements';
+import { UNIQUE_ERROR_MESSAGE, REQUIRED_MESSAGE } from '../../../constants/translationLabels/validationMessages';
 import './RoomForm.scss';
 
-const RoomForm = ({ oneRoom, roomTypes, rooms, onSubmit, clearRoomItem }) => {
+const RoomForm = ({
+                      oneRoom,
+                      roomTypes,
+                      rooms,
+                      disabledRooms = [],
+                      onSubmit,
+                      clearRoomItem,
+                  }) => {
     const { t } = useTranslation('formElements');
 
     const {
@@ -30,6 +38,11 @@ const RoomForm = ({ oneRoom, roomTypes, rooms, onSubmit, clearRoomItem }) => {
             afterId: null,
         },
     });
+
+    const allRoomsForValidation = useMemo(
+        () => [...rooms, ...disabledRooms],
+        [rooms, disabledRooms],
+    );
 
     useEffect(() => {
         if (oneRoom?.id) {
@@ -64,6 +77,14 @@ const RoomForm = ({ oneRoom, roomTypes, rooms, onSubmit, clearRoomItem }) => {
         ? rooms.filter((r) => r.id !== oneRoom.id)
         : rooms;
 
+    const validateUniqueName = (value) => {
+        const trimmed = value.trim().toLowerCase();
+        const isDuplicate = allRoomsForValidation.some(
+            (room) => room.name.trim().toLowerCase() === trimmed && room.id !== oneRoom?.id,
+        );
+        return isDuplicate ? t(UNIQUE_ERROR_MESSAGE) : true;
+    };
+
     return (
         <FormWrapper
             title={`${oneRoom?.id ? t(EDIT_TITLE) : t(CREATE_TITLE)} ${t(ROOM_Y_LABEL)}`}
@@ -78,12 +99,17 @@ const RoomForm = ({ oneRoom, roomTypes, rooms, onSubmit, clearRoomItem }) => {
                 name="name"
                 label={`${t(ROOM_LABEL)}:`}
                 className="form-field"
-                rules={{ required: t('required') }}
+                rules={{
+                    required: t(REQUIRED_MESSAGE),
+                    validate: {
+                        unique: validateUniqueName,
+                    },
+                }}
             />
             <Controller
                 name="type"
                 control={control}
-                rules={{ required: t('required') }}
+                rules={{ required: t(REQUIRED_MESSAGE) }}
                 render={({ field, fieldState: { error } }) => (
                     <Autocomplete
                         {...field}

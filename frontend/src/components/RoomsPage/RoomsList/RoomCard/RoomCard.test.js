@@ -58,8 +58,9 @@ describe('behavior of RoomCard Component when room is not disabled', () => {
         expect(showConfirmDialog).toHaveBeenCalledTimes(1);
     });
 
-    it('should call setSelectRoom when click Edit icon', () => {
+    it('should call setSelectRoom with room object when click Edit icon', () => {
         fireEvent.click(document.querySelector('.edit-btn'));
         expect(setSelectRoom).toHaveBeenCalledTimes(1);
+        expect(setSelectRoom).toHaveBeenCalledWith(props.room);
     });
 });

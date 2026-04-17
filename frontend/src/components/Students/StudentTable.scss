@@ -63,7 +63,7 @@
 .checkbox-table-body {
   @include displayFlex(center, center);
   width: $full-size;
-  .MuiIconButton-label{
+  .MuiCheckbox-root {
     color: $blue;
   }
 }

@@ -32,7 +32,7 @@
         padding: 6px 5px;
     }
 
-    label + .MuiInput-formControl {
+    label + .MuiInputBase-root {
         padding-right: 0;
     }
 }
@@ -67,11 +67,9 @@
     .close-button {
         background-color: $white;
         border: 1px solid $gray1;
+        color: $black;
         &:hover {
             background-color: $gray2;
-        }
-        .MuiButton-label {
-            color: $black;
         }
     }
 }

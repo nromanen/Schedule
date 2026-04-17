@@ -19,6 +19,7 @@ import {
 import {
     BIGGER_THAN_FIELD_MESSAGE,
     LESS_THAN_FIELD_MESSAGE,
+    REQUIRED_MESSAGE
 } from '../../constants/translationLabels/validationMessages';
 import { hourFormat, timeFormat } from '../../constants/formats';
 import { queryClient } from '../../queryClient';
@@ -55,7 +56,7 @@ const ClassForm = ({ onSubmit, onReset, classSchedule }) => {
                 .add(CLASS_DURATION, hourFormat)
                 .format(timeFormat);
             setValue('endTime', newEndTime);
-            trigger('startTime');
+            trigger(['startTime', 'endTime']);
         }
     };
 
@@ -91,7 +92,7 @@ const ClassForm = ({ onSubmit, onReset, classSchedule }) => {
                 label={t(CLASS_LABEL)}
                 className="form-field"
                 rules={{
-                    required: t('required'),
+                    required: t(REQUIRED_MESSAGE),
                     validate: (value) => checkUniqClassName(value, classes, classSchedule?.id),
                 }}
             />
@@ -103,7 +104,7 @@ const ClassForm = ({ onSubmit, onReset, classSchedule }) => {
                     className="time-input"
                     onChange={handleStartTimeChange}
                     rules={{
-                        required: t('required'),
+                        required: t(REQUIRED_MESSAGE),
                         validate: {
                             lessThan: (value) =>
                                 !endTime ||
@@ -123,7 +124,7 @@ const ClassForm = ({ onSubmit, onReset, classSchedule }) => {
                     label={t(CLASS_TO_LABEL)}
                     className="time-input"
                     rules={{
-                        required: t('required'),
+                        required: t(REQUIRED_MESSAGE),
                         validate: {
                             greaterThan: (value) =>
                                 !startTime ||

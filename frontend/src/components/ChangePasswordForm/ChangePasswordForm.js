@@ -1,109 +1,124 @@
 import React from 'react';
-import {Field, reduxForm} from 'redux-form';
-
-import {connect} from 'react-redux';
-
-import './ChangePasswordForm.scss';
-
-import Button from '@mui/material/Button';
-import {useTranslation} from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import renderTextField from '../../share/renderedFields/input';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import {password, required} from '../../validation/validateFields';
+import { RHFTextField } from '../../share/rhf';
+import FormWrapper from '../../share/FormWrapper/FormWrapper';
+import { password, required } from '../../validation/validateFields';
 
-import {PROFILE_FORM} from '../../constants/reduxForms';
 import {
     CHANGE_PASSWORD_FROM_TITLE,
-    CLEAR_BUTTON_LABEL,
     NEW_PASSWORD_LABEL,
     PASSWORD_LABEL,
     RETYPE_PASSWORD_LABEL,
-    SAVE_BUTTON_LABEL,
 } from '../../constants/translationLabels/formElements';
+import { DIFFERENT_PASSWORDS } from '../../constants/translationLabels/common';
 
-function ExpandMoreIcon() {
-    return null;
-}
+import './ChangePasswordForm.scss';
 
-const ChangePasswordForm = (props) => {
+const wrapValidators = (validators) =>
+    validators.reduce((acc, validator, idx) => {
+        acc[`v${idx}`] = (value, formValues) => {
+            const result = validator(value, undefined, { values: formValues });
+            return result === undefined || result === '' ? true : result;
+        };
+        return acc;
+    }, {});
+
+const ChangePasswordForm = ({ onSubmit, onReset }) => {
     const { t } = useTranslation('formElements');
-    const { handleSubmit, pristine, onReset, submitting } = props;
+
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { isDirty, isSubmitting },
+    } = useForm({
+        mode: 'onChange',
+        defaultValues: {
+            current_password: '',
+            new_password: '',
+            confirm_password: '',
+        },
+    });
+
+    const handleFormSubmit = (values) => {
+        onSubmit(values);
+    };
+
+    const handleFormReset = () => {
+        if (onReset) onReset();
+        reset({
+            current_password: '',
+            new_password: '',
+            confirm_password: '',
+        });
+    };
+
+    const passwordRules = wrapValidators([required, password]);
 
     return (
-        <>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
+        <Accordion>
+            <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+            >
+                <Typography>{t(CHANGE_PASSWORD_FROM_TITLE)}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+                <FormWrapper
+                    title=""
+                    onSubmit={handleSubmit(handleFormSubmit)}
+                    onReset={handleFormReset}
+                    isDirty={isDirty}
+                    isSubmitting={isSubmitting}
+                    entityId={null}
+                    noCard
                 >
-                    <Typography>{t(CHANGE_PASSWORD_FROM_TITLE)}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography>
-                        <form onSubmit={handleSubmit}>
-                            <Field
-                                component={renderTextField}
-                                className="form-field"
-                                name="current_password"
-                                id="current_password"
-                                label={t(PASSWORD_LABEL)}
-                                type="password"
-                                validate={[required, password]}
-                            />
-                            <Field
-                                component={renderTextField}
-                                className="form-field"
-                                name="new_password"
-                                id="new_password"
-                                label={t(NEW_PASSWORD_LABEL)}
-                                type="password"
-                                validate={[required, password]}
-                            />
-                            <Field
-                                component={renderTextField}
-                                className="form-field"
-                                name="confirm_password"
-                                id="confirm_password"
-                                label={t(RETYPE_PASSWORD_LABEL)}
-                                type="password"
-                                validate={[required, password]}
-                            />
-
-                            <div className="form-buttons-container">
-                                <Button
-                                    className="buttons-style"
-                                    type="submit"
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={pristine || submitting}
-                                >
-                                    {t(SAVE_BUTTON_LABEL)}
-                                </Button>
-                                <Button
-                                    className="buttons-style"
-                                    type="button"
-                                    variant="contained"
-                                    disabled={pristine || submitting}
-                                    onClick={onReset}
-                                >
-                                    {t(CLEAR_BUTTON_LABEL)}
-                                </Button>
-                            </div>
-                        </form>
-                    </Typography>
-                </AccordionDetails>
-            </Accordion>
-        </>
+                    <RHFTextField
+                        control={control}
+                        name="current_password"
+                        id="current_password"
+                        label={t(PASSWORD_LABEL)}
+                        type="password"
+                        className="form-field"
+                        rules={passwordRules}
+                    />
+                    <RHFTextField
+                        control={control}
+                        name="new_password"
+                        id="new_password"
+                        label={t(NEW_PASSWORD_LABEL)}
+                        type="password"
+                        className="form-field"
+                        rules={passwordRules}
+                    />
+                    <RHFTextField
+                        control={control}
+                        name="confirm_password"
+                        id="confirm_password"
+                        label={t(RETYPE_PASSWORD_LABEL)}
+                        type="password"
+                        className="form-field"
+                        rules={{
+                            validate: {
+                                ...passwordRules.validate,
+                                match: (value, formValues) =>
+                                    value === formValues.new_password ||
+                                    t(DIFFERENT_PASSWORDS, { ns: 'common' }),
+                            },
+                        }}
+                    />
+                </FormWrapper>
+            </AccordionDetails>
+        </Accordion>
     );
 };
 
-export default connect()(
-    reduxForm({
-        form: PROFILE_FORM,
-    })(ChangePasswordForm),
-);
+export default ChangePasswordForm;

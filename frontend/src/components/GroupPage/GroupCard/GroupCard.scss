@@ -2,7 +2,9 @@
 
 .group-card {
   align-items: center;
-  width: 80px;
+  width: 120px;
+  padding-left: 4px;
+  padding-right: 4px;
 
   &__label { display: none; }
 

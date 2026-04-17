@@ -63,21 +63,6 @@ export const checkUniqLesson = (lessons, currentLesson) => {
     );
 };
 
-export const checkUniqueRoomName = (roomName) => {
-    const roomdId = store.getState().rooms.oneRoom.id;
-    let find = false;
-    if (roomdId) {
-        find = store.getState().rooms.rooms.some((value) => {
-            return value.name.toUpperCase() === roomName.toUpperCase() && value.id !== roomdId;
-        });
-    } else {
-        find = store.getState().rooms.rooms.some((value) => {
-            return value.name.toUpperCase() === roomName.toUpperCase();
-        });
-    }
-    return find ? i18n.t(UNIQUE_ERROR_MESSAGE) : undefined;
-};
-
 export const checkUniqueGroup = (value, groups, currentId) => {
     const isDuplicate = groups.some(
         (group) => group.title.trim().toLowerCase() === value.trim().toLowerCase() && group.id !== currentId
@@ -89,14 +74,14 @@ export const checkUniqueSubject = (value, subjects, currentId) => {
     const isDuplicate = subjects.some(
         (subj) => subj.name.trim().toLowerCase() === value.trim().toLowerCase() && subj.id !== currentId
     );
-    return isDuplicate ? i18n.t('Name must be unique') : true;
+    return isDuplicate ? i18n.t(UNIQUE_ERROR_MESSAGE) : true;
 };
 
 export const checkUniqueDepartment = (value, departments, currentId) => {
     const isDuplicate = departments.some(
         (dept) => dept.name.trim().toLowerCase() === value.trim().toLowerCase() && dept.id !== currentId
     );
-    return isDuplicate ? i18n.t('Name must be unique') : true;
+    return isDuplicate ? i18n.t(UNIQUE_ERROR_MESSAGE) : true;
 };
 
 export const checkUniqSemester = (semester) => {

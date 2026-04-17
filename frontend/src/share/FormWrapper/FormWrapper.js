@@ -33,7 +33,8 @@ const FormWrapper = ({
                     </Button>
                     <Button
                         type="button"
-                        variant="contained"
+                        variant="outlined"
+                        color="primary"
                         className="buttons-style"
                         disabled={setDisableButton(!isDirty, isSubmitting, entityId)}
                         onClick={onReset}
